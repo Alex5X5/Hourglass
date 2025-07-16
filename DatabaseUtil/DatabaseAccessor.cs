@@ -1,0 +1,361 @@
+﻿namespace DatabaseUtil;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Threading.Tasks;
+
+public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
+
+	private readonly DbContextType? _context;
+	private readonly Dictionary<Type, PropertyInfo?> primaryKeyProperties = GetPrimaryKeyProperties();
+
+	public DatabaseAccessor(string? path, DatabasePathFormat pathFormat, ConfigurationManager? config) {
+		var optionsBuilder = new DbContextOptionsBuilder<DbContextType>();
+		string connectionString = pathFormat switch {
+			DatabasePathFormat.ConnectionString => path,
+			DatabasePathFormat.FileName => "Data Source=" + path,
+			DatabasePathFormat.ReadConfig => config?.GetConnectionString("DefaultConnection"),
+			_ => ""
+		} ?? "";
+		optionsBuilder.UseSqlite(connectionString);
+		_context = (DbContextType)BuildContext(optionsBuilder.Options);
+		//_context.Database.EnsureCreated();
+		_context.Database.Migrate();
+	}
+
+	private static DbContext BuildContext(DbContextOptions options) {
+		var constructor = typeof(DbContextType).GetConstructor([typeof(DbContextOptions)])
+			?? throw new NotSupportedException($"found no constructor for the type {typeof(DbContextType)} taking DbContextOptions while building DbContext");
+		return (DbContext)constructor.Invoke([options]);
+	}
+
+	private static PropertyInfo? GetModelTypePrimaryKeyProperty(Type modelType) {
+		foreach (PropertyInfo property in modelType.GetProperties()) {
+			IEnumerable<Attribute> genericTypeProperties = property.GetCustomAttributes();
+			foreach (Attribute annotation in genericTypeProperties) {
+				bool isGenerated = annotation.GetType() == typeof(DatabaseGeneratedAttribute);
+				if (!isGenerated)
+					continue;
+				bool isIdentity = ((DatabaseGeneratedAttribute)annotation).DatabaseGeneratedOption == DatabaseGeneratedOption.Identity;
+				if (isGenerated && isIdentity) {
+					return property;
+				}
+			}
+		}
+		return null;
+	}
+
+	private static Dictionary<Type, PropertyInfo?> GetPrimaryKeyProperties() {
+		Dictionary<Type, PropertyInfo?> keys = [];
+		List<PropertyInfo> dbSets = typeof(DbContextType)
+			.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+				.Where(p => 
+					p.PropertyType.IsGenericType &&
+					p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
+						.ToList();
+		foreach (var set in dbSets) {
+			var setType = set.PropertyType;
+			Type dbSetModelType = setType.GetGenericArguments()[0];
+			PropertyInfo? primaryKey = GetModelTypePrimaryKeyProperty(dbSetModelType);
+			if (primaryKey==null)
+				throw new NotSupportedException($"the entity type of the DbSet {dbSetModelType} does not contain a property that is annotated as a primary key");
+			keys[dbSetModelType] = primaryKey;
+		}
+		return keys;
+	}
+
+	private static object? ExpandoToDynamicType(ExpandoObject expando) {
+		var expandoDict = (IDictionary<string, object?>)expando;
+		var assemblyName = new AssemblyName("DynamicAnonTypes");
+		var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+		var moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
+		var typeBuilder = moduleBuilder.DefineType(
+			"AnonType" + Guid.NewGuid().ToString("N"),
+			TypeAttributes.Public | TypeAttributes.Class);
+
+		foreach (var kvp in expandoDict) {
+			var field = typeBuilder.DefineField("_" + kvp.Key, kvp.Value?.GetType() ?? typeof(object), FieldAttributes.Private);
+			var property = typeBuilder.DefineProperty(kvp.Key, PropertyAttributes.HasDefault, kvp.Value?.GetType() ?? typeof(object), null);
+
+			var getter = typeBuilder.DefineMethod(
+				"get_" + kvp.Key,
+				MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
+				kvp.Value?.GetType() ?? typeof(object),
+				Type.EmptyTypes);
+
+			var getterIL = getter.GetILGenerator();
+			getterIL.Emit(OpCodes.Ldarg_0);
+			getterIL.Emit(OpCodes.Ldfld, field);
+			getterIL.Emit(OpCodes.Ret);
+
+			var setter = typeBuilder.DefineMethod(
+				"set_" + kvp.Key,
+				MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
+				null,
+				[kvp.Value?.GetType() ?? typeof(object)]
+			);
+
+			var setterIL = setter.GetILGenerator();
+			setterIL.Emit(OpCodes.Ldarg_0);
+			setterIL.Emit(OpCodes.Ldarg_1);
+			setterIL.Emit(OpCodes.Stfld, field);
+			setterIL.Emit(OpCodes.Ret);
+
+			property.SetGetMethod(getter);
+			property.SetSetMethod(setter);
+		}
+
+		var dynamicType = typeBuilder.CreateType();
+
+		object? instance = Activator.CreateInstance(dynamicType);
+
+		foreach (var kvp in expandoDict) {
+			PropertyInfo? prop = dynamicType.GetProperty(kvp.Key);
+			prop?.SetValue(instance, kvp.Value);
+		}
+
+		return instance;
+	}
+
+	private object? PrimVal<T>(T? source) where T : class =>
+		primaryKeyProperties.ContainsKey(typeof(T)) ? primaryKeyProperties[typeof(T)]?.GetValue(source) : null;
+
+	private async Task<bool> SaveChangesAsync() {
+		if (_context == null)
+			return false;
+		try {
+			await _context.SaveChangesAsync();
+		} catch (DbUpdateConcurrencyException) {
+			return false;
+		}
+		return true;
+	}
+
+	private bool SaveChangesBlocking() {
+		if (_context == null)
+			return false;
+		try {
+			_context.SaveChanges();
+		} catch (DbUpdateConcurrencyException) {
+			return false;
+		}
+		return true;
+	}
+
+	public bool PrimaryKeyExistsInDatabase<T>(object? key) where T : class {
+		if (key?.GetType() == null)
+			return false;
+		if (!primaryKeyProperties.ContainsKey(key.GetType()))
+			return false;
+		if (_context?.Set<T>().Find(key) != null)
+			return true;
+		return false;
+	}
+
+	public async Task<T?> QuerySingleByKeyAsync<T>(object primaryKeyValue) where T : class {
+		if (_context == null)
+			return null;
+		if (primaryKeyProperties.ContainsKey(typeof(T)))
+			return await _context.Set<T>().FindAsync(primaryKeyValue);
+		return null;
+	}
+
+	public T? QuerySingleByKeyBlocking<T>(object keyValue) where T : class {
+		if (_context == null)
+			return null;
+		if (primaryKeyProperties.ContainsKey(typeof(T)))
+			_context.Find<DbContextType>(keyValue);
+		return null;
+	}
+
+	public async Task<IEnumerable<T>?> QueryRangeByPropertiesAsync<T>(object filter) where T : class {
+		if (_context == null)
+			return null;
+		List<PropertyInfo> properties = [.. filter.GetType().GetProperties()];
+		IEnumerable<T> items = await QueryAllAsync<T>();
+		foreach (PropertyInfo property in properties) {
+			items = items.Where(p => property.GetValue(p) == property.GetValue(filter));
+		}
+		return items;
+	}
+
+	public async Task<List<T>> QueryAllAsync<T>() where T : class {
+		var res = _context != null ? await _context.Set<T>().ToListAsync() : [];
+		return res;
+	}
+
+	public List<T> QueryAllBlocking<T>() where T : class =>
+		_context != null ? _context.Set<T>().ToList() : [];
+
+	public async Task<bool> AddAsync<T>(T item, bool updateIfExists) where T : class {
+		if (_context == null)
+			return false;
+		if (!PrimaryKeyExistsInDatabase<T>(PrimVal(item))) {
+			await _context.Set<T>().AddAsync(item);
+		} else if (updateIfExists) {
+			await UpdateAsync(item, false);
+		} else {
+			return false;
+		}
+		return await SaveChangesAsync();
+	}
+
+	public bool AddBlocking<T>(T item, bool updateIfExists) where T : class {
+		if (_context == null)
+			return false;
+		if (!PrimaryKeyExistsInDatabase<T>(PrimVal(item))) {
+			_context.Set<T>().Add(item);
+		} else if (updateIfExists) {
+			UpdateBlocking(item, false);
+		} else {
+			return false;
+		}
+		try {
+			_context.SaveChanges();
+		} catch (DbUpdateConcurrencyException) {
+			return false;
+		}
+		return true;
+	}
+
+	public async Task<bool> UpdateAsync<T>(T updatedObject, bool createIfNotExists) where T : class {
+		object? primaryKeyValue = primaryKeyProperties[typeof(T)]?.GetValue(updatedObject);
+		if (primaryKeyValue == null)
+			return false;
+		ExpandoObject dynamicObject = new ExpandoObject();
+		var dict = (IDictionary<string, object?>)dynamicObject;
+		var primaryKeyProperty = primaryKeyProperties[typeof(T)];
+		if (primaryKeyProperty != null) {
+			dict.Add(primaryKeyProperty.Name, primaryKeyValue);
+		}
+		return await UpdateAsync(ExpandoToDynamicType(dynamicObject), updatedObject, createIfNotExists);
+	}
+
+	public async Task<bool> UpdateAsync<T>(object? filter, T value, bool createIfNotExists) where T : class {
+		if (_context == null)
+			return false;
+		if (filter == null)
+			return true;
+		IEnumerable<T> filteredItems = _context.Set<T>();
+		List<PropertyInfo> filterObjectProperties = [.. filter.GetType().GetProperties()];
+		foreach (var filterObjectProperty in filterObjectProperties) {
+			IEnumerable<PropertyInfo> entityTypeProperties = typeof(T).GetProperties();
+			PropertyInfo? updatedObjectProperty = entityTypeProperties.FirstOrDefault(p => p.Name == filterObjectProperty.Name);
+			if (updatedObjectProperty == null)
+				continue;
+			object? filterValue = filterObjectProperty.GetValue(filter);
+			filteredItems = filteredItems.Where(x => (
+				filterValue!=null && updatedObjectProperty != null) ?
+				filterValue.Equals(updatedObjectProperty.GetValue(x)) :
+				false
+			);
+		}
+		List<T> _list = [.. filteredItems];
+		if (_list.Count == 0) {
+			return false;
+		} else {
+		IEnumerable<PropertyInfo> objectProperties = typeof(T).GetProperties();
+		foreach (T ob in filteredItems.ToList())
+			foreach (PropertyInfo p in objectProperties) {
+				if (p.Name != primaryKeyProperties[typeof(T)]?.Name)
+					p.SetValue(ob, p.GetValue(value), null);
+			}
+		}
+		return await SaveChangesAsync();
+	}
+
+	public bool UpdateBlocking<T>(T updatedObject, bool createIfNotExists) where T : class =>
+		UpdateAsync(updatedObject, updatedObject, createIfNotExists).Result;
+
+	public bool UpdateBlocking<T>(object? filter, T value, bool createIfNotExists) where T : class =>
+		UpdateAsync(filter, value, createIfNotExists).Result;
+
+	public async Task<bool> DeleteAsync<T>(T item) where T : class =>
+		await DeleteByKeyAsync<T>(PrimVal(item));
+
+	public async Task<bool> DeleteByKeyAsync<T>(object? key) where T : class {
+		if (_context == null)
+			return false;
+		if (key == null)
+			return false;
+		if (!PrimaryKeyExistsInDatabase<T>(key))
+			return false;
+		foreach (var it in _context.Set<T>()) {
+			if (key.Equals(PrimVal(it))) {
+				_context.Set<T>().Remove(it);
+				return await SaveChangesAsync();
+			}
+		}
+		return false;
+	}
+
+	public bool DeleteBlocking<T>(T item) where T : class =>
+		DeleteByKeyBlocking<T>(PrimVal(item));
+
+	public bool DeleteByKeyBlocking<T>(object? key) where T : class {
+		if (_context == null)
+			return false;
+		if (PrimaryKeyExistsInDatabase<T>(key)) {
+			if (_context.Set<T>().Find(key) == null)
+				return false;
+			else {
+				_context.Set<T>().Remove(
+					_context.Set<T>().First(
+						x => PrimVal(x) == key
+					)
+				);
+			}
+			return true;
+		}
+		return SaveChangesBlocking();
+	}
+}
+
+
+public enum DatabasePathFormat {
+	ConnectionString,
+	FileName,
+	ReadConfig
+}
+
+
+public static class AnonymousObjectMutator {
+	private const BindingFlags FieldFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+	private static readonly string[] BackingFieldFormats = { "<{0}>i__Field", "<{0}>" };
+
+	public static T Set<T, TProperty>(
+		this T instance,
+		Expression<Func<T, TProperty>> propExpression,
+		TProperty newValue) where T : class {
+		var pi = (propExpression.Body as MemberExpression).Member;
+		var backingFieldNames = BackingFieldFormats.Select(x => string.Format(x, pi.Name)).ToList();
+		var fi = typeof(T)
+			.GetFields(FieldFlags)
+			.FirstOrDefault(f => backingFieldNames.Contains(f.Name));
+		if (fi == null)
+			throw new NotSupportedException(string.Format("Cannot find backing field for {0}", pi.Name));
+		fi.SetValue(instance, newValue);
+		return instance;
+	}
+}
+
+
+//internal static class Ext {
+//    public static IEnumerable<Type> GetBaseTypes(this Type type) {
+//        if (type.BaseType == null) 
+//            return type.GetBaseTypes();
+//        return Enumerable.Repeat(type.BaseType, 1)
+//            .Concat(type.GetInterfaces())
+//            .Concat(type.GetInterfaces().SelectMany(GetBaseTypes))
+//            .Concat(type.BaseType.GetBaseTypes());
+//    }
+//}

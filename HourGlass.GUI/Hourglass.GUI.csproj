@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<UseWindowsForms>true</UseWindowsForms>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\HourGlass.PDF\Hourglass.PDF.csproj" />
+	  <ProjectReference Include="..\HourGlass.Database\Hourglass.Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\DocumentEditior\" />
+  </ItemGroup>
+
+</Project>

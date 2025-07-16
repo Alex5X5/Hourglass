@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.GUI", "HourGlass.GUI\Hourglass.GUI.csproj", "{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270} = {3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.PDF", "HourGlass.PDF\Hourglass.PDF.csproj", "{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass", "HourGlass\Hourglass.csproj", "{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Database", "HourGlass.Database\Hourglass.Database.csproj", "{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseUtil", "DatabaseUtil\DatabaseUtil.csproj", "{61941540-77D3-ECD2-7EB7-6DD8EC39E515}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hourglass.Logic", "Hourglass.Logic\Hourglass.Logic.csproj", "{F0F0B03C-3AAF-4A90-BD6E-4C403AAD5521}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78F09C6-A3C4-409C-9DCB-833FA99CECA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A329A23-BD6F-4C72-B2FE-DEEA8DC71270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF1B2B9-1DE7-4F43-9540-21E6CC952692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E40C22FD-B4ED-4C6C-9626-7B90A492B4D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61941540-77D3-ECD2-7EB7-6DD8EC39E515}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0F0B03C-3AAF-4A90-BD6E-4C403AAD5521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0F0B03C-3AAF-4A90-BD6E-4C403AAD5521}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0F0B03C-3AAF-4A90-BD6E-4C403AAD5521}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0F0B03C-3AAF-4A90-BD6E-4C403AAD5521}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02241275-2716-4FAF-B80D-C1D7510A11BF}
+	EndGlobalSection
+EndGlobal
