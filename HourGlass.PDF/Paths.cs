@@ -47,7 +47,7 @@ public static class Paths {
 		string assemplyName = Assembly.GetExecutingAssembly().GetName().Name+".dll";
 		string assemblyLocation = Assembly.GetExecutingAssembly().Location;
 		string trimedName = assemblyLocation.Trim(assemplyName.ToCharArray());
-		trimedName = Path.Combine(trimedName+@"\ShGame\Assets\", fileName);
+		trimedName = Path.Combine(trimedName+@"\Hourglass\Assets\", fileName);
 		return trimedName;
 	} 
 }

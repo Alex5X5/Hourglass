@@ -1,4 +1,5 @@
 ﻿using Hourglass.GUI.Pages.Timer;
+using ShGame.Game.Util;
 using System.Windows.Forms;
 
 namespace HourGlass.GUI.Pages.Timer; 
@@ -229,7 +230,8 @@ public partial class TimerWindow {
 		// TimerWindow
 		// 
 		BackColor = SystemColors.AppWorkspace;
-		ClientSize = new Size(1500, 1000);
+		ClientSize = new Size(1920, 1080);
+		BackgroundImage = ResizeImage(Image.FromFile(Paths.AssetsPath("Folie1.png")),Width, Height);
 		Controls.Add(button2);
 		Controls.Add(button1);
 		Controls.Add(TimeLabel);
