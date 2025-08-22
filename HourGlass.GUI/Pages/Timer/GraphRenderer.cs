@@ -1,24 +1,21 @@
 ﻿namespace Hourglass.GUI.Pages.Timer;
 
-using Hourglass.Database.Serices.Interfaces;
+using Hourglass.Database.Services.Interfaces;
 
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 class GraphRenderer : Panel {
 
 	#region fields
 
-	//public const int VIRTUAL_WIDTH = 1400, VIRTUAL_HEIGHT = 700;
 	private Bitmap image;
 
 	private readonly Brush GROUND_COLOR = new SolidBrush(Color.FromArgb(85, 85, 90));
 
 	public IHourglassDbService? _dbService;
-
-	private Random rand = new Random();
-
 	#endregion fields
 
 	public GraphRenderer(IHourglassDbService dbService) : this() {
@@ -27,7 +24,8 @@ class GraphRenderer : Panel {
 
 	public GraphRenderer() : base() {
 		image = new Bitmap(Width, Height);
-		this.DoubleBuffered = true;
+		DoubleBuffered = true;
+		Click += OnClick;
 	}
 
 	protected override void OnPaintBackground(PaintEventArgs e) {
@@ -37,7 +35,7 @@ class GraphRenderer : Panel {
 	private void DrawTimeline(Graphics g) {
 		using (Pen hintLines = new(Brushes.Black))
 		using (Pen pen = new(Brushes.Black)) {
-				g.DrawLine(pen, Width / 26, Height * 19 / 20, Width * 25 / 26, Height * 19 / 20);
+			g.DrawLine(pen, Width / 26, Height * 19 / 20, Width * 25 / 26, Height * 19 / 20);
 			for (int i = 1; i < 25; i++) {
 				g.DrawLine(pen, Width * i / 26, Height * 19 / 20, Width * i / 26, (int)Math.Floor(Height * 18.75 / 20));
 				g.DrawLine(hintLines, Width * i / 26, Height * 19 / 20, Width * i / 26, (int)Math.Floor(Height / 20.0));
@@ -46,11 +44,11 @@ class GraphRenderer : Panel {
 
 	}
 
-	private void DrawTaskBar(Graphics g, Database.Models.Task task, int graphPosY) {
+	private void DrawTaskMarker(Graphics g, Database.Models.Task task, int graphPosY) {
 		long duration = task.finish - task.start;
-		double proportion = TimeSpan.SecondsPerDay / image.Width;
+		double proportion = TimeSpan.SecondsPerDay / (image.Width * 24 / 26);
 		int graphLength = (int)Math.Floor(duration / proportion);
-		long now = System.DateTime.Now.Ticks / System.TimeSpan.TicksPerSecond;
+		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		long today = now - (now % TimeSpan.SecondsPerDay);
 		int graphPosX = (int)Math.Floor((task.start - today) / proportion);
 		graphPosX += image.Width / 26;
@@ -61,41 +59,53 @@ class GraphRenderer : Panel {
 			graphLength,
 			(int)Math.Floor(image.Height / 20.0));
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
-		using (Brush pen = new SolidBrush(Color.Black))
-			g.FillPath(pen, path);
+		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
+			g.FillPath(brush, path);
+		string text;
+		if (task.description.Length > 15)
+			text = task.description.Substring(0, 15);
+		else
+			text = task.description;
+		using (Brush brush = new SolidBrush(Color.Black))
+			g.DrawString(text, new Font("Segoe UI", 15F, FontStyle.Regular, GraphicsUnit.Pixel, 0), brush, graphPosX + 3, graphPosY + 3);
 	}
 
 	protected override async void OnPaint(PaintEventArgs e) {
-		
+		e.Graphics.Clear(Color.Gainsboro);
 		if (image.Width != Width | image.Height != Height) {
 			image.Dispose();
 			image = new Bitmap(Width, Height);
 		}
 		using (Graphics g = Graphics.FromImage(image)) {
-			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+			g.SmoothingMode = SmoothingMode.AntiAlias;
+			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
-			g.Clear(Color.FromArgb(255, 255, 255));
-			//long now = DateTime.Now.Second;
-			//g.DrawString(Convert.ToString(now), new Font(FontFamily.GenericSansSerif, 10), GROUND_COLOR, 0, 0);
+			g.Clear(Color.Gainsboro);
+			
+			//using (GraphicsPath path = GetRoundedRectanglePath(new Rectangle(0, 0, image.Width, image.Height), 55))
+			//using (Brush brush = new SolidBrush(Color.FromArgb(255, 255, 255, 255)))
+			//	g.FillPath(brush, path);
 			DrawTimeline(g);
 			int yPos = image.Height / 10;
-			List<Database.Models.Task>? tasks = await _dbService?.QueryTasksOfLastDayAsync();
-			if (tasks != null && tasks.Count>0) {
-				int graphPosY = (int)Math.Floor(image.Height / 20.0);
-				for (int i = 0; i < 10 && i < tasks.Count; i++) {
-					DrawTaskBar(g, tasks[i], graphPosY);
-					graphPosY += (int)Math.Floor(image.Height / 20.0);
-					graphPosY += (int)Math.Floor(image.Height / 40.0);
+			if (_dbService != null) {
+				List<Database.Models.Task>? tasks = await _dbService.QueryTasksOfCurrentDayAsync();
+				if (tasks != null && tasks.Count > 0) {
+					int graphPosY = (int)Math.Floor(image.Height / 20.0);
+					for (int i = 0; i < 10 && i < tasks.Count; i++) {
+						DrawTaskMarker(g, tasks[i], graphPosY);
+						graphPosY += (int)Math.Floor(image.Height / 20.0);
+						graphPosY += (int)Math.Floor(image.Height / 40.0);
+					}
 				}
 			}
 		}
 		e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 		e.Graphics.DrawImage(image, 0, 0, Width, Height);
 	}
+
 	private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius) {
 		GraphicsPath path = new GraphicsPath();
 
@@ -108,5 +118,9 @@ class GraphRenderer : Panel {
 		path.CloseFigure();
 
 		return path;
+	}
+
+	private void OnClick(object? sender, EventArgs e) {
+		
 	}
 }

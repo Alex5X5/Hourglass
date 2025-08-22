@@ -15,7 +15,8 @@
     <PackageReference Include="Serilog" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DatabaseUtil\DatabaseUtil.csproj" />
+	  <ProjectReference Include="..\DatabaseUtil\DatabaseUtil.csproj" />
+	  <ProjectReference Include="..\Hourglass.Util\Hourglass.Util.csproj" />
   </ItemGroup>
 
 </Project>

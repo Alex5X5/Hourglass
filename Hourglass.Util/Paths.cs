@@ -1,16 +1,15 @@
-﻿using System;
+﻿namespace Hourglass.Util;
+
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
-
-namespace HourGlass;
-
 
 public static class Paths {
 
 	public static void ExtractFiles(string resourceNamespacePrefix) {
 		// Get executing assembly
-		var assembly = Assembly.GetExecutingAssembly();
+		var assembly = Assembly.GetCallingAssembly();
 		var resourceNames = assembly.GetManifestResourceNames();
 
 		// Determine output path next to the running .exe
@@ -48,7 +47,8 @@ public static class Paths {
 		string assemplyName = Assembly.GetExecutingAssembly().GetName().Name+".dll";
 		string assemblyLocation = Assembly.GetExecutingAssembly().Location;
 		string trimedName = assemblyLocation.Trim(assemplyName.ToCharArray());
-		trimedName = Path.Combine(trimedName+@"\Hourglass\Assets\", fileName);
+		trimedName = Path.Combine(trimedName+ @"\Hourglass\Assets\", fileName);
+		//return Path.Combine(trimedName, fileName);
 		return trimedName;
 	} 
 }

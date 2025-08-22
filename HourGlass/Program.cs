@@ -2,9 +2,11 @@ namespace HourGlass;
 
 using DatabaseUtil;
 
-using Hourglass.Database.Serices.Interfaces;
-using Hourglass.Database.Serices;
+using Hourglass.Database.Services.Interfaces;
+using Hourglass.Database.Services;
 using System.Diagnostics;
+using HourGlass.PDF;
+using Hourglass.Util;
 
 public class Program {
     /// <summary>
@@ -19,21 +21,21 @@ public class Program {
 		//			;
 		//.AddJsonFile(Paths.AssetsPath($"settings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json"), false, true)
 		//.AddEnvironmentVariables()
-		var migrationName = "InitialCreate"; // or any name you want
-		var process = new Process {
-			StartInfo = new ProcessStartInfo {
-				FileName = "dotnet",
-				Arguments = $"ef migrations add {migrationName} " +
-							"--project ../Hourglass.Database/Hourglass.Database.csproj " +
-							"--startup-project ../Hourglass/Hourglass.csproj " +
-							"--output-dir Migrations",
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false,
-				CreateNoWindow = true,
-				WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..", "Hourglass.Database")
-			}
-		};
+		//var migrationName = "InitialCreate"; // or any name you want
+		//var process = new Process {
+		//	StartInfo = new ProcessStartInfo {
+		//		FileName = "dotnet",
+		//		Arguments = $"ef migrations add {migrationName} " +
+		//					"--project ../Hourglass.Database/Hourglass.Database.csproj " +
+		//					"--startup-project ../Hourglass/Hourglass.csproj " +
+		//					"--output-dir Migrations",
+		//		RedirectStandardOutput = true,
+		//		RedirectStandardError = true,
+		//		UseShellExecute = false,
+		//		CreateNoWindow = true,
+		//		WorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..", "Hourglass.Database")
+		//	}
+		//};
 
 		IHourglassDbService dbService = new HourglassDbService();
 
@@ -45,13 +47,13 @@ public class Program {
 
 		//document = Builder.SetAnnotaionValue(
 		//	document,
-		//	"monday_hour_2",
+		//	"moday_hour_range_1",
 		//	"test"
 
 		//);
 		//document = Builder.SetFieldValue(
 		//	document,
-		//	"monday_hour_2",
+		//	"moday_hour_range_1",
 		//	"mh2"
 
 		//);

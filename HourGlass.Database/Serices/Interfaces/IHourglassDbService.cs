@@ -1,4 +1,4 @@
-﻿namespace Hourglass.Database.Serices.Interfaces;
+﻿namespace Hourglass.Database.Services.Interfaces;
 
 using Hourglass.Database.Models;
 
@@ -18,9 +18,9 @@ public interface IHourglassDbService {
 
 	public Task<List<Models.Task>> QueryTasksAsync();
 
-	public Task<List<Models.Task>> QueryTasksOfLastHourAsync();
+	public Task<List<Models.Task>> QueryTasksOfCurrentHourAsync();
 
-	public Task<List<Models.Task>> QueryTasksOfLastDayAsync();
+	public Task<List<Models.Task>> QueryTasksOfCurrentDayAsync();
 	
 	public Task<Models.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Project? project, Ticket? ticket);
 

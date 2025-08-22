@@ -1,5 +1,6 @@
 ﻿namespace DatabaseUtil;
 
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -29,7 +30,7 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		optionsBuilder.UseSqlite(connectionString);
 		_context = (DbContextType)BuildContext(optionsBuilder.Options);
 		//_context.Database.EnsureCreated();
-		_context.Database.Migrate();
+		_context.Database.EnsureCreated();
 	}
 
 	private static DbContext BuildContext(DbContextOptions options) {
@@ -58,17 +59,15 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		Dictionary<Type, PropertyInfo?> keys = [];
 		List<PropertyInfo> dbSets = typeof(DbContextType)
 			.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-				.Where(p => 
-					p.PropertyType.IsGenericType &&
-					p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
-						.ToList();
+				.Where(p => p.PropertyType.IsGenericType &&
+							p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
+					.ToList();
 		foreach (var set in dbSets) {
 			var setType = set.PropertyType;
-			Type dbSetModelType = setType.GetGenericArguments()[0];
-			PropertyInfo? primaryKey = GetModelTypePrimaryKeyProperty(dbSetModelType);
-			if (primaryKey==null)
-				throw new NotSupportedException($"the entity type of the DbSet {dbSetModelType} does not contain a property that is annotated as a primary key");
-			keys[dbSetModelType] = primaryKey;
+			Type setEntityType = setType.GetGenericArguments()[0];
+			keys[setEntityType] = GetModelTypePrimaryKeyProperty(setEntityType);
+			if (keys[setEntityType]==null)
+				throw new NotSupportedException($"the entity type of the DbSet {setEntityType} does not contain a property that is annotated as a primary key");
 		}
 		return keys;
 	}
@@ -199,14 +198,15 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 	public async Task<bool> AddAsync<T>(T item, bool updateIfExists) where T : class {
 		if (_context == null)
 			return false;
-		if (!PrimaryKeyExistsInDatabase<T>(PrimVal(item))) {
-			await _context.Set<T>().AddAsync(item);
-		} else if (updateIfExists) {
+		if (PrimaryKeyExistsInDatabase<T>(PrimVal(item))) {
+			if (!updateIfExists)
+				return false;
 			await UpdateAsync(item, false);
-		} else {
-			return false;
+			return await SaveChangesAsync();
 		}
+		await _context.Set<T>().AddAsync(item);
 		return await SaveChangesAsync();
+
 	}
 
 	public bool AddBlocking<T>(T item, bool updateIfExists) where T : class {
@@ -249,13 +249,13 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		List<PropertyInfo> filterObjectProperties = [.. filter.GetType().GetProperties()];
 		foreach (var filterObjectProperty in filterObjectProperties) {
 			IEnumerable<PropertyInfo> entityTypeProperties = typeof(T).GetProperties();
-			PropertyInfo? updatedObjectProperty = entityTypeProperties.FirstOrDefault(p => p.Name == filterObjectProperty.Name);
-			if (updatedObjectProperty == null)
+			PropertyInfo? valueObjectProperty = entityTypeProperties.FirstOrDefault(p => p.Name.Equals(filterObjectProperty.Name));
+			if (valueObjectProperty == null)
 				continue;
 			object? filterValue = filterObjectProperty.GetValue(filter);
 			filteredItems = filteredItems.Where(x => (
-				filterValue!=null && updatedObjectProperty != null) ?
-				filterValue.Equals(updatedObjectProperty.GetValue(x)) :
+				filterValue!=null && valueObjectProperty != null) ?
+				filterValue.Equals(valueObjectProperty.GetValue(x)) :
 				false
 			);
 		}
@@ -263,12 +263,15 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		if (_list.Count == 0) {
 			return false;
 		} else {
-		IEnumerable<PropertyInfo> objectProperties = typeof(T).GetProperties();
-		foreach (T ob in filteredItems.ToList())
-			foreach (PropertyInfo p in objectProperties) {
-				if (p.Name != primaryKeyProperties[typeof(T)]?.Name)
+			IEnumerable<PropertyInfo> objectProperties = typeof(T).GetProperties();
+			foreach (T ob in _list)
+				foreach (PropertyInfo p in objectProperties) {
+					if (p.Name == primaryKeyProperties[typeof(T)]?.Name)
+						continue;
+					if (p.IsDefined(typeof(NotMappedAttribute), inherit: true))
+						continue;
 					p.SetValue(ob, p.GetValue(value), null);
-			}
+				}
 		}
 		return await SaveChangesAsync();
 	}

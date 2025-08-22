@@ -1,15 +1,16 @@
 ﻿namespace HourGlass.PDF;
 
+using Hourglass.Util;
+
 using System;
 using System.Text;
 
 
-public class FileManager
-{
+public class FileManager{
 	public static string LoadInput() {
-		int size = (int)new FileInfo("input.pdf").Length;
+		int size = (int)new FileInfo(Paths.AssetsPath("output-readable-indexers.pdf")).Length;
 		byte[] buffer = new byte[size];
-		using (FileStream fileHandle = File.OpenRead("input.pdf"))
+		using (FileStream fileHandle = File.OpenRead(Paths.AssetsPath("output-readable-indexers.pdf")))
 			fileHandle.ReadExactly(buffer, 0, size);
 		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 		Encoding ansi = Encoding.GetEncoding(1252);

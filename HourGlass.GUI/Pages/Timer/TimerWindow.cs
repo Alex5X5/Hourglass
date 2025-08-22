@@ -1,4 +1,7 @@
-﻿using Hourglass.Database.Serices.Interfaces;
+﻿using Hourglass.Database.Services.Interfaces;
+using Hourglass.Util;
+
+using System.Linq;
 
 namespace HourGlass.GUI.Pages.Timer;
 
@@ -14,7 +17,7 @@ public partial class TimerWindow : Form {
 	private bool stop = false;
 
 	public TimerWindow(IHourglassDbService dbService) {
-		_dbService = dbService;	
+		_dbService = dbService;
 
 		InitializeComponent();
 
@@ -28,70 +31,87 @@ public partial class TimerWindow : Form {
 				}
 			}
 		);
-		GraphRenderThread.Start();
 
-		TimerUpdaterThread = new Thread(
-			() => {
-				while (!CanRaiseEvents)
-					Thread.Sleep(10);
-				while (!Disposing && !stop) {
-					Thread.Sleep(500);
-					try {
-						if (runningTask == null) {
-							if (StartTextbox == null)
-								continue;
-							if (StartTextbox.Disposing)
-								continue;
-							if (StartTextbox.InvokeRequired)
-								StartTextbox?.Invoke(() => StartTextbox.Text = DateTime.Now.ToString());
-							else
-								StartTextbox.Text = DateTime.Now.ToString();
-						} else {
-							if (FinishTextbox == null)
-								continue;
-							if (FinishTextbox.Disposing)
-								continue;
-							if (FinishTextbox.InvokeRequired)
-								FinishTextbox.Invoke(() => FinishTextbox.Text = DateTime.Now.ToString());
-							else
-								FinishTextbox.Text = DateTime.Now.ToString();
-						}
-					} catch(InvalidOperationException){
-						
-					} catch(System.ComponentModel.InvalidAsynchronousStateException){
-
-					}
-				}
-			}
-		);
-		TimerUpdaterThread.Start();
+		TimerUpdaterThread = new Thread(UpdateTimers);
 		runningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (runningTask != null) {
-			StartTextbox.Text = DateTimeOffset.FromUnixTimeSeconds(runningTask.start).DateTime.ToString();
+			StartTextbox.Text = FormatDateTime(runningTask.StartDateTime);
 			StartButton.Enabled = false;
 		} else {
 			StopButton.Enabled = false;
 		}
 	}
 
-	private async Task StartButtonClick() {
-		IEnumerable<Hourglass.Database.Models.Project> projects = await _dbService.QueryProjectsAsync();
+	private string FormatDateTime(DateTime time) =>
+		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
+
+	private void UpdateTimers() {
+		while (!CanRaiseEvents)
+			Thread.Sleep(10);
+		while (!Disposing && !stop) {
+			Thread.Sleep(200);
+			try {
+				if (runningTask == null)
+					if (StartTextbox != null)
+						if (!StartTextbox.Disposing)
+							if (StartTextbox.InvokeRequired) {
+								StartTextbox?.Invoke(
+									() => StartTextbox.Text = FormatDateTime(DateTime.Now)
+								);
+							} else {
+								StartTextbox.Text = FormatDateTime(DateTime.Now);
+							}
+				if (runningTask == null)
+					continue;
+				if (FinishTextbox != null)
+					if (!FinishTextbox.Disposing)
+						if (FinishTextbox.InvokeRequired) {
+							FinishTextbox.Invoke(
+								() => FinishTextbox.Text = FormatDateTime(DateTime.Now)
+							);
+						} else {
+							FinishTextbox.Text = FormatDateTime(DateTime.Now);
+						}
+				if (runningTask == null)
+					continue;
+				if (ElapsedTimeLabel != null)
+					if (!ElapsedTimeLabel.Disposing)
+						if (ElapsedTimeLabel.InvokeRequired) {
+							TimeSpan t = DateTime.Now.Subtract(runningTask.StartDateTime);
+							ElapsedTimeLabel.Invoke(
+								() => {
+									DateTime time = Convert.ToDateTime(DateTime.Now.Subtract(runningTask.StartDateTime).ToString());
+									ElapsedTimeLabel.Text = $"{time.Hour}:{time.Minute}:{time.Second}";
+								}
+							);
+						} else {
+							DateTime time = Convert.ToDateTime(DateTime.Now.Subtract(runningTask.StartDateTime).ToString());
+							ElapsedTimeLabel.Text = $"{time.Hour}:{time.Minute}:{time.Second}";
+						}
+			} catch (InvalidOperationException) {
+			} catch (System.ComponentModel.InvalidAsynchronousStateException) {
+			}
+		}
+	}
+	
+	private void StartButtonClick(object sender, EventArgs e) {
+		IEnumerable<Hourglass.Database.Models.Project> projects = _dbService.QueryProjectsAsync().Result;
 		Hourglass.Database.Models.Project? project = projects.FirstOrDefault(x=>x.Name == ProjectTextBox.Text);
 		StartButton.Enabled = false;
-		runningTask = await _dbService.StartNewTaskAsnc(
+		runningTask = _dbService.StartNewTaskAsnc(
 			DescriptionTextBox.Text,
 			project,
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
-		);
+		).Result;
 		StopButton.Enabled = true;
 		StartButton.Enabled = false;
 	}
 
-	private async Task StopButtonClick() {
+	private void StopButtonClick(object sender, EventArgs e) {
 		DateTime? startDateTime = null;
 		DateTime? finishDateTime = null;
-		Hourglass.Database.Models.Task? currentTask = await _dbService.QueryCurrentTaskAsync();
+		Hourglass.Database.Models.Task? currentTask = _dbService.QueryCurrentTaskAsync().Result;
 		try {
 			startDateTime = DateTime.Parse(StartTextbox.Text);
 		} catch (FormatException) {
@@ -106,28 +126,47 @@ public partial class TimerWindow : Form {
 		} catch (FormatException) {
 			finishDateTime = DateTime.Now;
 		}
-		runningTask = await _dbService.FinishCurrentTaskAsync(
+		runningTask = _dbService.FinishCurrentTaskAsync(
 			startDateTime.Value.Ticks / TimeSpan.TicksPerSecond,
 			finishDateTime.Value.Ticks / TimeSpan.TicksPerSecond,
 			DescriptionTextBox.Text,
 			null,
 			null
-		);
+		).Result;
 		StopButton.Enabled = false;
 		StartButton.Enabled = true;
-		FinishTextbox.Text = "";
+		if (FinishTextbox.InvokeRequired)
+			FinishTextbox.Invoke(() => FinishTextbox.Text = "");
+		else
+			FinishTextbox.Text = "";
+		if (ElapsedTimeLabel.InvokeRequired)
+			ElapsedTimeLabel.Invoke(() => ElapsedTimeLabel.Text = "");
+		else
+			ElapsedTimeLabel.Text = "";
 	}
 
-	private async Task StopRestartButtonClick() {
-		await StopButtonClick();
-		await StartButtonClick();
+	private void StopRestartButtonClick(object sender, EventArgs e) {
+		StopButtonClick(sender, e);
+		StartButtonClick(sender, e);
 	}
 
 	private void TimerWindow_Load(object sender, EventArgs e) {
-
+		GraphRenderThread.Start();
+		TimerUpdaterThread.Start();
 	}
 
 	private void TimerWindow_Close(object sender, EventArgs e) {
 		stop = true;
+	}
+
+	protected override void OnPaintBackground(PaintEventArgs args) {
+		using (Graphics g = args.Graphics) {
+			g.Clear(Color.White);
+			Image m = Bitmap.FromFile(Paths.AssetsPath("Background2.png"));
+			g.DrawImage(
+				Bitmap.FromFile(Paths.AssetsPath("Background2.png")),
+				new Point(0,0)
+			);
+		}
 	}
 }
