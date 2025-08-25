@@ -1,4 +1,5 @@
 ﻿using Hourglass.Database.Services.Interfaces;
+using Hourglass.PDF;
 using Hourglass.Util;
 
 using System.ComponentModel;
@@ -181,7 +182,8 @@ public partial class TimerWindow : Form {
 	}
 
 	private void ExportButtonClick(object sender, EventArgs e) {
-	
+		Console.WriteLine("on export button click");
+		HourglassPdf.Export(_dbService);
 	}
 
 	private void ImportButtonClick(object sender, EventArgs e) {
