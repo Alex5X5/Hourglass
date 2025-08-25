@@ -34,14 +34,4 @@ public partial class HourglassPdf {
 			res += s + "\n";
 		return res;
 	}
-
-	public static string SetFields(string document, Dictionary<string, string> values) {
-		string res = "";
-		foreach (string s in values.Keys.AsEnumerable()) {
-			res = SetAnnotaionValue(document, s, values[s]);
-			res = SetFieldValue(res, s, values[s]);
-		}
-		return res;
-	}
-
 }

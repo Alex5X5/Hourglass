@@ -38,4 +38,12 @@ public partial class TaskDetails : Form {
 	private void EscapeButton_Click(object sender, EventArgs e) {
 		Close();
 	}
+
+	private void TaskDetails_Load(object sender, EventArgs e) {
+		if (_task != null) {
+			DescriptionTextbox.Text = _task.description;
+			StartTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.StartDateTime);
+			FinishTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.FinishDateTime);
+		}
+	}
 }

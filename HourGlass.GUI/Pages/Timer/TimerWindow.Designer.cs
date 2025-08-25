@@ -153,6 +153,7 @@ public partial class TimerWindow {
 		DescriptionTextBox.TabIndex = 16;
 		DescriptionTextBox.Text = "";
 		DescriptionTextBox.ScrollBars = RichTextBoxScrollBars.None;
+		DescriptionTextBox.LostFocus += OnDescriptionTextboxLostFocus;
 		// 
 		// SettingsButton
 		// 
@@ -259,8 +260,8 @@ public partial class TimerWindow {
 		Controls.Add(ElapsedTimeLabel);
 		Controls.Add(SettingsButton);
 		Controls.Add(StartButton);
-		//Controls.Add(ImportButton);
-		//Controls.Add(ExportButton);
+		Controls.Add(ImportButton);
+		Controls.Add(ExportButton);
 		Controls.Add(StartButton);
 		Controls.Add(TicketTextBox);
 		Controls.Add(ProjectTextBox);

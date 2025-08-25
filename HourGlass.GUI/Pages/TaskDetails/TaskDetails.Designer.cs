@@ -38,6 +38,12 @@ partial class TaskDetails {
 		StartTextbox = new TextBox();
 		FinishLabel = new Label();
 		FinishTextbox = new TextBox();
+		button1 = new Button();
+		button2 = new Button();
+		button3 = new Button();
+		button4 = new Button();
+		button5 = new Button();
+		button6 = new Button();
 		SuspendLayout();
 		// 
 		// ApplyButton
@@ -76,11 +82,11 @@ partial class TaskDetails {
 		// DescriptionTextbox
 		// 
 		DescriptionTextbox.Font = new Font("Segoe UI", 12F);
-		DescriptionTextbox.Location = new Point(210, 20);
+		DescriptionTextbox.Location = new Point(122, 31);
 		DescriptionTextbox.Name = "DescriptionTextbox";
 		DescriptionTextbox.Size = new Size(227, 86);
 		DescriptionTextbox.TabIndex = 1;
-		DescriptionTextbox.Text = _task.description;
+		DescriptionTextbox.Text = "";
 		// 
 		// ProjectTextbox
 		// 
@@ -89,7 +95,6 @@ partial class TaskDetails {
 		ProjectTextbox.Name = "ProjectTextbox";
 		ProjectTextbox.Size = new Size(145, 29);
 		ProjectTextbox.TabIndex = 2;
-		ProjectTextbox.Text = _task.project != null ? _task.project.Name : "";
 		// 
 		// TicketTextbox
 		// 
@@ -102,7 +107,7 @@ partial class TaskDetails {
 		// DescriptionLabel
 		// 
 		DescriptionLabel.Font = new Font("Segoe UI", 12F);
-		DescriptionLabel.Location = new Point(114, 23);
+		DescriptionLabel.Location = new Point(26, 34);
 		DescriptionLabel.Name = "DescriptionLabel";
 		DescriptionLabel.Size = new Size(89, 21);
 		DescriptionLabel.TabIndex = 8;
@@ -142,7 +147,6 @@ partial class TaskDetails {
 		StartTextbox.Name = "StartTextbox";
 		StartTextbox.Size = new Size(145, 29);
 		StartTextbox.TabIndex = 9;
-		StartTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.StartDateTime);
 		// 
 		// FinishLabel
 		// 
@@ -160,11 +164,78 @@ partial class TaskDetails {
 		FinishTextbox.Name = "FinishTextbox";
 		FinishTextbox.Size = new Size(145, 29);
 		FinishTextbox.TabIndex = 11;
-		FinishTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.FinishDateTime);
+		// 
+		// button1
+		// 
+		button1.BackColor = Color.FromArgb(255, 128, 0);
+		button1.Location = new Point(401, 37);
+		button1.Name = "button1";
+		button1.Size = new Size(25, 23);
+		button1.TabIndex = 13;
+		button1.Text = "button1";
+		button1.UseVisualStyleBackColor = false;
+		// 
+		// button2
+		// 
+		button2.BackColor = Color.Firebrick;
+		button2.Location = new Point(401, 94);
+		button2.Name = "button2";
+		button2.Size = new Size(25, 23);
+		button2.TabIndex = 14;
+		button2.Text = "button2";
+		button2.UseVisualStyleBackColor = false;
+		// 
+		// button3
+		// 
+		button3.BackColor = Color.LightSeaGreen;
+		button3.Location = new Point(451, 37);
+		button3.Name = "button3";
+		button3.Size = new Size(25, 23);
+		button3.TabIndex = 15;
+		button3.Text = "button3";
+		button3.UseVisualStyleBackColor = false;
+		// 
+		// button4
+		// 
+		button4.BackColor = Color.SteelBlue;
+		button4.Location = new Point(502, 37);
+		button4.Name = "button4";
+		button4.Size = new Size(25, 23);
+		button4.TabIndex = 16;
+		button4.Text = "button4";
+		button4.UseVisualStyleBackColor = false;
+		// 
+		// button5
+		// 
+		button5.BackColor = Color.LimeGreen;
+		button5.Location = new Point(451, 94);
+		button5.Name = "button5";
+		button5.Size = new Size(25, 23);
+		button5.TabIndex = 17;
+		button5.Text = "button5";
+		button5.UseVisualStyleBackColor = false;
+		// 
+		// button6
+		// 
+		button6.BackColor = Color.Green;
+		button6.FlatAppearance.BorderColor = Color.Lime;
+		button6.FlatAppearance.BorderSize = 5;
+		button6.Location = new Point(502, 94);
+		button6.Name = "button6";
+		button6.Size = new Size(25, 23);
+		button6.TabIndex = 18;
+		button6.Text = "button6";
+		button6.UseVisualStyleBackColor = false;
 		// 
 		// TaskDetails
 		// 
 		ClientSize = new Size(593, 353);
+		Controls.Add(button6);
+		Controls.Add(button5);
+		Controls.Add(button4);
+		Controls.Add(button3);
+		Controls.Add(button2);
+		Controls.Add(button1);
 		Controls.Add(FinishLabel);
 		Controls.Add(FinishTextbox);
 		Controls.Add(StartLabel);
@@ -178,7 +249,8 @@ partial class TaskDetails {
 		Controls.Add(EscapeButton);
 		Controls.Add(DeleteButton);
 		Controls.Add(ApplyButton);
-		Name = "Task Details";
+		Name = "TaskDetails";
+		Load += TaskDetails_Load;
 		ResumeLayout(false);
 		PerformLayout();
 	}
@@ -198,4 +270,10 @@ partial class TaskDetails {
 	private TextBox StartTextbox;
 	private Label FinishLabel;
 	private TextBox FinishTextbox;
+	private Button button1;
+	private Button button2;
+	private Button button3;
+	private Button button4;
+	private Button button5;
+	private Button button6;
 }

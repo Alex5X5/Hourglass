@@ -38,6 +38,7 @@ public partial class TimerWindow : Form {
 		TimerUpdaterThread = new Thread(UpdateTimers);
 		runningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (runningTask != null) {
+			DescriptionTextBox.Text = runningTask.description;
 			SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(runningTask.StartDateTime));
 			StartButton.Enabled = false;
 		} else {
@@ -237,26 +238,20 @@ public partial class TimerWindow : Form {
 		Invalidate();
 	}
 
+	protected override void OnClick(EventArgs e) {
+		Focus();
+	}
+
+	public void OnDescriptionTextboxLostFocus(Object sender, EventArgs args) {
+		if (runningTask != null) {
+			runningTask.description = DescriptionTextBox.Text;
+			_dbService.UpdateTaskAsync(runningTask);
+		}
+	}
+
 	protected override void OnPaintBackground(PaintEventArgs args) { }
 
 	protected override void OnPaint(PaintEventArgs args) {
-		//args.Graphics.Clear(Color.Black);
 		args.Graphics.DrawImage(image, 0, 0, ClientSize.Width, ClientSize.Height);
-		//args.Graphics.Clear(Color.AliceBlue);
-		//if (image.Width != Width | image.Height != Height) {
-		//	image.Dispose();
-		//	image = new Bitmap(Width, Height);
-		//}
-		//using (Graphics g = Graphics.FromImage(image)) {
-		//	g.SmoothingMode = SmoothingMode.AntiAlias;
-		//	g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-		//	g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-		//	g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-		//	g.SmoothingMode = SmoothingMode.HighQuality;
-		//	g.Clear(Color.Gainsboro);
-		//	args.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-		//}
-		//args.Graphics.DrawImage(image, 0, 0, Width, Height);
 	}
 }
