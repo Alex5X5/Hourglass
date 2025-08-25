@@ -25,6 +25,18 @@ class GraphRenderer : Panel {
 
 	#region draw methods
 
+	private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius) {
+		GraphicsPath path = new();
+		int diameter = radius * 2;
+		path.StartFigure();
+		path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
+		path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
+		path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
+		path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
+		path.CloseFigure();
+		return path;
+	}
+
 	private void DrawTimeline(Graphics g) {
 		using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170,170, 170))))
 		using (Pen timeline = new(Brushes.Black)) {
@@ -45,18 +57,16 @@ class GraphRenderer : Panel {
 			text = task.description;
 		float textWidth = g.MeasureString(text, font).Width;
 		if (task.StartDateTime.DayOfWeek != DateTime.Now.DayOfWeek) {
-			using (Brush brush = new SolidBrush(Color.Black))
-				g.DrawString(text, font, brush, graphPosX + textWidth + 10, graphPosY - 2);
 			return;
 		}
 		if (graphLength > textWidth + 10) {
 			using (Brush brush = new SolidBrush(Color.Black))
-				g.DrawString(text, font, brush, graphPosX + 3, graphPosY - 2);
+				g.DrawString(text, font, brush, graphPosX + 3, graphPosY + 1);
 			return;
 		}
 		if (graphPosX > textWidth + 10) {
 			using (Brush brush = new SolidBrush(Color.Black))
-				g.DrawString(text, font, brush, graphPosX - textWidth - 5, graphPosY - 2);
+				g.DrawString(text, font, brush, graphPosX - textWidth - 5, graphPosY + 1);
 			return;
 		}
 		using (Brush brush = new SolidBrush(Color.Black))
@@ -100,7 +110,7 @@ class GraphRenderer : Panel {
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
-			g.Clear(Color.Green);
+			g.Clear(Color.Gainsboro);
 			
 			DrawTimeline(g);
 			int yPos = image.Height / 10;
@@ -144,17 +154,5 @@ class GraphRenderer : Panel {
 			graphPosY += (int)Math.Floor(image.Height / 20.0);
 			graphPosY += (int)Math.Floor(image.Height / 40.0);
 		}
-	}
-
-	private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius) {
-		GraphicsPath path = new();
-		int diameter = radius * 2;
-		path.StartFigure();
-		path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
-		path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
-		path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
-		path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
-		path.CloseFigure();
-		return path;
 	}
 }

@@ -6,7 +6,7 @@ namespace Hourglass.Database.Models;
 public class Ticket {
 
 	[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-	public long Id { set; get; }
+	public long id { set; get; }
 	public string name { set; get; }
 	public string description { set; get; }
 	public Worker owner { set; get; }

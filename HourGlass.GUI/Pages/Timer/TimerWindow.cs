@@ -38,7 +38,7 @@ public partial class TimerWindow : Form {
 		TimerUpdaterThread = new Thread(UpdateTimers);
 		runningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (runningTask != null) {
-			SetStartTextboxText(FormatDateTime(runningTask.StartDateTime));
+			SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(runningTask.StartDateTime));
 			StartButton.Enabled = false;
 		} else {
 			StopButton.Enabled = false;
@@ -46,32 +46,6 @@ public partial class TimerWindow : Form {
 	}
 
 	#region timer update methods
-
-	private string FormatDateTime(DateTime time) =>
-		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
-
-	private DateTime? InterpretString(string s) {
-		try {
-			int startIndex = 0;
-			int finishIndex = finishIndex = s.IndexOf('.', startIndex);
-			int day = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			finishIndex = finishIndex = s.IndexOf(' ', startIndex);
-			int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			finishIndex = finishIndex = s.IndexOf(':', startIndex);
-			int hour = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			finishIndex = finishIndex = s.IndexOf(':', startIndex);
-			int minute = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			int second = Convert.ToInt32(s.Substring(startIndex, s.Length - startIndex));
-			DateTime d = new(DateTime.Now.Year, month, day, hour, minute, second);
-			return d;
-		} catch(FormatException){
-			return new(1, 1, 1, 1, 0, 0);
-		}
-	}
 
 	private void SetStartTextboxText(string text) {
 		try {
@@ -118,9 +92,9 @@ public partial class TimerWindow : Form {
 		while (!Disposing && !stop) {
 			try {
 				if (runningTask != null)
-						SetFinishTextboxText(FormatDateTime(DateTime.Now));
+					SetFinishTextboxText(DateTimeHelper.ToDayAndTimeString(DateTime.Now));
 				else
-					SetStartTextboxText(FormatDateTime(DateTime.Now));
+					SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(DateTime.Now));
 				if (runningTask == null)
 					continue;
 				TimeSpan t = DateTime.Now.Subtract(runningTask.StartDateTime);
@@ -130,7 +104,7 @@ public partial class TimerWindow : Form {
 				} catch(FormatException){
 					time = DateTime.Now;
 				}
-				SetElapsedTimeLabelText($"{time.Hour}:{time.Minute}:{time.Second}");
+				SetElapsedTimeLabelText(DateTimeHelper.ToTimeString(time));
 			} catch (InvalidOperationException) {
 			}
 			Thread.Sleep(200);
@@ -151,7 +125,7 @@ public partial class TimerWindow : Form {
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
 		).Result;
-		SetStartTextboxText(FormatDateTime(runningTask.StartDateTime));
+		SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(runningTask.StartDateTime));
 		StopButton.Enabled = true;
 		StartButton.Enabled = false;
 	}
@@ -161,7 +135,7 @@ public partial class TimerWindow : Form {
 		DateTime finishDateTime;
 		Hourglass.Database.Models.Task? currentTask = _dbService.QueryCurrentTaskAsync().Result;
 		try {
-			startDateTime = InterpretString(StartTextbox.Text) ?? DateTime.MinValue;
+			startDateTime = DateTimeHelper.InterpretDayAndTimeString(StartTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
 			if (currentTask == null) {
 				startDateTime = DateTime.Now;
@@ -170,7 +144,7 @@ public partial class TimerWindow : Form {
 			}
 		}
 		try {
-			finishDateTime = InterpretString(FinishTextbox.Text) ?? DateTime.MinValue;
+			finishDateTime = DateTimeHelper.InterpretDayAndTimeString(FinishTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
 			finishDateTime = DateTime.Now;
 		}
@@ -241,7 +215,6 @@ public partial class TimerWindow : Form {
 				graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
 			}
 		}
-		//image.Dispose();
 		return destImage;
 	}
 

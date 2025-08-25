@@ -127,7 +127,7 @@ public partial class TimerWindow {
 		TicketTextBox.BackColor = Color.Gainsboro;
 		TicketTextBox.BorderStyle = BorderStyle.None;
 		TicketTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		TicketTextBox.Location = new Point(73, 322);
+		TicketTextBox.Location = new Point(74, 294);
 		TicketTextBox.Name = "TicketTextBox";
 		TicketTextBox.Size = new Size(172, 31);
 		TicketTextBox.TabIndex = 12;
@@ -137,7 +137,7 @@ public partial class TimerWindow {
 		ProjectTextBox.BackColor = Color.Gainsboro;
 		ProjectTextBox.BorderStyle = BorderStyle.None;
 		ProjectTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		ProjectTextBox.Location = new Point(73, 215);
+		ProjectTextBox.Location = new Point(74, 197);
 		ProjectTextBox.Name = "ProjectTextBox";
 		ProjectTextBox.Size = new Size(172, 31);
 		ProjectTextBox.TabIndex = 11;
@@ -147,7 +147,7 @@ public partial class TimerWindow {
 		DescriptionTextBox.BackColor = Color.Gainsboro;
 		DescriptionTextBox.BorderStyle = BorderStyle.None;
 		DescriptionTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		DescriptionTextBox.Location = new Point(55, 433);
+		DescriptionTextBox.Location = new Point(55, 413);
 		DescriptionTextBox.Name = "DescriptionTextBox";
 		DescriptionTextBox.Size = new Size(210, 191);
 		DescriptionTextBox.TabIndex = 16;
@@ -166,7 +166,7 @@ public partial class TimerWindow {
 		// 
 		ElapsedTimeLabel.BackColor = Color.FromArgb(255,166,166,166);
 		ElapsedTimeLabel.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		ElapsedTimeLabel.Location = new Point(325, 163);
+		ElapsedTimeLabel.Location = new Point(321, 163);
 		ElapsedTimeLabel.Name = "ElapsedTimeLabel";
 		ElapsedTimeLabel.Size = new Size(138, 31);
 		ElapsedTimeLabel.TabIndex = 5;
@@ -217,11 +217,11 @@ public partial class TimerWindow {
 		// 
 		// ExportButton
 		// 
-		ExportButton.BackColor = Color.Transparent;
-		ExportButton.FlatAppearance.BorderSize = 0;
-		ExportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
-		ExportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		ExportButton.FlatStyle = FlatStyle.Flat;
+		//ExportButton.BackColor = Color.Transparent;
+		//ExportButton.FlatAppearance.BorderSize = 0;
+		//ExportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		//ExportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		//ExportButton.FlatStyle = FlatStyle.Flat;
 		ExportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		ExportButton.ForeColor = Color.Transparent;
 		ExportButton.Location = new Point(83, 595);
@@ -233,10 +233,10 @@ public partial class TimerWindow {
 		// 
 		// ImportButton
 		// 
-		ImportButton.BackColor = Color.Transparent;
-		ImportButton.FlatAppearance.BorderSize = 0;
-		ImportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		ImportButton.FlatStyle = FlatStyle.Flat;
+		//ImportButton.BackColor = Color.Transparent;
+		//ImportButton.FlatAppearance.BorderSize = 0;
+		//ImportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		//ImportButton.FlatStyle = FlatStyle.Flat;
 		ImportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		ImportButton.ForeColor = Color.Transparent;
 		ImportButton.Location = new Point(83, 654);
@@ -248,13 +248,17 @@ public partial class TimerWindow {
 		// TimerWindow
 		// 
 		BackColor = SystemColors.AppWorkspace;
-		ClientSize = new Size(1500, 1000);
-		Controls.Add(button2);
-		Controls.Add(DayModeButton);
-		Controls.Add(WeekModeButton);
-		Controls.Add(MonthModeButton);
+		FormBorderStyle = FormBorderStyle.FixedSingle;
+		ClientSize = new Size(1600, 900);
+		//Controls.Add(button2);
+		//Controls.Add(DayModeButton);
+		//Controls.Add(WeekModeButton);
+		//Controls.Add(MonthModeButton);
 		Controls.Add(ElapsedTimeLabel);
 		Controls.Add(SettingsButton);
+		Controls.Add(StartButton);
+		//Controls.Add(ImportButton);
+		//Controls.Add(ExportButton);
 		Controls.Add(StartButton);
 		Controls.Add(TicketTextBox);
 		Controls.Add(ProjectTextBox);

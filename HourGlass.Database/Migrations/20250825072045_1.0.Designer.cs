@@ -2,6 +2,7 @@
 using Hourglass.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hourglass.Database.Migrations
 {
     [DbContext(typeof(HourglassDbContext))]
-    partial class HourglassDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250825072045_1.0")]
+    partial class _10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
@@ -49,7 +52,7 @@ namespace Hourglass.Database.Migrations
                     b.Property<long>("start")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("ticketid")
+                    b.Property<long?>("ticketId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -58,36 +61,36 @@ namespace Hourglass.Database.Migrations
 
                     b.HasIndex("projectName");
 
-                    b.HasIndex("ticketid");
+                    b.HasIndex("ticketId");
 
                     b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Hourglass.Database.Models.Ticket", b =>
                 {
-                    b.Property<long>("id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("description")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("ownerid")
+                    b.Property<long>("Ownerid")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("projectName")
+                    b.Property<string>("ProjectName")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ownerid");
+                    b.HasIndex("Ownerid");
 
-                    b.HasIndex("projectName");
+                    b.HasIndex("ProjectName");
 
                     b.ToTable("Tickets");
                 });
@@ -119,7 +122,7 @@ namespace Hourglass.Database.Migrations
 
                     b.HasOne("Hourglass.Database.Models.Ticket", "ticket")
                         .WithMany()
-                        .HasForeignKey("ticketid");
+                        .HasForeignKey("ticketId");
 
                     b.Navigation("owner");
 
@@ -130,19 +133,19 @@ namespace Hourglass.Database.Migrations
 
             modelBuilder.Entity("Hourglass.Database.Models.Ticket", b =>
                 {
-                    b.HasOne("Hourglass.Database.Models.Worker", "owner")
+                    b.HasOne("Hourglass.Database.Models.Worker", "Owner")
                         .WithMany()
-                        .HasForeignKey("ownerid")
+                        .HasForeignKey("Ownerid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hourglass.Database.Models.Project", "project")
+                    b.HasOne("Hourglass.Database.Models.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("projectName");
+                        .HasForeignKey("ProjectName");
 
-                    b.Navigation("owner");
+                    b.Navigation("Owner");
 
-                    b.Navigation("project");
+                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

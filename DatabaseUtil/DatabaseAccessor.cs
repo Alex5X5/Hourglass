@@ -30,7 +30,7 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		optionsBuilder.UseSqlite(connectionString);
 		_context = (DbContextType)BuildContext(optionsBuilder.Options);
 		//_context.Database.EnsureCreated();
-		_context.Database.EnsureCreated();
+		_context.Database.Migrate();
 	}
 
 	private static DbContext BuildContext(DbContextOptions options) {
