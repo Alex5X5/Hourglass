@@ -33,6 +33,12 @@ public partial class TimerWindow {
 		StopButton = new Button();
 		StartTextbox = new TextBox();
 		FinishTextbox = new TextBox();
+		GraphPanel = new GraphRenderer();
+		DescriptionLabel = new Label();
+		StartLabel = new Label();
+		FinishLabel = new Label();
+		TicketLabel = new Label();
+		ProjectLabel = new Label();
 		TicketTextBox = new TextBox();
 		ProjectTextBox = new TextBox();
 		StartButton = new Button();
@@ -242,9 +248,7 @@ public partial class TimerWindow {
 		// TimerWindow
 		// 
 		BackColor = SystemColors.AppWorkspace;
-		ClientSize = new Size(1600, 900);
-		Controls.Add(ImportButton);
-		Controls.Add(ExportButton);
+		ClientSize = new Size(1500, 1000);
 		Controls.Add(button2);
 		Controls.Add(DayModeButton);
 		Controls.Add(WeekModeButton);
@@ -281,6 +285,11 @@ public partial class TimerWindow {
 	private RichTextBox DescriptionTextBox;
 	private Button SettingsButton;
 	private Label ElapsedTimeLabel;
+	private Label DescriptionLabel;
+	private Label StartLabel;
+	private Label FinishLabel;
+	private Label TicketLabel;
+	private Label ProjectLabel;
 	private Button button2;
 	private Button DayModeButton;
 	private Button WeekModeButton;
