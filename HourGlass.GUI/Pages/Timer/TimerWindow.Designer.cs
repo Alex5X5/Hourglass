@@ -1,4 +1,6 @@
 ﻿using Hourglass.GUI.Pages.Timer;
+using Hourglass.Util;
+
 using System.Windows.Forms;
 
 namespace HourGlass.GUI.Pages.Timer; 
@@ -27,7 +29,6 @@ public partial class TimerWindow {
 	/// the contents of this method with the code editor.
 	/// </summary>
 	private void InitializeComponent() {
-		System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TimerWindow));
 		StopRestartButton = new Button();
 		StopButton = new Button();
 		StartTextbox = new TextBox();
@@ -38,9 +39,13 @@ public partial class TimerWindow {
 		DescriptionTextBox = new RichTextBox();
 		SettingsButton = new Button();
 		ElapsedTimeLabel = new Label();
-		button1 = new Button();
+		DayModeButton = new Button();
+		WeekModeButton = new Button();
+		MonthModeButton = new Button();
 		button2 = new Button();
 		GraphPanel = new GraphRenderer();
+		ExportButton = new Button();
+		ImportButton = new Button();
 		SuspendLayout();
 		// 
 		// StopRestartButton
@@ -52,9 +57,9 @@ public partial class TimerWindow {
 		StopRestartButton.FlatStyle = FlatStyle.Flat;
 		StopRestartButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		StopRestartButton.ForeColor = Color.Transparent;
-		StopRestartButton.Location = new Point(822, 162);
+		StopRestartButton.Location = new Point(1047, 207);
 		StopRestartButton.Name = "StopRestartButton";
-		StopRestartButton.Size = new Size(207, 49);
+		StopRestartButton.Size = new Size(255, 53);
 		StopRestartButton.TabIndex = 2;
 		StopRestartButton.UseVisualStyleBackColor = true;
 		StopRestartButton.Click += StopRestartButtonClick;
@@ -68,52 +73,12 @@ public partial class TimerWindow {
 		StopButton.FlatStyle = FlatStyle.Flat;
 		StopButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		StopButton.ForeColor = Color.Transparent;
-		StopButton.Location = new Point(550, 123);
+		StopButton.Location = new Point(688, 158);
 		StopButton.Name = "StopButton";
-		StopButton.Size = new Size(122, 49);
+		StopButton.Size = new Size(146, 55);
 		StopButton.TabIndex = 3;
 		StopButton.UseVisualStyleBackColor = true;
 		StopButton.Click += StopButtonClick;
-		// 
-		// StartTextbox
-		// 
-		StartTextbox.BackColor = Color.Gainsboro;
-		StartTextbox.BorderStyle = BorderStyle.None;
-		StartTextbox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		StartTextbox.Location = new Point(214, 73);
-		StartTextbox.Name = "StartTextbox";
-		StartTextbox.Size = new Size(137, 31);
-		StartTextbox.TabIndex = 5;
-		// 
-		// FinishTextbox
-		// 
-		FinishTextbox.BackColor = Color.Gainsboro;
-		FinishTextbox.BorderStyle = BorderStyle.None;
-		FinishTextbox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		FinishTextbox.Location = new Point(375, 73);
-		FinishTextbox.Name = "FinishTextbox";
-		FinishTextbox.Size = new Size(137, 31);
-		FinishTextbox.TabIndex = 6;
-		// 
-		// TicketTextBox
-		// 
-		TicketTextBox.BackColor = Color.Gainsboro;
-		TicketTextBox.BorderStyle = BorderStyle.None;
-		TicketTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		TicketTextBox.Location = new Point(76, 269);
-		TicketTextBox.Name = "TicketTextBox";
-		TicketTextBox.Size = new Size(165, 31);
-		TicketTextBox.TabIndex = 12;
-		// 
-		// ProjectTextBox
-		// 
-		ProjectTextBox.BackColor = Color.Gainsboro;
-		ProjectTextBox.BorderStyle = BorderStyle.None;
-		ProjectTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		ProjectTextBox.Location = new Point(76, 174);
-		ProjectTextBox.Name = "ProjectTextBox";
-		ProjectTextBox.Size = new Size(172, 31);
-		ProjectTextBox.TabIndex = 11;
 		// 
 		// StartButton
 		// 
@@ -124,21 +89,61 @@ public partial class TimerWindow {
 		StartButton.FlatStyle = FlatStyle.Flat;
 		StartButton.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		StartButton.ForeColor = Color.Transparent;
-		StartButton.Location = new Point(685, 162);
+		StartButton.Location = new Point(867, 207);
 		StartButton.Name = "StartButton";
-		StartButton.Size = new Size(122, 49);
+		StartButton.Size = new Size(146, 55);
 		StartButton.TabIndex = 1;
 		StartButton.UseVisualStyleBackColor = true;
 		StartButton.Click += StartButtonClick;
+		// 
+		// StartTextbox
+		// 
+		StartTextbox.BackColor = Color.Gainsboro;
+		StartTextbox.BorderStyle = BorderStyle.None;
+		StartTextbox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		StartTextbox.Location = new Point(250, 91);
+		StartTextbox.Name = "StartTextbox";
+		StartTextbox.Size = new Size(137, 31);
+		StartTextbox.TabIndex = 5;
+		// 
+		// FinishTextbox
+		// 
+		FinishTextbox.BackColor = Color.Gainsboro;
+		FinishTextbox.BorderStyle = BorderStyle.None;
+		FinishTextbox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		FinishTextbox.Location = new Point(460, 91);
+		FinishTextbox.Name = "FinishTextbox";
+		FinishTextbox.Size = new Size(137, 31);
+		FinishTextbox.TabIndex = 6;
+		// 
+		// TicketTextBox
+		// 
+		TicketTextBox.BackColor = Color.Gainsboro;
+		TicketTextBox.BorderStyle = BorderStyle.None;
+		TicketTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		TicketTextBox.Location = new Point(73, 322);
+		TicketTextBox.Name = "TicketTextBox";
+		TicketTextBox.Size = new Size(172, 31);
+		TicketTextBox.TabIndex = 12;
+		// 
+		// ProjectTextBox
+		// 
+		ProjectTextBox.BackColor = Color.Gainsboro;
+		ProjectTextBox.BorderStyle = BorderStyle.None;
+		ProjectTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		ProjectTextBox.Location = new Point(73, 215);
+		ProjectTextBox.Name = "ProjectTextBox";
+		ProjectTextBox.Size = new Size(172, 31);
+		ProjectTextBox.TabIndex = 11;
 		// 
 		// DescriptionTextBox
 		// 
 		DescriptionTextBox.BackColor = Color.Gainsboro;
 		DescriptionTextBox.BorderStyle = BorderStyle.None;
 		DescriptionTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		DescriptionTextBox.Location = new Point(64, 376);
+		DescriptionTextBox.Location = new Point(55, 433);
 		DescriptionTextBox.Name = "DescriptionTextBox";
-		DescriptionTextBox.Size = new Size(171, 191);
+		DescriptionTextBox.Size = new Size(210, 191);
 		DescriptionTextBox.TabIndex = 16;
 		DescriptionTextBox.Text = "";
 		// 
@@ -153,21 +158,39 @@ public partial class TimerWindow {
 		// 
 		// ElapsedTimeLabel
 		// 
-		ElapsedTimeLabel.BackColor = Color.Gainsboro;
+		ElapsedTimeLabel.BackColor = Color.FromArgb(255,166,166,166);
 		ElapsedTimeLabel.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		ElapsedTimeLabel.Location = new Point(267, 127);
+		ElapsedTimeLabel.Location = new Point(325, 163);
 		ElapsedTimeLabel.Name = "ElapsedTimeLabel";
 		ElapsedTimeLabel.Size = new Size(138, 31);
 		ElapsedTimeLabel.TabIndex = 5;
 		// 
-		// button1
+		// DayModeButton
 		// 
-		button1.Location = new Point(1214, 346);
-		button1.Name = "button1";
-		button1.Size = new Size(54, 52);
-		button1.TabIndex = 20;
-		button1.Text = "Sett";
-		button1.UseVisualStyleBackColor = true;
+		DayModeButton.Location = new Point(1214, 350);
+		DayModeButton.Name = "DayModeButton";
+		DayModeButton.Size = new Size(54, 52);
+		DayModeButton.TabIndex = 20;
+		DayModeButton.Text = "Day";
+		DayModeButton.UseVisualStyleBackColor = true;
+		// 
+		// WeekModeButton
+		// 
+		WeekModeButton.Location = new Point(1214, 439);
+		WeekModeButton.Name = "WeekModeButton";
+		WeekModeButton.Size = new Size(54, 52);
+		WeekModeButton.TabIndex = 20;
+		WeekModeButton.Text = "Week";
+		WeekModeButton.UseVisualStyleBackColor = true;
+		// 
+		// MonthModeButton
+		// 
+		MonthModeButton.Location = new Point(1214, 530);
+		MonthModeButton.Name = "MonthModeButton";
+		MonthModeButton.Size = new Size(54, 52);
+		MonthModeButton.TabIndex = 20;
+		MonthModeButton.Text = "Month";
+		MonthModeButton.UseVisualStyleBackColor = true;
 		// 
 		// button2
 		// 
@@ -180,19 +203,52 @@ public partial class TimerWindow {
 		// 
 		// GraphPanel
 		// 
-		GraphPanel.Location = new Point(356, 280);
+		GraphPanel.Location = new Point(430, 350);
 		GraphPanel.Name = "GraphPanel";
-		GraphPanel.Size = new Size(761, 396);
+		GraphPanel.Size = new Size(996, 494);
 		GraphPanel.TabIndex = 22;
 		GraphPanel._dbService = _dbService;
+		// 
+		// ExportButton
+		// 
+		ExportButton.BackColor = Color.Transparent;
+		ExportButton.FlatAppearance.BorderSize = 0;
+		ExportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		ExportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		ExportButton.FlatStyle = FlatStyle.Flat;
+		ExportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		ExportButton.ForeColor = Color.Transparent;
+		ExportButton.Location = new Point(83, 595);
+		ExportButton.Name = "ExportButton";
+		ExportButton.Size = new Size(122, 49);
+		ExportButton.TabIndex = 23;
+		ExportButton.UseVisualStyleBackColor = true;
+		ExportButton.Click += ExportButtonClick;
+		// 
+		// ImportButton
+		// 
+		ImportButton.BackColor = Color.Transparent;
+		ImportButton.FlatAppearance.BorderSize = 0;
+		ImportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		ImportButton.FlatStyle = FlatStyle.Flat;
+		ImportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		ImportButton.ForeColor = Color.Transparent;
+		ImportButton.Location = new Point(83, 654);
+		ImportButton.Name = "ImportButton";
+		ImportButton.Size = new Size(122, 49);
+		ImportButton.TabIndex = 24;
+		ImportButton.UseVisualStyleBackColor = true;
 		// 
 		// TimerWindow
 		// 
 		BackColor = SystemColors.AppWorkspace;
-		BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-		ClientSize = new Size(1280, 720);
+		ClientSize = new Size(1600, 900);
+		Controls.Add(ImportButton);
+		Controls.Add(ExportButton);
 		Controls.Add(button2);
-		Controls.Add(button1);
+		Controls.Add(DayModeButton);
+		Controls.Add(WeekModeButton);
+		Controls.Add(MonthModeButton);
 		Controls.Add(ElapsedTimeLabel);
 		Controls.Add(SettingsButton);
 		Controls.Add(StartButton);
@@ -225,6 +281,10 @@ public partial class TimerWindow {
 	private RichTextBox DescriptionTextBox;
 	private Button SettingsButton;
 	private Label ElapsedTimeLabel;
-	private Button button1;
 	private Button button2;
+	private Button DayModeButton;
+	private Button WeekModeButton;
+	private Button MonthModeButton;
+	private Button ExportButton;
+	private Button ImportButton;
 }

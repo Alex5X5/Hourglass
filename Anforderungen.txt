@@ -1,0 +1,2 @@
+kein updated des Start feldes während idle
+vergrößern des Fensters für einen edit document button unterhalb des import buttons

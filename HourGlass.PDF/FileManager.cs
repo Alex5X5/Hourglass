@@ -7,6 +7,7 @@ using System.Text;
 
 
 public class FileManager{
+
 	public static string LoadInput() {
 		int size = (int)new FileInfo(Paths.AssetsPath("output-readable-indexers.pdf")).Length;
 		byte[] buffer = new byte[size];
@@ -18,7 +19,6 @@ public class FileManager{
 	}
 
 	public static void WriteOutput(string value) {
-		//Console.WriteLine(value);
 		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 		Encoding ansi = Encoding.GetEncoding(1252);
 		byte[] buffer = ansi.GetBytes(value);

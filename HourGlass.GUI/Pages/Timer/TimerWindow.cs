@@ -1,7 +1,9 @@
 ﻿using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 
-using System.Linq;
+using System.ComponentModel;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace HourGlass.GUI.Pages.Timer;
 
@@ -14,6 +16,7 @@ public partial class TimerWindow : Form {
 
 	private Hourglass.Database.Models.Task? runningTask = null;
 
+	private readonly Image image = Bitmap.FromFile(Paths.AssetsPath("Präsentation3.png"));
 	private bool stop = false;
 
 	public TimerWindow(IHourglassDbService dbService) {
@@ -35,67 +38,111 @@ public partial class TimerWindow : Form {
 		TimerUpdaterThread = new Thread(UpdateTimers);
 		runningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (runningTask != null) {
-			StartTextbox.Text = FormatDateTime(runningTask.StartDateTime);
+			SetStartTextboxText(FormatDateTime(runningTask.StartDateTime));
 			StartButton.Enabled = false;
 		} else {
 			StopButton.Enabled = false;
 		}
 	}
 
+	#region timer update methods
+
 	private string FormatDateTime(DateTime time) =>
 		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
+
+	private DateTime? InterpretString(string s) {
+		try {
+			int startIndex = 0;
+			int finishIndex = finishIndex = s.IndexOf('.', startIndex);
+			int day = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+			startIndex = finishIndex + 1;
+			finishIndex = finishIndex = s.IndexOf(' ', startIndex);
+			int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+			startIndex = finishIndex + 1;
+			finishIndex = finishIndex = s.IndexOf(':', startIndex);
+			int hour = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+			startIndex = finishIndex + 1;
+			finishIndex = finishIndex = s.IndexOf(':', startIndex);
+			int minute = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+			startIndex = finishIndex + 1;
+			int second = Convert.ToInt32(s.Substring(startIndex, s.Length - startIndex));
+			DateTime d = new(DateTime.Now.Year, month, day, hour, minute, second);
+			return d;
+		} catch(FormatException){
+			return new(1, 1, 1, 1, 0, 0);
+		}
+	}
+
+	private void SetStartTextboxText(string text) {
+		try {
+			if (StartTextbox == null)
+				return;
+			if (StartTextbox.Disposing)
+				return;
+			if (StartTextbox.InvokeRequired)
+				StartTextbox?.Invoke(() => StartTextbox.Text = text);
+			else
+				StartTextbox.Text = text;
+		} catch (InvalidAsynchronousStateException) { }
+	}
+
+	private void SetFinishTextboxText(string text) {
+		try {
+			if (FinishTextbox == null)
+				return;
+			if (FinishTextbox.Disposing)
+				return;
+			if (FinishTextbox.InvokeRequired)
+				FinishTextbox?.Invoke(() => FinishTextbox.Text = text);
+			else
+				FinishTextbox.Text = text;
+		} catch(InvalidAsynchronousStateException){ }
+	}
+
+	private void SetElapsedTimeLabelText(string text) {
+		try {
+			if (ElapsedTimeLabel == null)
+				return;
+			if (ElapsedTimeLabel.Disposing)
+				return;
+			if (ElapsedTimeLabel.InvokeRequired)
+				ElapsedTimeLabel?.Invoke(() => ElapsedTimeLabel.Text = text);
+			else
+				ElapsedTimeLabel.Text = text;
+		} catch (InvalidAsynchronousStateException) { }
+	}
 
 	private void UpdateTimers() {
 		while (!CanRaiseEvents)
 			Thread.Sleep(10);
 		while (!Disposing && !stop) {
-			Thread.Sleep(200);
 			try {
-				if (runningTask == null)
-					if (StartTextbox != null)
-						if (!StartTextbox.Disposing)
-							if (StartTextbox.InvokeRequired) {
-								StartTextbox?.Invoke(
-									() => StartTextbox.Text = FormatDateTime(DateTime.Now)
-								);
-							} else {
-								StartTextbox.Text = FormatDateTime(DateTime.Now);
-							}
+				if (runningTask != null)
+						SetFinishTextboxText(FormatDateTime(DateTime.Now));
+				else
+					SetStartTextboxText(FormatDateTime(DateTime.Now));
 				if (runningTask == null)
 					continue;
-				if (FinishTextbox != null)
-					if (!FinishTextbox.Disposing)
-						if (FinishTextbox.InvokeRequired) {
-							FinishTextbox.Invoke(
-								() => FinishTextbox.Text = FormatDateTime(DateTime.Now)
-							);
-						} else {
-							FinishTextbox.Text = FormatDateTime(DateTime.Now);
-						}
-				if (runningTask == null)
-					continue;
-				if (ElapsedTimeLabel != null)
-					if (!ElapsedTimeLabel.Disposing)
-						if (ElapsedTimeLabel.InvokeRequired) {
-							TimeSpan t = DateTime.Now.Subtract(runningTask.StartDateTime);
-							ElapsedTimeLabel.Invoke(
-								() => {
-									DateTime time = Convert.ToDateTime(DateTime.Now.Subtract(runningTask.StartDateTime).ToString());
-									ElapsedTimeLabel.Text = $"{time.Hour}:{time.Minute}:{time.Second}";
-								}
-							);
-						} else {
-							DateTime time = Convert.ToDateTime(DateTime.Now.Subtract(runningTask.StartDateTime).ToString());
-							ElapsedTimeLabel.Text = $"{time.Hour}:{time.Minute}:{time.Second}";
-						}
+				TimeSpan t = DateTime.Now.Subtract(runningTask.StartDateTime);
+				DateTime time;
+				try {
+					time = Convert.ToDateTime(t.ToString());
+				} catch(FormatException){
+					time = DateTime.Now;
+				}
+				SetElapsedTimeLabelText($"{time.Hour}:{time.Minute}:{time.Second}");
 			} catch (InvalidOperationException) {
-			} catch (System.ComponentModel.InvalidAsynchronousStateException) {
 			}
+			Thread.Sleep(200);
 		}
 	}
-	
-	private void StartButtonClick(object sender, EventArgs e) {
-		IEnumerable<Hourglass.Database.Models.Project> projects = _dbService.QueryProjectsAsync().Result;
+
+	#endregion
+
+	#region button callbacks
+
+	private async void StartButtonClick(object sender, EventArgs e) {
+		IEnumerable<Hourglass.Database.Models.Project> projects = await _dbService.QueryProjectsAsync();
 		Hourglass.Database.Models.Project? project = projects.FirstOrDefault(x=>x.Name == ProjectTextBox.Text);
 		StartButton.Enabled = false;
 		runningTask = _dbService.StartNewTaskAsnc(
@@ -104,51 +151,68 @@ public partial class TimerWindow : Form {
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
 		).Result;
+		SetStartTextboxText(FormatDateTime(runningTask.StartDateTime));
 		StopButton.Enabled = true;
 		StartButton.Enabled = false;
 	}
 
 	private void StopButtonClick(object sender, EventArgs e) {
-		DateTime? startDateTime = null;
-		DateTime? finishDateTime = null;
+		DateTime startDateTime;
+		DateTime finishDateTime;
 		Hourglass.Database.Models.Task? currentTask = _dbService.QueryCurrentTaskAsync().Result;
 		try {
-			startDateTime = DateTime.Parse(StartTextbox.Text);
+			startDateTime = InterpretString(StartTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
 			if (currentTask == null) {
 				startDateTime = DateTime.Now;
 			} else {
-				startDateTime = DateTimeOffset.FromUnixTimeSeconds(currentTask.start).DateTime;
+				startDateTime = currentTask.StartDateTime;
 			}
 		}
 		try {
-			finishDateTime = DateTime.Parse(FinishTextbox.Text);
+			finishDateTime = InterpretString(FinishTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
 			finishDateTime = DateTime.Now;
 		}
 		runningTask = _dbService.FinishCurrentTaskAsync(
-			startDateTime.Value.Ticks / TimeSpan.TicksPerSecond,
-			finishDateTime.Value.Ticks / TimeSpan.TicksPerSecond,
+			startDateTime.Ticks / TimeSpan.TicksPerSecond,
+			finishDateTime.Ticks / TimeSpan.TicksPerSecond,
 			DescriptionTextBox.Text,
 			null,
 			null
 		).Result;
 		StopButton.Enabled = false;
 		StartButton.Enabled = true;
-		if (FinishTextbox.InvokeRequired)
-			FinishTextbox.Invoke(() => FinishTextbox.Text = "");
-		else
-			FinishTextbox.Text = "";
-		if (ElapsedTimeLabel.InvokeRequired)
-			ElapsedTimeLabel.Invoke(() => ElapsedTimeLabel.Text = "");
-		else
-			ElapsedTimeLabel.Text = "";
+		SetFinishTextboxText("");
+		SetElapsedTimeLabelText("");
 	}
 
 	private void StopRestartButtonClick(object sender, EventArgs e) {
 		StopButtonClick(sender, e);
 		StartButtonClick(sender, e);
 	}
+
+	private void ExportButtonClick(object sender, EventArgs e) {
+	
+	}
+
+	private void ImportButtonClick(object sender, EventArgs e) {
+	
+	}
+
+	private void DayModeButtonButtonClick(object sender, EventArgs e) {
+
+	}
+
+	private void WeekModeButtonButtonClick(object sender, EventArgs e) {
+
+	}
+
+	private void MonthModeButtonButtonClick(object sender, EventArgs e) {
+
+	}
+
+	#endregion
 
 	private void TimerWindow_Load(object sender, EventArgs e) {
 		GraphRenderThread.Start();
@@ -159,14 +223,53 @@ public partial class TimerWindow : Form {
 		stop = true;
 	}
 
-	protected override void OnPaintBackground(PaintEventArgs args) {
-		using (Graphics g = args.Graphics) {
-			g.Clear(Color.White);
-			Image m = Bitmap.FromFile(Paths.AssetsPath("Background2.png"));
-			g.DrawImage(
-				Bitmap.FromFile(Paths.AssetsPath("Background2.png")),
-				new Point(0,0)
-			);
+	public static Bitmap ResizeImage(Image image, int width, int height) {
+		var destRect = new Rectangle(0, 0, width, height);
+		var destImage = new Bitmap(width, height);
+
+		destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+		using (var graphics = Graphics.FromImage(destImage)) {
+			graphics.CompositingMode = CompositingMode.SourceCopy;
+			graphics.CompositingQuality = CompositingQuality.HighQuality;
+			graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+			graphics.SmoothingMode = SmoothingMode.HighQuality;
+			graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+			using (var wrapMode = new ImageAttributes()) {
+				wrapMode.SetWrapMode(WrapMode.Clamp);
+				graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+			}
 		}
+		//image.Dispose();
+		return destImage;
+	}
+
+	protected override void OnResize(EventArgs e) {
+		base.OnResize(e);
+		Invalidate();
+	}
+
+	protected override void OnPaintBackground(PaintEventArgs args) { }
+
+	protected override void OnPaint(PaintEventArgs args) {
+		//args.Graphics.Clear(Color.Black);
+		args.Graphics.DrawImage(image, 0, 0, ClientSize.Width, ClientSize.Height);
+		//args.Graphics.Clear(Color.AliceBlue);
+		//if (image.Width != Width | image.Height != Height) {
+		//	image.Dispose();
+		//	image = new Bitmap(Width, Height);
+		//}
+		//using (Graphics g = Graphics.FromImage(image)) {
+		//	g.SmoothingMode = SmoothingMode.AntiAlias;
+		//	g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+		//	g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+		//	g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+		//	g.SmoothingMode = SmoothingMode.HighQuality;
+		//	g.Clear(Color.Gainsboro);
+		//	args.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+		//}
+		//args.Graphics.DrawImage(image, 0, 0, Width, Height);
 	}
 }

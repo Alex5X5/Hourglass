@@ -52,6 +52,14 @@ public class HourglassDbService : IHourglassDbService {
 		return all.Where(x => x.finish >= now).ToList();
 	}
 
+	public async Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync() {
+		DateTime today = DateTime.Today;
+		int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+		DateTime lastMonday = today.AddDays(-daysSinceMonday);
+		IEnumerable<Models.Task> all = await QueryTasksAsync();
+		return all.Where(x => x.StartDateTime >= lastMonday).ToList();
+	}
+
 	public async Task<Models.Task?> StartNewTaskAsnc(string description, Project project, Worker worker, Ticket? ticket) {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		Models.Task task = new() {

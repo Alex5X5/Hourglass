@@ -1,11 +1,7 @@
 namespace HourGlass;
 
-using DatabaseUtil;
-
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.Database.Services;
-using System.Diagnostics;
-using HourGlass.PDF;
 using Hourglass.Util;
 
 public class Program {
