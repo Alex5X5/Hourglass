@@ -5,19 +5,42 @@ namespace Hourglass.PDF;
 public partial class HourglassPdf {
 
 	public static void Export(IHourglassDbService dbService) {
+		Console.WriteLine("started expoting");
 		string document = FileManager.LoadInput();
 		List<Database.Models.Task> tasks = dbService.QueryTasksOfCurrentWeekAsync().Result;
 		int dayIndex = 1;
-		foreach (string dayName in new string[] { "monday", "tuesday", "wendsday", "thursday", "friday" }) {
+
+        Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
+            { "monday", DayOfWeek.Monday },
+            { "tuesday", DayOfWeek.Tuesday },
+            { "wendsday", DayOfWeek.Wednesday },
+            { "thursday", DayOfWeek.Thursday },
+            { "friday", DayOfWeek.Friday }
+        };
+		
+		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
-			List<Database.Models.Task> tasks_ = tasks.Where(x=>x.FinishDateTime.Day == dayIndex).ToList();
+			List<Database.Models.Task> tasks_ = tasks.Where(x=>x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			if(tasks_.Count == 0)
+				continue;
 			foreach (Database.Models.Task task in tasks_) {
 				string[] compiledTask = CompileTask(task);
-				Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+				try {
+					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+				} catch(IndexOutOfRangeException) {
+					break;
+				}
 				offset += compiledTask.Length;
 			}
+			for(int i=0; i<lines.Length; i++) {
+				string query = $"{dayName}_line_{i + 1}";
+                document = SetAnnotaionValue(document, query, lines[i]);
+                document = SetFieldValue(document, query, lines[i]);
+			}
 		}
+		FileManager.WriteOutput(document);
+		Console.WriteLine("done exporting");
 	}
 
 	public static string[] CompileTask(Database.Models.Task task) {
