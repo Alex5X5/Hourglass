@@ -76,9 +76,9 @@ partial class TaskDetails {
 		// DescriptionTextbox
 		// 
 		DescriptionTextbox.Font = new Font("Segoe UI", 12F);
-		DescriptionTextbox.Location = new Point(210, 30);
+		DescriptionTextbox.Location = new Point(210, 20);
 		DescriptionTextbox.Name = "DescriptionTextbox";
-		DescriptionTextbox.Size = new Size(207, 76);
+		DescriptionTextbox.Size = new Size(227, 86);
 		DescriptionTextbox.TabIndex = 1;
 		DescriptionTextbox.Text = _task.description;
 		// 
@@ -102,7 +102,7 @@ partial class TaskDetails {
 		// DescriptionLabel
 		// 
 		DescriptionLabel.Font = new Font("Segoe UI", 12F);
-		DescriptionLabel.Location = new Point(114, 33);
+		DescriptionLabel.Location = new Point(114, 23);
 		DescriptionLabel.Name = "DescriptionLabel";
 		DescriptionLabel.Size = new Size(89, 21);
 		DescriptionLabel.TabIndex = 8;
@@ -178,7 +178,7 @@ partial class TaskDetails {
 		Controls.Add(EscapeButton);
 		Controls.Add(DeleteButton);
 		Controls.Add(ApplyButton);
-		Name = "TaskDetails";
+		Name = "Task Details";
 		ResumeLayout(false);
 		PerformLayout();
 	}

@@ -146,12 +146,13 @@ public partial class TimerWindow {
 		// 
 		DescriptionTextBox.BackColor = Color.Gainsboro;
 		DescriptionTextBox.BorderStyle = BorderStyle.None;
-		DescriptionTextBox.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		DescriptionTextBox.Font = new Font("Segoe UI", 15F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		DescriptionTextBox.Location = new Point(55, 413);
 		DescriptionTextBox.Name = "DescriptionTextBox";
-		DescriptionTextBox.Size = new Size(210, 191);
+		DescriptionTextBox.Size = new Size(230, 191);
 		DescriptionTextBox.TabIndex = 16;
 		DescriptionTextBox.Text = "";
+		DescriptionTextBox.ScrollBars = RichTextBoxScrollBars.None;
 		// 
 		// SettingsButton
 		// 
@@ -244,6 +245,7 @@ public partial class TimerWindow {
 		ImportButton.Size = new Size(122, 49);
 		ImportButton.TabIndex = 24;
 		ImportButton.UseVisualStyleBackColor = true;
+		ImportButton.Click += ImportButtonClick;
 		// 
 		// TimerWindow
 		// 

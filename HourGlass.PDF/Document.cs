@@ -1,4 +1,4 @@
-﻿namespace HourGlass.PDF;
+﻿namespace Hourglass.PDF;
 
 using System;
 using System.Collections.Generic;

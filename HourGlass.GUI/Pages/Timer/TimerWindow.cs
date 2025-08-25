@@ -86,6 +86,19 @@ public partial class TimerWindow : Form {
 		} catch (InvalidAsynchronousStateException) { }
 	}
 
+	private void SetDescriptionTextboxText(string text) {
+		try {
+			if (DescriptionTextBox == null)
+				return;
+			if (DescriptionTextBox.Disposing)
+				return;
+			if (DescriptionTextBox.InvokeRequired)
+				DescriptionTextBox?.Invoke(() => DescriptionTextBox.Text = text);
+			else
+				DescriptionTextBox.Text = text;
+		} catch (InvalidAsynchronousStateException) { }
+	}
+
 	private void UpdateTimers() {
 		while (!CanRaiseEvents)
 			Thread.Sleep(10);
@@ -159,6 +172,7 @@ public partial class TimerWindow : Form {
 		StartButton.Enabled = true;
 		SetFinishTextboxText("");
 		SetElapsedTimeLabelText("");
+		SetDescriptionTextboxText("");
 	}
 
 	private void StopRestartButtonClick(object sender, EventArgs e) {

@@ -1,4 +1,4 @@
-﻿namespace HourGlass.PDF;
+﻿namespace Hourglass.PDF;
 
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class Builder
-{
+public partial class HourglassPdf {
+
 	public static string SetAnnotaionValue(string document, string indexName, string value) {
 		string[] lines = document.Split("\n");
 		for (int i = 0; i < lines.Length; i++) {

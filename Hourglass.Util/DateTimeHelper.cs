@@ -22,6 +22,8 @@ public static class DateTimeHelper {
 			return time;
 		} catch (FormatException) {
 			return null;
+		} catch (ArgumentOutOfRangeException) {
+			return null;
 		}
 	}
 

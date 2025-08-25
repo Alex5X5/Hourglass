@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hourglass.Util\Hourglass.Util.csproj" />
+	  <ProjectReference Include="..\Hourglass.Util\Hourglass.Util.csproj" />
+	  <ProjectReference Include="..\Hourglass.Database\Hourglass.Database.csproj" />
   </ItemGroup>
 
 </Project>

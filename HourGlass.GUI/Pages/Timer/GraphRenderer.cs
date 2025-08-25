@@ -52,8 +52,8 @@ class GraphRenderer : Panel {
 	private void DrawTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
 		string text;
 		Font font = new("Segoe UI", 15F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
-		if (task.description.Length > 15)
-			text = task.description[..15] + "...";
+		if (task.description.Length > 25)
+			text = task.description[..25] + "...";
 		else
 			text = task.description;
 		float textWidth = g.MeasureString(text, font).Width;
@@ -132,7 +132,8 @@ class GraphRenderer : Panel {
 	}
 
 	protected async override void OnClick(EventArgs e) {
-		Console.WriteLine("OnClick");
+		const int ADDITIONAL_HITBOX_WIDTH = 6;
+		const int ADDITIONAL_HITBOX_HEIGHT = 2;
 		Point mousePos = PointToClient(MousePosition);
 		if (_dbService == null)
 			return;
@@ -147,13 +148,12 @@ class GraphRenderer : Panel {
 			int graphPosX = 
 				(int)Math.Floor((task.start - today) / proportion) 
 					+ (int)Math.Floor(image.Height * 3 / 40.0);
-			if (mousePos.X > graphPosX)
-				if (mousePos.Y > graphPosY)
-					if (mousePos.X < graphPosX + graphLength)
-						if (mousePos.Y < graphPosY + image.Height / 20.0) {
+			if (mousePos.X > graphPosX - ADDITIONAL_HITBOX_WIDTH)
+				if (mousePos.Y > graphPosY - ADDITIONAL_HITBOX_HEIGHT)
+					if (mousePos.X < graphPosX + graphLength + ADDITIONAL_HITBOX_WIDTH)
+						if (mousePos.Y < graphPosY + image.Height / 20.0 + ADDITIONAL_HITBOX_HEIGHT) {
 							TaskDetails.TaskDetails taskDetailsWindow = new(task, _dbService);
 							taskDetailsWindow.ShowDialog();
-							Console.WriteLine("OnClick * 2");
 							break;
 						}
 			graphPosY += (int)Math.Floor(image.Height / 20.0);
