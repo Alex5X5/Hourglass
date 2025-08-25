@@ -150,15 +150,16 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		return true;
 	}
 
-	public bool PrimaryKeyExistsInDatabase<T>(object? key) where T : class {
+	public bool PrimaryKeyValueExistsInDatabase<EntityType>(object? key) where EntityType : class {
 		if (key?.GetType() == null)
 			return false;
-		if (!primaryKeyProperties.ContainsKey(key.GetType()))
-			return false;
-		if (_context?.Set<T>().Find(key) != null)
+		if (_context?.Set<EntityType>().Find(key) != null)
 			return true;
 		return false;
 	}
+
+	public bool PrimaryKeyOfEntryExistsInDatabase<T>(object? key) where T : class =>
+		PrimaryKeyValueExistsInDatabase<T>(PrimVal<T>((T)key));
 
 	public async Task<T?> QuerySingleByKeyAsync<T>(object primaryKeyValue) where T : class {
 		if (_context == null)
@@ -198,21 +199,21 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 	public async Task<bool> AddAsync<T>(T item, bool updateIfExists) where T : class {
 		if (_context == null)
 			return false;
-		if (PrimaryKeyExistsInDatabase<T>(PrimVal(item))) {
+		if (PrimaryKeyOfEntryExistsInDatabase<T>(item)) {
 			if (!updateIfExists)
 				return false;
 			await UpdateAsync(item, false);
 			return await SaveChangesAsync();
 		}
-		await _context.Set<T>().AddAsync(item);
+		if(await _context.Set<T>().AddAsync(item) == null)
+			return false;
 		return await SaveChangesAsync();
-
 	}
 
 	public bool AddBlocking<T>(T item, bool updateIfExists) where T : class {
 		if (_context == null)
 			return false;
-		if (!PrimaryKeyExistsInDatabase<T>(PrimVal(item))) {
+		if (!PrimaryKeyOfEntryExistsInDatabase<T>(item)) {
 			_context.Set<T>().Add(item);
 		} else if (updateIfExists) {
 			UpdateBlocking(item, false);
@@ -290,7 +291,7 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 			return false;
 		if (key == null)
 			return false;
-		if (!PrimaryKeyExistsInDatabase<T>(key))
+		if (!PrimaryKeyValueExistsInDatabase<T>(key))
 			return false;
 		foreach (var it in _context.Set<T>()) {
 			if (key.Equals(PrimVal(it))) {
@@ -301,18 +302,18 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		return false;
 	}
 
-	public bool DeleteBlocking<T>(T item) where T : class =>
-		DeleteByKeyBlocking<T>(PrimVal(item));
+	public bool DeleteBlocking<EntityType>(EntityType item) where EntityType : class =>
+		DeleteByKeyBlocking<EntityType>(PrimVal(item));
 
-	public bool DeleteByKeyBlocking<T>(object? key) where T : class {
+	public bool DeleteByKeyBlocking<EntityType>(object? key) where EntityType : class {
 		if (_context == null)
 			return false;
-		if (PrimaryKeyExistsInDatabase<T>(key)) {
-			if (_context.Set<T>().Find(key) == null)
+		if (PrimaryKeyValueExistsInDatabase<EntityType>(key)) {
+			if (_context.Set<EntityType>().Find(key) == null)
 				return false;
 			else {
-				_context.Set<T>().Remove(
-					_context.Set<T>().First(
+				_context.Set<EntityType>().Remove(
+					_context.Set<EntityType>().First(
 						x => PrimVal(x) == key
 					)
 				);

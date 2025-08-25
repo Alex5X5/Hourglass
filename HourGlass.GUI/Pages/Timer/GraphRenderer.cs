@@ -10,6 +10,7 @@ class GraphRenderer : Panel {
 	#region fields
 	
 	private Bitmap image;
+	private bool isTaskDetailsWindpwOpen = false;
 	public IHourglassDbService? _dbService;
 
 	#endregion fields
@@ -148,9 +149,13 @@ class GraphRenderer : Panel {
 					+ (int)Math.Floor(image.Height * 3 / 40.0);
 			if (mousePos.X > graphPosX)
 				if (mousePos.Y > graphPosY)
-					if(mousePos.X < graphPosX + graphLength)
-						if (mousePos.Y < graphPosY + image.Height / 20.0)
+					if (mousePos.X < graphPosX + graphLength)
+						if (mousePos.Y < graphPosY + image.Height / 20.0) {
+							TaskDetails.TaskDetails taskDetailsWindow = new(task, _dbService);
+							taskDetailsWindow.ShowDialog();
 							Console.WriteLine("OnClick * 2");
+							break;
+						}
 			graphPosY += (int)Math.Floor(image.Height / 20.0);
 			graphPosY += (int)Math.Floor(image.Height / 40.0);
 		}

@@ -12,8 +12,10 @@ public class Task {
 	public Project? project { set; get; }
 	public Ticket? ticket { set; get;}
 	public long start { set; get; } = 0;
+	public long finish { set; get; } = 0;
 	[NotMapped]
 	public DateTime StartDateTime {
+		set => start = value.Ticks / TimeSpan.TicksPerSecond;
 		get => DateTime.MinValue.AddSeconds(start);
 	}
 	[NotMapped]
@@ -21,5 +23,4 @@ public class Task {
 		set => finish = value.Ticks / TimeSpan.TicksPerSecond;
 		get => DateTime.MinValue.AddSeconds(finish);
 	}
-	public long finish { set; get; } = 0;
 }

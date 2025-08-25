@@ -1,27 +1,41 @@
-﻿using Hourglass.Database;
+﻿namespace Hourglass.GUI.Pages.TaskDetails;
 
-namespace Hourglass.GUI.Pages.TaskDetails;
+using Hourglass.Database;
+using Hourglass.Database.Services.Interfaces;
+using Hourglass.Util;
 
 public partial class TaskDetails : Form {
 
-	private Database.Models.Task _taks;
-	private HourglassDbContext _context;
+	private readonly Database.Models.Task _task;
+	private readonly IHourglassDbService _dbService;
 
-	public TaskDetails(Database.Models.Task task, HourglassDbContext context) {
-		_taks = task;
-		_context = context;
+	public TaskDetails(Database.Models.Task task, IHourglassDbService dbService) {
+		_task = task;
+		_dbService = dbService;
 		InitializeComponent();
 	}
 
 	private void ApplyButton_Click(object sender, EventArgs e) {
 		//_taks.StartDateTime = ;
+		Database.Models.Task newTask = new() {
+			Id = _task.Id,
+			description = DescriptionTextbox.Text,
+			StartDateTime = DateTimeHelper.InterpretDayAndTimeString(StartTextbox.Text) ?? _task.StartDateTime,
+			FinishDateTime = DateTimeHelper.InterpretDayAndTimeString(FinishTextbox.Text) ?? _task.FinishDateTime,
+			owner = _task.owner,
+			project = _task.project,
+			ticket = _task.ticket
+		};
+		_dbService.UpdateTaskAsync(newTask);
+		Close();
 	}
 
 	private void DeleteButton_Click(object sender, EventArgs e) {
-
+		_dbService.DeleteTaskAsync(_task);
+		Close();
 	}
 
 	private void EscapeButton_Click(object sender, EventArgs e) {
-
+		Close();
 	}
 }

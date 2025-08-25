@@ -8,7 +8,7 @@ public class BasicDatabaseAcessor<T>(string? path, DatabasePathFormat pathFormat
     : DatabaseAccessor<BasicDbContext<T>>(path, pathFormat, config) where T : class {
 
     public bool PrimaryKeyExistsInDatabase(object? key) =>
-        base.PrimaryKeyExistsInDatabase<T>(key);
+        base.PrimaryKeyValueExistsInDatabase<T>(key);
 
     public async Task<T?> QuerySingleByKeyAsync(object key) =>
         await base.QuerySingleByKeyAsync<T>(key);

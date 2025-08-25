@@ -37,7 +37,7 @@ public class HourglassDbService : IHourglassDbService {
 			return null;
 		return task;
 	}
-
+	
 	public async Task<List<Models.Task>> QueryTasksOfCurrentHourAsync() {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		now -= TimeSpan.SecondsPerHour;
@@ -49,7 +49,10 @@ public class HourglassDbService : IHourglassDbService {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		now -= TimeSpan.SecondsPerDay;
 		IEnumerable<Models.Task> all = await QueryTasksAsync();
-		return all.Where(x => x.finish >= now).ToList();
+		return all
+			.Where(x => x.finish >= now)
+				.Where(x => x.FinishDateTime.DayOfWeek == DateTime.Now.DayOfWeek)
+					.ToList();
 	}
 
 	public async Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync() {
@@ -94,4 +97,6 @@ public class HourglassDbService : IHourglassDbService {
 	public async Task<List<Worker>> QueryWorkersAsync()=>
 		await _accessor.QueryAllAsync<Worker>();
 
+	public async System.Threading.Tasks.Task DeleteTaskAsync(Models.Task task) =>
+		await _accessor.DeleteAsync(task);
 }
