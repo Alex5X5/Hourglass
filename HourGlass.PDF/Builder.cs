@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public partial class HourglassPdf {
 
 	public static string SetAnnotaionValue(string document, string indexName, string value) {
-		string[] lines = document.Split("\n");
+			string[] lines = document.Split("\n");
 		for (int i = 0; i < lines.Length; i++) {
 			if (lines[i]==$"%%index-{indexName}-annotation") {
 				lines[i+1] = $"/V ({value})";

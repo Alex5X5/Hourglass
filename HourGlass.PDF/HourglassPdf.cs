@@ -7,9 +7,8 @@ public partial class HourglassPdf {
 	public static void Export(IHourglassDbService dbService) {
 		Console.WriteLine("started expoting");
 		string document = FileManager.LoadInput();
+		document = SetUtilityFields(document);
 		List<Database.Models.Task> tasks = dbService.QueryTasksOfCurrentWeekAsync().Result;
-		int dayIndex = 1;
-
         Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
             { "monday", DayOfWeek.Monday },
             { "tuesday", DayOfWeek.Tuesday },
@@ -59,9 +58,20 @@ public partial class HourglassPdf {
 				CharacterRemoveCount = MAX_LINE_LENGTH;
 			else
 				CharacterRemoveCount = source.Length;
-			res.Add(source[..CharacterRemoveCount]);
+			res.Add((res.Count > 0 ? "     ":"") + source[..CharacterRemoveCount]);
 			source = source[CharacterRemoveCount..source.Length];
 		}
 		return res.ToArray();
+	}
+
+	public static string SetUtilityFields(string document) {
+		DateTime startDate = new DateTime(2024, 8, 5);
+		DateTime today = DateTime.Today;
+		int daysDifference = (today - startDate).Days;
+		int weeksPassed = daysDifference / 7;
+		int currentWeek = (int)Math.Ceiling(daysDifference / 7.0);
+		document = SetFieldValue(document, "count", Convert.ToString(weeksPassed));
+		document = SetAnnotaionValue(document, "count", Convert.ToString(weeksPassed));
+		return document;
 	}
 }

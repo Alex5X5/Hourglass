@@ -49,7 +49,7 @@ public partial class TimerWindow {
 		WeekModeButton = new Button();
 		MonthModeButton = new Button();
 		button2 = new Button();
-		GraphPanel = new GraphRenderer();
+		GraphPanel = new GraphRenderer(_dbService, windowMode);
 		ExportButton = new Button();
 		ImportButton = new Button();
 		SuspendLayout();
@@ -175,29 +175,47 @@ public partial class TimerWindow {
 		// 
 		// DayModeButton
 		// 
-		DayModeButton.Location = new Point(1214, 350);
+		DayModeButton.BackColor = Color.Transparent;
+		DayModeButton.FlatAppearance.BorderSize = 0;
+		DayModeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		DayModeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		DayModeButton.FlatStyle = FlatStyle.Flat;
+		DayModeButton.Location = new Point(1515, 405);
 		DayModeButton.Name = "DayModeButton";
-		DayModeButton.Size = new Size(54, 52);
+		DayModeButton.Size = new Size(68, 67);
 		DayModeButton.TabIndex = 20;
 		DayModeButton.Text = "Day";
 		DayModeButton.UseVisualStyleBackColor = true;
+		DayModeButton.Click += DayModeButtonButtonClick;
 		// 
 		// WeekModeButton
 		// 
-		WeekModeButton.Location = new Point(1214, 439);
+		WeekModeButton.BackColor = Color.Transparent;
+		WeekModeButton.FlatAppearance.BorderSize = 0;
+		WeekModeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		WeekModeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		WeekModeButton.FlatStyle = FlatStyle.Flat;
+		WeekModeButton.Location = new Point(1515, 522);
 		WeekModeButton.Name = "WeekModeButton";
-		WeekModeButton.Size = new Size(54, 52);
+		WeekModeButton.Size = new Size(68, 67);
 		WeekModeButton.TabIndex = 20;
 		WeekModeButton.Text = "Week";
+		WeekModeButton.Click += WeekModeButtonButtonClick;
 		WeekModeButton.UseVisualStyleBackColor = true;
 		// 
 		// MonthModeButton
 		// 
-		MonthModeButton.Location = new Point(1214, 530);
+		MonthModeButton.BackColor = Color.Transparent;
+		MonthModeButton.FlatAppearance.BorderSize = 0;
+		MonthModeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		MonthModeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		MonthModeButton.FlatStyle = FlatStyle.Flat;
+		MonthModeButton.Location = new Point(1515, 641);
 		MonthModeButton.Name = "MonthModeButton";
-		MonthModeButton.Size = new Size(54, 52);
+		MonthModeButton.Size = new Size(68, 67);
 		MonthModeButton.TabIndex = 20;
 		MonthModeButton.Text = "Month";
+		MonthModeButton.Click += MonthModeButtonButtonClick;
 		MonthModeButton.UseVisualStyleBackColor = true;
 		// 
 		// button2
@@ -219,31 +237,32 @@ public partial class TimerWindow {
 		// 
 		// ExportButton
 		// 
-		//ExportButton.BackColor = Color.Transparent;
-		//ExportButton.FlatAppearance.BorderSize = 0;
-		//ExportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
-		//ExportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		//ExportButton.FlatStyle = FlatStyle.Flat;
+		ExportButton.BackColor = Color.Transparent;
+		ExportButton.FlatAppearance.BorderSize = 0;
+		ExportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		ExportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		ExportButton.FlatStyle = FlatStyle.Flat;
 		ExportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		ExportButton.ForeColor = Color.Transparent;
-		ExportButton.Location = new Point(83, 595);
+		ExportButton.Location = new Point(83, 676);
 		ExportButton.Name = "ExportButton";
-		ExportButton.Size = new Size(122, 49);
+		ExportButton.Size = new Size(170, 54);
 		ExportButton.TabIndex = 23;
 		ExportButton.UseVisualStyleBackColor = true;
 		ExportButton.Click += ExportButtonClick;
 		// 
 		// ImportButton
 		// 
-		//ImportButton.BackColor = Color.Transparent;
-		//ImportButton.FlatAppearance.BorderSize = 0;
-		//ImportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		//ImportButton.FlatStyle = FlatStyle.Flat;
+		ImportButton.BackColor = Color.Transparent;
+		ImportButton.FlatAppearance.BorderSize = 0;
+		ImportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		ImportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		ImportButton.FlatStyle = FlatStyle.Flat;
 		ImportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		ImportButton.ForeColor = Color.Transparent;
-		ImportButton.Location = new Point(83, 654);
+		ImportButton.Location = new Point(83, 748);
 		ImportButton.Name = "ImportButton";
-		ImportButton.Size = new Size(122, 49);
+		ImportButton.Size = new Size(170, 54);
 		ImportButton.TabIndex = 24;
 		ImportButton.UseVisualStyleBackColor = true;
 		ImportButton.Click += ImportButtonClick;
@@ -254,9 +273,9 @@ public partial class TimerWindow {
 		FormBorderStyle = FormBorderStyle.FixedSingle;
 		ClientSize = new Size(1600, 900);
 		//Controls.Add(button2);
-		//Controls.Add(DayModeButton);
-		//Controls.Add(WeekModeButton);
-		//Controls.Add(MonthModeButton);
+		Controls.Add(DayModeButton);
+		Controls.Add(WeekModeButton);
+		Controls.Add(MonthModeButton);
 		Controls.Add(ElapsedTimeLabel);
 		Controls.Add(SettingsButton);
 		Controls.Add(StartButton);

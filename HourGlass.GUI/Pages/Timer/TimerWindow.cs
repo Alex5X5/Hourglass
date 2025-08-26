@@ -1,4 +1,5 @@
 ﻿using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.Pages.Timer;
 using Hourglass.PDF;
 using Hourglass.Util;
 
@@ -19,6 +20,8 @@ public partial class TimerWindow : Form {
 
 	private readonly Image image = Bitmap.FromFile(Paths.AssetsPath("Präsentation3.png"));
 	private bool stop = false;
+
+	TimerWindowMode windowMode = TimerWindowMode.Day;
 
 	public TimerWindow(IHourglassDbService dbService) {
 		_dbService = dbService;
@@ -184,23 +187,31 @@ public partial class TimerWindow : Form {
 
 	private void ExportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("on export button click");
+		ExportButton.Enabled = false;
 		HourglassPdf.Export(_dbService);
+		ExportButton.Enabled = true;
 	}
 
 	private void ImportButtonClick(object sender, EventArgs e) {
-	
+		Console.WriteLine("import button click");
 	}
 
 	private void DayModeButtonButtonClick(object sender, EventArgs e) {
-
+		Console.WriteLine("day mode button click");
+		windowMode = TimerWindowMode.Day;
+		GraphPanel._windowMode = windowMode;
 	}
 
 	private void WeekModeButtonButtonClick(object sender, EventArgs e) {
-
+		Console.WriteLine("week mode button click");
+		windowMode = TimerWindowMode.Week;
+		GraphPanel._windowMode = windowMode;
 	}
 
 	private void MonthModeButtonButtonClick(object sender, EventArgs e) {
-
+		Console.WriteLine("month mode button click");
+		windowMode = TimerWindowMode.Month;
+		GraphPanel._windowMode = windowMode;
 	}
 
 	#endregion
