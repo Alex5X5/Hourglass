@@ -253,6 +253,10 @@ public partial class TimerWindow : Form {
 
 	protected override void OnClick(EventArgs e) {
 		Focus();
+		if (runningTask != null) {
+			runningTask.description = DescriptionTextBox.Text;
+			_dbService.UpdateTaskAsync(runningTask);
+		}
 	}
 
 	public void OnDescriptionTextboxLostFocus(Object sender, EventArgs args) {

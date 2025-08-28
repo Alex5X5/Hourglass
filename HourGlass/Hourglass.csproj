@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	  <PublishSingleFile>true</PublishSingleFile>
+	  <PackAsTool>True</PackAsTool>
+	  <SelfContained>true</SelfContained>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>

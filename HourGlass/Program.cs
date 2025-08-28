@@ -10,6 +10,7 @@ public class Program {
     /// </summary>
     [STAThread]
     public static void Main() {
+		Paths.PrintDetailedInfo();
         Paths.ExtractFiles("Hourglass");
 		//ConfigurationManager configuration = (ConfigurationManager)new ConfigurationBuilder()
 		//	.SetBasePath(Directory.GetCurrentDirectory())

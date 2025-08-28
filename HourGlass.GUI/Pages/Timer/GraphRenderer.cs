@@ -13,9 +13,10 @@ class GraphRenderer : Panel {
 	public IHourglassDbService? _dbService;
 	public TimerWindowMode _windowMode;
 
+	private const int MAX_TASKS_PER_DAY = 6;
+	private const int MAX_TASKS_PER_WEEK = MAX_TASKS_PER_DAY * 5;
 
-
-#endregion fields
+	#endregion fields
 
 	public GraphRenderer(IHourglassDbService dbService, TimerWindowMode windowMode) : this() {
 		_dbService = dbService;
@@ -27,9 +28,32 @@ class GraphRenderer : Panel {
 		DoubleBuffered = true;
 	}
 
-#region draw methods
+	#region draw methods
 
-	private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius) {
+	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, ref int graphPosY) {
+		int xAxisSegmentSize = image.Width / (xAxisSegmentCount + 2);
+		int yAxisSegmentSize = image.Height / (yAxisSegmentCount + 2);
+		int yGraphSpace = yAxisSegmentSize / 2;
+		long duration = task.finish - task.start;
+		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
+		int graphLength = (int)Math.Floor(duration * proportion);
+		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion);
+		graphPosX += xAxisSegmentSize;
+		graphPosY += yAxisSegmentSize;
+		Rectangle res = new(
+			graphPosX - additionalWidth,
+			graphPosY - additionalHeight,
+			graphLength + additionalWidth * 2,
+			yAxisSegmentSize + additionalHeight * 2
+		);
+		graphPosY += yGraphSpace;
+		using (Graphics g = Graphics.FromImage(image))
+		using (Brush b = new SolidBrush(Color.AliceBlue))
+			g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);
+		return res;
+	}
+
+	private static GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius) {
 		GraphicsPath path = new();
 		int diameter = radius * 2;
 		path.StartFigure();
@@ -92,12 +116,28 @@ class GraphRenderer : Panel {
 	}
 
 	private void DrawMonthTimeline(Graphics g) {
-			
+		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+		int xAxisSegmentSize = Width / (daysInCurrentMonth + 2);
+		using (Brush textBrush = new SolidBrush(Color.Black))
+		using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170, 170, 170))))
+		using (Pen timeline = new(Brushes.Black)) {
+			g.DrawLine(timeline, xAxisSegmentSize, Height * 19 / 20, xAxisSegmentSize*(daysInCurrentMonth+2), Height * 19 / 20);
+			for (int i = 1; i < daysInCurrentMonth; i++) {
+				g.DrawLine(timeline, xAxisSegmentSize * i, Height * 19 / 20, xAxisSegmentSize * i, (int)Math.Floor(Height * 18.75 / 20));
+				g.DrawLine(hintLines, xAxisSegmentSize * i, Height * 19 / 20, xAxisSegmentSize * i, (int)Math.Floor(Height / 20.0));
+				g.DrawString(
+					Convert.ToString(i),
+					new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
+					textBrush,
+					new Point(xAxisSegmentSize * i + (Convert.ToString(i).Length == 1 ? 5 : 2), Height * 19 / 20 + 2)
+				);
+			}
+		}
 	}
 
 	private void DrawDayTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
 		string text;
-		Font font = new("Segoe UI", 20F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+		System.Drawing.Font font = new("Segoe UI", 20F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 		if (task.description.Length > 25)
 			text = task.description[..25] + "...";
 		else
@@ -121,44 +161,34 @@ class GraphRenderer : Panel {
 		return;
 	}
 
-	private void DrawDayTaskGraph(Graphics g, Database.Models.Task task, int graphPosY) {
-		long duration = task.finish - task.start;
-		double proportion = TimeSpan.SecondsPerDay / (image.Width * 24 / 26);
-		int graphLength = (int)Math.Floor(duration / proportion);
-		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		long today = now - (now % TimeSpan.SecondsPerDay);
-		int graphPosX = (int)Math.Floor((task.start - today) / proportion);
-		graphPosX += image.Width / 26;
-		Rectangle rect = new(
-			graphPosX,
-			graphPosY,
-			graphLength,
-			(int)Math.Floor(image.Height / 20.0));
+	private void DrawDayTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
+		long nowSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+		long todaySeconds = nowSeconds - (nowSeconds % TimeSpan.SecondsPerDay);
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
 		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
 			g.FillPath(brush, path);
-		DrawDayTaskDescriptionStub(g, task, graphPosX, graphPosY, graphLength);
+		//DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
-	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, int graphPosY) {
-		int MAX_GRAPH_COUNT = 10;
-		int GRAPH_HEIGHT = (int)Math.Floor(image.Height / (MAX_GRAPH_COUNT * 1.5 + 2.0));
-		long duration = task.finish - task.start;
-		double proportion = TimeSpan.SecondsPerDay * 8 / image.Width;
-		int graphLength = (int)Math.Floor(duration / proportion);
-		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		long today = now - (now % TimeSpan.SecondsPerDay);
-		int graphPosX = (int)Math.Floor((task.start - today) / proportion);
-		graphPosX += image.Width / 16;
-		Rectangle rect = new(
-			graphPosX,
-			graphPosY,
-			graphLength,
-			(int)Math.Floor(image.Height / 30.0));
+	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
+		//Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, 7, MAX_TASKS_PER_WEEK, 0, 0, ref graphPosY);
+		int daysSinceMonday = (7 + (DateTime.Today.DayOfWeek - DayOfWeek.Monday)) % 7;
+		long thisWeekSeconds = DateTime.Today.AddDays(-daysSinceMonday).Ticks / TimeSpan.TicksPerSecond;
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
 		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
 			g.FillPath(brush, path);
-		DrawDayTaskDescriptionStub(g, task, graphPosX, graphPosY, graphLength);
+	}
+
+	private void DrawMonthTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
+		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+		int xAxisSegmentSize = Width / (daysInCurrentMonth + 2);
+		long thisMonthSeconds = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond;
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, ref graphPosY);
+		using (GraphicsPath path = GetRoundedRectanglePath(rect, 2))
+		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
+			g.FillPath(brush, path);
 	}
 
 #endregion
@@ -179,42 +209,35 @@ class GraphRenderer : Panel {
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
 			g.Clear(Color.Gainsboro);
-			
+
 			DrawTimeline(g);
-			int yPos = image.Height / 10;
 			if (_dbService != null) {
 				List<Database.Models.Task> tasks;
+				tasks = await _dbService.QueryTasksOfCurrentDayAsync();
 				switch (_windowMode) {
 					case TimerWindowMode.Day:
-						tasks = await _dbService.QueryTasksOfCurrentDayAsync();
 						if (tasks != null && tasks.Count > 0) {
-							int graphPosY = (int)Math.Floor(image.Height / 20.0);
-							for (int i = 0; i < 12 && i < tasks.Count; i++) {
-								DrawDayTaskGraph(g, tasks[i], graphPosY);
-								graphPosY += (int)Math.Floor(image.Height / 20.0);
-								graphPosY += (int)Math.Floor(image.Height / 40.0);
+							int graphPosY = 0;
+							for (int i = 0; i < MAX_TASKS_PER_DAY && i < tasks.Count; i++) {
+								DrawDayTaskGraph(g, tasks[i], ref graphPosY);
 							}
 						}
 						break;
 					case TimerWindowMode.Week:
 						tasks = await _dbService.QueryTasksOfCurrentWeekAsync();
 						if (tasks != null && tasks.Count > 0) {
-							int graphPosY = (int)Math.Floor(image.Height / 30.0);
-							for (int i = 0; i < 28 && i < tasks.Count; i++) {
-								DrawWeekTaskGraph(g, tasks[i], graphPosY);
-								graphPosY += (int)Math.Floor(image.Height / 60.0);
-								graphPosY += (int)Math.Floor(image.Height / 30.0);
+							int graphPosY = 0;
+							for (int i = 0; i < MAX_TASKS_PER_WEEK && i < tasks.Count; i++) {
+								DrawWeekTaskGraph(g, tasks[i], ref graphPosY);
 							}
 						}
 						break;
 					case TimerWindowMode.Month:
 						tasks = await _dbService.QueryTasksOfCurrentWeekAsync();
 						if (tasks != null && tasks.Count > 0) {
-							int graphPosY = (int)Math.Floor(image.Height / 20.0);
-							for (int i = 0; i < 12 && i < tasks.Count; i++) {
-								DrawDayTaskGraph(g, tasks[i], graphPosY);
-								graphPosY += (int)Math.Floor(image.Height / 20.0);
-								graphPosY += (int)Math.Floor(image.Height / 40.0);
+							int graphPosY = 0;
+							for (int i = 0; i < 100 && i < tasks.Count; i++) {
+								DrawMonthTaskGraph(g, tasks[i], ref graphPosY);
 							}
 						}
 						break;
@@ -228,44 +251,59 @@ class GraphRenderer : Panel {
 	protected async override void OnClick(EventArgs e) {
 		if (_dbService == null)
 			return;
-		const int ADDITIONAL_HITBOX_WIDTH = 6;
-		const int ADDITIONAL_HITBOX_HEIGHT = 2;
-		int xAxisSegmentSize = (int)Math.Floor(image.Width / 26.0);
-		int yAxisSegmentSize = (int)Math.Floor(image.Height / 20.0);
-		int yGraphSpace = yAxisSegmentSize / 2;
 		Point mousePos = PointToClient(MousePosition);
 		Console.WriteLine($"click at {mousePos}");
-		int graphPosY = yAxisSegmentSize;
-		List<Database.Models.Task>? tasks = await _dbService.QueryTasksOfCurrentDayAsync();
+		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+		List<Database.Models.Task>? tasks = _windowMode switch {
+			TimerWindowMode.Day => await _dbService.QueryTasksOfCurrentDayAsync(),
+			TimerWindowMode.Week => await _dbService.QueryTasksOfCurrentWeekAsync(),
+			TimerWindowMode.Month => await _dbService.QueryTasksOfCurrentWeekAsync(),
+			_=> []
+		};
+		using (Graphics g = Graphics.FromImage(image))
+			g.Clear(Color.Gainsboro);
+		int graphPosY = 0;
 		foreach (Database.Models.Task task in tasks) {
-			long duration = task.finish - task.start;
-			double proportion = xAxisSegmentSize * 24.0 / TimeSpan.SecondsPerDay;
-			int graphLength = (int)Math.Floor(duration * proportion);
-			long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-			long today = now - (now % TimeSpan.SecondsPerDay);
-			int graphPosX = (int)Math.Floor((task.start - today) * proportion) + xAxisSegmentSize;
-			Rectangle hitbox = new(
-				graphPosX,
-				graphPosY - ADDITIONAL_HITBOX_HEIGHT,
-				graphLength + ADDITIONAL_HITBOX_WIDTH * 2,
-				yAxisSegmentSize + ADDITIONAL_HITBOX_HEIGHT * 2
-			);
-			//using (Graphics g = Graphics.FromImage(image))
-			//using (Brush b = new SolidBrush(Color.AliceBlue))		
-			//	g.FillRectangle(b, hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height);
-
-			if (hitbox.Contains(mousePos)) {
+			bool clicked = _windowMode switch {
+				TimerWindowMode.Day =>
+					GetTaskRectanlge(
+						task,
+						TimeSpan.SecondsPerHour,
+						DateTime.Today.Ticks / TimeSpan.TicksPerSecond,
+						24,
+						MAX_TASKS_PER_DAY,
+						10,
+						5,
+						ref graphPosY
+					).Contains(mousePos),
+				TimerWindowMode.Week =>
+					GetTaskRectanlge(
+						task,
+						TimeSpan.SecondsPerDay,
+						DateTime.Today.AddDays(-((7 + (DateTime.Today.DayOfWeek - DayOfWeek.Monday)) % 7)).Ticks / TimeSpan.TicksPerSecond,						7,
+						MAX_TASKS_PER_WEEK,
+						5,
+						2,
+						ref graphPosY
+					).Contains(mousePos),
+				TimerWindowMode.Month =>
+					GetTaskRectanlge(
+						task,
+						TimeSpan.SecondsPerDay,
+						new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond,
+						daysInCurrentMonth,
+						MAX_TASKS_PER_WEEK * daysInCurrentMonth,
+						2,
+						2,
+						ref graphPosY
+					).Contains(mousePos),
+				_ => false
+			};
+			if (clicked) {
 				TaskDetails.TaskDetails taskDetailsWindow = new(task, _dbService);
 				taskDetailsWindow.ShowDialog();
 				break;
 			}
-			//if (mousePos.X > graphPosX - ADDITIONAL_HITBOX_WIDTH)
-			//	if (mousePos.Y > graphPosY - ADDITIONAL_HITBOX_HEIGHT)
-			//		if (mousePos.X < graphPosX + graphLength + ADDITIONAL_HITBOX_WIDTH)
-			//			if (mousePos.Y < graphPosY + image.Height / 20.0 + ADDITIONAL_HITBOX_HEIGHT) {
-			//			}
-			graphPosY += yAxisSegmentSize;
-			graphPosY += yGraphSpace;
 		}
 	}
 }

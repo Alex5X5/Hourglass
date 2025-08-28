@@ -1,6 +1,7 @@
 ﻿namespace Hourglass.Util;
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -43,12 +44,148 @@ public static class Paths {
         }
 	}
 
-	public static string AssetsPath(string fileName) {
-		string assemplyName = Assembly.GetExecutingAssembly().GetName().Name+".dll";
-		string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-		string trimedName = assemblyLocation.Trim(assemplyName.ToCharArray());
-		trimedName = Path.Combine(trimedName+ @"\Hourglass\Assets\", fileName);
-		//return Path.Combine(trimedName, fileName);
-		return trimedName;
-	} 
+	public static string AssetsPath(string fileName) =>
+		Path.Combine(GetMainEntryPointPath()+ @"\Hourglass\Assets\", fileName);
+		//string assemblyName = Assembly.GetCallingAssembly().GetName().Name+".exe";
+		//Console.WriteLine($"asseblyName:{assemblyName}");
+		//string assemblyLocation = Assembly.GetCallingAssembly().Location;
+		//Console.WriteLine($"asseblyLocation:{assemblyLocation}");
+		//string trimedName = assemblyLocation.Trim(assemblyName.ToCharArray());
+		//Console.WriteLine($"trimmedName:{trimedName}");
+		//Console.WriteLine($"finalPath:{trimedName}");
+		////return Path.Combine(trimedName, fileName);
+		//return trimedName;
+	//} 
+
+	public static void Test() {
+		try {
+			string mainFilePath = GetMainEntryPointPath();
+			Console.WriteLine($"Main entry point file path: {mainFilePath}");
+
+			// Additional information
+			Console.WriteLine($"Directory: {Path.GetDirectoryName(mainFilePath)}");
+			Console.WriteLine($"Filename: {Path.GetFileName(mainFilePath)}");
+		} catch (Exception ex) {
+			Console.WriteLine($"Error detecting main entry point: {ex.Message}");
+		}
+
+		Console.WriteLine("\nPress any key to exit...");
+		Console.ReadKey();
+	}
+
+	/// <summary>
+	/// Detects and returns the path to the file containing the main entry point of the running program.
+	/// </summary>
+	/// <returns>The full path to the main entry point file</returns>
+	public static string GetMainEntryPointPath() {
+		// Method 1: Try to get the entry assembly (most reliable for executable applications)
+		Assembly entryAssembly = Assembly.GetEntryAssembly();
+		if (entryAssembly != null) {
+			string assemblyPath = entryAssembly.Location;
+			if (!string.IsNullOrEmpty(assemblyPath) && File.Exists(assemblyPath)) {
+				return Path.GetDirectoryName(assemblyPath);
+			}
+		}
+
+		// Method 2: Use the executing assembly as fallback
+		Assembly executingAssembly = Assembly.GetExecutingAssembly();
+		if (executingAssembly != null) {
+			string assemblyPath = executingAssembly.Location;
+			if (!string.IsNullOrEmpty(assemblyPath) && File.Exists(assemblyPath)) {
+				return Path.GetDirectoryName(assemblyPath);
+			}
+		}
+
+		// Method 3: Try getting from the current process (for .exe files)
+		try {
+			Process currentProcess = Process.GetCurrentProcess();
+			string processPath = currentProcess.MainModule?.FileName;
+			if (!string.IsNullOrEmpty(processPath) && File.Exists(processPath)) {
+				return Path.GetDirectoryName(processPath);
+			}
+		} catch (Exception) {
+			// Process.MainModule can throw exceptions in some contexts
+		}
+
+		// Method 4: Use AppDomain base directory as last resort
+		string appDomainPath = AppDomain.CurrentDomain.BaseDirectory;
+		if (!string.IsNullOrEmpty(appDomainPath)) {
+			// Try to find the main executable in the base directory
+			string[] possibleExtensions = { ".exe", ".dll" };
+			string appName = AppDomain.CurrentDomain.FriendlyName;
+
+			foreach (string ext in possibleExtensions) {
+				string possiblePath = Path.Combine(appDomainPath,
+					Path.ChangeExtension(appName, ext));
+				if (File.Exists(possiblePath)) {
+					return Path.GetDirectoryName(possiblePath);
+				}
+			}
+
+			// If no specific file found, return the base directory
+			return Path.GetDirectoryName(appDomainPath);
+		}
+
+		throw new InvalidOperationException("Unable to determine the main entry point path");
+	}
+
+	/// <summary>
+	/// Alternative method that attempts to find the source file path (for development scenarios)
+	/// Note: This only works in debug builds with specific compiler settings
+	/// </summary>
+	public static string GetSourceFilePath() {
+		try {
+			// Get the stack trace to find the calling method
+			StackTrace stackTrace = new StackTrace(true);
+
+			// Look for the Main method in the stack trace
+			for (int i = 0; i < stackTrace.FrameCount; i++) {
+				StackFrame frame = stackTrace.GetFrame(i);
+				MethodBase method = frame.GetMethod();
+
+				if (method != null && method.Name == "Main" &&
+					method.DeclaringType != null) {
+					string fileName = frame.GetFileName();
+					if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName)) {
+						return fileName;
+					}
+				}
+			}
+		} catch (Exception) {
+			// Stack trace information might not be available
+		}
+
+		return null;
+	}
+
+	public static void PrintDetailedInfo() {
+		Console.WriteLine("=== Main Entry Point Detection Details ===");
+
+		// Entry Assembly
+		Assembly entryAssembly = Assembly.GetEntryAssembly();
+		Console.WriteLine($"Entry Assembly: {entryAssembly?.FullName ?? "Not available"}");
+		Console.WriteLine($"Entry Assembly Location: {entryAssembly?.Location ?? "Not available"}");
+
+		// Executing Assembly
+		Assembly executingAssembly = Assembly.GetExecutingAssembly();
+		Console.WriteLine($"Executing Assembly: {executingAssembly?.FullName ?? "Not available"}");
+		Console.WriteLine($"Executing Assembly Location: {executingAssembly?.Location ?? "Not available"}");
+
+		// Process Info
+		try {
+			Process currentProcess = Process.GetCurrentProcess();
+			Console.WriteLine($"Process Name: {currentProcess.ProcessName}");
+			Console.WriteLine($"Process Main Module: {currentProcess.MainModule?.FileName ?? "Not available"}");
+		} catch (Exception ex) {
+			Console.WriteLine($"Process Info Error: {ex.Message}");
+		}
+
+		// AppDomain Info
+		Console.WriteLine($"AppDomain Base Directory: {AppDomain.CurrentDomain.BaseDirectory}");
+		Console.WriteLine($"AppDomain Friendly Name: {AppDomain.CurrentDomain.FriendlyName}");
+
+		// Source file (if available)
+		string sourceFile = GetSourceFilePath();
+		Console.WriteLine($"Source File Path: {sourceFile ?? "Not available (release build or no debug info)"}");
+	}
 }
