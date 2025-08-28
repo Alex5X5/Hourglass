@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net9.0-windows</TargetFramework>
-	  <ImplicitUsings>enable</ImplicitUsings>
+	<TargetFramework>net9.0-windows</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<SelfContained>true</SelfContained>
+	<PublishSingleFile>true</PublishSingleFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
