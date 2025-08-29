@@ -44,20 +44,13 @@ public static class Paths {
         }
 	}
 
+    public static string FilesPath(string fileName) =>
+        GetMainEntryPointPath() + @"\Hourglass\" + fileName;
+    
 	public static string AssetsPath(string fileName) =>
-		Path.Combine(GetMainEntryPointPath()+ @"\Hourglass\Assets\", fileName);
-		//string assemblyName = Assembly.GetCallingAssembly().GetName().Name+".exe";
-		//Console.WriteLine($"asseblyName:{assemblyName}");
-		//string assemblyLocation = Assembly.GetCallingAssembly().Location;
-		//Console.WriteLine($"asseblyLocation:{assemblyLocation}");
-		//string trimedName = assemblyLocation.Trim(assemblyName.ToCharArray());
-		//Console.WriteLine($"trimmedName:{trimedName}");
-		//Console.WriteLine($"finalPath:{trimedName}");
-		////return Path.Combine(trimedName, fileName);
-		//return trimedName;
-	//} 
+		FilesPath(@"Assets\" + fileName);
 
-	public static void Test() {
+    public static void Test() {
 		try {
 			string mainFilePath = GetMainEntryPointPath();
 			Console.WriteLine($"Main entry point file path: {mainFilePath}");

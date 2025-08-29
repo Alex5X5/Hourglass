@@ -24,6 +24,5 @@ public class FileManager{
 		byte[] buffer = ansi.GetBytes(value);
 		using (FileStream fileHandle = File.OpenWrite("output.pdf"))
 			fileHandle.Write(buffer, 0, buffer.Length);
-
 	}
 }

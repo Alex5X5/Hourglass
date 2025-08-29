@@ -32,20 +32,22 @@ class GraphRenderer : Panel {
 
 	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, ref int graphPosY) {
 		int xAxisSegmentSize = image.Width / (xAxisSegmentCount + 2);
-		int yAxisSegmentSize = image.Height / (yAxisSegmentCount + 2);
+        //xAxisSegmentCount = (int)(xAxisSegmentCount / 1.5);
+        int yAxisSegmentSize = image.Height / (yAxisSegmentCount + 2);
+        //yAxisSegmentCount = (int)(yAxisSegmentCount / 1.5);
 		int yGraphSpace = yAxisSegmentSize / 2;
 		long duration = task.finish - task.start;
 		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
 		int graphLength = (int)Math.Floor(duration * proportion);
 		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion);
 		graphPosX += xAxisSegmentSize;
-		graphPosY += yAxisSegmentSize;
+		graphPosY += (int)(yAxisSegmentSize/2);
 		Rectangle res = new(
 			graphPosX - additionalWidth,
-			graphPosY - additionalHeight,
-			graphLength + additionalWidth * 2,
-			yAxisSegmentSize + additionalHeight * 2
-		);
+            (int)((graphPosY - additionalHeight) / 1.0),
+            graphLength + additionalWidth * 2,
+			(int)((yAxisSegmentSize + additionalHeight * 2) / 1.0)
+        );
 		graphPosY += yGraphSpace;
 		using (Graphics g = Graphics.FromImage(image))
 		using (Brush b = new SolidBrush(Color.AliceBlue))

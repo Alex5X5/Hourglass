@@ -3,6 +3,7 @@ namespace HourGlass;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.Database.Services;
 using Hourglass.Util;
+using Hourglass.PDF;
 
 public class Program {
     /// <summary>
@@ -12,6 +13,11 @@ public class Program {
     public static void Main() {
 		Paths.PrintDetailedInfo();
         Paths.ExtractFiles("Hourglass");
+		unsafe { 
+			byte* buffer = FileManagerUnsafe.LoadInput(out int fileSize);
+			char* text = FileManagerUnsafe.DecodeCharacters(buffer, fileSize, out int charCount);
+			FileManagerUnsafe.FindIndexers(text, charCount);
+		}
 		//ConfigurationManager configuration = (ConfigurationManager)new ConfigurationBuilder()
 		//	.SetBasePath(Directory.GetCurrentDirectory())
 		//		.AddJsonFile(Paths.AssetsPath("settings.json"), false, true)
@@ -60,7 +66,7 @@ public class Program {
 		//Application.EnableVisualStyles();
 		//Application.SetCompatibleTextRenderingDefault(false);
 
-		Application.Run(new HourGlass.GUI.Pages.Timer.TimerWindow(dbService));
+		Application.Run(new GUI.Pages.Timer.TimerWindow(dbService));
         
     }
 }

@@ -13,13 +13,13 @@ public partial class HourglassPdf {
 		string document = FileManager.LoadInput();
 		document = SetUtilityFields(document);
 		List<Database.Models.Task> tasks = dbService.QueryTasksOfCurrentWeekAsync().Result;
-        Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
-            { "monday", DayOfWeek.Monday },
-            { "tuesday", DayOfWeek.Tuesday },
-            { "wendsday", DayOfWeek.Wednesday },
-            { "thursday", DayOfWeek.Thursday },
-            { "friday", DayOfWeek.Friday }
-        };
+		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
+			{ "monday", DayOfWeek.Monday },
+			{ "tuesday", DayOfWeek.Tuesday },
+			{ "wendsday", DayOfWeek.Wednesday },
+			{ "thursday", DayOfWeek.Thursday },
+			{ "friday", DayOfWeek.Friday }
+		};
 		
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
@@ -38,8 +38,8 @@ public partial class HourglassPdf {
 			}
 			for(int i=0; i<lines.Length; i++) {
 				string query = $"{dayName}_line_{i + 1}";
-                document = SetAnnotaionValue(document, query, lines[i]);
-                document = SetFieldValue(document, query, lines[i]);
+				document = SetAnnotaionValue(document, query, lines[i]);
+				document = SetFieldValue(document, query, lines[i]);
 			}
 		}
 		FileManager.WriteOutput(document);

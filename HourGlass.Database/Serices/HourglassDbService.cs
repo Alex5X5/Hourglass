@@ -4,6 +4,7 @@ using DatabaseUtil;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,10 @@ using System.Threading.Tasks;
 
 public class HourglassDbService : IHourglassDbService {
 
-	DatabaseAccessor<HourglassDbContext> _accessor = new("database", DatabasePathFormat.FileName, null);
+	DatabaseAccessor<HourglassDbContext> _accessor = 
+		new(Paths.FilesPath("database"), DatabasePathFormat.FileName, null);
 
-	public HourglassDbService() {
-		var res = _accessor.QueryAllAsync<Models.Task>().Result;
-	}
+	public HourglassDbService() { }
 
 	public async Task<List<Ticket>> QueryTicketsAsync()=>
 		await _accessor.QueryAllAsync<Ticket>();
