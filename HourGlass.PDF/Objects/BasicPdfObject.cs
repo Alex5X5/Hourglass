@@ -1,5 +1,7 @@
 ﻿namespace HourGlass.PDF.Objects;
 
+using System;
+
 class BasicPdfObject(int offset, int objectNumber) {
 	public int _offset = 0;
 	public int _objectNumber = 0;

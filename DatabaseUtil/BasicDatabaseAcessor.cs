@@ -2,7 +2,8 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class BasicDatabaseAcessor<T>(string? path, DatabasePathFormat pathFormat, ConfigurationManager? config)
     : DatabaseAccessor<BasicDbContext<T>>(path, pathFormat, config) where T : class {

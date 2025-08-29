@@ -1,6 +1,10 @@
-﻿using Hourglass.Database.Services.Interfaces;
+﻿namespace Hourglass.PDF;
 
-namespace Hourglass.PDF;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Hourglass.Database.Services.Interfaces;
 
 public partial class HourglassPdf {
 

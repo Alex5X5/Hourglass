@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
+using System;
+using System.IO;
 
 namespace DatabaseUtil.Generator.MigrationGenerator;
 
