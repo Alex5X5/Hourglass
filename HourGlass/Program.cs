@@ -13,16 +13,6 @@ public class Program {
     public static void Main() {
 		Paths.PrintDetailedInfo();
         Paths.ExtractFiles("Hourglass");
-
-		HourglassPdfUnsafe hpdf = new HourglassPdfUnsafe();
-		hpdf.InsertOperations.Add("%%index-monday_line_1-annotation", "test");
-		hpdf.FlushDocument();
-		//return;
-		unsafe { 
-			//byte* buffer = FileManagerUnsafe.LoadInputUnsafe(out int fileSize);
-			//char* text = FileManagerUnsafe.DecodeCharacters(buffer, fileSize, out int charCount);
-			//FileManagerUnsafe.FindIndexers(text, charCount);
-		}
 		//ConfigurationManager configuration = (ConfigurationManager)new ConfigurationBuilder()
 		//	.SetBasePath(Directory.GetCurrentDirectory())
 		//		.AddJsonFile(Paths.AssetsPath("settings.json"), false, true)

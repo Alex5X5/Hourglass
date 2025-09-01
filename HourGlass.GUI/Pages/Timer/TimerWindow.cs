@@ -16,6 +16,8 @@ public partial class TimerWindow : Form {
 	private readonly Thread GraphRenderThread;
 	private readonly Thread TimerUpdaterThread;
 
+	private readonly HourglassPdfUnsafe pdf;
+
 	private Hourglass.Database.Models.Task? runningTask = null;
 
 	private readonly Image image = Bitmap.FromFile(Paths.AssetsPath("Präsentation3.png"));
@@ -25,8 +27,8 @@ public partial class TimerWindow : Form {
 
 	public TimerWindow(IHourglassDbService dbService) {
 		_dbService = dbService;
-
-		InitializeComponent();
+		pdf = new(_dbService);
+        InitializeComponent();
 
 		GraphRenderThread = new Thread(
 			() => {
@@ -188,7 +190,7 @@ public partial class TimerWindow : Form {
 	private void ExportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("on export button click");
 		ExportButton.Enabled = false;
-		HourglassPdf.Export(_dbService);
+		Task.Run(pdf.Export);
 		ExportButton.Enabled = true;
 	}
 

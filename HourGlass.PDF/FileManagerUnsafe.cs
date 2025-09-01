@@ -1,7 +1,6 @@
 ﻿namespace Hourglass.PDF;
 
 using Hourglass.Util;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,9 +8,28 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 
-public unsafe class FileManagerUnsafe {
+public partial class HourglassPdfUnsafe {
 
-	public static byte* LoadInputUnsafe(out int fileSize) {
+	public static unsafe char* DecodeBuffer(byte* buffer, int fileSize, out int charCount) {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        Encoding encoding = Encoding.GetEncoding(1252);
+		int bytesPerChar = encoding.GetByteCount(['a']);
+		charCount = fileSize / bytesPerChar;
+		char* chars = (char*)NativeMemory.Alloc((uint)(charCount * sizeof(char)));
+		charCount = encoding.GetChars(buffer, fileSize, chars, charCount);
+		return chars;
+	}
+
+	public static unsafe byte* EncodeBuffer(char* chars, int charCount, out int fileSize) {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        Encoding encoding = Encoding.GetEncoding(1252);
+        fileSize = charCount * sizeof(char);
+        byte* buffer = (byte*)NativeMemory.Alloc((uint)fileSize);
+		fileSize = encoding.GetBytes(chars, charCount, buffer, fileSize);
+		return buffer;
+	}
+
+	public static unsafe byte* LoadInputUnsafe(out int fileSize) {
 		fileSize = (int)new FileInfo(Paths.AssetsPath("output-readable-indexers.pdf")).Length;
 		byte* file = (byte*)NativeMemory.Alloc((uint)fileSize);
 		using (FileStream fs = new FileStream(Paths.AssetsPath("output-readable-indexers.pdf"), FileMode.Open, FileAccess.Read))
@@ -19,11 +37,7 @@ public unsafe class FileManagerUnsafe {
 		return file;
 	}
 
-	public static void WriteOutput(char* content, int size) {
-		byte* file = (byte*)NativeMemory.Alloc((uint)size);
-		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-		Encoding ansi = Encoding.GetEncoding(1252);
-		//ansi.GetBytes(content, size, file, size);
+	public static unsafe void WriteOutputUnsafe(byte* content, int size) {
 		using (FileStream fileHandle = File.OpenWrite("output.pdf"))
 			fileHandle.Write(new Span<byte>(content, size));
 	}

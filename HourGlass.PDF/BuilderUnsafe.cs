@@ -22,17 +22,14 @@ public partial class HourglassPdfUnsafe {
 	//	return res;
 	//}
 	
-	public static string BufferFieldValueUnsafe(string document, string indexName, string value) {
-		string[] lines = document.Split("\n");
-		for (int i = 0; i < lines.Length; i++) {
-			if (lines[i] == $"%%index-{indexName}-field") {
-				lines[i + 1] = $"({value}) Tj";
-			}
-		}
-		string res = "";
-		foreach (string s in lines)
-			res += s + "\n";
-		return res;
+	public void BufferFieldValueUnsafe(string indexName, string value) {
+		//string[] lines = document.Split("\n");
+		InsertOperations.Add($"%%index-{indexName}-field", value);
+	}
+
+	public void BufferAnnotationValueUnsafe(string indexName, string value) {
+		//string[] lines = document.Split("\n");
+		InsertOperations.Add($"%%index-{indexName}-annotation", value);
 	}
 
     private static unsafe byte* InsertSpace(byte* originalBuffer, int originalSize, byte* insertPoint, int spaceSize, out byte* newBuffer) {
