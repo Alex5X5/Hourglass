@@ -22,7 +22,7 @@ public class FileManager{
 		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 		Encoding ansi = Encoding.GetEncoding(1252);
 		byte[] buffer = ansi.GetBytes(value);
-		using (FileStream fileHandle = File.OpenWrite("output.pdf"))
+		using (FileStream fileHandle = File.OpenWrite(Paths.FilesPath("output.pdf")))
 			fileHandle.Write(buffer, 0, buffer.Length);
 	}
 }

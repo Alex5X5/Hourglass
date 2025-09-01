@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Hourglass.PDF;
 
-public partial class HourglassPdf {
+public partial class HourglassPdfUnsafe {
 
 	const int INDEXER_COUNT = 197;
 
