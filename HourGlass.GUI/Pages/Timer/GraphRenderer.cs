@@ -39,14 +39,14 @@ class GraphRenderer : Panel {
 		int graphLength = (int)Math.Floor(duration * proportion);
 		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion);
 		graphPosX += xAxisSegmentSize;
-		graphPosY += yAxisSegmentSize;
+		graphPosY += (int)(yAxisSegmentSize / 2);
 		Rectangle res = new(
 			graphPosX - additionalWidth,
             graphPosY - additionalHeight,
             graphLength + additionalWidth * 2,
 			yAxisSegmentSize + additionalHeight * 2
         );
-		graphPosY += yGraphSpace;
+		graphPosY += yAxisSegmentSize;
 		using (Graphics g = Graphics.FromImage(image))
 		using (Brush b = new SolidBrush(Color.AliceBlue))
 			g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);
