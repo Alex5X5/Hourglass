@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Hourglass.Database.Services.Interfaces;
@@ -9,6 +10,8 @@ using Hourglass.Database.Services.Interfaces;
 public partial class HourglassPdf {
 
 	public static void Export(IHourglassDbService dbService) {
+		Stopwatch stopwatch = new Stopwatch();
+		stopwatch.Start();
 		Console.WriteLine("started expoting");
 		string document = FileManager.LoadInput();
 		document = SetUtilityFields(document);
@@ -44,7 +47,9 @@ public partial class HourglassPdf {
 		}
 		FileManager.WriteOutput(document);
 		Console.WriteLine("done exporting");
-	}
+        stopwatch.Stop();
+        Console.WriteLine(stopwatch.Elapsed.ToString());
+    }
 
 	public static string[] CompileTask(Database.Models.Task task) {
 		const int MAX_LINE_LENGTH = 85;

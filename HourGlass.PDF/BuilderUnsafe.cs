@@ -4,51 +4,49 @@ using System.Runtime.InteropServices;
 
 namespace Hourglass.PDF;
 
-public partial class HourglassPdfUnsafe {
-
-	const int INDEXER_COUNT = 197;
-
-	private Dictionary<string, string> BufferedInserts;
-	
- //   public static string BufferAnnotaionValueunsafe(char* document, string indexName, string value) {
-	//	for (int i = 0; i < lines.Length; i++) {
-	//		if (lines[i]==$"%%index-{indexName}-annotation") {
-	//			lines[i+1] = $"/V ({value})";
-	//		}
-	//	}
-	//	string res = "";
-	//	foreach (string s in lines)
-	//		res += s + "\n";
-	//	return res;
-	//}
+public unsafe partial class HourglassPdfUnsafe {
 	
 	public void BufferFieldValueUnsafe(string indexName, string value) {
-		//string[] lines = document.Split("\n");
 		InsertOperations.Add($"%%index-{indexName}-field", value);
 	}
 
 	public void BufferAnnotationValueUnsafe(string indexName, string value) {
-		//string[] lines = document.Split("\n");
 		InsertOperations.Add($"%%index-{indexName}-annotation", value);
 	}
 
-    private static unsafe byte* InsertSpace(byte* originalBuffer, int originalSize, byte* insertPoint, int spaceSize, out byte* newBuffer) {
-        int offsetToInsertPoint = (int)(insertPoint - originalBuffer);
-        newBuffer = (byte*)NativeMemory.Realloc(originalBuffer, (uint)(originalSize + spaceSize));
-        byte* newInsertPoint = newBuffer + offsetToInsertPoint;
-        int bytesToMove = originalSize - offsetToInsertPoint;
-        if (bytesToMove > 0) {
-            Buffer.MemoryCopy(
-                newInsertPoint,                    // source: current position
-                newInsertPoint + spaceSize,        // destination: 20 bytes later
-                bytesToMove,                       // bytes to move
-                bytesToMove                        // destination size
-            );
+	public void BuildDocument() {
+		int finalTextLength = charCount;
+		foreach (string key in InsertOperations.Keys)
+			finalTextLength += InsertOperations[key].Length;
+		Console.WriteLine($"final text length will be:{finalTextLength}");
+		char* buffer = (char*)NativeMemory.AllocZeroed((uint)(finalTextLength * sizeof(char)));
+		char* _buffer = buffer;
+		foreach (string key in Indexers.Keys) {
+			uint souceCharCopyCount = (uint)((char*)Indexers[key].Item2 - (char*)Indexers[key].Item1);
+			uint sourceByteCopyCount = souceCharCopyCount * sizeof(char);
+			NativeMemory.Copy((char*) Indexers[key].Item1, _buffer, sourceByteCopyCount);
+			_buffer += souceCharCopyCount;
+			InsertOperations.TryGetValue(key, out string? val);
+			if (val != null) {
+				string s = InsertOperations[key];
+				if(s == "")
+					continue;
+				int charInsertCount = s.Length;
+				uint byteInsertCount = (uint) (charInsertCount * sizeof(char));
+				fixed (char* insert = &InsertOperations[key].ToCharArray()[0]) {
+					PrintCharsBefore(_buffer);
+					Console.WriteLine($"Inserting\'{val}\' at document position:{_buffer - buffer} at memory position:\'{(nuint)_buffer}\' for key:\'{key}\'");
+					NativeMemory.Copy(insert, _buffer, byteInsertCount);
+					_buffer += charInsertCount;
+				}
+			}
         }
 
-        // Clear the newly created space (optional)
-        new Span<byte>(newInsertPoint, spaceSize).Clear();
-
-        return newInsertPoint; // Return pointer to the new empty space
+		byte* resultFile = EncodeBuffer(buffer, finalTextLength, out int fileSize);
+		WriteOutputUnsafe(resultFile, fileSize);
+		NativeMemory.Free(resultFile);
+		NativeMemory.Free(buffer);
+		InsertOperations.Clear();
+        Console.WriteLine("flushed document");
     }
 }

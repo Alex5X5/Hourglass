@@ -190,12 +190,17 @@ public partial class TimerWindow : Form {
 	private void ExportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("on export button click");
 		ExportButton.Enabled = false;
-		Task.Run(pdf.Export);
-		ExportButton.Enabled = true;
+		Task.Run(pdf.Export)
+			.ContinueWith(
+				args => ExportButton.Invoke(
+					()=>ExportButton.Enabled = true
+				)
+			);
 	}
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
+		HourglassPdf.Export(_dbService);
 	}
 
 	private void DayModeButtonButtonClick(object sender, EventArgs e) {

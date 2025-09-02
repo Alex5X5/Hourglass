@@ -3611,7 +3611,7 @@ BT
 0 g
 2 2.11 Td
 %%index-job-field
-  () Tj
+() Tj
 ET
 EMC
 endstream
@@ -3663,7 +3663,7 @@ BT
 1 4.0695181 Td
 /F4 9 Tf
 %%index-count-field
-  () Tj
+() Tj
 ET
 Q
 EMC

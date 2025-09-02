@@ -32,21 +32,19 @@ class GraphRenderer : Panel {
 
 	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, ref int graphPosY) {
 		int xAxisSegmentSize = image.Width / (xAxisSegmentCount + 2);
-        //xAxisSegmentCount = (int)(xAxisSegmentCount / 1.5);
         int yAxisSegmentSize = image.Height / (yAxisSegmentCount + 2);
-        //yAxisSegmentCount = (int)(yAxisSegmentCount / 1.5);
 		int yGraphSpace = yAxisSegmentSize / 2;
 		long duration = task.finish - task.start;
 		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
 		int graphLength = (int)Math.Floor(duration * proportion);
 		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion);
 		graphPosX += xAxisSegmentSize;
-		graphPosY += (int)(yAxisSegmentSize/2);
+		graphPosY += yAxisSegmentSize;
 		Rectangle res = new(
 			graphPosX - additionalWidth,
-            (int)((graphPosY - additionalHeight) / 1.0),
+            graphPosY - additionalHeight,
             graphLength + additionalWidth * 2,
-			(int)((yAxisSegmentSize + additionalHeight * 2) / 1.0)
+			yAxisSegmentSize + additionalHeight * 2
         );
 		graphPosY += yGraphSpace;
 		using (Graphics g = Graphics.FromImage(image))
@@ -137,9 +135,9 @@ class GraphRenderer : Panel {
 		}
 	}
 
-	private void DrawDayTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
+	private static void DrawDayTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
 		string text;
-		System.Drawing.Font font = new("Segoe UI", 20F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+		Font font = new("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 		if (task.description.Length > 25)
 			text = task.description[..25] + "...";
 		else
@@ -150,16 +148,42 @@ class GraphRenderer : Panel {
 		}
 		if (graphLength > textWidth + 10) {
 			using (Brush brush = new SolidBrush(Color.Black))
-				g.DrawString(text, font, brush, graphPosX + 3, graphPosY - 5);
+				g.DrawString(text, font, brush, graphPosX + 3, graphPosY + 6);
 			return;
 		}
 		if (graphPosX > textWidth + 10) {
 			using (Brush brush = new SolidBrush(Color.Black))
-				g.DrawString(text, font, brush, graphPosX - textWidth - 5, graphPosY - 5);
+				g.DrawString(text, font, brush, graphPosX - textWidth - 5, graphPosY + 6);
 			return;
 		}
 		using (Brush brush = new SolidBrush(Color.Black))
-			g.DrawString(text, font, brush, graphPosX + graphLength + 5, graphPosY - 5);
+			g.DrawString(text, font, brush, graphPosX + graphLength + 5, graphPosY + 6);
+		return;
+	}
+
+	private static void DrawWeekTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
+		string text;
+		Font font = new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+		if (task.description.Length > 25)
+			text = task.description[..25] + "...";
+		else
+			text = task.description;
+		float textWidth = g.MeasureString(text, font).Width;
+		if (task.StartDateTime.DayOfWeek != DateTime.Now.DayOfWeek) {
+			return;
+		}
+		if (graphLength > textWidth + 10) {
+			using (Brush brush = new SolidBrush(Color.Black))
+				g.DrawString(text, font, brush, graphPosX + 3, graphPosY - 1 );
+			return;
+		}
+		if (graphPosX > textWidth + 10) {
+			using (Brush brush = new SolidBrush(Color.Black))
+				g.DrawString(text, font, brush, graphPosX - textWidth - 3, graphPosY - 1 );
+			return;
+		}
+		using (Brush brush = new SolidBrush(Color.Black))
+			g.DrawString(text, font, brush, graphPosX + graphLength + 3, graphPosY - 1 );
 		return;
 	}
 
@@ -170,22 +194,21 @@ class GraphRenderer : Panel {
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
 		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
 			g.FillPath(brush, path);
-		//DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
+		DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
 	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
-		//Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, 7, MAX_TASKS_PER_WEEK, 0, 0, ref graphPosY);
 		int daysSinceMonday = (7 + (DateTime.Today.DayOfWeek - DayOfWeek.Monday)) % 7;
 		long thisWeekSeconds = DateTime.Today.AddDays(-daysSinceMonday).Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
 		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
 			g.FillPath(brush, path);
+        DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
 	private void DrawMonthTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-		int xAxisSegmentSize = Width / (daysInCurrentMonth + 2);
 		long thisMonthSeconds = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 2))

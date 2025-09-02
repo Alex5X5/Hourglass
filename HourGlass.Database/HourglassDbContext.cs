@@ -20,8 +20,7 @@ public class HourglassDbContext : DbContext {
 public class HourglassDbContextFactory : IDesignTimeDbContextFactory<HourglassDbContext> {
 	public HourglassDbContext CreateDbContext(string[] args) {
 		var optionsBuilder = new DbContextOptionsBuilder<HourglassDbContext>();
-		optionsBuilder.UseSqlite("Data Source=hourglass.db"); // or from config/env vars
-
+		optionsBuilder.UseSqlite("Data Source=hourglass.db");
 		return new HourglassDbContext(optionsBuilder.Options);
 	}
 }
