@@ -16,25 +16,27 @@ public partial class TimerWindow : Form {
 	private readonly Thread GraphRenderThread;
 	private readonly Thread TimerUpdaterThread;
 
-	private readonly HourglassPdfUnsafe pdf;
+	private readonly HourglassPdfUnsafe Pdf;
 
-	private Hourglass.Database.Models.Task? runningTask = null;
+	private List<Hourglass.Database.Models.Task> VisibleTasks;
+	private Hourglass.Database.Models.Task? RunningTask = null;
 
 	private readonly Image image = Bitmap.FromFile(Paths.AssetsPath("Präsentation3.png"));
-	private bool stop = false;
+	private bool Stop = false;
 
 	TimerWindowMode windowMode = TimerWindowMode.Day;
 
 	public TimerWindow(IHourglassDbService dbService) {
+		VisibleTasks = [];
 		_dbService = dbService;
-		pdf = new(_dbService);
+		Pdf = new(_dbService);
         InitializeComponent();
 
 		GraphRenderThread = new Thread(
 			() => {
 				while (!CanRaiseEvents)
 					Thread.Sleep(10);
-				while (!Disposing && !stop) {
+				while (!Disposing && !Stop) {
 					GraphPanel.Invalidate();
 					Thread.Sleep(100);
 				}
@@ -42,10 +44,10 @@ public partial class TimerWindow : Form {
 		);
 
 		TimerUpdaterThread = new Thread(UpdateTimers);
-		runningTask = _dbService.QueryCurrentTaskAsync().Result;
-		if (runningTask != null) {
-			DescriptionTextBox.Text = runningTask.description;
-			SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(runningTask.StartDateTime));
+		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
+		if (RunningTask != null) {
+			DescriptionTextBox.Text = RunningTask.description;
+			SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(RunningTask.StartDateTime));
 			StartButton.Enabled = false;
 		} else {
 			StopButton.Enabled = false;
@@ -109,15 +111,15 @@ public partial class TimerWindow : Form {
 	private void UpdateTimers() {
 		while (!CanRaiseEvents)
 			Thread.Sleep(10);
-		while (!Disposing && !stop) {
+		while (!Disposing && !Stop) {
 			try {
-				if (runningTask != null)
+				if (RunningTask != null)
 					SetFinishTextboxText(DateTimeHelper.ToDayAndTimeString(DateTime.Now));
 				else
 					SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(DateTime.Now));
-				if (runningTask == null)
+				if (RunningTask == null)
 					continue;
-				TimeSpan t = DateTime.Now.Subtract(runningTask.StartDateTime);
+				TimeSpan t = DateTime.Now.Subtract(RunningTask.StartDateTime);
 				DateTime time;
 				try {
 					time = Convert.ToDateTime(t.ToString());
@@ -139,21 +141,21 @@ public partial class TimerWindow : Form {
 		IEnumerable<Hourglass.Database.Models.Project> projects = await _dbService.QueryProjectsAsync();
 		Hourglass.Database.Models.Project? project = projects.FirstOrDefault(x=>x.Name == ProjectTextBox.Text);
 		StartButton.Enabled = false;
-		runningTask = _dbService.StartNewTaskAsnc(
+		RunningTask = _dbService.StartNewTaskAsnc(
 			DescriptionTextBox.Text,
 			project,
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
 		).Result;
-		SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(runningTask.StartDateTime));
+		SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(RunningTask.StartDateTime));
 		StopButton.Enabled = true;
 		StartButton.Enabled = false;
 	}
 
-	private void StopButtonClick(object sender, EventArgs e) {
+	private async void StopButtonClick(object sender, EventArgs e) {
 		DateTime startDateTime;
 		DateTime finishDateTime;
-		Hourglass.Database.Models.Task? currentTask = _dbService.QueryCurrentTaskAsync().Result;
+		Hourglass.Database.Models.Task? currentTask = await _dbService.QueryCurrentTaskAsync();
 		try {
 			startDateTime = DateTimeHelper.InterpretDayAndTimeString(StartTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
@@ -168,7 +170,7 @@ public partial class TimerWindow : Form {
 		} catch (FormatException) {
 			finishDateTime = DateTime.Now;
 		}
-		runningTask = _dbService.FinishCurrentTaskAsync(
+		RunningTask = _dbService.FinishCurrentTaskAsync(
 			startDateTime.Ticks / TimeSpan.TicksPerSecond,
 			finishDateTime.Ticks / TimeSpan.TicksPerSecond,
 			DescriptionTextBox.Text,
@@ -190,7 +192,7 @@ public partial class TimerWindow : Form {
 	private void ExportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("on export button click");
 		ExportButton.Enabled = false;
-		Task.Run(pdf.Export)
+		Task.Run(Pdf.Export)
 			.ContinueWith(
 				args => ExportButton.Invoke(
 					()=>ExportButton.Enabled = true
@@ -203,22 +205,25 @@ public partial class TimerWindow : Form {
 		HourglassPdf.Export(_dbService);
 	}
 
-	private void DayModeButtonButtonClick(object sender, EventArgs e) {
-		Console.WriteLine("day mode button click");
+	private async void DayModeButtonButtonClick(object sender, EventArgs e) {
+        Console.WriteLine("day mode button click");
+		VisibleTasks = await _dbService.QueryTasksOfCurrentDayAsync();
 		windowMode = TimerWindowMode.Day;
-		GraphPanel._windowMode = windowMode;
+		GraphPanel.WindowMode = windowMode;
 	}
 
-	private void WeekModeButtonButtonClick(object sender, EventArgs e) {
+	private async void WeekModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("week mode button click");
-		windowMode = TimerWindowMode.Week;
-		GraphPanel._windowMode = windowMode;
+        VisibleTasks = await _dbService.QueryTasksOfCurrentWeekAsync();
+        windowMode = TimerWindowMode.Week;
+		GraphPanel.WindowMode = windowMode;
 	}
 
-	private void MonthModeButtonButtonClick(object sender, EventArgs e) {
+	private async void MonthModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("month mode button click");
-		windowMode = TimerWindowMode.Month;
-		GraphPanel._windowMode = windowMode;
+        VisibleTasks = await _dbService.QueryTasksOfCurrentWeekAsync();
+        windowMode = TimerWindowMode.Month;
+		GraphPanel.WindowMode = windowMode;
 	}
 
 	#endregion
@@ -229,7 +234,7 @@ public partial class TimerWindow : Form {
 	}
 
 	private void TimerWindow_Close(object sender, EventArgs e) {
-		stop = true;
+		Stop = true;
 	}
 
 	public static Bitmap ResizeImage(Image image, int width, int height) {
@@ -260,16 +265,16 @@ public partial class TimerWindow : Form {
 
 	protected override void OnClick(EventArgs e) {
 		Focus();
-		if (runningTask != null) {
-			runningTask.description = DescriptionTextBox.Text;
-			_dbService.UpdateTaskAsync(runningTask);
+		if (RunningTask != null) {
+			RunningTask.description = DescriptionTextBox.Text;
+			_dbService.UpdateTaskAsync(RunningTask);
 		}
 	}
 
 	public void OnDescriptionTextboxLostFocus(Object sender, EventArgs args) {
-		if (runningTask != null) {
-			runningTask.description = DescriptionTextBox.Text;
-			_dbService.UpdateTaskAsync(runningTask);
+		if (RunningTask != null) {
+			RunningTask.description = DescriptionTextBox.Text;
+			_dbService.UpdateTaskAsync(RunningTask);
 		}
 	}
 
