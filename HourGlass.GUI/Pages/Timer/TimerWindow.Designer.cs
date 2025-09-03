@@ -19,7 +19,6 @@ public partial class TimerWindow {
 		if (disposing && (components != null)) {
 			components.Dispose();
 		}
-		pdf.Dispose();
 		base.Dispose(disposing);
 	}
 

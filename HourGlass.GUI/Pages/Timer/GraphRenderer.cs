@@ -192,7 +192,7 @@ class GraphRenderer : Panel {
 		long todaySeconds = nowSeconds - (nowSeconds % TimeSpan.SecondsPerDay);
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
-		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
+		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
 		DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
@@ -202,7 +202,7 @@ class GraphRenderer : Panel {
 		long thisWeekSeconds = DateTime.Today.AddDays(-daysSinceMonday).Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
-		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
+		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
         DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
@@ -238,9 +238,9 @@ class GraphRenderer : Panel {
 			DrawTimeline(g);
 			if (_dbService != null) {
 				List<Database.Models.Task> tasks;
-				tasks = await _dbService.QueryTasksOfCurrentDayAsync();
 				switch (WindowMode) {
 					case TimerWindowMode.Day:
+						tasks = await _dbService.QueryTasksOfCurrentDayAsync();
 						if (tasks != null && tasks.Count > 0) {
 							int graphPosY = 0;
 							for (int i = 0; i < MAX_TASKS_PER_DAY && i < tasks.Count; i++) {

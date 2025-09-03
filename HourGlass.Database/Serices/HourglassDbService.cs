@@ -50,9 +50,8 @@ public class HourglassDbService : IHourglassDbService {
 		now -= TimeSpan.SecondsPerDay;
 		IEnumerable<Models.Task> all = await QueryTasksAsync();
 		return all
-			.Where(x => x.finish >= now)
-				.Where(x => x.StartDateTime.DayOfWeek == DateTime.Now.DayOfWeek)
-					.ToList();
+			.Where(x => x.StartDateTime.DayOfWeek == DateTime.Now.DayOfWeek)
+				.ToList();
 	}
 
 	public async Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync() {
@@ -62,8 +61,7 @@ public class HourglassDbService : IHourglassDbService {
 		DateTime lastMonday = today.AddDays(-daysSinceMonday);
 		IEnumerable<Models.Task> all = await QueryTasksAsync();
 		return all
-			.Where(x => x.finish >= now)
-				.Where(x => x.StartDateTime >= lastMonday).ToList();
+			.Where(x => x.StartDateTime >= lastMonday).ToList();
 	}
 
 	public async Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync() {
@@ -71,8 +69,7 @@ public class HourglassDbService : IHourglassDbService {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		IEnumerable<Models.Task> all = await QueryTasksAsync();
 		return all
-            .Where(x => x.finish >= now)
-				.Where(x => x.StartDateTime >= thisMonth).ToList();
+			.Where(x => x.StartDateTime >= thisMonth).ToList();
 	}
 
 	public async Task<Models.Task?> StartNewTaskAsnc(string description, Project project, Worker worker, Ticket? ticket) {

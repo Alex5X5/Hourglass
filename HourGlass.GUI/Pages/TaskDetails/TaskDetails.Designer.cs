@@ -39,12 +39,12 @@ partial class TaskDetails {
         StartTextbox = new TextBox();
         FinishLabel = new Label();
         FinishTextbox = new TextBox();
-        button1 = new Button();
-        button2 = new Button();
-        button3 = new Button();
-        button4 = new Button();
-        button5 = new Button();
-        button6 = new Button();
+        ColorOrangeButton = new Button();
+        ColorRedButton = new Button();
+        ColorLightBlueButton = new Button();
+        ColorDarkBlueButton = new Button();
+        ColorLightGreenButton = new Button();
+        ColorDarkGreenButton = new Button();
         ContiniueButton = new Button();
         SuspendLayout();
         // 
@@ -167,73 +167,72 @@ partial class TaskDetails {
         FinishTextbox.Size = new Size(145, 29);
         FinishTextbox.TabIndex = 11;
         // 
-        // button1
+        // ColorOrangeButton
         // 
-        button1.BackColor = Color.FromArgb(255, 128, 0);
-        button1.Location = new Point(401, 37);
-        button1.Name = "button1";
-        button1.Size = new Size(25, 23);
-        button1.TabIndex = 13;
-        button1.Text = "button1";
-        button1.UseVisualStyleBackColor = false;
+        ColorOrangeButton.BackColor = TASK_BACKGROUND_ORANGE;
+        ColorOrangeButton.Location = new Point(401, 37);
+        ColorOrangeButton.Name = "ColorOrangeButton";
+        ColorOrangeButton.Size = new Size(25, 23);
+        ColorOrangeButton.TabIndex = 13;
+        ColorOrangeButton.UseVisualStyleBackColor = false;
+        ColorOrangeButton.Click += ColorOrangeButton_Click;
         // 
-        // button2
+        // ColorRedButton
         // 
-        button2.BackColor = Color.Firebrick;
-        button2.Location = new Point(401, 94);
-        button2.Name = "button2";
-        button2.Size = new Size(25, 23);
-        button2.TabIndex = 14;
-        button2.Text = "button2";
-        button2.UseVisualStyleBackColor = false;
+        ColorRedButton.BackColor = TASK_BACKGROUND_RED;
+        ColorRedButton.Location = new Point(401, 94);
+        ColorRedButton.Name = "ColorRedButton";
+        ColorRedButton.Size = new Size(25, 23);
+        ColorRedButton.TabIndex = 14;
+        ColorRedButton.UseVisualStyleBackColor = false;
+        ColorRedButton.Click += ColorRedButton_Click;
         // 
-        // button3
+        // ColorLightBlueButton
         // 
-        button3.BackColor = Color.LightSeaGreen;
-        button3.Location = new Point(451, 37);
-        button3.Name = "button3";
-        button3.Size = new Size(25, 23);
-        button3.TabIndex = 15;
-        button3.Text = "button3";
-        button3.UseVisualStyleBackColor = false;
+        ColorLightBlueButton.BackColor = TASK_BACKGROUND_LIGTH_BLUE;
+        ColorLightBlueButton.Location = new Point(451, 37);
+        ColorLightBlueButton.Name = "ColorLightBlueButton";
+        ColorLightBlueButton.Size = new Size(25, 23);
+        ColorLightBlueButton.TabIndex = 15;
+        ColorLightBlueButton.UseVisualStyleBackColor = false;
+        ColorLightBlueButton.Click += ColorLightBlueButton_Click;
         // 
-        // button4
+        // ColorDarkBlueButton
         // 
-        button4.BackColor = Color.SteelBlue;
-        button4.Location = new Point(502, 37);
-        button4.Name = "button4";
-        button4.Size = new Size(25, 23);
-        button4.TabIndex = 16;
-        button4.Text = "button4";
-        button4.UseVisualStyleBackColor = false;
+        ColorDarkBlueButton.BackColor = TASK_BACKGROUND_DARK_BLUE;
+        ColorDarkBlueButton.Location = new Point(502, 37);
+        ColorDarkBlueButton.Name = "ColorDarkBlueButton";
+        ColorDarkBlueButton.Size = new Size(25, 23);
+        ColorDarkBlueButton.TabIndex = 16;
+        ColorDarkBlueButton.UseVisualStyleBackColor = false;
+        ColorDarkBlueButton.Click += ColorDarkBlueButton_Click;
         // 
-        // button5
+        // ColorLightGreenButton
         // 
-        button5.BackColor = Color.LimeGreen;
-        button5.Location = new Point(451, 94);
-        button5.Name = "button5";
-        button5.Size = new Size(25, 23);
-        button5.TabIndex = 17;
-        button5.Text = "button5";
-        button5.UseVisualStyleBackColor = false;
+        ColorLightGreenButton.BackColor = TASK_BACKGROUND_LIGHT_GREEN;
+        ColorLightGreenButton.Location = new Point(451, 94);
+        ColorLightGreenButton.Name = "ColorLightGreenButton";
+        ColorLightGreenButton.Size = new Size(25, 23);
+        ColorLightGreenButton.TabIndex = 17;
+        ColorLightGreenButton.UseVisualStyleBackColor = false;
+        ColorLightGreenButton.Click += ColorLightGreenButton_Click;
         // 
-        // button6
+        // ColorDarkGreenButton
         // 
-        button6.BackColor = Color.Green;
-        button6.FlatAppearance.BorderColor = Color.Lime;
-        button6.FlatAppearance.BorderSize = 5;
-        button6.Location = new Point(502, 94);
-        button6.Name = "button6";
-        button6.Size = new Size(25, 23);
-        button6.TabIndex = 18;
-        button6.Text = "button6";
-        button6.UseVisualStyleBackColor = false;
+        ColorDarkGreenButton.BackColor = TASK_BACKGROUND_DARK_GREEN;
+        ColorDarkGreenButton.Location = new Point(502, 94);
+        ColorDarkGreenButton.Name = "ColorDarkGreenButton";
+        ColorDarkGreenButton.Size = new Size(25, 23);
+        ColorDarkGreenButton.TabIndex = 18;
+        ColorDarkGreenButton.Text = "button6";
+        ColorDarkGreenButton.UseVisualStyleBackColor = false;
+        ColorDarkGreenButton.Click += ColorDarkGreenButton_Click;
         // 
-        // button7
+        // ContiniueButton
         // 
         ContiniueButton.Font = new Font("Segoe UI", 12F);
         ContiniueButton.Location = new Point(321, 255);
-        ContiniueButton.Name = "button7";
+        ContiniueButton.Name = "ContiniueButton";
         ContiniueButton.Size = new Size(98, 35);
         ContiniueButton.TabIndex = 0;
         ContiniueButton.Text = "Continiue";
@@ -243,12 +242,12 @@ partial class TaskDetails {
         // TaskDetails
         // 
         ClientSize = new Size(593, 353);
-        Controls.Add(button6);
-        Controls.Add(button5);
-        Controls.Add(button4);
-        Controls.Add(button3);
-        Controls.Add(button2);
-        Controls.Add(button1);
+        Controls.Add(ColorDarkGreenButton);
+        Controls.Add(ColorLightGreenButton);
+        Controls.Add(ColorDarkBlueButton);
+        Controls.Add(ColorLightBlueButton);
+        Controls.Add(ColorRedButton);
+        Controls.Add(ColorOrangeButton);
         Controls.Add(FinishLabel);
         Controls.Add(FinishTextbox);
         Controls.Add(StartLabel);
@@ -284,11 +283,11 @@ partial class TaskDetails {
 	private TextBox StartTextbox;
 	private Label FinishLabel;
 	private TextBox FinishTextbox;
-	private Button button1;
-	private Button button2;
-	private Button button3;
-	private Button button4;
-	private Button button5;
-	private Button button6;
+	private Button ColorOrangeButton;
+	private Button ColorRedButton;
+	private Button ColorLightBlueButton;
+	private Button ColorDarkBlueButton;
+	private Button ColorLightGreenButton;
+	private Button ColorDarkGreenButton;
     private Button ContiniueButton;
 }
