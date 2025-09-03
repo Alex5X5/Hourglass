@@ -48,4 +48,7 @@ public static class DateTimeHelper {
 
 	public static DateTime GetFirstDayOfCurrentMonth() =>
 		new(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+	public static int GetWeekCountSinceStart() =>
+        (int) Math.Ceiling((DateTime.Today - START_DATE).Days / 7.0);
 }

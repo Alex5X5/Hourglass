@@ -133,7 +133,7 @@ public unsafe partial class HourglassPdfUnsafe {
 		SetUtilityFields();
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = EncodeBuffer(document, documentCharCount, out int fileSize);
-		WriteOutputUnsafe(resultFile, "", fileSize);
+		WriteOutputUnsafe(resultFile, Paths.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
         NativeMemory.Free(resultFile);
         NativeMemory.Free(document);
         InsertOperations.Clear();
@@ -163,7 +163,7 @@ public unsafe partial class HourglassPdfUnsafe {
 		return res.ToArray();
 	}
 
-	public void SetUtilityFields() {
+	private void SetUtilityFields() {
 		int daysDifference = (DateTime.Today - DateTimeHelper.START_DATE).Days;
 		int currentWeek = (int)Math.Ceiling(daysDifference / 7.0);
         BufferAnnotationValueUnsafe("week", Convert.ToString(currentWeek));
@@ -174,6 +174,12 @@ public unsafe partial class HourglassPdfUnsafe {
         BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
         BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
         BufferFieldValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
-
     }
+
+	private string GetNewFileName() {
+        DateTime dayFrom = DateTimeHelper.GetMondayOfCurrentWeek();
+        DateTime dayTo = DateTimeHelper.GetFridayOfCurrentWeek();
+		return $"Ausbildungsnachweis{DateTimeHelper.GetWeekCountSinceStart()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
+    }
+
 }
