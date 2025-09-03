@@ -272,7 +272,6 @@ public partial class TimerWindow {
 		BackColor = SystemColors.AppWorkspace;
 		FormBorderStyle = FormBorderStyle.FixedSingle;
 		ClientSize = new Size(1600, 900);
-		//Controls.Add(button2);
 		Controls.Add(DayModeButton);
 		Controls.Add(WeekModeButton);
 		Controls.Add(MonthModeButton);

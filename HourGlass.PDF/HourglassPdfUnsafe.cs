@@ -130,8 +130,14 @@ public unsafe partial class HourglassPdfUnsafe {
 				BufferFieldValueUnsafe(query, lines[i]);
             }
         }
-		BuildDocument();
-		stopwatch.Stop();
+		SetUtilityFields();
+		char* document = BuildDocument(out int documentCharCount);
+		byte* resultFile = EncodeBuffer(document, documentCharCount, out int fileSize);
+		WriteOutputUnsafe(resultFile, "", fileSize);
+        NativeMemory.Free(resultFile);
+        NativeMemory.Free(document);
+        InsertOperations.Clear();
+        stopwatch.Stop();
 		Console.WriteLine("finished exporting unsafe");
 		Console.WriteLine($"exporting took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
     }
@@ -157,13 +163,17 @@ public unsafe partial class HourglassPdfUnsafe {
 		return res.ToArray();
 	}
 
-	public static string SetUtilityFieldsUnsafe(string document) {
-        DateTime thisMonthFirstDay = new(DateTime.Today.Year, DateTime.Today.Month, 0);
-		DateTime today = DateTime.Today;
-		int daysDifference = (today - DateTimeHelper.START_DATE).Days;
-		int weeksPassed = daysDifference / 7;
+	public void SetUtilityFields() {
+		int daysDifference = (DateTime.Today - DateTimeHelper.START_DATE).Days;
 		int currentWeek = (int)Math.Ceiling(daysDifference / 7.0);
-		//BufferFieldValueUnsafe("date_from");
-		return document;
-	}
+        BufferAnnotationValueUnsafe("week", Convert.ToString(currentWeek));
+        BufferFieldValueUnsafe("week", Convert.ToString(currentWeek));
+		DateTime dayFrom = DateTimeHelper.GetMondayOfCurrentWeek();
+		DateTime dayTo = DateTimeHelper.GetFridayOfCurrentWeek();
+        BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
+        BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
+        BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
+        BufferFieldValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
+
+    }
 }

@@ -42,6 +42,9 @@ public static class DateTimeHelper {
         int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
         return today.AddDays(-daysSinceMonday);
     }
+	
+	public static DateTime GetFridayOfCurrentWeek() =>
+        GetMondayOfCurrentWeek().AddDays(4);
 
 	public static DateTime GetFirstDayOfCurrentMonth() =>
 		new(DateTime.Today.Year, DateTime.Today.Month, 1);

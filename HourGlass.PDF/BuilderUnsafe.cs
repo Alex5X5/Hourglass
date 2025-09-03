@@ -7,15 +7,16 @@ namespace Hourglass.PDF;
 public unsafe partial class HourglassPdfUnsafe {
 	
 	public void BufferFieldValueUnsafe(string indexName, string value) {
-		InsertOperations.Add($"%%index-{indexName}-field", value);
+		InsertOperations[$"%%index-{indexName}-field"] = value;
 	}
 
 	public void BufferAnnotationValueUnsafe(string indexName, string value) {
-		InsertOperations.Add($"%%index-{indexName}-annotation", value);
+		InsertOperations[$"%%index-{indexName}-annotation"] = value;
 	}
 
-	public void BuildDocument() {
-		int finalTextLength = charCount;
+	public char* BuildDocument(out int finalTextLength) {
+		Console.WriteLine("started building document");
+        finalTextLength = charCount;
 		foreach (string key in InsertOperations.Keys)
 			finalTextLength += InsertOperations[key].Length;
 		Console.WriteLine($"final text length will be:{finalTextLength}");
@@ -41,12 +42,7 @@ public unsafe partial class HourglassPdfUnsafe {
 				}
 			}
         }
-
-		byte* resultFile = EncodeBuffer(buffer, finalTextLength, out int fileSize);
-		WriteOutputUnsafe(resultFile, fileSize);
-		NativeMemory.Free(resultFile);
-		NativeMemory.Free(buffer);
-		InsertOperations.Clear();
-        Console.WriteLine("flushed document");
+        Console.WriteLine("finished building document");
+        return buffer;
     }
 }

@@ -224,7 +224,6 @@ partial class TaskDetails {
         ColorDarkGreenButton.Name = "ColorDarkGreenButton";
         ColorDarkGreenButton.Size = new Size(25, 23);
         ColorDarkGreenButton.TabIndex = 18;
-        ColorDarkGreenButton.Text = "button6";
         ColorDarkGreenButton.UseVisualStyleBackColor = false;
         ColorDarkGreenButton.Click += ColorDarkGreenButton_Click;
         // 

@@ -37,7 +37,7 @@ public partial class HourglassPdfUnsafe {
 		return file;
 	}
 
-	public static unsafe void WriteOutputUnsafe(byte* content, int size) {
+	public static unsafe void WriteOutputUnsafe(byte* content, string filename, int size) {
 		using (FileStream fileHandle = File.OpenWrite("output.pdf"))
 			fileHandle.Write(new Span<byte>(content, size));
 	}

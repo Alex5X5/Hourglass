@@ -3,6 +3,7 @@
 using Hourglass.Database.Services.Interfaces;
 
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 class GraphRenderer : Panel {
@@ -47,9 +48,9 @@ class GraphRenderer : Panel {
 			yAxisSegmentSize + additionalHeight * 2
         );
 		graphPosY += yAxisSegmentSize;
-		using (Graphics g = Graphics.FromImage(image))
-		using (Brush b = new SolidBrush(Color.AliceBlue))
-			g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);
+		//using (Graphics g = Graphics.FromImage(image))
+		//using (Brush b = new SolidBrush(Color.AliceBlue))
+		//	g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);
 		return res;
 	}
 
@@ -191,7 +192,7 @@ class GraphRenderer : Panel {
 		long nowSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		long todaySeconds = nowSeconds - (nowSeconds % TimeSpan.SecondsPerDay);
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, ref graphPosY);
-		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
+		using (GraphicsPath path = GetRoundedRectanglePath(rect, 20))
 		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
 		DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
@@ -212,7 +213,7 @@ class GraphRenderer : Panel {
 		long thisMonthSeconds = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, 2))
-		using (Brush brush = new SolidBrush(Color.FromArgb(255, 122, 0)))
+		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
 	}
 
@@ -224,13 +225,15 @@ class GraphRenderer : Panel {
 		args.Graphics.Clear(Color.Gainsboro);
 		if (image.Width != Width | image.Height != Height) {
 			image.Dispose();
-			image = new Bitmap(Width, Height);
+			image = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
 		}
 		using (Graphics g = Graphics.FromImage(image)) {
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            g.CompositingMode = CompositingMode.SourceOver; // This preserves background
+
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
 			g.Clear(Color.Gainsboro);

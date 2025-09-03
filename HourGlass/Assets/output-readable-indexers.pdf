@@ -276,7 +276,7 @@ endobj
   /Subtype /Widget
   /T (Textfeld 1_3)
   /Type /Annot
-%%index-count-annotation
+%%index-week-annotation
 /V ()
 >>
 endobj
@@ -3662,7 +3662,7 @@ BT
 0 0 0 rg
 1 4.0695181 Td
 /F4 9 Tf
-%%index-count-field
+%%index-week-field
 () Tj
 ET
 Q
@@ -3768,6 +3768,7 @@ BT
 0 0 0 rg
 1 3.184 Td
 /F3 8 Tf
+%%index-date_to-field
 () Tj
 ET
 Q
