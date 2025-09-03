@@ -7,14 +7,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 public unsafe partial class HourglassPdfUnsafe {
 
 	private const string LAST_SECTION_INDEXER = "eof";
 
-	public static bool IndexersLoaded {
-		private set; get;
-	}
+	public static bool IndexersLoaded { private set; get; } = false;
 
 	IHourglassDbService _dbService;
 
@@ -33,7 +32,8 @@ public unsafe partial class HourglassPdfUnsafe {
 		text = DecodeBuffer(buffer, inputFileSize, out int _charCount);
 		charCount = _charCount;
 		NativeMemory.Free(buffer);
-		FindIndexers();
+		new Thread(LoadIndexers).Start();
+		//LoadIndexers();
 	}
 
 	public void Dispose() {
@@ -50,7 +50,10 @@ public unsafe partial class HourglassPdfUnsafe {
         Console.WriteLine();
     }
 
-	public void FindIndexers() {
+	public void LoadIndexers() {
+		Console.WriteLine("loading indexers");
+		Stopwatch stopwatch = new();
+		stopwatch.Start();
 		int i = 0;
 		char* _content = text;
 		int annotationCount = 0;
@@ -70,18 +73,14 @@ public unsafe partial class HourglassPdfUnsafe {
 				i++;
 				if (_content[0] == '/' && _content[1] == 'V' && _content[2] == ' ' && _content[3] == '(' && _content[4] == ')') {
 					annotationCount++;
-					Console.WriteLine($"annotation:{key} annotationCount:{annotationCount}  pos:{(nuint)_content} offset:{(nuint)_content - (nuint)text}");
 					_content += 4;
 					i += 4;
-                    //Console.WriteLine($"new *_content:'{*_content}' old *_content:'{*previouslastSectionCharacter}'");
 					Indexers[key] = ((IntPtr)previouslastSectionCharacter, (IntPtr)_content);
 					previouslastSectionCharacter = _content;
                 } else if (_content[0] == '(' && _content[1] == ')' && _content[2] == ' ' && _content[3] == 'T' && _content[4] == 'j') {
 					fieldCount++;
-					Console.WriteLine($"field:{key} fieldCount:{fieldCount} pos:{(nuint)_content} offset:{(nuint)_content-(nuint)text}");
 					_content += 1;
 					i += 1;
-                    //Console.WriteLine($"new *_content:'{*_content}' old *_content:'{*previouslastSectionCharacter}'");
 					Indexers[key] = ((IntPtr)previouslastSectionCharacter, (IntPtr)_content);
 					previouslastSectionCharacter = _content;
 				}
@@ -90,9 +89,15 @@ public unsafe partial class HourglassPdfUnsafe {
 			i++;
 		}
         Indexers[LAST_SECTION_INDEXER] = ((IntPtr)previouslastSectionCharacter, (IntPtr)(text+charCount));
-    }
+		IndexersLoaded = true;
+		stopwatch.Stop();
+		Console.WriteLine("finished loading indexers");
+		Console.WriteLine($"loading indexers took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
+	}
 
     public void Export() {
+		if (!IndexersLoaded)
+			return;
 		Stopwatch stopwatch = new();
 		stopwatch.Start();
         Console.WriteLine("started expoting unsafe");
@@ -126,9 +131,9 @@ public unsafe partial class HourglassPdfUnsafe {
             }
         }
 		BuildDocument();
-        Console.WriteLine("done exporting");
 		stopwatch.Stop();
-		Console.WriteLine(stopwatch.Elapsed.ToString());
+		Console.WriteLine("finished exporting unsafe");
+		Console.WriteLine($"exporting took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
     }
 
 	public static string[] CompileTask(Database.Models.Task task) {

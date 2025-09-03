@@ -129,7 +129,7 @@ class GraphRenderer : Panel {
 					Convert.ToString(i),
 					new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
 					textBrush,
-					new Point(xAxisSegmentSize * i + (Convert.ToString(i).Length == 1 ? 5 : 2), Height * 19 / 20 + 2)
+					new Point(xAxisSegmentSize * i + (Convert.ToString(i).Length == 1 ? 9 : 6), Height * 19 / 20 + 2)
 				);
 			}
 		}
