@@ -18,6 +18,8 @@ public partial class TimerWindow : Form {
 
 	private readonly HourglassPdfUnsafe Pdf;
 
+	private HourglassPdfUnsafe pdf;
+
 	private List<Hourglass.Database.Models.Task> VisibleTasks;
 	private Hourglass.Database.Models.Task? RunningTask = null;
 
