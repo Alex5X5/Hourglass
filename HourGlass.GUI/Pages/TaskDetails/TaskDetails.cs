@@ -30,16 +30,21 @@ public partial class TaskDetails : Form {
 		Close();
 	}
 
-	private void DeleteButton_Click(object sender, EventArgs e) {
+	private void DeleteButtonClick(object sender, EventArgs e) {
 		_dbService.DeleteTaskAsync(_task);
 		Close();
-	}
+    }
 
-	private void EscapeButton_Click(object sender, EventArgs e) {
-		Close();
-	}
+    private void EscapeButtonClick(object sender, EventArgs e) {
+        Close();
+    }
 
-	private void TaskDetails_Load(object sender, EventArgs e) {
+    private void ContiniueButtonClick(object sender, EventArgs e) {
+		_dbService.ContiniueTaskAsync(_task);
+        Close();
+    }
+
+    private void TaskDetails_Load(object sender, EventArgs e) {
 		if (_task != null) {
 			DescriptionTextbox.Text = _task.description;
 			StartTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.StartDateTime);

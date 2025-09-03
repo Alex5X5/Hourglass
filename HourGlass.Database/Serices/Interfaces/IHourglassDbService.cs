@@ -16,7 +16,7 @@ public interface IHourglassDbService {
 
 	public System.Threading.Tasks.Task DeleteTaskAsync(Models.Task updatedTask);
 
-	public Task<bool> ContiniueTaskAsync(Models.Task updatedTask);
+	public Task<Models.Task> ContiniueTaskAsync(Models.Task updatedTask);
 
 	public Task<List<Models.Task>> QueryTasksAsync();
 
@@ -26,7 +26,9 @@ public interface IHourglassDbService {
 
 	public Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync();
 
-	public Task<Models.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Project? project, Ticket? ticket);
+    public Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync();
+
+    public Task<Models.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Project? project, Ticket? ticket);
 
 	public Task<List<Models.Ticket>> QueryTicketsAsync();
 

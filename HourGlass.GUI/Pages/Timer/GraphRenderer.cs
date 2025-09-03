@@ -11,7 +11,7 @@ class GraphRenderer : Panel {
 	
 	private Bitmap image;
 	public IHourglassDbService? _dbService;
-	public TimerWindowMode _windowMode;
+	public TimerWindowMode WindowMode;
 
 	private const int MAX_TASKS_PER_DAY = 6;
 	private const int MAX_TASKS_PER_WEEK = MAX_TASKS_PER_DAY * 5;
@@ -20,7 +20,7 @@ class GraphRenderer : Panel {
 
 	public GraphRenderer(IHourglassDbService dbService, TimerWindowMode windowMode) : this() {
 		_dbService = dbService;
-		_windowMode = windowMode;
+		WindowMode = windowMode;
 	}
 
 	public GraphRenderer() : base() {
@@ -66,11 +66,11 @@ class GraphRenderer : Panel {
 	}
 
 	private void DrawTimeline(Graphics g) {
-		if(_windowMode == TimerWindowMode.Day)
+		if(WindowMode == TimerWindowMode.Day)
 			DrawDayTimeline(g);
-		if(_windowMode == TimerWindowMode.Week)
+		if(WindowMode == TimerWindowMode.Week)
 			DrawWeekTimeline(g);
-		if(_windowMode == TimerWindowMode.Month)
+		if(WindowMode == TimerWindowMode.Month)
 			DrawMonthTimeline(g);
 	}
 
@@ -239,7 +239,7 @@ class GraphRenderer : Panel {
 			if (_dbService != null) {
 				List<Database.Models.Task> tasks;
 				tasks = await _dbService.QueryTasksOfCurrentDayAsync();
-				switch (_windowMode) {
+				switch (WindowMode) {
 					case TimerWindowMode.Day:
 						if (tasks != null && tasks.Count > 0) {
 							int graphPosY = 0;
@@ -279,7 +279,7 @@ class GraphRenderer : Panel {
 		Point mousePos = PointToClient(MousePosition);
 		Console.WriteLine($"click at {mousePos}");
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-		List<Database.Models.Task>? tasks = _windowMode switch {
+		List<Database.Models.Task>? tasks = WindowMode switch {
 			TimerWindowMode.Day => await _dbService.QueryTasksOfCurrentDayAsync(),
 			TimerWindowMode.Week => await _dbService.QueryTasksOfCurrentWeekAsync(),
 			TimerWindowMode.Month => await _dbService.QueryTasksOfCurrentWeekAsync(),
@@ -289,7 +289,7 @@ class GraphRenderer : Panel {
 			g.Clear(Color.Gainsboro);
 		int graphPosY = 0;
 		foreach (Database.Models.Task task in tasks) {
-			bool clicked = _windowMode switch {
+			bool clicked = WindowMode switch {
 				TimerWindowMode.Day =>
 					GetTaskRectanlge(
 						task,
