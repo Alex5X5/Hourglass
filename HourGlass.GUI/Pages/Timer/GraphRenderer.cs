@@ -1,6 +1,7 @@
 ﻿namespace Hourglass.GUI.Pages.Timer;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.Util;
 using HourGlass.GUI.Pages.Timer;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -20,6 +21,12 @@ class GraphRenderer : Panel {
 	private const int MAX_TASKS_PER_DAY = 6;
 	private const int MAX_TASKS_PER_WEEK = MAX_TASKS_PER_DAY * 5;
 
+	private const int DAY_GRAPH_CLICK_ADDITIONAL_WIDTH = 8, WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH = 5, MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH = 5;
+	private const int DAY_GRAPH_CLICK_ADDITIONAL_HEIGHT = 5, WEEK_GRAPH_CLICK_ADDITIONAL_HEIGHT = 2, MONTH_GRAPH_CLICK_ADDITIONAL_HEIGHT = 2;
+
+    private const int DAY_GRAPH_MINIMAL_WIDTH = 8, WEEK_GRAPH_MINIMAL_WIDTH = 5, MONTH_GRAPH_MINIMAL_WIDTH = 2;
+	private const int DAY_GRAPH_CORNER_RADIUS = 12, WEEK_GRAPH_CORNER_RADIUS = 5, MONTH_GRAPH_CONRER_RADIUS = 2;
+
 	#endregion fields
 
 	public GraphRenderer(IHourglassDbService dbService, TimerWindowMode windowMode, TimerWindow parent) : this() {
@@ -35,20 +42,20 @@ class GraphRenderer : Panel {
 
 	#region draw methods
 
-	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, ref int graphPosY) {
+	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, ref int graphPosY) {
 		int xAxisSegmentSize = image.Width / (xAxisSegmentCount + 2);
         int yAxisSegmentSize = image.Height / (yAxisSegmentCount + 2);
-		int yGraphSpace = yAxisSegmentSize / 2;
 		long duration = task.finish - task.start;
 		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
 		int graphLength = (int)Math.Floor(duration * proportion);
 		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion);
 		graphPosX += xAxisSegmentSize;
-		graphPosY += (int)(yAxisSegmentSize / 2);
-		Rectangle res = new(
+		graphPosY += yAxisSegmentSize / 2;
+		int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
+        Rectangle res = new(
 			graphPosX - additionalWidth,
             graphPosY - additionalHeight,
-            graphLength + additionalWidth * 2,
+            width,
 			yAxisSegmentSize + additionalHeight * 2
         );
 		graphPosY += yAxisSegmentSize;
@@ -61,6 +68,8 @@ class GraphRenderer : Panel {
 	private static GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius) {
 		GraphicsPath path = new();
 		int diameter = radius * 2;
+		if(diameter > rect.Width)
+			diameter = rect.Width;
 		path.StartFigure();
 		path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
 		path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
@@ -195,8 +204,8 @@ class GraphRenderer : Panel {
 	private void DrawDayTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		long nowSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		long todaySeconds = nowSeconds - (nowSeconds % TimeSpan.SecondsPerDay);
-		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, ref graphPosY);
-		using (GraphicsPath path = GetRoundedRectanglePath(rect, 20))
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, DAY_GRAPH_MINIMAL_WIDTH, ref graphPosY);
+		using (GraphicsPath path = GetRoundedRectanglePath(rect, DAY_GRAPH_CORNER_RADIUS))
 		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
 		DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
@@ -205,8 +214,8 @@ class GraphRenderer : Panel {
 	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		int daysSinceMonday = (7 + (DateTime.Today.DayOfWeek - DayOfWeek.Monday)) % 7;
 		long thisWeekSeconds = DateTime.Today.AddDays(-daysSinceMonday).Ticks / TimeSpan.TicksPerSecond;
-		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, ref graphPosY);
-		using (GraphicsPath path = GetRoundedRectanglePath(rect, 5))
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, WEEK_GRAPH_MINIMAL_WIDTH, ref graphPosY);
+		using (GraphicsPath path = GetRoundedRectanglePath(rect, WEEK_GRAPH_CORNER_RADIUS))
 		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
         DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
@@ -215,8 +224,8 @@ class GraphRenderer : Panel {
 	private void DrawMonthTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 		long thisMonthSeconds = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond;
-		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, ref graphPosY);
-		using (GraphicsPath path = GetRoundedRectanglePath(rect, 2))
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, MONTH_GRAPH_MINIMAL_WIDTH, ref graphPosY);
+		using (GraphicsPath path = GetRoundedRectanglePath(rect, MONTH_GRAPH_CONRER_RADIUS))
 		using (Brush brush = new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
 	}
@@ -304,29 +313,33 @@ class GraphRenderer : Panel {
 						DateTime.Today.Ticks / TimeSpan.TicksPerSecond,
 						24,
 						MAX_TASKS_PER_DAY,
-						10,
-						5,
+						DAY_GRAPH_CLICK_ADDITIONAL_WIDTH,
+						DAY_GRAPH_CLICK_ADDITIONAL_HEIGHT,
+						DAY_GRAPH_MINIMAL_WIDTH,
 						ref graphPosY
 					).Contains(mousePos),
 				TimerWindowMode.Week =>
 					GetTaskRectanlge(
 						task,
 						TimeSpan.SecondsPerDay,
-						DateTime.Today.AddDays(-((7 + (DateTime.Today.DayOfWeek - DayOfWeek.Monday)) % 7)).Ticks / TimeSpan.TicksPerSecond,						7,
+						DateTimeHelper.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond,
+						7,
 						MAX_TASKS_PER_WEEK,
-						5,
-						2,
+						WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH,
+						WEEK_GRAPH_CLICK_ADDITIONAL_HEIGHT,
+						WEEK_GRAPH_MINIMAL_WIDTH,
 						ref graphPosY
 					).Contains(mousePos),
 				TimerWindowMode.Month =>
 					GetTaskRectanlge(
 						task,
 						TimeSpan.SecondsPerDay,
-						new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond,
+						DateTimeHelper.GetFirstDayOfCurrentMonth().Ticks / TimeSpan.TicksPerSecond,
 						daysInCurrentMonth,
 						MAX_TASKS_PER_WEEK * daysInCurrentMonth,
-						2,
-						2,
+						MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH,
+						MONTH_GRAPH_CLICK_ADDITIONAL_HEIGHT,
+						MONTH_GRAPH_MINIMAL_WIDTH,
 						ref graphPosY
 					).Contains(mousePos),
 				_ => false

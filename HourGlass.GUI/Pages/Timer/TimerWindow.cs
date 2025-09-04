@@ -32,7 +32,7 @@ public partial class TimerWindow : Form {
 	public TimerWindow(IHourglassDbService dbService) {
 		VisibleTasks = [];
 		_dbService = dbService;
-		Pdf = new(_dbService);
+		Pdf = new PdfService(_dbService);
         InitializeComponent();
 
 		GraphRenderThread = new Thread(
@@ -205,7 +205,7 @@ public partial class TimerWindow : Form {
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
-		HourglassPdfService.Export(_dbService);
+		pdf.Import();
 	}
 
 	private async void DayModeButtonButtonClick(object sender, EventArgs e) {

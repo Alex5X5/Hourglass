@@ -1,6 +1,7 @@
 ﻿namespace Hourglass.PDF;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-public unsafe partial class PdfService {
+public unsafe partial class PdfService : IPdfService {
 
 	private const string LAST_SECTION_INDEXER = "eof";
 
@@ -33,7 +34,6 @@ public unsafe partial class PdfService {
 		charCount = _charCount;
 		NativeMemory.Free(buffer);
 		new Thread(LoadIndexers).Start();
-		//LoadIndexers();
 	}
 
 	public void Dispose() {
@@ -119,10 +119,16 @@ public unsafe partial class PdfService {
                 string[] compiledTask = CompileTask(task);
                 try {
                     Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-                } catch (IndexOutOfRangeException) {
-                    break;
-                }
-                offset += compiledTask.Length;
+					offset += compiledTask.Length;
+                } catch (ArgumentOutOfRangeException) {
+					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+					Console.WriteLine($"description of task was:'{task.description}'");
+					break;
+                } catch (ArgumentException) {
+                    Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+					Console.WriteLine($"description of task was:'{task.description}'");
+					break;
+				}
             }
             for (int i = 0; i < lines.Length; i++) {
                 string query = $"{dayName}_line_{i + 1}";
@@ -142,7 +148,11 @@ public unsafe partial class PdfService {
 		Console.WriteLine($"exporting took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
     }
 
-	public static string[] CompileTask(Database.Models.Task task) {
+    public void Import() {
+        throw new NotImplementedException();
+    }
+
+    public static string[] CompileTask(Database.Models.Task task) {
 		const int MAX_LINE_LENGTH = 85;
 		string source = "";
 		List<string> res = [];
@@ -181,5 +191,4 @@ public unsafe partial class PdfService {
         DateTime dayTo = DateTimeHelper.GetFridayOfCurrentWeek();
 		return $"Ausbildungsnachweis{DateTimeHelper.GetWeekCountSinceStart()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
     }
-
 }
