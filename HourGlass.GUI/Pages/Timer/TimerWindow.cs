@@ -19,7 +19,7 @@ public partial class TimerWindow : Form {
 
 	private readonly PdfService Pdf;
 
-	private IPdfService pdf;
+	private readonly IPdfService pdf;
 
 	private List<Hourglass.Database.Models.Task> VisibleTasks;
 	private Hourglass.Database.Models.Task? RunningTask = null;
