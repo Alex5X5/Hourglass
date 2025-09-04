@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 
-public partial class HourglassPdfUnsafe {
+public partial class PdfService {
 
 	public static unsafe char* DecodeBuffer(byte* buffer, int fileSize, out int charCount) {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

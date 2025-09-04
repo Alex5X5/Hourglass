@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-public unsafe partial class HourglassPdfUnsafe {
+public unsafe partial class PdfService {
 
 	private const string LAST_SECTION_INDEXER = "eof";
 
@@ -24,7 +24,7 @@ public unsafe partial class HourglassPdfUnsafe {
 	private readonly int charCount;
 	private readonly char* text;
 
-	public HourglassPdfUnsafe(IHourglassDbService dbService) {
+	public PdfService(IHourglassDbService dbService) {
 		_dbService = dbService;
 		InsertOperations = [];
 		Indexers = [];

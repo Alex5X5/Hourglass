@@ -16,9 +16,9 @@ public partial class TimerWindow : Form {
 	private readonly Thread GraphRenderThread;
 	private readonly Thread TimerUpdaterThread;
 
-	private readonly HourglassPdfUnsafe Pdf;
+	private readonly PdfService Pdf;
 
-	private HourglassPdfUnsafe pdf;
+	private PdfService pdf;
 
 	private List<Hourglass.Database.Models.Task> VisibleTasks;
 	private Hourglass.Database.Models.Task? RunningTask = null;
@@ -204,7 +204,7 @@ public partial class TimerWindow : Form {
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
-		HourglassPdf.Export(_dbService);
+		HourglassPdfService.Export(_dbService);
 	}
 
 	private async void DayModeButtonButtonClick(object sender, EventArgs e) {
@@ -229,6 +229,16 @@ public partial class TimerWindow : Form {
 	}
 
 	#endregion
+
+	public void OnContiniueTask(Hourglass.Database.Models.Task task) {
+		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
+		SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(task.StartDateTime));
+		SetDescriptionTextboxText(task.description);
+		StopButton.Enabled = true;
+		StopRestartButton.Enabled = true;
+		StartButton.Enabled = false;
+		
+	}
 
 	private void TimerWindow_Load(object sender, EventArgs e) {
 		GraphRenderThread.Start();

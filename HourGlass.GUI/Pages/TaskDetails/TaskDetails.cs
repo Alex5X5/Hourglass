@@ -3,6 +3,7 @@
 using Hourglass.Database;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
+using HourGlass.GUI.Pages.Timer;
 
 public partial class TaskDetails : Form
 {
@@ -15,12 +16,14 @@ public partial class TaskDetails : Form
 
     private readonly Database.Models.Task _task;
     private readonly IHourglassDbService _dbService;
+    private readonly TimerWindow _parent;
 
     private Color previousColor;
 
-    public TaskDetails(Database.Models.Task task, IHourglassDbService dbService) {
+    public TaskDetails(Database.Models.Task task, IHourglassDbService dbService, TimerWindow parent) {
         _task = task;
         _dbService = dbService;
+        _parent = parent;
         InitializeComponent();
     }
 
@@ -54,6 +57,7 @@ public partial class TaskDetails : Form
 
     private void ContiniueButtonClick(object sender, EventArgs e) {
         _dbService.ContiniueTaskAsync(_task);
+        _parent.OnContiniueTask(_task);
         Close();
     }
 

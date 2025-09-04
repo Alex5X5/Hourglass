@@ -1,25 +1,29 @@
 ﻿namespace Hourglass.GUI.Pages.Timer;
 
 using Hourglass.Database.Services.Interfaces;
-
+using HourGlass.GUI.Pages.Timer;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 class GraphRenderer : Panel {
 
-#region fields
-	
-	private Bitmap image;
+	#region fields
+
+	private TimerWindow _parent;
 	public IHourglassDbService? _dbService;
 	public TimerWindowMode WindowMode;
+
+
+	private Bitmap image;
 
 	private const int MAX_TASKS_PER_DAY = 6;
 	private const int MAX_TASKS_PER_WEEK = MAX_TASKS_PER_DAY * 5;
 
 	#endregion fields
 
-	public GraphRenderer(IHourglassDbService dbService, TimerWindowMode windowMode) : this() {
+	public GraphRenderer(IHourglassDbService dbService, TimerWindowMode windowMode, TimerWindow parent) : this() {
+		_parent = parent;
 		_dbService = dbService;
 		WindowMode = windowMode;
 	}
@@ -328,7 +332,7 @@ class GraphRenderer : Panel {
 				_ => false
 			};
 			if (clicked) {
-				TaskDetails.TaskDetails taskDetailsWindow = new(task, _dbService);
+				TaskDetails.TaskDetails taskDetailsWindow = new(task, _dbService, _parent);
 				taskDetailsWindow.ShowDialog();
 				break;
 			}

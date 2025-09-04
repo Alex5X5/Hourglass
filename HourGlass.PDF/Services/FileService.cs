@@ -1,4 +1,4 @@
-﻿namespace Hourglass.PDF;
+﻿namespace Hourglass.PDF.Services;
 
 using Hourglass.Util;
 
@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 
 
-public class FileManager{
+public class FileService{
 
 	public static string LoadInput() {
 		int size = (int)new FileInfo(Paths.AssetsPath("output-readable-indexers.pdf")).Length;

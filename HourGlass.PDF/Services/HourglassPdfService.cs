@@ -6,14 +6,15 @@ using System.Diagnostics;
 using System.Linq;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.PDF.Services;
 
-public partial class HourglassPdf {
+public partial class HourglassPdfService {
 
 	public static void Export(IHourglassDbService dbService) {
 		Stopwatch stopwatch = new Stopwatch();
 		stopwatch.Start();
 		Console.WriteLine("started expoting");
-		string document = FileManager.LoadInput();
+		string document = FileService.LoadInput();
 		document = SetUtilityFields(document);
 		List<Database.Models.Task> tasks = dbService.QueryTasksOfCurrentWeekAsync().Result;
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
@@ -45,7 +46,7 @@ public partial class HourglassPdf {
 				document = SetFieldValue(document, query, lines[i]);
 			}
 		}
-		FileManager.WriteOutput(document);
+		FileService.WriteOutput(document);
 		Console.WriteLine("done exporting");
         stopwatch.Stop();
         Console.WriteLine(stopwatch.Elapsed.ToString());

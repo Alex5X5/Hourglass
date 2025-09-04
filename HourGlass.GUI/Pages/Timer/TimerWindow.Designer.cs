@@ -49,7 +49,7 @@ public partial class TimerWindow {
 		WeekModeButton = new Button();
 		MonthModeButton = new Button();
 		button2 = new Button();
-		GraphPanel = new GraphRenderer(_dbService, windowMode);
+		GraphPanel = new GraphRenderer(_dbService, windowMode, this);
 		ExportButton = new Button();
 		ImportButton = new Button();
 		SuspendLayout();
