@@ -1,6 +1,7 @@
 ﻿using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Pages.Timer;
 using Hourglass.PDF;
+using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
 
 using System.ComponentModel;
@@ -18,7 +19,7 @@ public partial class TimerWindow : Form {
 
 	private readonly PdfService Pdf;
 
-	private PdfService pdf;
+	private IPdfService pdf;
 
 	private List<Hourglass.Database.Models.Task> VisibleTasks;
 	private Hourglass.Database.Models.Task? RunningTask = null;
