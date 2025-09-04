@@ -119,7 +119,10 @@ public unsafe partial class PdfService : IPdfService {
                 string[] compiledTask = CompileTask(task);
                 try {
                     Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-					offset += compiledTask.Length;
+                    string query = $"{dayName}_line_{i + 1}";
+                    BufferAnnotationValueUnsafe(query, lines[i]);
+                    BufferFieldValueUnsafe(query, lines[i]);
+                    offset += compiledTask.Length;
                 } catch (ArgumentOutOfRangeException) {
 					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
 					Console.WriteLine($"description of task was:'{task.description}'");
