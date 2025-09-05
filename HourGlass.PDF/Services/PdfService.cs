@@ -16,9 +16,9 @@ public unsafe partial class PdfService : IPdfService {
 
 	public static bool IndexersLoaded { private set; get; } = false;
 
-	IHourglassDbService _dbService;
+	private readonly IHourglassDbService _dbService;
 
-	private static Dictionary<string, ValueTuple<IntPtr, IntPtr>> Indexers;
+	private readonly Dictionary<string, ValueTuple<IntPtr, IntPtr>> Indexers;
 
 	public Dictionary<string, string> InsertOperations;
 
@@ -150,9 +150,9 @@ public unsafe partial class PdfService : IPdfService {
             }
         }
         prepareContentStopwatch.Stop();
+        SetUtilityFields();
         Console.WriteLine("finished preparing content for the document");
         Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
-        SetUtilityFields();
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = EncodeBuffer(document, documentCharCount, out int fileSize);
 		WriteOutputUnsafe(resultFile, Paths.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
