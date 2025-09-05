@@ -80,8 +80,9 @@ public class HourglassDbService : IHourglassDbService {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		Models.Task task = new() {
 			description = description,
-			project = project,
 			owner = worker,
+			project = project,
+			running = true,
 			start = now
 		};
 		await _accessor.AddAsync(task, false);
@@ -111,7 +112,8 @@ public class HourglassDbService : IHourglassDbService {
 		if (start != null)
 			current.start = (long)start;
 		current.description = description;
-			current.finish = finish ?? DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+		current.finish = finish ?? DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+		current.running = false;
 		if(await _accessor.UpdateAsync(current, false))
 			return null;
 		return current;

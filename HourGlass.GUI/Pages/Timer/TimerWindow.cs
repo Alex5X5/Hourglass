@@ -233,8 +233,13 @@ public partial class TimerWindow : Form {
 
 	public void OnContiniueTask(Hourglass.Database.Models.Task task) {
 		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
-		SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(task.StartDateTime));
-		SetDescriptionTextboxText(task.description);
+		Task.Run(
+			() => {
+				Thread.Sleep(200);
+				SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(task.StartDateTime));
+				SetDescriptionTextboxText(task.description);
+			}
+		);
 		StopButton.Enabled = true;
 		StopRestartButton.Enabled = true;
 		StartButton.Enabled = false;

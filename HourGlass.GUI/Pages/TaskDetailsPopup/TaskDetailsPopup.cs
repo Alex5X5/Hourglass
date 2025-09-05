@@ -38,7 +38,8 @@ public partial class TaskDetailsPopup : Form
             ticket = _task.ticket,
             displayColorBlue = _task.displayColorBlue,
             displayColorGreen = _task.displayColorGreen,
-            displayColorRed = _task.displayColorRed
+            displayColorRed = _task.displayColorRed,
+            running = _task.running,
         };
         _dbService.UpdateTaskAsync(newTask);
         Close();
