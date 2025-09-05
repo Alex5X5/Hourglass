@@ -6,9 +6,11 @@ namespace Hourglass.PDF;
 
 public unsafe partial class PdfService {
 	
+
 	public void BufferFieldValueUnsafe(string indexName, string value) {
 		InsertOperations[$"%%index-{indexName}-field"] = value;
 	}
+
 
 	public void BufferAnnotationValueUnsafe(string indexName, string value) {
 		InsertOperations[$"%%index-{indexName}-annotation"] = value;
@@ -35,8 +37,8 @@ public unsafe partial class PdfService {
 				int charInsertCount = s.Length;
 				uint byteInsertCount = (uint) (charInsertCount * sizeof(char));
 				fixed (char* insert = &InsertOperations[key].ToCharArray()[0]) {
-					PrintCharsBefore(_buffer);
-					Console.WriteLine($"Inserting\'{val}\' at document position:{_buffer - buffer} at memory position:\'{(nuint)_buffer}\' for key:\'{key}\'");
+					//PrintCharsBefore(_buffer);
+					//Console.WriteLine($"Inserting\'{val}\' at document position:{_buffer - buffer} at memory position:\'{(nuint)_buffer}\' for key:\'{key}\'");
 					NativeMemory.Copy(insert, _buffer, byteInsertCount);
 					_buffer += charInsertCount;
 				}

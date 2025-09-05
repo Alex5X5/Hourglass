@@ -1,7 +1,8 @@
-﻿using Hourglass.Util;
+﻿namespace Hourglass.GUI.Pages.TaskDetails; 
 
-namespace Hourglass.GUI.Pages.TaskDetails; 
-partial class TaskDetails {
+using Hourglass.Util;
+
+partial class TaskDetailsPopup {
 	/// <summary>
 	/// Required designer variable.
 	/// </summary>

@@ -99,6 +99,7 @@ public class HourglassDbService : IHourglassDbService {
 				runningTask.ticket
 			);
 		taskToContiniue.finish = 0;
+		taskToContiniue.running = true;
 		await _accessor.UpdateAsync(taskToContiniue, false);
 		return taskToContiniue;
 	}

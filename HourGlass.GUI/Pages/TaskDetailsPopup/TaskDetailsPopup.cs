@@ -5,7 +5,7 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 using HourGlass.GUI.Pages.Timer;
 
-public partial class TaskDetails : Form
+public partial class TaskDetailsPopup : Form
 {
     public static readonly Color TASK_BACKGROUND_ORANGE = Color.FromArgb(255, 128, 0);
     public static readonly Color TASK_BACKGROUND_RED= Color.Firebrick;
@@ -20,7 +20,7 @@ public partial class TaskDetails : Form
 
     private Color previousColor;
 
-    public TaskDetails(Database.Models.Task task, IHourglassDbService dbService, TimerWindow parent) {
+    public TaskDetailsPopup(Database.Models.Task task, IHourglassDbService dbService, TimerWindow parent) {
         _task = task;
         _dbService = dbService;
         _parent = parent;

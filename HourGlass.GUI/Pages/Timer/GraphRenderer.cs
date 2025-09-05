@@ -216,8 +216,13 @@ class GraphRenderer : Panel {
 		long thisWeekSeconds = DateTime.Today.AddDays(-daysSinceMonday).Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, WEEK_GRAPH_MINIMAL_WIDTH, ref graphPosY);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, WEEK_GRAPH_CORNER_RADIUS))
-		using (Brush brush = new SolidBrush(task.DisplayColor))
-			g.FillPath(brush, path);
+		//using (Brush brush = new SolidBrush(task.DisplayColor))
+		using (Brush brush = new LinearGradientBrush(rect, Color.Red, Color.Yellow, 45)) {
+            ColorBlend cblend = new ColorBlend(3);
+            cblend.Colors = new Color[3] { Color.Red, Color.Yellow, Color.Green };
+            cblend.Positions = new float[3] { 0f, 0.5f, 1f };
+            g.FillPath(brush, path);
+		}
         DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
@@ -345,7 +350,7 @@ class GraphRenderer : Panel {
 				_ => false
 			};
 			if (clicked) {
-				TaskDetails.TaskDetails taskDetailsWindow = new(task, _dbService, _parent);
+				TaskDetails.TaskDetailsPopup taskDetailsWindow = new(task, _dbService, _parent);
 				taskDetailsWindow.ShowDialog();
 				break;
 			}

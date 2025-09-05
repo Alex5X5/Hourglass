@@ -29,12 +29,15 @@ public static class DateTimeHelper {
 		} catch (ArgumentOutOfRangeException) {
 			return null;
 		}
-	}
+    }
 
-	public static string ToTimeString(DateTime time) =>
-		$"{time.Hour}:{time.Minute}:{time.Second}";
+    public static string ToTimeString(DateTime time) =>
+        $"{time.Hour}:{time.Minute}:{time.Second}";
 
-	public static string ToDayAndTimeString(DateTime time) =>
+    public static string ToHourMinuteString(long seconds) =>
+		$"{seconds / TimeSpan.SecondsPerHour}:{seconds % TimeSpan.SecondsPerHour}";
+
+    public static string ToDayAndTimeString(DateTime time) =>
 		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
 
 	public static DateTime GetMondayOfCurrentWeek() {

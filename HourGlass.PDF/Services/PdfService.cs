@@ -98,9 +98,12 @@ public unsafe partial class PdfService : IPdfService {
     public void Export() {
 		if (!IndexersLoaded)
 			return;
-		Stopwatch stopwatch = new();
-		stopwatch.Start();
-        Console.WriteLine("started expoting unsafe");
+		Stopwatch totalStopwatch = new();
+		totalStopwatch.Start();
+        Console.WriteLine("started expoting");
+        Stopwatch prepareContentStopwatch = new();
+        prepareContentStopwatch.Start();
+        Console.WriteLine("started preparing content for the document");
         List<Database.Models.Task> tasks = _dbService.QueryTasksOfCurrentWeekAsync().Result;
         Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
             { "monday", DayOfWeek.Monday },
@@ -116,12 +119,19 @@ public unsafe partial class PdfService : IPdfService {
             if (tasks_.Count == 0)
                 continue;
             foreach (Database.Models.Task task in tasks_) {
+				if (task.running)
+					continue;
                 string[] compiledTask = CompileTask(task);
                 try {
                     Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-                    string query = $"{dayName}_line_{i + 1}";
-                    BufferAnnotationValueUnsafe(query, lines[i]);
-                    BufferFieldValueUnsafe(query, lines[i]);
+                    string query = $"{dayName}_hour_range_{offset + 1}";
+                    string value = DateTimeHelper.ToTimeString(task.StartDateTime) + " - " + DateTimeHelper.ToTimeString(task.FinishDateTime);
+                    BufferAnnotationValueUnsafe(query, value);
+                    BufferFieldValueUnsafe(query, value);
+                    query = $"{dayName}_hour_{offset + 1}";
+                    value = DateTimeHelper.ToHourMinuteString(task.finish-task.start);
+                    BufferAnnotationValueUnsafe(query, value);
+                    BufferFieldValueUnsafe(query, value);
                     offset += compiledTask.Length;
                 } catch (ArgumentOutOfRangeException) {
 					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
@@ -139,16 +149,19 @@ public unsafe partial class PdfService : IPdfService {
 				BufferFieldValueUnsafe(query, lines[i]);
             }
         }
-		SetUtilityFields();
+        prepareContentStopwatch.Stop();
+        Console.WriteLine("finished preparing content for the document");
+        Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
+        SetUtilityFields();
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = EncodeBuffer(document, documentCharCount, out int fileSize);
 		WriteOutputUnsafe(resultFile, Paths.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
         NativeMemory.Free(resultFile);
         NativeMemory.Free(document);
         InsertOperations.Clear();
-        stopwatch.Stop();
+        totalStopwatch.Stop();
 		Console.WriteLine("finished exporting unsafe");
-		Console.WriteLine($"exporting took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
+		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
     }
 
     public void Import() {
