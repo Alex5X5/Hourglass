@@ -112,6 +112,9 @@ public unsafe partial class PdfService : IPdfService {
             { "thursday", DayOfWeek.Thursday },
             { "friday", DayOfWeek.Friday }
         };
+		long totalWeekSeconds = 0;
+		string query = "";
+		string value = "";
         foreach (string dayName in days.Keys) {
             int offset = 0;
             string[] lines = ["", "", "", "", "", ""];
@@ -124,12 +127,13 @@ public unsafe partial class PdfService : IPdfService {
                 string[] compiledTask = CompileTask(task);
                 try {
                     Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-                    string query = $"{dayName}_hour_range_{offset + 1}";
-                    string value = DateTimeHelper.ToTimeString(task.StartDateTime) + " - " + DateTimeHelper.ToTimeString(task.FinishDateTime);
+                    query = $"{dayName}_hour_range_{offset + 1}";
+                    value = DateTimeHelper.ToTimeString(task.StartDateTime) + " - " + DateTimeHelper.ToTimeString(task.FinishDateTime);
                     BufferAnnotationValueUnsafe(query, value);
                     BufferFieldValueUnsafe(query, value);
                     query = $"{dayName}_hour_{offset + 1}";
                     value = DateTimeHelper.ToHourMinuteString(task.finish-task.start);
+					totalWeekSeconds += task.finish - task.start;
                     BufferAnnotationValueUnsafe(query, value);
                     BufferFieldValueUnsafe(query, value);
                     offset += compiledTask.Length;
@@ -144,15 +148,19 @@ public unsafe partial class PdfService : IPdfService {
 				}
             }
             for (int i = 0; i < lines.Length; i++) {
-                string query = $"{dayName}_line_{i + 1}";
+                query = $"{dayName}_line_{i + 1}";
 				BufferAnnotationValueUnsafe(query, lines[i]);
 				BufferFieldValueUnsafe(query, lines[i]);
             }
         }
+        query = $"total_hour";
+        value = DateTimeHelper.ToHourMinuteString(totalWeekSeconds);
+        BufferAnnotationValueUnsafe(query, value);
+        BufferFieldValueUnsafe(query, value);
+        SetUtilityFields();
         prepareContentStopwatch.Stop();
         Console.WriteLine("finished preparing content for the document");
         Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
-        SetUtilityFields();
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = EncodeBuffer(document, documentCharCount, out int fileSize);
 		WriteOutputUnsafe(resultFile, Paths.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
@@ -196,6 +204,10 @@ public unsafe partial class PdfService : IPdfService {
         BufferFieldValueUnsafe("week", Convert.ToString(currentWeek));
 		DateTime dayFrom = DateTimeHelper.GetMondayOfCurrentWeek();
 		DateTime dayTo = DateTimeHelper.GetFridayOfCurrentWeek();
+		BufferAnnotationValueUnsafe("name", "Alexander Lehnert");
+        BufferFieldValueUnsafe("name", "Alexander Lehnert");
+        BufferAnnotationValueUnsafe("job", "Fachinformatiker für Anwendungsentwicklung");
+		BufferFieldValueUnsafe("job", "Fachinformatiker für Anwendungsentwicklung");
         BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
         BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
         BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");

@@ -35,7 +35,7 @@ public static class DateTimeHelper {
         $"{time.Hour}:{time.Minute}:{time.Second}";
 
     public static string ToHourMinuteString(long seconds) =>
-		$"{seconds / TimeSpan.SecondsPerHour}:{seconds % TimeSpan.SecondsPerHour}";
+		$"{seconds / TimeSpan.SecondsPerHour}:{(int)Math.Floor((seconds % TimeSpan.SecondsPerHour)/60.0)}";
 
     public static string ToDayAndTimeString(DateTime time) =>
 		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
