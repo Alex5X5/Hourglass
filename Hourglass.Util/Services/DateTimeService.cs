@@ -2,7 +2,7 @@
 
 using System;
 
-public static class DateTimeHelper {
+public static class DateTimeService {
 
 	public static readonly DateTime START_DATE = new(2024, 8, 5);
 
@@ -34,8 +34,11 @@ public static class DateTimeHelper {
     public static string ToTimeString(DateTime time) =>
         $"{time.Hour}:{time.Minute}:{time.Second}";
 
-    public static string ToHourMinuteString(long seconds) =>
-		$"{seconds / TimeSpan.SecondsPerHour}:{seconds % TimeSpan.SecondsPerHour}";
+	public static string ToHourMinuteString(long totalSeconds) {
+		long hours = totalSeconds / TimeSpan.SecondsPerHour;
+		long minutes = (long)Math.Ceiling((totalSeconds % TimeSpan.SecondsPerHour) / (float)TimeSpan.SecondsPerMinute);
+		return (hours < 10 ? "0" + Convert.ToString(hours) : Convert.ToString(hours)) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
+	}
 
     public static string ToDayAndTimeString(DateTime time) =>
 		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";

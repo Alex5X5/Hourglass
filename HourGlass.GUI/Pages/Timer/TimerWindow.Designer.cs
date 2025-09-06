@@ -157,9 +157,9 @@ public partial class TimerWindow {
 		// 
 		// SettingsButton
 		// 
-		SettingsButton.Location = new Point(1364, 69);
+		SettingsButton.Location = new Point(1410, 13);
 		SettingsButton.Name = "SettingsButton";
-		SettingsButton.Size = new Size(54, 52);
+		SettingsButton.Size = new Size(75, 75);
 		SettingsButton.TabIndex = 17;
 		SettingsButton.Text = "Sett";
 		SettingsButton.UseVisualStyleBackColor = true;

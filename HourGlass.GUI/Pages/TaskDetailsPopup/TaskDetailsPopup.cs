@@ -31,8 +31,8 @@ public partial class TaskDetailsPopup : Form
         Database.Models.Task newTask = new() {
             Id = _task.Id,
             description = DescriptionTextbox.Text,
-            StartDateTime = DateTimeHelper.InterpretDayAndTimeString(StartTextbox.Text) ?? _task.StartDateTime,
-            FinishDateTime = DateTimeHelper.InterpretDayAndTimeString(FinishTextbox.Text) ?? _task.FinishDateTime,
+            StartDateTime = DateTimeService.InterpretDayAndTimeString(StartTextbox.Text) ?? _task.StartDateTime,
+            FinishDateTime = DateTimeService.InterpretDayAndTimeString(FinishTextbox.Text) ?? _task.FinishDateTime,
             owner = _task.owner,
             project = _task.project,
             ticket = _task.ticket,
@@ -66,8 +66,8 @@ public partial class TaskDetailsPopup : Form
         if (_task != null) {
             previousColor = _task.DisplayColor;
             DescriptionTextbox.Text = _task.description;
-            StartTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.StartDateTime);
-            FinishTextbox.Text = DateTimeHelper.ToDayAndTimeString(_task.FinishDateTime);
+            StartTextbox.Text = DateTimeService.ToDayAndTimeString(_task.StartDateTime);
+            FinishTextbox.Text = DateTimeService.ToDayAndTimeString(_task.FinishDateTime);
         }
     }
 

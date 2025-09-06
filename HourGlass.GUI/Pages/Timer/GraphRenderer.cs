@@ -218,7 +218,7 @@ class GraphRenderer : Panel {
 	}
 
 	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
-		DateTime thisMonday = DateTimeHelper.GetMondayOfCurrentWeek();
+		DateTime thisMonday = DateTimeService.GetMondayOfCurrentWeek();
 		long thisWeekSeconds = thisMonday.Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, WEEK_GRAPH_MINIMAL_WIDTH, ref graphPosY);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
@@ -333,7 +333,7 @@ class GraphRenderer : Panel {
 					GetTaskRectanlge(
 						task,
 						TimeSpan.SecondsPerDay,
-						DateTimeHelper.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond,
+						DateTimeService.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond,
 						7,
 						MAX_TASKS_PER_WEEK,
 						WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH,
@@ -345,7 +345,7 @@ class GraphRenderer : Panel {
 					GetTaskRectanlge(
 						task,
 						TimeSpan.SecondsPerDay,
-						DateTimeHelper.GetFirstDayOfCurrentMonth().Ticks / TimeSpan.TicksPerSecond,
+						DateTimeService.GetFirstDayOfCurrentMonth().Ticks / TimeSpan.TicksPerSecond,
 						daysInCurrentMonth,
 						daysInCurrentMonth,
 						MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH,

@@ -2,8 +2,8 @@ namespace HourGlass;
 
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.Database.Services;
-using Hourglass.Util;
 using Hourglass.PDF;
+using Hourglass.Util.Services;
 
 public class Program {
     /// <summary>
@@ -11,8 +11,8 @@ public class Program {
     /// </summary>
     [STAThread]
     public static void Main() {
-		Paths.PrintDetailedInfo();
-        Paths.ExtractFiles("Hourglass");
+		PathService.PrintDetailedInfo();
+        PathService.ExtractFiles("Hourglass");
 		//ConfigurationManager configuration = (ConfigurationManager)new ConfigurationBuilder()
 		//	.SetBasePath(Directory.GetCurrentDirectory())
 		//		.AddJsonFile(Paths.AssetsPath("settings.json"), false, true)

@@ -4,7 +4,8 @@ using DatabaseUtil;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.Util;
+using Hourglass.Util.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 public class HourglassDbService : IHourglassDbService {
 
 	DatabaseAccessor<HourglassDbContext> _accessor = 
-		new(Paths.FilesPath("database"), DatabasePathFormat.FileName, null);
+		new(PathService.FilesPath("database"), DatabasePathFormat.FileName, null);
 
 	public HourglassDbService() { }
 

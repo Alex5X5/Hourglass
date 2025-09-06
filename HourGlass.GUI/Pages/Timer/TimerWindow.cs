@@ -3,6 +3,7 @@ using Hourglass.GUI.Pages.Timer;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
+using Hourglass.Util.Services;
 
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
@@ -24,7 +25,7 @@ public partial class TimerWindow : Form {
 	private List<Hourglass.Database.Models.Task> VisibleTasks;
 	private Hourglass.Database.Models.Task? RunningTask = null;
 
-	private readonly Image image = Bitmap.FromFile(Paths.AssetsPath("Präsentation3.png"));
+	private readonly Image image = Bitmap.FromFile(PathService.AssetsPath("Präsentation3.png"));
 	private bool Stop = false;
 
 	TimerWindowMode windowMode = TimerWindowMode.Day;
@@ -50,7 +51,7 @@ public partial class TimerWindow : Form {
 		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (RunningTask != null) {
 			DescriptionTextBox.Text = RunningTask.description;
-			SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(RunningTask.StartDateTime));
+			SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
 			StartButton.Enabled = false;
 		} else {
 			StopButton.Enabled = false;
@@ -117,9 +118,9 @@ public partial class TimerWindow : Form {
 		while (!Disposing && !Stop) {
 			try {
 				if (RunningTask != null)
-					SetFinishTextboxText(DateTimeHelper.ToDayAndTimeString(DateTime.Now));
+					SetFinishTextboxText(DateTimeService.ToDayAndTimeString(DateTime.Now));
 				else
-					SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(DateTime.Now));
+					SetStartTextboxText(DateTimeService.ToDayAndTimeString(DateTime.Now));
 				if (RunningTask == null)
 					continue;
 				TimeSpan t = DateTime.Now.Subtract(RunningTask.StartDateTime);
@@ -129,7 +130,7 @@ public partial class TimerWindow : Form {
 				} catch(FormatException){
 					time = DateTime.Now;
 				}
-				SetElapsedTimeLabelText(DateTimeHelper.ToTimeString(time));
+				SetElapsedTimeLabelText(DateTimeService.ToTimeString(time));
 			} catch (InvalidOperationException) {
 			}
 			Thread.Sleep(200);
@@ -150,7 +151,7 @@ public partial class TimerWindow : Form {
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
 		).Result;
-		SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(RunningTask.StartDateTime));
+		SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
 		StopButton.Enabled = true;
 		StartButton.Enabled = false;
 	}
@@ -160,7 +161,7 @@ public partial class TimerWindow : Form {
 		DateTime finishDateTime;
 		Hourglass.Database.Models.Task? currentTask = await _dbService.QueryCurrentTaskAsync();
 		try {
-			startDateTime = DateTimeHelper.InterpretDayAndTimeString(StartTextbox.Text) ?? DateTime.MinValue;
+			startDateTime = DateTimeService.InterpretDayAndTimeString(StartTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
 			if (currentTask == null) {
 				startDateTime = DateTime.Now;
@@ -169,7 +170,7 @@ public partial class TimerWindow : Form {
 			}
 		}
 		try {
-			finishDateTime = DateTimeHelper.InterpretDayAndTimeString(FinishTextbox.Text) ?? DateTime.MinValue;
+			finishDateTime = DateTimeService.InterpretDayAndTimeString(FinishTextbox.Text) ?? DateTime.MinValue;
 		} catch (FormatException) {
 			finishDateTime = DateTime.Now;
 		}
@@ -236,7 +237,7 @@ public partial class TimerWindow : Form {
 		Task.Run(
 			() => {
 				Thread.Sleep(200);
-				SetStartTextboxText(DateTimeHelper.ToDayAndTimeString(task.StartDateTime));
+				SetStartTextboxText(DateTimeService.ToDayAndTimeString(task.StartDateTime));
 				SetDescriptionTextboxText(task.description);
 			}
 		);
