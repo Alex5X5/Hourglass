@@ -60,7 +60,7 @@ public class EncryptionService : IEncryptionService {
 					cryptoStream.FlushFinalBlock();
 
 					// Return total size: IV + encrypted data
-					outputBufferSize = IVSize + (int)outputStream.Position;
+					//outputBufferSize = IVSize + (int)outputStream.Position;
 				}
 			}
 		}
@@ -104,11 +104,23 @@ public class EncryptionService : IEncryptionService {
 		return result;
 	}
 
-	public void EncryptFile(string path, string key) {
-		throw new NotImplementedException();
+	public void EncryptFile(string path) {
+		unsafe {
+			byte* loadedFile = FileService.LoadFileUnsafe(path, out int fileSize);
+			byte* encryptedData = EncryptBuffer(loadedFile, fileSize, out int encryptedBufferSize);
+			NativeMemory.Free(loadedFile);
+			FileService.WriteFileUnsafe(encryptedData, path, encryptedBufferSize);
+			NativeMemory.Free(encryptedData);
+		}
 	}
 
-	public void DecryptFile(string path, string key) {
-		throw new NotImplementedException();
+	public void DecryptFile(string path) {
+		unsafe {
+			byte* loadedFile = FileService.LoadFileUnsafe(path, out int fileSize);
+			byte* encryptedData = DecryptBuffer(loadedFile, fileSize, out int encryptedBufferSize);
+			NativeMemory.Free(loadedFile);
+			FileService.WriteFileUnsafe(encryptedData, path, encryptedBufferSize);
+			NativeMemory.Free(encryptedData);
+		}
 	}
 }
