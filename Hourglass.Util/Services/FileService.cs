@@ -27,7 +27,7 @@ public static class FileService {
 		return buffer;
 	}
 
-	public static unsafe byte* LoadInputUnsafe(string path, out int fileSize) {
+	public static unsafe byte* LoadFileUnsafe(string path, out int fileSize) {
 		fileSize = (int)new FileInfo(path).Length;
 		byte* file = (byte*)NativeMemory.Alloc((uint)fileSize);
 		using FileStream fs = new(path, FileMode.Open, FileAccess.Read);
@@ -35,7 +35,7 @@ public static class FileService {
 		return file;
 	}
 
-	public static unsafe void WriteOutputUnsafe(byte* content, string pathName, int size) {
+	public static unsafe void WriteFileUnsafe(byte* content, string pathName, int size) {
 		if (!Directory.Exists(Path.GetDirectoryName(pathName)))
 			Directory.CreateDirectory(Path.GetDirectoryName(pathName));
 		using FileStream fileHandle = File.OpenWrite(pathName);
