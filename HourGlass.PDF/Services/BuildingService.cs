@@ -6,6 +6,7 @@ namespace Hourglass.PDF;
 
 public unsafe partial class PdfService {
 	
+
 	public void BufferFieldValueUnsafe(string indexName, string value) {
 		InsertOperations[$"%%index-{indexName}-field"] = value;
 	}

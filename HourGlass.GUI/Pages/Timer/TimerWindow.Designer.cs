@@ -1,7 +1,5 @@
-﻿using Hourglass.GUI.GuiComponents;
-using Hourglass.GUI.Pages.Timer;
+﻿using Hourglass.GUI.Pages.Timer;
 using Hourglass.Util;
-using Hourglass.Util.Services;
 
 using System.Windows.Forms;
 
@@ -32,34 +30,7 @@ public partial class TimerWindow {
 	/// </summary>
 	private void InitializeComponent() {
 		StopRestartButton = new Button();
-		StopButton = new AnimatedButton(
-			PathService.AssetsPath("button-1-normal.png"),
-			PathService.AssetsPath("button-1-hover.png"),
-			PathService.AssetsPath("button-1-disabled.png"),
-			PathService.AssetsPath("button-1-pressed.png"),
-			new(683, 156, 155, 58)
-		);
-		StartButton = new AnimatedButton(
-			PathService.AssetsPath("button-1-normal.png"),
-			PathService.AssetsPath("button-1-hover.png"),
-			PathService.AssetsPath("button-1-disabled.png"),
-			PathService.AssetsPath("button-1-pressed.png"),
-			new(861, 205, 155, 58)
-		);
-		ExportButton = new AnimatedButton(
-			PathService.AssetsPath("button-1-normal.png"),
-			PathService.AssetsPath("button-1-hover.png"),
-			PathService.AssetsPath("button-1-disabled.png"),
-			PathService.AssetsPath("button-1-pressed.png"),
-			new(83, 676, 155, 58)
-		);
-		ImportButton = new AnimatedButton(
-			PathService.AssetsPath("button-1-normal.png"),
-			PathService.AssetsPath("button-1-hover.png"),
-			PathService.AssetsPath("button-1-disabled.png"),
-			PathService.AssetsPath("button-1-pressed.png"),
-			new(83, 748, 155, 58)
-		);
+		StopButton = new Button();
 		StartTextbox = new TextBox();
 		FinishTextbox = new TextBox();
 		GraphPanel = new GraphRenderer();
@@ -70,6 +41,7 @@ public partial class TimerWindow {
 		ProjectLabel = new Label();
 		TicketTextBox = new TextBox();
 		ProjectTextBox = new TextBox();
+		StartButton = new Button();
 		DescriptionTextBox = new RichTextBox();
 		SettingsButton = new Button();
 		ElapsedTimeLabel = new Label();
@@ -78,6 +50,8 @@ public partial class TimerWindow {
 		MonthModeButton = new Button();
 		button2 = new Button();
 		GraphPanel = new GraphRenderer(_dbService, windowMode, this);
+		ExportButton = new Button();
+		ImportButton = new Button();
 		SuspendLayout();
 		// 
 		// StopRestartButton
@@ -98,16 +72,34 @@ public partial class TimerWindow {
 		// 
 		// StopButton
 		// 
-		StopButton.Text = "Stop";
+		StopButton.BackColor = Color.Transparent;
+		StopButton.FlatAppearance.BorderSize = 0;
+		StopButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		StopButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		StopButton.FlatStyle = FlatStyle.Flat;
 		StopButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		StopButton.ForeColor = Color.White;
+		StopButton.ForeColor = Color.Transparent;
+		StopButton.Location = new Point(688, 158);
+		StopButton.Name = "StopButton";
+		StopButton.Size = new Size(146, 55);
+		StopButton.TabIndex = 3;
+		StopButton.UseVisualStyleBackColor = true;
 		StopButton.Click += StopButtonClick;
 		// 
 		// StartButton
 		// 
-		StartButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		StartButton.ForeColor = Color.White;
-		StartButton.Text = "Start";
+		StartButton.BackColor = Color.Transparent;
+		StartButton.FlatAppearance.BorderSize = 0;
+		StartButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		StartButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		StartButton.FlatStyle = FlatStyle.Flat;
+		StartButton.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 0);
+		StartButton.ForeColor = Color.Transparent;
+		StartButton.Location = new Point(867, 207);
+		StartButton.Name = "StartButton";
+		StartButton.Size = new Size(146, 55);
+		StartButton.TabIndex = 1;
+		StartButton.UseVisualStyleBackColor = true;
 		StartButton.Click += StartButtonClick;
 		// 
 		// StartTextbox
@@ -245,16 +237,34 @@ public partial class TimerWindow {
 		// 
 		// ExportButton
 		// 
+		ExportButton.BackColor = Color.Transparent;
+		ExportButton.FlatAppearance.BorderSize = 0;
+		ExportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		ExportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		ExportButton.FlatStyle = FlatStyle.Flat;
 		ExportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		ExportButton.ForeColor = Color.White;
-		ExportButton.Text = "Export";
+		ExportButton.ForeColor = Color.Transparent;
+		ExportButton.Location = new Point(83, 676);
+		ExportButton.Name = "ExportButton";
+		ExportButton.Size = new Size(170, 54);
+		ExportButton.TabIndex = 23;
+		ExportButton.UseVisualStyleBackColor = true;
 		ExportButton.Click += ExportButtonClick;
 		// 
 		// ImportButton
 		// 
+		ImportButton.BackColor = Color.Transparent;
+		ImportButton.FlatAppearance.BorderSize = 0;
+		ImportButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
+		ImportButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
+		ImportButton.FlatStyle = FlatStyle.Flat;
 		ImportButton.Font = new Font("Segoe UI", 22F, FontStyle.Regular, GraphicsUnit.Point, 0);
-		ImportButton.ForeColor = Color.White;
-		ImportButton.Text = "Import";
+		ImportButton.ForeColor = Color.Transparent;
+		ImportButton.Location = new Point(83, 748);
+		ImportButton.Name = "ImportButton";
+		ImportButton.Size = new Size(170, 54);
+		ImportButton.TabIndex = 24;
+		ImportButton.UseVisualStyleBackColor = true;
 		ImportButton.Click += ImportButtonClick;
 		// 
 		// TimerWindow
@@ -290,13 +300,13 @@ public partial class TimerWindow {
 	#endregion
 
 	private Button StopRestartButton;
-	private AnimatedButton StopButton;
+	private Button StopButton;
 	private TextBox StartTextbox;
 	private TextBox FinishTextbox;
 	private GraphRenderer GraphPanel;
 	private TextBox TicketTextBox;
 	private TextBox ProjectTextBox;
-	private AnimatedButton StartButton;
+	private Button StartButton;
 	private RichTextBox DescriptionTextBox;
 	private Button SettingsButton;
 	private Label ElapsedTimeLabel;
@@ -309,6 +319,6 @@ public partial class TimerWindow {
 	private Button DayModeButton;
 	private Button WeekModeButton;
 	private Button MonthModeButton;
-	private AnimatedButton ExportButton;
-	private AnimatedButton ImportButton;
+	private Button ExportButton;
+	private Button ImportButton;
 }

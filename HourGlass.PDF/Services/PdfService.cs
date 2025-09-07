@@ -31,7 +31,7 @@ public unsafe partial class PdfService : IPdfService {
 		_dbService = dbService;
 		InsertOperations = [];
 		Indexers = [];
-		byte* buffer = FileService.LoadFileUnsafe(PathService.AssetsPath("output-readable-indexers.pdf"), out int inputFileSize);
+		byte* buffer = FileService.LoadInputUnsafe(PathService.AssetsPath("output-readable-indexers.pdf"), out int inputFileSize);
 		text = FileService.DecodeBufferAnsi(buffer, inputFileSize, out int _charCount);
 		charCount = _charCount;
 		NativeMemory.Free(buffer);
@@ -157,7 +157,7 @@ public unsafe partial class PdfService : IPdfService {
         Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
-		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
+		FileService.WriteOutputUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
         NativeMemory.Free(resultFile);
         NativeMemory.Free(document);
         InsertOperations.Clear();

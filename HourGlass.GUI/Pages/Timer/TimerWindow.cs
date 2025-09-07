@@ -52,9 +52,9 @@ public partial class TimerWindow : Form {
 		if (RunningTask != null) {
 			DescriptionTextBox.Text = RunningTask.description;
 			SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
-			StartButton.Disable();
+			StartButton.Enabled = false;
 		} else {
-			StopButton.Disable();
+			StopButton.Enabled = false;
 		}
 	}
 
@@ -142,7 +142,6 @@ public partial class TimerWindow : Form {
 	#region button callbacks
 
 	private async void StartButtonClick(object sender, EventArgs e) {
-		Console.WriteLine("OnStartButtonClick");
 		IEnumerable<Hourglass.Database.Models.Project> projects = await _dbService.QueryProjectsAsync();
 		Hourglass.Database.Models.Project? project = projects.FirstOrDefault(x=>x.Name == ProjectTextBox.Text);
 		StartButton.Enabled = false;
@@ -152,9 +151,9 @@ public partial class TimerWindow : Form {
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
 		).Result;
-		Task.Run(() => { Thread.Sleep(500); SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime)); });
-		StopButton.Enable();
-		StartButton.Disable();
+		SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
+		StopButton.Enabled = true;
+		StartButton.Enabled = false;
 	}
 
 	private async void StopButtonClick(object sender, EventArgs e) {
@@ -182,11 +181,11 @@ public partial class TimerWindow : Form {
 			null,
 			null
 		).Result;
-		Task.Run(() => { Thread.Sleep(500); SetFinishTextboxText(""); });
-		Task.Run(() => { Thread.Sleep(500); SetElapsedTimeLabelText(""); });
-		Task.Run(() => { Thread.Sleep(500); SetDescriptionTextboxText("");});
-		StartButton.Enable();
-		StopButton.Disable();
+		StopButton.Enabled = false;
+		StartButton.Enabled = true;
+		SetFinishTextboxText("");
+		SetElapsedTimeLabelText("");
+		SetDescriptionTextboxText("");
 	}
 
 	private void StopRestartButtonClick(object sender, EventArgs e) {
