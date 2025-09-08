@@ -303,4 +303,27 @@ public partial class TimerWindow : Form {
 	protected override void OnPaint(PaintEventArgs args) {
 		args.Graphics.DrawImage(image, 0, 0, ClientSize.Width, ClientSize.Height);
 	}
+
+	private void DayModeButtonPaint(PaintEventArgs args) {
+		int startOffset = DateTimeService.GetMondayOfCurrentWeek().DayOfWeek switch {
+			DayOfWeek.Monday => 2,
+			DayOfWeek.Tuesday => 3,
+			DayOfWeek.Wednesday => 4,
+			DayOfWeek.Thursday => 5,
+			DayOfWeek.Friday => 6,
+			DayOfWeek.Sunday => 1,
+			_ => 0
+		};
+		for(int i=0; i<DateTimeService.)
+		using Brush brush = new SolidBrush(Color.FromArgb(200,200,200,255));
+		args.Graphics.FillRectangle(brush, new(0,0,10,10));
+	}
+
+	private void WeekModeButtonPaint(PaintEventArgs args) {
+		//throw new NotImplementedException();
+	}
+
+	private void MonthModeButtonPaint(PaintEventArgs args) {
+		//throw new NotImplementedException();
+	}
 }

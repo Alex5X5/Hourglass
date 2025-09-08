@@ -67,7 +67,7 @@ public class AnimatedButton:Button, IDisposable{
 			wrapMode.SetWrapMode(WrapMode.Clamp);
 			args.Graphics.DrawImage(currentImage, 0, 0, Size.Width, Size.Height);
 		}
-		using(var brush = new SolidBrush(this.ForeColor))
+		using(var brush = new SolidBrush(ForeColor))
 		args.Graphics.DrawString(Text, Font, brush, Width/2-args.Graphics.MeasureString(Text, Font).Width/2, Height / 2 - args.Graphics.MeasureString(Text, Font).Height / 2);
 		foreach(var action in additionalPaintActions)
 			action.Invoke(args);

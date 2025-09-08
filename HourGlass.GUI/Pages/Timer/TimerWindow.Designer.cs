@@ -60,6 +60,27 @@ public partial class TimerWindow {
 			PathService.AssetsPath("button-1-pressed.png"),
 			new(83, 748, 155, 58)
 		);
+		DayModeButton = new AnimatedButton(
+			PathService.AssetsPath("button-2-normal.png"),
+			PathService.AssetsPath("button-2-hover.png"),
+			PathService.AssetsPath("button-2-disabled.png"),
+			PathService.AssetsPath("button-2-pressed.png"),
+			new(1513, 403, 72, 72)
+		);
+		WeekModeButton = new AnimatedButton(
+			PathService.AssetsPath("button-2-normal.png"),
+			PathService.AssetsPath("button-2-hover.png"),
+			PathService.AssetsPath("button-2-disabled.png"),
+			PathService.AssetsPath("button-2-pressed.png"),
+			new(1513, 522, 72, 72)
+		);
+		MonthModeButton = new AnimatedButton(
+			PathService.AssetsPath("button-2-normal.png"),
+			PathService.AssetsPath("button-2-hover.png"),
+			PathService.AssetsPath("button-2-disabled.png"),
+			PathService.AssetsPath("button-2-pressed.png"),
+			new(1513, 641, 72, 72)
+		);
 		StartTextbox = new TextBox();
 		FinishTextbox = new TextBox();
 		GraphPanel = new GraphRenderer();
@@ -73,9 +94,9 @@ public partial class TimerWindow {
 		DescriptionTextBox = new RichTextBox();
 		SettingsButton = new Button();
 		ElapsedTimeLabel = new Label();
-		DayModeButton = new Button();
-		WeekModeButton = new Button();
-		MonthModeButton = new Button();
+		//DayModeButton = new Button();
+		//WeekModeButton = new Button();
+		//MonthModeButton = new Button();
 		button2 = new Button();
 		GraphPanel = new GraphRenderer(_dbService, windowMode, this);
 		SuspendLayout();
@@ -183,48 +204,18 @@ public partial class TimerWindow {
 		// 
 		// DayModeButton
 		// 
-		DayModeButton.BackColor = Color.Transparent;
-		DayModeButton.FlatAppearance.BorderSize = 0;
-		DayModeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
-		DayModeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		DayModeButton.FlatStyle = FlatStyle.Flat;
-		DayModeButton.Location = new Point(1515, 405);
-		DayModeButton.Name = "DayModeButton";
-		DayModeButton.Size = new Size(68, 67);
-		DayModeButton.TabIndex = 20;
-		DayModeButton.Text = "Day";
-		DayModeButton.UseVisualStyleBackColor = true;
 		DayModeButton.Click += DayModeButtonButtonClick;
+		DayModeButton.AddOnPaintEvent(DayModeButtonPaint);
 		// 
 		// WeekModeButton
 		// 
-		WeekModeButton.BackColor = Color.Transparent;
-		WeekModeButton.FlatAppearance.BorderSize = 0;
-		WeekModeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
-		WeekModeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		WeekModeButton.FlatStyle = FlatStyle.Flat;
-		WeekModeButton.Location = new Point(1515, 522);
-		WeekModeButton.Name = "WeekModeButton";
-		WeekModeButton.Size = new Size(68, 67);
-		WeekModeButton.TabIndex = 20;
-		WeekModeButton.Text = "Week";
 		WeekModeButton.Click += WeekModeButtonButtonClick;
-		WeekModeButton.UseVisualStyleBackColor = true;
+		WeekModeButton.AddOnPaintEvent(WeekModeButtonPaint);
 		// 
 		// MonthModeButton
 		// 
-		MonthModeButton.BackColor = Color.Transparent;
-		MonthModeButton.FlatAppearance.BorderSize = 0;
-		MonthModeButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
-		MonthModeButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
-		MonthModeButton.FlatStyle = FlatStyle.Flat;
-		MonthModeButton.Location = new Point(1515, 641);
-		MonthModeButton.Name = "MonthModeButton";
-		MonthModeButton.Size = new Size(68, 67);
-		MonthModeButton.TabIndex = 20;
-		MonthModeButton.Text = "Month";
 		MonthModeButton.Click += MonthModeButtonButtonClick;
-		MonthModeButton.UseVisualStyleBackColor = true;
+		MonthModeButton.AddOnPaintEvent(MonthModeButtonPaint);
 		// 
 		// button2
 		// 
@@ -306,9 +297,9 @@ public partial class TimerWindow {
 	private Label TicketLabel;
 	private Label ProjectLabel;
 	private Button button2;
-	private Button DayModeButton;
-	private Button WeekModeButton;
-	private Button MonthModeButton;
+	private AnimatedButton DayModeButton;
+	private AnimatedButton WeekModeButton;
+	private AnimatedButton MonthModeButton;
 	private AnimatedButton ExportButton;
 	private AnimatedButton ImportButton;
 }
