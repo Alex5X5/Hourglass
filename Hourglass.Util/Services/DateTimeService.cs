@@ -55,6 +55,6 @@ public static class DateTimeService {
 	public static DateTime GetFirstDayOfCurrentMonth() =>
 		new(DateTime.Today.Year, DateTime.Today.Month, 1);
 
-	public static int GetWeekCountSinceStart() =>
-        (int) Math.Ceiling((DateTime.Today - START_DATE).Days / 7.0);
+	public static int GetCurrentWeekCount() =>
+        (int) Math.Floor((DateTime.Today - START_DATE).Days / 7.0) + 1;
 }

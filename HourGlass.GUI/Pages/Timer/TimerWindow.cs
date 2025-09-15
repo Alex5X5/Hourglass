@@ -6,6 +6,8 @@ using Hourglass.Util;
 using Hourglass.Util.Services;
 
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -175,13 +177,13 @@ public partial class TimerWindow : Form {
 		} catch (FormatException) {
 			finishDateTime = DateTime.Now;
 		}
-		RunningTask = _dbService.FinishCurrentTaskAsync(
+		RunningTask = await _dbService.FinishCurrentTaskAsync(
 			startDateTime.Ticks / TimeSpan.TicksPerSecond,
 			finishDateTime.Ticks / TimeSpan.TicksPerSecond,
 			DescriptionTextBox.Text,
 			null,
 			null
-		).Result;
+		);
 		Task.Run(() => { Thread.Sleep(500); SetFinishTextboxText(""); });
 		Task.Run(() => { Thread.Sleep(500); SetElapsedTimeLabelText(""); });
 		Task.Run(() => { Thread.Sleep(500); SetDescriptionTextboxText("");});
@@ -207,7 +209,7 @@ public partial class TimerWindow : Form {
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
-		pdf.Import();
+		//PdfImport();
 	}
 
 	private async void DayModeButtonButtonClick(object sender, EventArgs e) {
@@ -305,25 +307,67 @@ public partial class TimerWindow : Form {
 	}
 
 	private void DayModeButtonPaint(PaintEventArgs args) {
-		int startOffset = DateTimeService.GetMondayOfCurrentWeek().DayOfWeek switch {
-			DayOfWeek.Monday => 2,
-			DayOfWeek.Tuesday => 3,
-			DayOfWeek.Wednesday => 4,
-			DayOfWeek.Thursday => 5,
-			DayOfWeek.Friday => 6,
-			DayOfWeek.Sunday => 1,
-			_ => 0
-		};
-		for(int i=0; i<DateTimeService.)
-		using Brush brush = new SolidBrush(Color.FromArgb(200,200,200,255));
-		args.Graphics.FillRectangle(brush, new(0,0,10,10));
+		using (Brush brush = new SolidBrush(Color.FromArgb(255, 0, 0, 0)))
+			args.Graphics.FillRectangle(brush, new(18, 18, 36, 36));
+		using (Brush brush = new SolidBrush(Color.FromArgb(255, 200, 200, 200)))
+			args.Graphics.FillRectangle(brush, new(20, 20, 32, 32));
+		string dayText = Convert.ToString(DateTime.Now.Day);
+		using (Brush brush = new SolidBrush(Color.FromArgb(255, 0, 0, 0)))
+			args.Graphics.DrawString(
+				dayText,
+				new("Segoe UI", 26F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
+				brush,
+				new Point(dayText.Length == 1 ? 25 : 18, 17)
+			);
 	}
 
 	private void WeekModeButtonPaint(PaintEventArgs args) {
-		//throw new NotImplementedException();
+		int currentDay = DateTimeService.GetMondayOfCurrentWeek().DayOfWeek switch {
+			DayOfWeek.Monday => 0,
+			DayOfWeek.Tuesday => 1,
+			DayOfWeek.Wednesday => 2,
+			DayOfWeek.Thursday => 3,
+			DayOfWeek.Friday => 4,
+			DayOfWeek.Sunday => 5,
+			_ => 6
+		};
+		int squareIntervall = 8;
+		for (int i = 0; i < 7; i++) {
+			int xPos = i * squareIntervall+8;
+			int yPos = 33;
+			Color color = Color.FromArgb(255, 230, 230, 230);
+			if (i % 7 == 5 | i % 7 == 6)
+				color = Color.FromArgb(255, 174, 174, 174);
+			if (i == DateTime.Now.Day)
+				color = Color.FromArgb(255, 192, 0, 0);
+			if(i==currentDay)
+				color = Color.FromArgb(255, 192, 0, 0);
+			using Brush brush = new SolidBrush(color);
+			args.Graphics.FillRectangle(brush, new(xPos, yPos, 6, 6));
+		}
 	}
 
 	private void MonthModeButtonPaint(PaintEventArgs args) {
-		//throw new NotImplementedException();
+		int startOffset = DateTimeService.GetMondayOfCurrentWeek().DayOfWeek switch {
+			DayOfWeek.Monday => 0,
+			DayOfWeek.Tuesday => 1,
+			DayOfWeek.Wednesday => 2,
+			DayOfWeek.Thursday => 3,
+			DayOfWeek.Friday => 4,
+			DayOfWeek.Saturday => 5,
+			_ => 6
+		};
+		int squareIntervall = 7;
+		for (int i = startOffset; i < DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + startOffset; i++) {
+			int xPos = (i % 7) * squareIntervall + 13;
+			int yPos = (int)Math.Floor(i / 7.0) * squareIntervall + 20;
+			Color color = Color.FromArgb(255, 230, 230, 230);
+			if (i % 7 == 5 | i % 7 == 6)
+				color = Color.FromArgb(255, 174, 174, 174);
+			if (i == DateTime.Now.Day - 1)
+				color = Color.FromArgb(255, 192, 0, 0);
+			using Brush brush = new SolidBrush(color);
+			args.Graphics.FillRectangle(brush, new(xPos, yPos, 5, 5));
+		}
 	}
 }

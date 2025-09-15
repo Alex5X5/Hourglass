@@ -18,7 +18,7 @@ class GraphRenderer : Panel {
 
 	private Bitmap image;
 
-	private const int MAX_TASKS_PER_DAY = 6;
+	private const int MAX_TASKS_PER_DAY = 4;
 	private const int MAX_TASKS_PER_WEEK = MAX_TASKS_PER_DAY * 5;
 
 	private const int DAY_GRAPH_CLICK_ADDITIONAL_WIDTH = 8, WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH = 5, MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH = 5;
@@ -44,15 +44,14 @@ class GraphRenderer : Panel {
 
 	#region draw methods
 
-	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, ref int graphPosY) {
+	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, ref int graphPosY, int columns) {
 		int xAxisSegmentSize = (image.Width - 2 * PADDING_X) / xAxisSegmentCount;
-        int yAxisSegmentSize = (image.Height - 2 * PADDING_Y) / yAxisSegmentCount;
+        int yAxisSegmentSize = (int)((image.Height - 2 * PADDING_Y) / (yAxisSegmentCount*1.5));
 		long duration = task.finish - task.start;
 		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
 		int graphLength = (int)Math.Floor(duration * proportion);
 		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion) + PADDING_X;
 		//graphPosX += xAxisSegmentSize;
-		graphPosY += yAxisSegmentSize;
 		int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
         Rectangle res = new(
 			graphPosX - additionalWidth,
@@ -61,6 +60,7 @@ class GraphRenderer : Panel {
 			yAxisSegmentSize + additionalHeight * 2
         );
 		graphPosY += yAxisSegmentSize;
+		graphPosY += yAxisSegmentSize / 2;
 		//using (Graphics g = Graphics.FromImage(image))
 		//using (Brush b = new SolidBrush(Color.AliceBlue))
 		//	g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);
@@ -208,7 +208,7 @@ class GraphRenderer : Panel {
 	private void DrawDayTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		long nowSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		long todaySeconds = nowSeconds - (nowSeconds % TimeSpan.SecondsPerDay);
-		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, DAY_GRAPH_MINIMAL_WIDTH, ref graphPosY);
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, DAY_GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
         Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
         Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
         using (GraphicsPath path = GetRoundedRectanglePath(rect, DAY_GRAPH_CORNER_RADIUS))
@@ -220,19 +220,19 @@ class GraphRenderer : Panel {
 	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		DateTime thisMonday = DateTimeService.GetMondayOfCurrentWeek();
 		long thisWeekSeconds = thisMonday.Ticks / TimeSpan.TicksPerSecond;
-		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, WEEK_GRAPH_MINIMAL_WIDTH, ref graphPosY);
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, WEEK_GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, WEEK_GRAPH_CORNER_RADIUS))
 		using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
-				g.FillPath(brush, path);
+			g.FillPath(brush, path);
         DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
 	private void DrawMonthTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 		long thisMonthSeconds = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond;
-        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, MONTH_GRAPH_MINIMAL_WIDTH, ref graphPosY);
+        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, MONTH_GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
         Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
         Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, MONTH_GRAPH_CONRER_RADIUS))
@@ -269,7 +269,7 @@ class GraphRenderer : Panel {
 					case TimerWindowMode.Day:
 						tasks = await _dbService.QueryTasksOfCurrentDayAsync();
 						if (tasks != null && tasks.Count > 0) {
-							int graphPosY = 0;
+							int graphPosY = PADDING_Y;
 							for (int i = 0; i < MAX_TASKS_PER_DAY && i < tasks.Count; i++) {
 								DrawDayTaskGraph(g, tasks[i], ref graphPosY);
 							}
@@ -278,7 +278,7 @@ class GraphRenderer : Panel {
 					case TimerWindowMode.Week:
 						tasks = await _dbService.QueryTasksOfCurrentWeekAsync();
 						if (tasks != null && tasks.Count > 0) {
-							int graphPosY = 0;
+							int graphPosY = PADDING_Y;
 							for (int i = 0; i < MAX_TASKS_PER_WEEK && i < tasks.Count; i++) {
 								DrawWeekTaskGraph(g, tasks[i], ref graphPosY);
 							}
@@ -287,7 +287,7 @@ class GraphRenderer : Panel {
 					case TimerWindowMode.Month:
 						tasks = await _dbService.QueryTasksOfCurrentWeekAsync();
 						if (tasks != null && tasks.Count > 0) {
-							int graphPosY = 0;
+							int graphPosY = PADDING_Y;
 							for (int i = 0; i < 100 && i < tasks.Count; i++) {
 								DrawMonthTaskGraph(g, tasks[i], ref graphPosY);
 							}
@@ -314,7 +314,7 @@ class GraphRenderer : Panel {
 		};
 		using (Graphics g = Graphics.FromImage(image))
 			g.Clear(Color.Gainsboro);
-		int graphPosY = 0;
+		int graphPosY = PADDING_Y;
 		foreach (Database.Models.Task task in tasks) {
 			bool clicked = WindowMode switch {
 				TimerWindowMode.Day =>
@@ -327,7 +327,8 @@ class GraphRenderer : Panel {
 						DAY_GRAPH_CLICK_ADDITIONAL_WIDTH,
 						DAY_GRAPH_CLICK_ADDITIONAL_HEIGHT,
 						DAY_GRAPH_MINIMAL_WIDTH,
-						ref graphPosY
+						ref graphPosY,
+						1
 					).Contains(mousePos),
 				TimerWindowMode.Week =>
 					GetTaskRectanlge(
@@ -339,7 +340,8 @@ class GraphRenderer : Panel {
 						WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH,
 						WEEK_GRAPH_CLICK_ADDITIONAL_HEIGHT,
 						WEEK_GRAPH_MINIMAL_WIDTH,
-						ref graphPosY
+						ref graphPosY,
+						1
 					).Contains(mousePos),
 				TimerWindowMode.Month =>
 					GetTaskRectanlge(
@@ -351,7 +353,8 @@ class GraphRenderer : Panel {
 						MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH,
 						MONTH_GRAPH_CLICK_ADDITIONAL_HEIGHT,
 						MONTH_GRAPH_MINIMAL_WIDTH,
-						ref graphPosY
+						ref graphPosY,
+						1
 					).Contains(mousePos),
 				_ => false
 			};

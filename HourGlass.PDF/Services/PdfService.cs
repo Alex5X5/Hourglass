@@ -192,10 +192,8 @@ public unsafe partial class PdfService : IPdfService {
 	}
 
 	private void SetUtilityFields() {
-		int daysDifference = (DateTime.Today - DateTimeService.START_DATE).Days;
-		int currentWeek = (int)Math.Ceiling(daysDifference / 7.0);
-        BufferAnnotationValueUnsafe("week", Convert.ToString(currentWeek));
-        BufferFieldValueUnsafe("week", Convert.ToString(currentWeek));
+        BufferAnnotationValueUnsafe("week", Convert.ToString(DateTimeService.GetCurrentWeekCount()));
+        BufferFieldValueUnsafe("week", Convert.ToString(DateTimeService.GetCurrentWeekCount()));
 		DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
 		DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
         BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
@@ -207,6 +205,6 @@ public unsafe partial class PdfService : IPdfService {
 	private string GetNewFileName() {
         DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
         DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
-		return $"Ausbildungsnachweis{DateTimeService.GetWeekCountSinceStart()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
+		return $"Ausbildungsnachweis{DateTimeService.GetCurrentWeekCount()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
     }
 }
