@@ -27,6 +27,8 @@ class GraphRenderer : Panel {
     private const int DAY_GRAPH_MINIMAL_WIDTH = 8, WEEK_GRAPH_MINIMAL_WIDTH = 5, MONTH_GRAPH_MINIMAL_WIDTH = 2;
 	private const int DAY_GRAPH_CORNER_RADIUS = 12, WEEK_GRAPH_CORNER_RADIUS = 5, MONTH_GRAPH_CONRER_RADIUS = 2;
 
+	private const int PADDING_X = 50, PADDING_Y = 30;
+
 	#endregion fields
 
 	public GraphRenderer(IHourglassDbService dbService, TimerWindowMode windowMode, TimerWindow parent) : this() {
@@ -43,14 +45,14 @@ class GraphRenderer : Panel {
 	#region draw methods
 
 	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, ref int graphPosY) {
-		int xAxisSegmentSize = image.Width / (xAxisSegmentCount + 2);
-        int yAxisSegmentSize = image.Height / (yAxisSegmentCount + 2);
+		int xAxisSegmentSize = (image.Width - 2 * PADDING_X) / xAxisSegmentCount;
+        int yAxisSegmentSize = (image.Height - 2 * PADDING_Y) / yAxisSegmentCount;
 		long duration = task.finish - task.start;
 		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
 		int graphLength = (int)Math.Floor(duration * proportion);
-		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion);
-		graphPosX += xAxisSegmentSize;
-		graphPosY += yAxisSegmentSize / 2;
+		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion) + PADDING_X;
+		//graphPosX += xAxisSegmentSize;
+		graphPosY += yAxisSegmentSize;
 		int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
         Rectangle res = new(
 			graphPosX - additionalWidth,
@@ -92,15 +94,16 @@ class GraphRenderer : Panel {
 		using (Brush textBrush = new SolidBrush(Color.Black))
 		using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170, 170, 170))))
 		using (Pen timeline = new(Brushes.Black)) {
-			g.DrawLine(timeline, Width / 26, Height * 19 / 20, Width * 25 / 26, Height * 19 / 20);
-			for (int i = 1; i < 26; i++) {
-				g.DrawLine(timeline, Width * i / 26, Height * 19 / 20, Width * i / 26, (int)Math.Floor(Height * 18.75 / 20));
-				g.DrawLine(hintLines, Width * i / 26, Height * 19 / 20, Width * i / 26, (int)Math.Floor(Height / 20.0));
+			g.DrawLine(timeline, PADDING_X, Height - PADDING_Y, Width - PADDING_X, Height - PADDING_Y);
+			for (int i = 0; i < 25; i++) {
+				int xPos = (Width - 2 * PADDING_X) * i / 24 + PADDING_X;
+				g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
+				g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, (int)Math.Floor(Height - PADDING_Y * 1.25));
 				g.DrawString(
-					Convert.ToString(i - 1) + ":00",
+					Convert.ToString(i) + ":00",
 					new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
 					textBrush,
-					new Point(Width * i / 26 - 12, Height * 19 / 20 + 2)
+					new Point((Width - 2 * PADDING_X) * (i+1) / 24, Height - PADDING_Y + 5)
 				);
 			}
 		}
@@ -109,11 +112,12 @@ class GraphRenderer : Panel {
 	private void DrawWeekTimeline(Graphics g) {
 		using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170, 170, 170))))
 		using (Pen timeline = new(Brushes.Black)) {
-			g.DrawLine(timeline, Width / 16, Height * 19 / 20, Width * 15 /16, Height * 19 / 20);
+			g.DrawLine(timeline, PADDING_X, Height - PADDING_Y, Width - PADDING_X, Height - PADDING_Y);
 			for (int i = 0; i <8; i++) {
-				int xPos = (int)Math.Floor(Width * (i+0.5) /8);
-				g.DrawLine(timeline, xPos, Height * 19 / 20, xPos, (int)Math.Floor(Height * 18.75 / 20));
-				g.DrawLine(hintLines, xPos , Height * 19 / 20, xPos, Height / 20);
+				int xPos = (Width - 2 * PADDING_X) * i / 7 + PADDING_X;
+				g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
+				g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, (int)Math.Floor(Height - PADDING_Y * 1.25));
+
 			}
 		}
 		string[] days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
@@ -131,27 +135,30 @@ class GraphRenderer : Panel {
 
 	private void DrawMonthTimeline(Graphics g) {
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-		int xAxisSegmentSize = Width / (daysInCurrentMonth + 2);
+		int xAxisSegmentSize = (Width - 2 * PADDING_X) / daysInCurrentMonth;
 		using (Brush textBrush = new SolidBrush(Color.Black))
 		using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170, 170, 170))))
 		using (Pen timeline = new(Brushes.Black)) {
-			g.DrawLine(timeline, xAxisSegmentSize, Height * 19 / 20, xAxisSegmentSize*(daysInCurrentMonth+2), Height * 19 / 20);
-			for (int i = 1; i < daysInCurrentMonth; i++) {
-				g.DrawLine(timeline, xAxisSegmentSize * i, Height * 19 / 20, xAxisSegmentSize * i, (int)Math.Floor(Height * 18.75 / 20));
-				g.DrawLine(hintLines, xAxisSegmentSize * i, Height * 19 / 20, xAxisSegmentSize * i, (int)Math.Floor(Height / 20.0));
+			g.DrawLine(timeline, PADDING_X, Height - PADDING_Y, Width - PADDING_X, Height - PADDING_Y);
+			for (int i = 0; i < daysInCurrentMonth + 1; i++) {
+				int xPos = (Width - 2 * PADDING_X) * i / (daysInCurrentMonth + 1) + PADDING_X;
+				g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
+				g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, (int)Math.Floor(Height - PADDING_Y * 1.25));
 				g.DrawString(
 					Convert.ToString(i),
 					new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
 					textBrush,
-					new Point(xAxisSegmentSize * i + (Convert.ToString(i).Length == 1 ? 9 : 6), Height * 19 / 20 + 2)
+					new Point(xPos + (Convert.ToString(i).Length == 1 ? 9 : 6), Height * 19 / 20 + 2)
 				);
 			}
+			g.DrawLine(hintLines, Width - PADDING_X, Height - PADDING_Y, Width - PADDING_X, PADDING_Y);
+			g.DrawLine(timeline, Width - PADDING_X, Height - PADDING_Y, Width - PADDING_X, (int)Math.Floor(Height - PADDING_Y * 1.25));
 		}
 	}
 
 	private static void DrawDayTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
+		using Font font = new("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 		string text;
-		Font font = new("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 		if (task.description.Length > 25)
 			text = task.description[..25] + "...";
 		else
@@ -176,16 +183,13 @@ class GraphRenderer : Panel {
 	}
 
 	private static void DrawWeekTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
+		using Font font = new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 		string text;
-		Font font = new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0);
 		if (task.description.Length > 25)
 			text = task.description[..25] + "...";
 		else
 			text = task.description;
 		float textWidth = g.MeasureString(text, font).Width;
-		if (task.StartDateTime.DayOfWeek != DateTime.Now.DayOfWeek) {
-			return;
-		}
 		if (graphLength > textWidth + 10) {
 			using (Brush brush = new SolidBrush(Color.Black))
 				g.DrawString(text, font, brush, graphPosX + 3, graphPosY - 1 );
@@ -214,8 +218,8 @@ class GraphRenderer : Panel {
 	}
 
 	private void DrawWeekTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
-		int daysSinceMonday = (7 + (DateTime.Today.DayOfWeek - DayOfWeek.Monday)) % 7;
-		long thisWeekSeconds = DateTime.Today.AddDays(-daysSinceMonday).Ticks / TimeSpan.TicksPerSecond;
+		DateTime thisMonday = DateTimeService.GetMondayOfCurrentWeek();
+		long thisWeekSeconds = thisMonday.Ticks / TimeSpan.TicksPerSecond;
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS_PER_WEEK, 0, 0, WEEK_GRAPH_MINIMAL_WIDTH, ref graphPosY);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
@@ -251,7 +255,7 @@ class GraphRenderer : Panel {
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            g.CompositingMode = CompositingMode.SourceOver; // This preserves background
+            g.CompositingMode = CompositingMode.SourceOver;
 
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
@@ -329,7 +333,7 @@ class GraphRenderer : Panel {
 					GetTaskRectanlge(
 						task,
 						TimeSpan.SecondsPerDay,
-						DateTimeHelper.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond,
+						DateTimeService.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond,
 						7,
 						MAX_TASKS_PER_WEEK,
 						WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH,
@@ -341,9 +345,9 @@ class GraphRenderer : Panel {
 					GetTaskRectanlge(
 						task,
 						TimeSpan.SecondsPerDay,
-						DateTimeHelper.GetFirstDayOfCurrentMonth().Ticks / TimeSpan.TicksPerSecond,
+						DateTimeService.GetFirstDayOfCurrentMonth().Ticks / TimeSpan.TicksPerSecond,
 						daysInCurrentMonth,
-						MAX_TASKS_PER_WEEK * daysInCurrentMonth,
+						daysInCurrentMonth,
 						MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH,
 						MONTH_GRAPH_CLICK_ADDITIONAL_HEIGHT,
 						MONTH_GRAPH_MINIMAL_WIDTH,

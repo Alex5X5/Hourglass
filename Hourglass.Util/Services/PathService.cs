@@ -1,4 +1,4 @@
-﻿namespace Hourglass.Util;
+﻿namespace Hourglass.Util.Services;
 
 using System;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-public static class Paths {
+public static class PathService {
 
 	public static void ExtractFiles(string resourceNamespacePrefix) {
 		// Get executing assembly
@@ -50,26 +50,6 @@ public static class Paths {
 	public static string AssetsPath(string fileName) =>
 		FilesPath(@"Assets\" + fileName);
 
-    public static void Test() {
-		try {
-			string mainFilePath = GetMainEntryPointPath();
-			Console.WriteLine($"Main entry point file path: {mainFilePath}");
-
-			// Additional information
-			Console.WriteLine($"Directory: {Path.GetDirectoryName(mainFilePath)}");
-			Console.WriteLine($"Filename: {Path.GetFileName(mainFilePath)}");
-		} catch (Exception ex) {
-			Console.WriteLine($"Error detecting main entry point: {ex.Message}");
-		}
-
-		Console.WriteLine("\nPress any key to exit...");
-		Console.ReadKey();
-	}
-
-	/// <summary>
-	/// Detects and returns the path to the file containing the main entry point of the running program.
-	/// </summary>
-	/// <returns>The full path to the main entry point file</returns>
 	public static string GetMainEntryPointPath() {
 		// Method 1: Try to get the entry assembly (most reliable for executable applications)
 		Assembly entryAssembly = Assembly.GetEntryAssembly();

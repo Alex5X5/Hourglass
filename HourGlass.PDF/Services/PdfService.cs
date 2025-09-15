@@ -3,6 +3,8 @@
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
+using Hourglass.Util.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,9 +18,9 @@ public unsafe partial class PdfService : IPdfService {
 
 	public static bool IndexersLoaded { private set; get; } = false;
 
-	IHourglassDbService _dbService;
+	private readonly IHourglassDbService _dbService;
 
-	private static Dictionary<string, ValueTuple<IntPtr, IntPtr>> Indexers;
+	private readonly Dictionary<string, ValueTuple<IntPtr, IntPtr>> Indexers;
 
 	public Dictionary<string, string> InsertOperations;
 
@@ -29,8 +31,8 @@ public unsafe partial class PdfService : IPdfService {
 		_dbService = dbService;
 		InsertOperations = [];
 		Indexers = [];
-		byte* buffer = LoadInputUnsafe(out int inputFileSize);
-		text = DecodeBuffer(buffer, inputFileSize, out int _charCount);
+		byte* buffer = FileService.LoadFileUnsafe(PathService.AssetsPath("output-readable-indexers.pdf"), out int inputFileSize);
+		text = FileService.DecodeBufferAnsi(buffer, inputFileSize, out int _charCount);
 		charCount = _charCount;
 		NativeMemory.Free(buffer);
 		new Thread(LoadIndexers).Start();
@@ -127,13 +129,12 @@ public unsafe partial class PdfService : IPdfService {
                 string[] compiledTask = CompileTask(task);
                 try {
                     Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-                    query = $"{dayName}_hour_range_{offset + 1}";
-                    value = DateTimeHelper.ToTimeString(task.StartDateTime) + " - " + DateTimeHelper.ToTimeString(task.FinishDateTime);
+                    string query = $"{dayName}_hour_range_{offset + 1}";
+                    string value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
                     BufferAnnotationValueUnsafe(query, value);
                     BufferFieldValueUnsafe(query, value);
                     query = $"{dayName}_hour_{offset + 1}";
-                    value = DateTimeHelper.ToHourMinuteString(task.finish-task.start);
-					totalWeekSeconds += task.finish - task.start;
+                    value = DateTimeService.ToHourMinuteString(task.finish-task.start);
                     BufferAnnotationValueUnsafe(query, value);
                     BufferFieldValueUnsafe(query, value);
                     offset += compiledTask.Length;
@@ -159,11 +160,12 @@ public unsafe partial class PdfService : IPdfService {
         BufferFieldValueUnsafe(query, value);
         SetUtilityFields();
         prepareContentStopwatch.Stop();
+        SetUtilityFields();
         Console.WriteLine("finished preparing content for the document");
         Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 		char* document = BuildDocument(out int documentCharCount);
-		byte* resultFile = EncodeBuffer(document, documentCharCount, out int fileSize);
-		WriteOutputUnsafe(resultFile, Paths.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
+		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
+		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
         NativeMemory.Free(resultFile);
         NativeMemory.Free(document);
         InsertOperations.Clear();
@@ -198,16 +200,12 @@ public unsafe partial class PdfService : IPdfService {
 	}
 
 	private void SetUtilityFields() {
-		int daysDifference = (DateTime.Today - DateTimeHelper.START_DATE).Days;
+		int daysDifference = (DateTime.Today - DateTimeService.START_DATE).Days;
 		int currentWeek = (int)Math.Ceiling(daysDifference / 7.0);
         BufferAnnotationValueUnsafe("week", Convert.ToString(currentWeek));
         BufferFieldValueUnsafe("week", Convert.ToString(currentWeek));
-		DateTime dayFrom = DateTimeHelper.GetMondayOfCurrentWeek();
-		DateTime dayTo = DateTimeHelper.GetFridayOfCurrentWeek();
-		BufferAnnotationValueUnsafe("name", "Alexander Lehnert");
-        BufferFieldValueUnsafe("name", "Alexander Lehnert");
-        BufferAnnotationValueUnsafe("job", "Fachinformatiker für Anwendungsentwicklung");
-		BufferFieldValueUnsafe("job", "Fachinformatiker für Anwendungsentwicklung");
+		DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
+		DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
         BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
         BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
         BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
@@ -215,8 +213,8 @@ public unsafe partial class PdfService : IPdfService {
     }
 
 	private string GetNewFileName() {
-        DateTime dayFrom = DateTimeHelper.GetMondayOfCurrentWeek();
-        DateTime dayTo = DateTimeHelper.GetFridayOfCurrentWeek();
-		return $"Ausbildungsnachweis{DateTimeHelper.GetWeekCountSinceStart()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
+        DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
+        DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
+		return $"Ausbildungsnachweis{DateTimeService.GetWeekCountSinceStart()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
     }
 }

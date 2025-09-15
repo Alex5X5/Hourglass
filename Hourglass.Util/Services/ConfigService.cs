@@ -1,18 +1,18 @@
-﻿namespace Hourglass.Util;
+﻿namespace Hourglass.Util.Services;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 
-public class ConfigManager {
+public class ConfigService {
 
 	private string bufferedFile;
 	private string _path;
 	internal string[] lines;
 	private Dictionary<string, Configuration> configurationBuffer;
 
-	public ConfigManager(string path) {
+	public ConfigService(string path) {
 		_path = path;
 		LoadConfigurations();
 	}
@@ -128,9 +128,9 @@ public class ConfigManager {
 
 }
 
-public class Configuration(ConfigManager _manager, string _name, int _offset) {
+public class Configuration(ConfigService _manager, string _name, int _offset) {
 
-	private ConfigManager manager = _manager;
+	private ConfigService manager = _manager;
 	private string name = _name;
 	private int offset = _offset;
 
