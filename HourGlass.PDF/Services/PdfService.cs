@@ -114,6 +114,9 @@ public unsafe partial class PdfService : IPdfService {
             { "thursday", DayOfWeek.Thursday },
             { "friday", DayOfWeek.Friday }
         };
+		long totalWeekSeconds = 0;
+		string query = "";
+		string value = "";
         foreach (string dayName in days.Keys) {
             int offset = 0;
             string[] lines = ["", "", "", "", "", ""];
@@ -146,11 +149,16 @@ public unsafe partial class PdfService : IPdfService {
 				}
             }
             for (int i = 0; i < lines.Length; i++) {
-                string query = $"{dayName}_line_{i + 1}";
+                query = $"{dayName}_line_{i + 1}";
 				BufferAnnotationValueUnsafe(query, lines[i]);
 				BufferFieldValueUnsafe(query, lines[i]);
             }
         }
+        query = $"total_hour";
+        value = DateTimeHelper.ToHourMinuteString(totalWeekSeconds);
+        BufferAnnotationValueUnsafe(query, value);
+        BufferFieldValueUnsafe(query, value);
+        SetUtilityFields();
         prepareContentStopwatch.Stop();
         SetUtilityFields();
         Console.WriteLine("finished preparing content for the document");
