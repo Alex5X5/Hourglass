@@ -97,7 +97,7 @@ public unsafe partial class PdfService : IPdfService {
 		Console.WriteLine($"loading indexers took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
 	}
 
-    public void Export() {
+    public void Export(IProgressReporter progressReporter) {
 		if (!IndexersLoaded)
 			return;
 		Stopwatch totalStopwatch = new();
@@ -117,6 +117,10 @@ public unsafe partial class PdfService : IPdfService {
 		long totalWeekSeconds = 0;
 		string query = "";
 		string value = "";
+		const int progressUpdatesPerTask = 1;
+		int totalSteps = tasks.Count * progressUpdatesPerTask;
+		int currentStep = 0;
+		int percentage = 0;
         foreach (string dayName in days.Keys) {
             int offset = 0;
             string[] lines = ["", "", "", "", "", ""];
@@ -124,13 +128,18 @@ public unsafe partial class PdfService : IPdfService {
             if (tasks_.Count == 0)
                 continue;
             foreach (Database.Models.Task task in tasks_) {
-				if (task.running)
+                if (progressReporter.IsCancellationRequested) {
+                    progressReporter.ReportProgress(currentStep, "Cancelling...");
+                    Thread.Sleep(500);
+                    return;
+                }
+                if (task.running)
 					continue;
                 string[] compiledTask = CompileTask(task);
                 try {
                     Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-                    string query = $"{dayName}_hour_range_{offset + 1}";
-                    string value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
+                    query = $"{dayName}_hour_range_{offset + 1}";
+                    value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
                     BufferAnnotationValueUnsafe(query, value);
                     BufferFieldValueUnsafe(query, value);
                     query = $"{dayName}_hour_{offset + 1}";
@@ -147,7 +156,12 @@ public unsafe partial class PdfService : IPdfService {
 					Console.WriteLine($"description of task was:'{task.description}'");
 					break;
 				}
+				currentStep++;
+				percentage = (int)(currentStep * 100.0 / totalSteps);
+				progressReporter.ReportProgress(percentage, $"Processing day {dayName}...");
+				//Thread.Sleep(100);
             }
+			//Thread.Sleep(100);
             for (int i = 0; i < lines.Length; i++) {
                 query = $"{dayName}_line_{i + 1}";
 				BufferAnnotationValueUnsafe(query, lines[i]);
@@ -155,7 +169,7 @@ public unsafe partial class PdfService : IPdfService {
             }
         }
         query = $"total_hour";
-        value = DateTimeHelper.ToHourMinuteString(totalWeekSeconds);
+        value = DateTimeService.ToHourMinuteString(totalWeekSeconds);
         BufferAnnotationValueUnsafe(query, value);
         BufferFieldValueUnsafe(query, value);
         SetUtilityFields();
@@ -172,6 +186,7 @@ public unsafe partial class PdfService : IPdfService {
         totalStopwatch.Stop();
 		Console.WriteLine("finished exporting unsafe");
 		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
+        progressReporter.ReportProgress(100, "finished exporting");
     }
 
     public void Import() {

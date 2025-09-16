@@ -24,39 +24,52 @@ partial class ExportProgressPopup {
     /// the contents of this method with the code editor.
     /// </summary>
     private void InitializeComponent() {
-        InfoTextbox = new RichTextBox();
-        progressBar1 = new ProgressBar();
+        progressBar = new ProgressBar();
+        CancelExportingButton = new Button();
+        statusLabel = new Label();
         SuspendLayout();
         // 
-        // InfoTextbox
+        // progressBar
         // 
-        InfoTextbox.Font = new Font("Segoe UI", 12F);
-        InfoTextbox.Location = new Point(12, 12);
-        InfoTextbox.Name = "InfoTextbox";
-        InfoTextbox.Size = new Size(255, 136);
-        InfoTextbox.TabIndex = 1;
-        InfoTextbox.Text = "";
-        InfoTextbox.TextChanged += DescriptionTextbox_TextChanged;
+        progressBar.Location = new Point(12, 37);
+        progressBar.Name = "progressBar";
+        progressBar.Size = new Size(255, 23);
+        progressBar.TabIndex = 2;
         // 
-        // progressBar1
+        // CancelExportingButton
         // 
-        progressBar1.Location = new Point(12, 155);
-        progressBar1.Name = "progressBar1";
-        progressBar1.Size = new Size(255, 23);
-        progressBar1.TabIndex = 2;
-        progressBar1.Click += progressBar1_Click;
+        CancelExportingButton.Location = new Point(98, 67);
+        CancelExportingButton.Name = "CancelExportingButton";
+        CancelExportingButton.Size = new Size(75, 23);
+        CancelExportingButton.TabIndex = 3;
+        CancelExportingButton.Text = "Cancel";
+        CancelExportingButton.UseVisualStyleBackColor = true;
+        CancelExportingButton.Click += CancelExportingButton_Click;
+        // 
+        // statusLabel
+        // 
+        statusLabel.AutoSize = true;
+        statusLabel.Location = new Point(117, 9);
+        statusLabel.Name = "statusLabel";
+        statusLabel.Size = new Size(69, 15);
+        statusLabel.TabIndex = 4;
+        statusLabel.Text = "exporting ...";
         // 
         // ExportProgressPopup
         // 
-        ClientSize = new Size(279, 190);
-        Controls.Add(progressBar1);
-        Controls.Add(InfoTextbox);
+        ClientSize = new Size(279, 102);
+        Controls.Add(statusLabel);
+        Controls.Add(CancelExportingButton);
+        Controls.Add(progressBar);
         Name = "ExportProgressPopup";
         Load += ExportProgressPopup_Load;
         ResumeLayout(false);
+        PerformLayout();
     }
 
     #endregion
-    private RichTextBox InfoTextbox;
-    private ProgressBar progressBar1;
+
+    private ProgressBar progressBar;
+    private Button CancelExportingButton;
+    private Label statusLabel;
 }

@@ -1,4 +1,5 @@
 ﻿using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.Pages.ExportProgressPopup;
 using Hourglass.GUI.Pages.Timer;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
@@ -6,8 +7,6 @@ using Hourglass.Util;
 using Hourglass.Util.Services;
 
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -20,11 +19,9 @@ public partial class TimerWindow : Form {
 	private readonly Thread GraphRenderThread;
 	private readonly Thread TimerUpdaterThread;
 
-	private readonly PdfService Pdf;
 
 	private readonly IPdfService pdf;
 
-	private List<Hourglass.Database.Models.Task> VisibleTasks;
 	private Hourglass.Database.Models.Task? RunningTask = null;
 
 	private readonly Image image = Bitmap.FromFile(PathService.AssetsPath("Präsentation3.png"));
@@ -33,9 +30,8 @@ public partial class TimerWindow : Form {
 	TimerWindowMode windowMode = TimerWindowMode.Day;
 
 	public TimerWindow(IHourglassDbService dbService) {
-		VisibleTasks = [];
 		_dbService = dbService;
-		Pdf = new PdfService(_dbService);
+		pdf = new PdfService(_dbService);
         InitializeComponent();
 
 		GraphRenderThread = new Thread(
@@ -148,13 +144,17 @@ public partial class TimerWindow : Form {
 		IEnumerable<Hourglass.Database.Models.Project> projects = await _dbService.QueryProjectsAsync();
 		Hourglass.Database.Models.Project? project = projects.FirstOrDefault(x=>x.Name == ProjectTextBox.Text);
 		StartButton.Enabled = false;
-		RunningTask = _dbService.StartNewTaskAsnc(
+		RunningTask = await _dbService.StartNewTaskAsnc(
 			DescriptionTextBox.Text,
 			project,
 			new Hourglass.Database.Models.Worker { name = "new user" },
 			null
-		).Result;
-		Task.Run(() => { Thread.Sleep(500); SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime)); });
+		);
+		await Task.Run(
+				() => {
+					Thread.Sleep(100);
+					SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
+				});
 		StopButton.Enable();
 		StartButton.Disable();
 	}
@@ -184,9 +184,14 @@ public partial class TimerWindow : Form {
 			null,
 			null
 		);
-		Task.Run(() => { Thread.Sleep(500); SetFinishTextboxText(""); });
-		Task.Run(() => { Thread.Sleep(500); SetElapsedTimeLabelText(""); });
-		Task.Run(() => { Thread.Sleep(500); SetDescriptionTextboxText("");});
+		await Task.Run(
+				() => {
+					Thread.Sleep(100);
+					SetFinishTextboxText("");
+                    SetDescriptionTextboxText("");
+                    SetElapsedTimeLabelText("");
+                }
+		);
 		StartButton.Enable();
 		StopButton.Disable();
 	}
@@ -199,36 +204,37 @@ public partial class TimerWindow : Form {
 	private void ExportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("on export button click");
 		ExportButton.Enabled = false;
-		Task.Run(Pdf.Export)
-			.ContinueWith(
-				args => ExportButton.Invoke(
-					()=>ExportButton.Enabled = true
-				)
-			);
-	}
+		ExportProgressPopup popup = new();
+		ProgressReporter progressReporter = new(popup);
+		popup.Show(this);
+		new Thread(
+				() => {
+					pdf.Export(progressReporter);
+					Invoke(
+							() => {
+								ExportButton.Enabled = true;
+							});
+				}).Start();
+    }
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
-		//PdfImport();
 	}
 
 	private async void DayModeButtonButtonClick(object sender, EventArgs e) {
         Console.WriteLine("day mode button click");
-		VisibleTasks = await _dbService.QueryTasksOfCurrentDayAsync();
 		windowMode = TimerWindowMode.Day;
 		GraphPanel.WindowMode = windowMode;
 	}
 
 	private async void WeekModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("week mode button click");
-        VisibleTasks = await _dbService.QueryTasksOfCurrentWeekAsync();
         windowMode = TimerWindowMode.Week;
 		GraphPanel.WindowMode = windowMode;
 	}
 
 	private async void MonthModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("month mode button click");
-        VisibleTasks = await _dbService.QueryTasksOfCurrentWeekAsync();
         windowMode = TimerWindowMode.Month;
 		GraphPanel.WindowMode = windowMode;
 	}
@@ -236,7 +242,7 @@ public partial class TimerWindow : Form {
 	#endregion
 
 	public void OnContiniueTask(Hourglass.Database.Models.Task task) {
-		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
+		RunningTask = task;
 		Task.Run(
 			() => {
 				Thread.Sleep(200);
@@ -244,9 +250,9 @@ public partial class TimerWindow : Form {
 				SetDescriptionTextboxText(task.description);
 			}
 		);
-		StopButton.Enabled = true;
+		StopButton.Enable();
 		StopRestartButton.Enabled = true;
-		StartButton.Enabled = false;
+		StartButton.Disable();
 		
 	}
 
