@@ -202,11 +202,14 @@ public unsafe partial class PdfService : IPdfService {
 		source += task.description;
 		while (source.Length > 0) {
 			int CharacterRemoveCount;
-			if (source.Length >= MAX_LINE_LENGTH)
+			if (source.Length >= MAX_LINE_LENGTH) {
 				CharacterRemoveCount = MAX_LINE_LENGTH;
+				while (source[CharacterRemoveCount] != ' ')
+					CharacterRemoveCount--;
+			}
 			else
 				CharacterRemoveCount = source.Length;
-			res.Add((res.Count > 0 ? "     ":"") + source[..CharacterRemoveCount]);
+			res.Add((res.Count > 0 ? "     ":"") + source[..(source[CharacterRemoveCount-1]==' '? CharacterRemoveCount-1 : CharacterRemoveCount)]);
 			source = source[CharacterRemoveCount..source.Length];
 		}
 		return res.ToArray();
