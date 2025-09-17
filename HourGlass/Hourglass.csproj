@@ -6,12 +6,18 @@
 	<SelfContained>true</SelfContained>
 	<PublishReadyToRun>true</PublishReadyToRun>
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+	<TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

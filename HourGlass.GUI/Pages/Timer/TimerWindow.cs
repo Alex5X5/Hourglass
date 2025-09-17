@@ -19,8 +19,11 @@ public partial class TimerWindow : Form {
 	private readonly Thread GraphRenderThread;
 	private readonly Thread TimerUpdaterThread;
 
+    private bool invokeInProgress = false;
+	private bool stopInvoking = false;
+	public bool ShuttingDown { get { return stopInvoking; } }
 
-	private readonly IPdfService pdf;
+    private readonly IPdfService pdf;
 
 	private Hourglass.Database.Models.Task? RunningTask = null;
 
@@ -48,67 +51,69 @@ public partial class TimerWindow : Form {
 		TimerUpdaterThread = new Thread(UpdateTimers);
 		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (RunningTask != null) {
-			DescriptionTextBox.Text = RunningTask.description;
-			SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
+			SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
+            SetTextBoxTextSafely(DescriptionTextBox, RunningTask.description);
 			StartButton.Disable();
 		} else {
 			StopButton.Disable();
 		}
 	}
 
-	#region timer update methods
+    #region timer update methods
 
-	private void SetStartTextboxText(string text) {
-		try {
-			if (StartTextbox == null)
-				return;
-			if (StartTextbox.Disposing)
-				return;
-			if (StartTextbox.InvokeRequired)
-				StartTextbox?.Invoke(() => StartTextbox.Text = text);
-			else
-				StartTextbox.Text = text;
-		} catch (InvalidAsynchronousStateException) { }
-	}
+    private void SetLabelTextSafely(Label label, string text) {
+            if (Disposing)
+                return;
+            if (label == null)
+                return;
+            if (label.Disposing)
+                return;
+            if (label.InvokeRequired) {
+                if (stopInvoking != true) {
+                    invokeInProgress = true;
+                    label?.Invoke(() => label.Text = text);
+                    invokeInProgress = false;
+                }
+                return;
+            } else
+                label.Text = text;
+    }
 
-	private void SetFinishTextboxText(string text) {
-		try {
-			if (FinishTextbox == null)
-				return;
-			if (FinishTextbox.Disposing)
-				return;
-			if (FinishTextbox.InvokeRequired)
-				FinishTextbox?.Invoke(() => FinishTextbox.Text = text);
-			else
-				FinishTextbox.Text = text;
-		} catch(InvalidAsynchronousStateException){ }
-	}
+    private void SetTextBoxTextSafely(TextBox label, string text) {
+            if (Disposing)
+                return;
+            if (label == null)
+                return;
+            if (label.Disposing)
+                return;
+            if (label.InvokeRequired) {
+                if (stopInvoking != true) {
+                    invokeInProgress = true;
+                    label?.Invoke(() => label.Text = text);
+                    invokeInProgress = false;
+                }
+                return;
+            } else
+                label.Text = text;
+    }
 
-	private void SetElapsedTimeLabelText(string text) {
-		try {
-			if (ElapsedTimeLabel == null)
-				return;
-			if (ElapsedTimeLabel.Disposing)
-				return;
-			if (ElapsedTimeLabel.InvokeRequired)
-				ElapsedTimeLabel?.Invoke(() => ElapsedTimeLabel.Text = text);
-			else
-				ElapsedTimeLabel.Text = text;
-		} catch (InvalidAsynchronousStateException) { }
-	}
-
-	private void SetDescriptionTextboxText(string text) {
-		try {
-			if (DescriptionTextBox == null)
-				return;
-			if (DescriptionTextBox.Disposing)
-				return;
-			if (DescriptionTextBox.InvokeRequired)
-				DescriptionTextBox?.Invoke(() => DescriptionTextBox.Text = text);
-			else
-				DescriptionTextBox.Text = text;
-		} catch (InvalidAsynchronousStateException) { }
-	}
+    private void SetTextBoxTextSafely(RichTextBox label, string text) {
+            if (Disposing)
+                return;
+            if (label == null)
+                return;
+            if (label.Disposing)
+                return;
+            if (label.InvokeRequired) {
+                if (stopInvoking != true) {
+                    invokeInProgress = true;
+                    label?.Invoke(() => label.Text = text);
+                    invokeInProgress = false;
+                }
+                return;
+            } else
+                label.Text = text;
+    }
 
 	private void UpdateTimers() {
 		while (!CanRaiseEvents)
@@ -116,9 +121,9 @@ public partial class TimerWindow : Form {
 		while (!Disposing && !Stop) {
 			try {
 				if (RunningTask != null)
-					SetFinishTextboxText(DateTimeService.ToDayAndTimeString(DateTime.Now));
+					SetTextBoxTextSafely(FinishTextbox, DateTimeService.ToDayAndTimeString(DateTime.Now));
 				else
-					SetStartTextboxText(DateTimeService.ToDayAndTimeString(DateTime.Now));
+					SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(DateTime.Now));
 				if (RunningTask == null)
 					continue;
 				TimeSpan t = DateTime.Now.Subtract(RunningTask.StartDateTime);
@@ -128,9 +133,8 @@ public partial class TimerWindow : Form {
 				} catch(FormatException){
 					time = DateTime.Now;
 				}
-				SetElapsedTimeLabelText(DateTimeService.ToTimeString(time));
-			} catch (InvalidOperationException) {
-			}
+				SetLabelTextSafely(ElapsedTimeLabel, DateTimeService.ToTimeString(time));
+			} catch (InvalidOperationException) { }
 			Thread.Sleep(200);
 		}
 	}
@@ -151,10 +155,12 @@ public partial class TimerWindow : Form {
 			null
 		);
 		await Task.Run(
-				() => {
-					Thread.Sleep(100);
-					SetStartTextboxText(DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
-				});
+			() => {
+				Thread.Sleep(100);
+				if(RunningTask!=null)
+					SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
+			}
+		);
 		StopButton.Enable();
 		StartButton.Disable();
 	}
@@ -185,12 +191,12 @@ public partial class TimerWindow : Form {
 			null
 		);
 		await Task.Run(
-				() => {
-					Thread.Sleep(100);
-					SetFinishTextboxText("");
-                    SetDescriptionTextboxText("");
-                    SetElapsedTimeLabelText("");
-                }
+			() => {
+				Thread.Sleep(100);
+				SetTextBoxTextSafely(FinishTextbox, "");
+                SetTextBoxTextSafely(DescriptionTextBox, "");
+                SetLabelTextSafely(ElapsedTimeLabel, "");
+            }
 		);
 		StartButton.Enable();
 		StopButton.Disable();
@@ -208,32 +214,33 @@ public partial class TimerWindow : Form {
 		ProgressReporter progressReporter = new(popup);
 		popup.Show(this);
 		new Thread(
-				() => {
-					pdf.Export(progressReporter);
-					Invoke(
-							() => {
-								ExportButton.Enabled = true;
-							});
-				}).Start();
+			() => {
+				pdf.Export(progressReporter);
+				Invoke(
+						() => {
+							ExportButton.Enabled = true;
+						});
+			}
+		).Start();
     }
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
 	}
 
-	private async void DayModeButtonButtonClick(object sender, EventArgs e) {
+	private void DayModeButtonButtonClick(object sender, EventArgs e) {
         Console.WriteLine("day mode button click");
 		windowMode = TimerWindowMode.Day;
 		GraphPanel.WindowMode = windowMode;
 	}
 
-	private async void WeekModeButtonButtonClick(object sender, EventArgs e) {
+	private void WeekModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("week mode button click");
         windowMode = TimerWindowMode.Week;
 		GraphPanel.WindowMode = windowMode;
 	}
 
-	private async void MonthModeButtonButtonClick(object sender, EventArgs e) {
+	private void MonthModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("month mode button click");
         windowMode = TimerWindowMode.Month;
 		GraphPanel.WindowMode = windowMode;
@@ -246,8 +253,8 @@ public partial class TimerWindow : Form {
 		Task.Run(
 			() => {
 				Thread.Sleep(200);
-				SetStartTextboxText(DateTimeService.ToDayAndTimeString(task.StartDateTime));
-				SetDescriptionTextboxText(task.description);
+				SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(task.StartDateTime));
+				SetTextBoxTextSafely(DescriptionTextBox, task.description);
 			}
 		);
 		StopButton.Enable();
@@ -261,9 +268,19 @@ public partial class TimerWindow : Form {
 		TimerUpdaterThread.Start();
 	}
 
-	private void TimerWindow_Close(object sender, EventArgs e) {
+	private async void TimerWindow_Close(object sender, FormClosingEventArgs e) {
 		Stop = true;
-	}
+        if (invokeInProgress) {
+            e.Cancel = true;
+            stopInvoking = true;
+            await Task.Factory.StartNew(
+				() => {
+					while (invokeInProgress) ;
+				}
+			);
+            Close();
+        }
+    }
 
 	public static Bitmap ResizeImage(Image image, int width, int height) {
 		var destRect = new Rectangle(0, 0, width, height);
@@ -306,7 +323,7 @@ public partial class TimerWindow : Form {
 		}
 	}
 
-	protected override void OnPaintBackground(PaintEventArgs args) { }
+    protected override void OnPaintBackground(PaintEventArgs args) { }
 
 	protected override void OnPaint(PaintEventArgs args) {
 		args.Graphics.DrawImage(image, 0, 0, ClientSize.Width, ClientSize.Height);

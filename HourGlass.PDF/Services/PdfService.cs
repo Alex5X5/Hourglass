@@ -159,9 +159,7 @@ public unsafe partial class PdfService : IPdfService {
 				currentStep++;
 				percentage = (int)(currentStep * 100.0 / totalSteps);
 				progressReporter.ReportProgress(percentage, $"Processing day {dayName}...");
-				//Thread.Sleep(100);
             }
-			//Thread.Sleep(100);
             for (int i = 0; i < lines.Length; i++) {
                 query = $"{dayName}_line_{i + 1}";
 				BufferAnnotationValueUnsafe(query, lines[i]);

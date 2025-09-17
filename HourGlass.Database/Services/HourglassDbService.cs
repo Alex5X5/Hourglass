@@ -77,7 +77,7 @@ public class HourglassDbService : IHourglassDbService {
 				.ToList();
 	}
 
-	public async Task<Models.Task?> StartNewTaskAsnc(string description, Project project, Worker worker, Ticket? ticket) {
+	public async Task<Models.Task> StartNewTaskAsnc(string description, Project? project, Worker worker, Ticket? ticket) {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		Models.Task task = new() {
 			description = description,
