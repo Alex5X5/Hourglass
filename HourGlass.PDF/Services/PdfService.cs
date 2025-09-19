@@ -156,6 +156,7 @@ public unsafe partial class PdfService : IPdfService {
 					Console.WriteLine($"description of task was:'{task.description}'");
 					break;
 				}
+				totalWeekSeconds += task.finish - task.start;
 				currentStep++;
 				percentage = (int)(currentStep * 100.0 / totalSteps);
 				progressReporter.ReportProgress(percentage, $"Processing day {dayName}...");

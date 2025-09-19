@@ -3,7 +3,6 @@
 namespace Hourglass.GUI.Pages.SettingsPopup {
 	public partial class SettingsPopup : Form {
 		
-		private bool skipSaveSettings = false;
 		private readonly Dictionary<string, string> Settings;
 
 		public const string NAME_KEY = "name";
@@ -24,25 +23,20 @@ namespace Hourglass.GUI.Pages.SettingsPopup {
 		}
 
 		private void OkButton_Click(object sender, EventArgs e) {
-			if (skipSaveSettings)
-				return;
 			ParseEnteredValues();
-			//Task.Run(
-			//	() => {
-					string[] lines = new string[Settings.Count];
-					int i = 0;
-					foreach (string key in Settings.Keys) {
-						lines[i] = key + ":" + Settings[key];
-						i++;
-					}
-					string res = String.Join("\n", lines);
-					string path = PathService.FilesPath("appsettings.dat");
-                    if (!File.Exists(path))
-						File.Create(path);
-					using FileStream fileHandle = File.Open(path, FileMode.Truncate);
-					using StreamWriter streamWriter = new(fileHandle);
-					streamWriter.Write(res);
-				//});
+			string[] lines = new string[Settings.Count];
+			int i = 0;
+			foreach (string key in Settings.Keys) {
+				lines[i] = key + ":" + Settings[key];
+				i++;
+			}
+			string res = string.Join("\n", lines);
+			string path = PathService.FilesPath("appsettings.dat");
+            if (!File.Exists(path))
+				File.Create(path);
+			using FileStream fileHandle = File.Open(path, FileMode.Truncate);
+			using StreamWriter streamWriter = new(fileHandle);
+			streamWriter.Write(res);
 			Close();
 		}
 
