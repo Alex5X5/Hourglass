@@ -2,7 +2,6 @@
 using Hourglass.GUI.Pages.Timer;
 using Hourglass.Util;
 using Hourglass.Util.Services;
-
 using System.Windows.Forms;
 
 namespace HourGlass.GUI.Pages.Timer; 
@@ -192,10 +191,11 @@ public partial class TimerWindow {
 		SettingsButton.TabIndex = 17;
 		SettingsButton.Text = "Sett";
 		SettingsButton.UseVisualStyleBackColor = true;
-		// 
-		// ElapsedTimeLabel
-		// 
-		ElapsedTimeLabel.BackColor = Color.FromArgb(255,166,166,166);
+        SettingsButton.Click += SettingsButtonClick;
+        // 
+        // ElapsedTimeLabel
+        // 
+        ElapsedTimeLabel.BackColor = Color.FromArgb(255,166,166,166);
 		ElapsedTimeLabel.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		ElapsedTimeLabel.Location = new Point(321, 163);
 		ElapsedTimeLabel.Name = "ElapsedTimeLabel";
@@ -278,9 +278,9 @@ public partial class TimerWindow {
 		PerformLayout();
 	}
 
-	#endregion
+    #endregion
 
-	private Button StopRestartButton;
+    private Button StopRestartButton;
 	private AnimatedButton StopButton;
 	private TextBox StartTextbox;
 	private TextBox FinishTextbox;

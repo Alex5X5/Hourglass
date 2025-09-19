@@ -1,5 +1,6 @@
 ﻿using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Pages.ExportProgressPopup;
+using Hourglass.GUI.Pages.SettingsPopup;
 using Hourglass.GUI.Pages.Timer;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
@@ -202,7 +203,13 @@ public partial class TimerWindow : Form {
 		StopButton.Disable();
 	}
 
-	private void StopRestartButtonClick(object sender, EventArgs e) {
+    private void SettingsButtonClick(object sender, EventArgs e) {
+		Console.WriteLine("showing settings");
+        SettingsPopup popup =  new SettingsPopup();
+		popup.ShowDialog();
+    }
+
+    private void StopRestartButtonClick(object sender, EventArgs e) {
 		StopButtonClick(sender, e);
 		StartButtonClick(sender, e);
 	}

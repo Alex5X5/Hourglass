@@ -1,30 +1,53 @@
 ﻿using Hourglass.Util.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Hourglass.GUI.Pages.SettingsPopup {
 	public partial class SettingsPopup : Form {
+		
+		private bool skipSaveSettings = false;
+		private readonly Dictionary<string, string> Settings;
+
+		public const string NAME_KEY = "name";
+		public const string JOB_KEY = "job";
+		
 		public SettingsPopup() {
 			InitializeComponent();
+			Settings = SettingsService.ReadAppSettings();
+			Settings.TryGetValue(JOB_KEY, out string? job);
+			JobTetbox.Text = job ?? "";
+			Settings.TryGetValue(NAME_KEY, out string? name);
+			NameTextbox.Text = name ?? "";
 		}
 
-		private void button1_Click(object sender, EventArgs e) {
-			string[] buffer = ["", "", "", ""];
-			string[] lines;
-			using (FileStream fileHandle = File.Open(PathService.AssetsPath("appsettings.dat"), FileMode.OpenOrCreate))
-			using (StreamReader streamReader = new StreamReader(fileHandle))
-				lines = streamReader.ReadToEnd().Split('\n');
+		private void ParseEnteredValues() {
+			Settings[JOB_KEY] = JobTetbox.Text;
+			Settings[NAME_KEY] = NameTextbox.Text;
 		}
 
-		private void button2_Click(object sender, EventArgs e) {
-			
+		private void OkButton_Click(object sender, EventArgs e) {
+			if (skipSaveSettings)
+				return;
+			ParseEnteredValues();
+			//Task.Run(
+			//	() => {
+					string[] lines = new string[Settings.Count];
+					int i = 0;
+					foreach (string key in Settings.Keys) {
+						lines[i] = key + ":" + Settings[key];
+						i++;
+					}
+					string res = String.Join("\n", lines);
+					string path = PathService.FilesPath("appsettings.dat");
+                    if (!File.Exists(path))
+						File.Create(path);
+					using FileStream fileHandle = File.Open(path, FileMode.Truncate);
+					using StreamWriter streamWriter = new(fileHandle);
+					streamWriter.Write(res);
+				//});
+			Close();
+		}
+
+		private void CancelButton_Click(object sender, EventArgs e) {
+			Close();
 		}
 	}
 }

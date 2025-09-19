@@ -23,29 +23,29 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            textBox1 = new TextBox();
-            label1 = new Label();
+            NameTextbox = new TextBox();
+            NameLabel = new Label();
             JobLabel = new Label();
-            textBox2 = new TextBox();
-            button1 = new Button();
-            button2 = new Button();
+            JobTetbox = new TextBox();
+            OkButton = new Button();
+            CancelButton = new Button();
             SuspendLayout();
             // 
-            // textBox1
+            // NameTextbox
             // 
-            textBox1.Location = new Point(50, 57);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(238, 23);
-            textBox1.TabIndex = 0;
+            NameTextbox.Location = new Point(50, 57);
+            NameTextbox.Name = "NameTextbox";
+            NameTextbox.Size = new Size(238, 23);
+            NameTextbox.TabIndex = 0;
             // 
-            // label1
+            // NameLabel
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(50, 39);
-            label1.Name = "label1";
-            label1.Size = new Size(39, 15);
-            label1.TabIndex = 1;
-            label1.Text = "Name";
+            NameLabel.AutoSize = true;
+            NameLabel.Location = new Point(50, 39);
+            NameLabel.Name = "NameLabel";
+            NameLabel.Size = new Size(60, 15);
+            NameLabel.TabIndex = 1;
+            NameLabel.Text = "Username";
             // 
             // JobLabel
             // 
@@ -56,44 +56,44 @@
             JobLabel.TabIndex = 2;
             JobLabel.Text = "Job Name";
             // 
-            // textBox2
+            // JobTetbox
             // 
-            textBox2.Location = new Point(50, 121);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(238, 23);
-            textBox2.TabIndex = 3;
+            JobTetbox.Location = new Point(50, 121);
+            JobTetbox.Name = "JobTetbox";
+            JobTetbox.Size = new Size(238, 23);
+            JobTetbox.TabIndex = 3;
             // 
-            // button1
+            // OkButton
             // 
-            button1.Location = new Point(50, 233);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 4;
-            button1.Text = "OK";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            OkButton.Location = new Point(50, 233);
+            OkButton.Name = "OkButton";
+            OkButton.Size = new Size(75, 23);
+            OkButton.TabIndex = 4;
+            OkButton.Text = "OK";
+            OkButton.UseVisualStyleBackColor = true;
+            OkButton.Click += OkButton_Click;
             // 
-            // button2
+            // CancelButton
             // 
-            button2.Location = new Point(213, 233);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 5;
-            button2.Text = "Cancel";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            CancelButton.Location = new Point(213, 233);
+            CancelButton.Name = "CancelButton";
+            CancelButton.Size = new Size(75, 23);
+            CancelButton.TabIndex = 5;
+            CancelButton.Text = "Cancel";
+            CancelButton.UseVisualStyleBackColor = true;
+            CancelButton.Click += CancelButton_Click;
             // 
             // SettingsPopup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(342, 268);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(textBox2);
+            Controls.Add(CancelButton);
+            Controls.Add(OkButton);
+            Controls.Add(JobTetbox);
             Controls.Add(JobLabel);
-            Controls.Add(label1);
-            Controls.Add(textBox1);
+            Controls.Add(NameLabel);
+            Controls.Add(NameTextbox);
             Name = "SettingsPopup";
             Text = "SettingsPopup";
             ResumeLayout(false);
@@ -102,11 +102,11 @@
 
         #endregion
 
-        private TextBox textBox1;
-        private Label label1;
+        private TextBox NameTextbox;
+        private Label NameLabel;
         private Label JobLabel;
-        private TextBox textBox2;
-        private Button button1;
-        private Button button2;
+        private TextBox JobTetbox;
+        private Button OkButton;
+        private new Button CancelButton;
     }
 }

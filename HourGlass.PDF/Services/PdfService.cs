@@ -216,9 +216,16 @@ public unsafe partial class PdfService : IPdfService {
 	}
 
 	private void SetUtilityFields() {
+		Dictionary<string, string> settingsValues = SettingsService.ReadAppSettings();
         BufferAnnotationValueUnsafe("week", Convert.ToString(DateTimeService.GetCurrentWeekCount()));
         BufferFieldValueUnsafe("week", Convert.ToString(DateTimeService.GetCurrentWeekCount()));
-		DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
+        settingsValues.TryGetValue("name", out string? name);
+        BufferAnnotationValueUnsafe("name", name ?? "username");
+        BufferFieldValueUnsafe("name", name ?? "username");
+        settingsValues.TryGetValue("job", out string? job);
+        BufferAnnotationValueUnsafe("job", job ?? "job");
+        BufferFieldValueUnsafe("job", job ?? "job");
+        DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
 		DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
         BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
         BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
