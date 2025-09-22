@@ -285,7 +285,7 @@ class GraphRenderer : Panel {
 						}
 						break;
 					case TimerWindowMode.Month:
-						tasks = await _dbService.QueryTasksOfCurrentWeekAsync();
+						tasks = await _dbService.QueryTasksOfCurrentMonthAsync();
 						if (tasks != null && tasks.Count > 0) {
 							int graphPosY = PADDING_Y;
 							for (int i = 0; i < 100 && i < tasks.Count; i++) {

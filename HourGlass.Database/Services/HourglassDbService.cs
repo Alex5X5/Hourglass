@@ -4,6 +4,7 @@ using DatabaseUtil;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.Util;
 using Hourglass.Util.Services;
 
 using System;
@@ -18,7 +19,7 @@ public class HourglassDbService : IHourglassDbService {
 
 	public HourglassDbService() { }
 
-	public async Task<List<Ticket>> QueryTicketsAsync()=>
+    public async Task<List<Ticket>> QueryTicketsAsync()=>
 		await _accessor.QueryAllAsync<Ticket>();
 
 	public async Task<List<Project>> QueryProjectsAsync()=>
@@ -49,8 +50,7 @@ public class HourglassDbService : IHourglassDbService {
 	}
 
 	public async Task<List<Models.Task>> QueryTasksOfCurrentDayAsync() {
-		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		now -= TimeSpan.SecondsPerDay;
+		long now = DateTime.Today.Date.Ticks / TimeSpan.TicksPerSecond;
 		IEnumerable<Models.Task> all = await QueryTasksAsync();
 		return all
 			.Where(x => x.StartDateTime.DayOfWeek == DateTime.Now.DayOfWeek)
@@ -69,8 +69,8 @@ public class HourglassDbService : IHourglassDbService {
 	}
 
 	public async Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync() {
-		DateTime thisMonth = new(DateTime.Now.Year, DateTime.Now.Month, 1);
-		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+		DateTime thisMonth = DateTimeService.GetFirstDayOfCurrentMonth();
+		int thisMonthSeconds = (int)(thisMonth.Ticks / TimeSpan.TicksPerSecond);
 		IEnumerable<Models.Task> all = await QueryTasksAsync();
 		return all
 			.Where(x => x.StartDateTime >= thisMonth)
