@@ -174,7 +174,7 @@ public unsafe partial class PdfService : IPdfService {
         SetUtilityFields();
         prepareContentStopwatch.Stop();
         SetUtilityFields();
-        Console.WriteLine("finished preparing content for the document");
+        Console.Write("finished preparing content for the document\n");
         Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
@@ -183,7 +183,7 @@ public unsafe partial class PdfService : IPdfService {
         NativeMemory.Free(document);
         InsertOperations.Clear();
         totalStopwatch.Stop();
-		Console.WriteLine("finished exporting unsafe");
+		Console.Write("finished exporting unsafe\n");
 		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
         progressReporter.ReportProgress(100, "finished exporting");
     }

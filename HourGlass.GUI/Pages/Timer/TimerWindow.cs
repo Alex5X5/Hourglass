@@ -31,7 +31,20 @@ public partial class TimerWindow : Form {
 	private readonly Image image = Bitmap.FromFile(PathService.AssetsPath("Präsentation3.png"));
 	private bool Stop = false;
 
-	TimerWindowMode windowMode = TimerWindowMode.Day;
+    public DateTime SelectedWeek {
+        set => SelectedWeekStartSeconds = (int)(value.Ticks / TimeSpan.TicksPerSecond);
+        get => new(SelectedWeekStartSeconds);
+    }
+
+	public DateTime SelectedDay {
+        set => SelectedDayStartSeconds = (int)(value.Ticks / TimeSpan.TicksPerSecond);
+        get => new(SelectedDayStartSeconds);
+    }
+
+    private int SelectedWeekStartSeconds = (int)(DateTime.Now.Ticks / TimeSpan.TicksPerSecond);
+	private int SelectedDayStartSeconds = (int)(DateTime.Now.Ticks / TimeSpan.TicksPerSecond);
+
+    TimerWindowMode windowMode = TimerWindowMode.Day;
 
 	public TimerWindow(IHourglassDbService dbService) {
 		_dbService = dbService;

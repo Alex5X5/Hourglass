@@ -315,8 +315,9 @@ class GraphRenderer : Panel {
 		using (Graphics g = Graphics.FromImage(image))
 			g.Clear(Color.Gainsboro);
 		int graphPosY = PADDING_Y;
+		bool taskClicked = false;
 		foreach (Database.Models.Task task in tasks) {
-			bool clicked = WindowMode switch {
+			taskClicked = WindowMode switch {
 				TimerWindowMode.Day =>
 					GetTaskRectanlge(
 						task,
@@ -358,10 +359,20 @@ class GraphRenderer : Panel {
 					).Contains(mousePos),
 				_ => false
 			};
-			if (clicked) {
+			if (taskClicked) {
 				TaskDetails.TaskDetailsPopup taskDetailsWindow = new(task, _dbService, _parent);
 				taskDetailsWindow.ShowDialog();
 				break;
+			}
+		}
+		if (!taskClicked) {
+			if (WindowMode == TimerWindowMode.Day) {
+			} else if (WindowMode == TimerWindowMode.Week) {
+
+                int offset = (int)Math.Floor((Width - 2.0 * PADDING_X) / 7);
+				DateTime newDate = DateTimeService.GetMondayOfCurrentWeek().AddDays(offset);
+			} else if (WindowMode == TimerWindowMode.Month) {
+
 			}
 		}
 	}

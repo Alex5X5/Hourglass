@@ -25,8 +25,7 @@ partial class TaskDetailsPopup {
     /// Required method for Designer support - do not modify
     /// the contents of this method with the code editor.
     /// </summary>
-    private void InitializeComponent()
-    {
+    private void InitializeComponent() {
         ApplyButton = new Button();
         DeleteButton = new Button();
         EscapeButton = new Button();
@@ -47,12 +46,13 @@ partial class TaskDetailsPopup {
         ColorLightGreenButton = new Button();
         ColorDarkGreenButton = new Button();
         ContiniueButton = new Button();
+        RestartButton = new Button();
         SuspendLayout();
         // 
         // ApplyButton
         // 
         ApplyButton.Font = new Font("Segoe UI", 12F);
-        ApplyButton.Location = new Point(90, 255);
+        ApplyButton.Location = new Point(242, 249);
         ApplyButton.Name = "ApplyButton";
         ApplyButton.Size = new Size(98, 35);
         ApplyButton.TabIndex = 0;
@@ -63,7 +63,7 @@ partial class TaskDetailsPopup {
         // DeleteButton
         // 
         DeleteButton.Font = new Font("Segoe UI", 12F);
-        DeleteButton.Location = new Point(206, 255);
+        DeleteButton.Location = new Point(138, 249);
         DeleteButton.Name = "DeleteButton";
         DeleteButton.Size = new Size(98, 35);
         DeleteButton.TabIndex = 0;
@@ -74,7 +74,7 @@ partial class TaskDetailsPopup {
         // EscapeButton
         // 
         EscapeButton.Font = new Font("Segoe UI", 12F);
-        EscapeButton.Location = new Point(437, 255);
+        EscapeButton.Location = new Point(346, 249);
         EscapeButton.Name = "EscapeButton";
         EscapeButton.Size = new Size(98, 35);
         EscapeButton.TabIndex = 0;
@@ -231,7 +231,7 @@ partial class TaskDetailsPopup {
         // ContiniueButton
         // 
         ContiniueButton.Font = new Font("Segoe UI", 12F);
-        ContiniueButton.Location = new Point(321, 255);
+        ContiniueButton.Location = new Point(293, 290);
         ContiniueButton.Name = "ContiniueButton";
         ContiniueButton.Size = new Size(98, 35);
         ContiniueButton.TabIndex = 0;
@@ -239,9 +239,20 @@ partial class TaskDetailsPopup {
         ContiniueButton.UseVisualStyleBackColor = true;
         ContiniueButton.Click += ContiniueButtonClick;
         // 
-        // TaskDetails
+        // button1
+        // 
+        RestartButton.Font = new Font("Segoe UI", 12F);
+        RestartButton.Location = new Point(189, 290);
+        RestartButton.Name = "button1";
+        RestartButton.Size = new Size(98, 35);
+        RestartButton.TabIndex = 19;
+        RestartButton.Text = "Continiue";
+        RestartButton.UseVisualStyleBackColor = true;
+        // 
+        // TaskDetailsPopup
         // 
         ClientSize = new Size(593, 353);
+        Controls.Add(RestartButton);
         Controls.Add(ColorDarkGreenButton);
         Controls.Add(ColorLightGreenButton);
         Controls.Add(ColorDarkBlueButton);
@@ -262,7 +273,7 @@ partial class TaskDetailsPopup {
         Controls.Add(ContiniueButton);
         Controls.Add(DeleteButton);
         Controls.Add(ApplyButton);
-        Name = "TaskDetails";
+        Name = "TaskDetailsPopup";
         Load += TaskDetails_Load;
         ResumeLayout(false);
         PerformLayout();
@@ -290,4 +301,5 @@ partial class TaskDetailsPopup {
 	private Button ColorLightGreenButton;
 	private Button ColorDarkGreenButton;
     private Button ContiniueButton;
+    private Button RestartButton;
 }
