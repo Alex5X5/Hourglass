@@ -268,9 +268,11 @@ public partial class TimerWindow : Form {
 		GraphPanel.WindowMode = windowMode;
 	}
 
-	#endregion
+    #endregion
 
-	public void OnContiniueTask(Hourglass.Database.Models.Task task) {
+    #region externally callable events
+
+    public void OnContiniueTask(Hourglass.Database.Models.Task task) {
 		RunningTask = task;
 		Task.Run(
 			() => {
@@ -285,7 +287,17 @@ public partial class TimerWindow : Form {
 		
 	}
 
-	private void TimerWindow_Load(object sender, EventArgs e) {
+	public void OnSelectedDayChanged(DateTime newSelectedDay) {
+
+	}
+
+	public void OnSelectedWeekChanged(DateTime newSelectedDay) {
+
+	}
+
+    #endregion
+
+    private void TimerWindow_Load(object sender, EventArgs e) {
 		GraphRenderThread.Start();
 		TimerUpdaterThread.Start();
 	}

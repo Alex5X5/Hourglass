@@ -7,7 +7,7 @@ using System.Linq;
 
 public static class SettingsService {
 
-    public static event Action OnSettingsReload;
+    public static event Action OnSettingsReload = () => { };
 
     private const string FILE_NAME = "appsettings.yml";
     
@@ -71,8 +71,8 @@ public static class SettingsService {
         foreach (Delegate act in OnSettingsReload.GetInvocationList())
             try {
                 act.DynamicInvoke();
-            } catch {
-                Console.WriteLine("");
+            } catch (Exception ex){
+                Console.WriteLine("an error occurred while invoking settings reload subscribers: "+ex.Message);
             }
     }
 }

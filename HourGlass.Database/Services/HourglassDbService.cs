@@ -6,7 +6,6 @@ using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 using Hourglass.Util.Services;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +18,7 @@ public class HourglassDbService : IHourglassDbService {
 
 	public HourglassDbService() { }
 
-    public async Task<List<Ticket>> QueryTicketsAsync()=>
+	public async Task<List<Ticket>> QueryTicketsAsync()=>
 		await _accessor.QueryAllAsync<Ticket>();
 
 	public async Task<List<Project>> QueryProjectsAsync()=>
@@ -27,6 +26,11 @@ public class HourglassDbService : IHourglassDbService {
 
 	public async Task<List<Models.Task>> QueryTasksAsync()=>
 		await _accessor.QueryAllAsync<Models.Task>();
+
+	public async Task<List<Models.Task>> QueryTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) =>
+		(await _accessor.QueryAllAsync<Models.Task>())
+			.Where(x => x.start >= intervallStartSeconds && x.finish <= intervallFinishSeconds)
+				.ToList();
 
 	public async Task<Models.Task?> QueryCurrentTaskAsync() {
 		List<Models.Task> tasks = await QueryTasksAsync();
@@ -40,42 +44,46 @@ public class HourglassDbService : IHourglassDbService {
 		return task;
 	}
 	
-	public async Task<List<Models.Task>> QueryTasksOfCurrentHourAsync() {
-		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		now -= TimeSpan.SecondsPerHour;
+	public async Task<List<Models.Task>> QueryTasksOfHourAtDateAsync(DateTime date) {
+		long seconds = date.Ticks / TimeSpan.TicksPerSecond;
+		seconds -= TimeSpan.SecondsPerHour;
 		IEnumerable<Models.Task> all= await QueryTasksAsync();
 		return all
-			.Where(x => (x.finish >= now|x.finish==0))
+			.Where(x => (x.finish >= seconds|x.finish==0))
 				.ToList();
+	}
+	
+	public async Task<List<Models.Task>> QueryTasksOfCurrentHourAsync() =>
+		await QueryTasksOfHourAtDateAsync(DateTime.Now);
+
+	public async Task<List<Models.Task>> QueryTasksOfDayAtDateAsync(DateTime date) {
+		long intervallStartSeconds = new DateTime(date.Year, date.Month, date.Day).Ticks / TimeSpan.TicksPerSecond;
+		long intervallFinishSeconds = intervallStartSeconds + TimeSpan.SecondsPerDay;
+		return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
 	}
 
-	public async Task<List<Models.Task>> QueryTasksOfCurrentDayAsync() {
-		long now = DateTime.Today.Date.Ticks / TimeSpan.TicksPerSecond;
-		IEnumerable<Models.Task> all = await QueryTasksAsync();
-		return all
-			.Where(x => x.StartDateTime.DayOfWeek == DateTime.Now.DayOfWeek)
-				.ToList();
+	public async Task<List<Models.Task>> QueryTasksOfCurrentDayAsync() =>
+		await QueryTasksOfDayAtDateAsync(DateTime.Now);
+
+	public async Task<List<Models.Task>> QueryTasksOfWeekAtDateAsync(DateTime date) {
+		long intervallStartSeconds = DateTimeService.GetMondayOfWeekAtDate(date).Ticks / TimeSpan.TicksPerSecond;
+		long intervallFinishSeconds = intervallStartSeconds + TimeSpan.TicksPerDay * 7;
+		return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
 	}
 
-	public async Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync() {
-		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
-		DateTime today = DateTime.Today;
-		int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-		DateTime lastMonday = today.AddDays(-daysSinceMonday);
-		IEnumerable<Models.Task> all = await QueryTasksAsync();
-		return all
-			.Where(x => x.StartDateTime >= lastMonday)
-				.ToList();
+	public async Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync() =>
+		await QueryTasksOfWeekAtDateAsync(DateTime.Now);
+
+	public async Task<List<Models.Task>> QueryTasksOfMonthAtDateAsync(DateTime date) {
+		DateTime month = DateTimeService.GetFirstDayOfMonthAtDate(date);
+		long intervallStartSeconds = month.Ticks / TimeSpan.TicksPerSecond;
+		long intervallFinishSeconds = intervallStartSeconds + DateTime.DaysInMonth(date.Year, date.Month) * TimeSpan.TicksPerDay;
+		return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
 	}
 
-	public async Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync() {
-		DateTime thisMonth = DateTimeService.GetFirstDayOfCurrentMonth();
-		int thisMonthSeconds = (int)(thisMonth.Ticks / TimeSpan.TicksPerSecond);
-		IEnumerable<Models.Task> all = await QueryTasksAsync();
-		return all
-			.Where(x => x.StartDateTime >= thisMonth)
-				.ToList();
-	}
+	public async Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync() =>
+		await QueryTasksOfMonthAtDateAsync(DateTime.Now);
+
 
 	public async Task<Models.Task> StartNewTaskAsnc(string description, Project? project, Worker worker, Ticket? ticket) {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;

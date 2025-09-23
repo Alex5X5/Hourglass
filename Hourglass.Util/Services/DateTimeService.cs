@@ -5,7 +5,12 @@ using System;
 
 public static class DateTimeService {
 
-	public static readonly DateTime START_DATE = GetStartDate();
+	public static DateTime START_DATE = GetStartDate();
+
+	static DateTimeService() {
+		SettingsService.OnSettingsReload += 
+			() => START_DATE = GetStartDate();
+	}
 
 	private static DateTime GetStartDate() {
 		try {
@@ -13,7 +18,7 @@ public static class DateTimeService {
 			return val;
 		} catch (FormatException) {
 			var val = new DateTime(2024, 8, 5);
-            return val;
+			return val;
 		}
 	}
 
@@ -59,13 +64,27 @@ public static class DateTimeService {
 		int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
 		return today.AddDays(-daysSinceMonday);
 	}
+
+	public static DateTime GetMondayOfWeekAtDate(DateTime date) {
+		int daysSinceMonday = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+		return date.AddDays(-daysSinceMonday);
+	}
 	
 	public static DateTime GetFridayOfCurrentWeek() =>
 		GetMondayOfCurrentWeek().AddDays(4);
+	
+	public static DateTime GetFridayOfWeekAtDate(DateTime date) =>
+		GetMondayOfWeekAtDate(date).AddDays(4);
 
 	public static DateTime GetFirstDayOfCurrentMonth() =>
 		new(DateTime.Today.Year, DateTime.Today.Month, 1);
 
+	public static DateTime GetFirstDayOfMonthAtDate(DateTime date) =>
+		new(date.Year, date.Month, 1);
+
 	public static int GetCurrentWeekCount() =>
 		(int) Math.Floor((DateTime.Today - START_DATE).Days / 7.0) + 1;
+
+	public static int GetWeekCountAtDate(DateTime date) =>
+		(int) Math.Floor((DateTime.Today - date).Days / 7.0) + 1;
 }

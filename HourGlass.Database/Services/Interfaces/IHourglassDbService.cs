@@ -1,7 +1,7 @@
 ﻿namespace Hourglass.Database.Services.Interfaces;
 
 using Hourglass.Database.Models;
-
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,11 +20,19 @@ public interface IHourglassDbService {
 
 	public Task<List<Models.Task>> QueryTasksAsync();
 
+	public Task<List<Models.Task>> QueryTasksOfHourAtDateAsync(DateTime date);
+
 	public Task<List<Models.Task>> QueryTasksOfCurrentHourAsync();
+
+	public Task<List<Models.Task>> QueryTasksOfDayAtDateAsync(DateTime date);
 
 	public Task<List<Models.Task>> QueryTasksOfCurrentDayAsync();
 
-	public Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync();
+    public Task<List<Models.Task>> QueryTasksOfWeekAtDateAsync(DateTime date);
+
+    public Task<List<Models.Task>> QueryTasksOfCurrentWeekAsync();
+
+    public Task<List<Models.Task>> QueryTasksOfMonthAtDateAsync(DateTime date);
 
     public Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync();
 

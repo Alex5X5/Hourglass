@@ -24,7 +24,7 @@ class GraphRenderer : Panel {
 	private const int DAY_GRAPH_CLICK_ADDITIONAL_WIDTH = 8, WEEK_GRAPH_CLICK_ADDITIONAL_WIDTH = 5, MONTH_GRAPH_CLICK_ADDITIONAL_WIDTH = 5;
 	private const int DAY_GRAPH_CLICK_ADDITIONAL_HEIGHT = 5, WEEK_GRAPH_CLICK_ADDITIONAL_HEIGHT = 2, MONTH_GRAPH_CLICK_ADDITIONAL_HEIGHT = 2;
 
-    private const int DAY_GRAPH_MINIMAL_WIDTH = 8, WEEK_GRAPH_MINIMAL_WIDTH = 5, MONTH_GRAPH_MINIMAL_WIDTH = 2;
+	private const int DAY_GRAPH_MINIMAL_WIDTH = 8, WEEK_GRAPH_MINIMAL_WIDTH = 5, MONTH_GRAPH_MINIMAL_WIDTH = 2;
 	private const int DAY_GRAPH_CORNER_RADIUS = 12, WEEK_GRAPH_CORNER_RADIUS = 5, MONTH_GRAPH_CONRER_RADIUS = 2;
 
 	private const int PADDING_X = 50, PADDING_Y = 30;
@@ -46,19 +46,19 @@ class GraphRenderer : Panel {
 
 	private Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, ref int graphPosY, int columns) {
 		int xAxisSegmentSize = (image.Width - 2 * PADDING_X) / xAxisSegmentCount;
-        int yAxisSegmentSize = (int)((image.Height - 2 * PADDING_Y) / (yAxisSegmentCount*1.5));
+		int yAxisSegmentSize = (int)((image.Height - 2 * PADDING_Y) / (yAxisSegmentCount*1.5));
 		long duration = task.finish - task.start;
 		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
 		int graphLength = (int)Math.Floor(duration * proportion);
 		int graphPosX = (int)Math.Floor((task.start-originSecond) * proportion) + PADDING_X;
 		//graphPosX += xAxisSegmentSize;
 		int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
-        Rectangle res = new(
+		Rectangle res = new(
 			graphPosX - additionalWidth,
-            graphPosY - additionalHeight,
-            width,
+			graphPosY - additionalHeight,
+			width,
 			yAxisSegmentSize + additionalHeight * 2
-        );
+		);
 		graphPosY += yAxisSegmentSize;
 		graphPosY += yAxisSegmentSize / 2;
 		//using (Graphics g = Graphics.FromImage(image))
@@ -209,11 +209,11 @@ class GraphRenderer : Panel {
 		long nowSeconds = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		long todaySeconds = nowSeconds - (nowSeconds % TimeSpan.SecondsPerDay);
 		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS_PER_DAY, 0, 0, DAY_GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
-        Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-        Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-        using (GraphicsPath path = GetRoundedRectanglePath(rect, DAY_GRAPH_CORNER_RADIUS))
-        using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
-            g.FillPath(brush, path);
+		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		using (GraphicsPath path = GetRoundedRectanglePath(rect, DAY_GRAPH_CORNER_RADIUS))
+		using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
+			g.FillPath(brush, path);
 		DrawDayTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
@@ -226,20 +226,20 @@ class GraphRenderer : Panel {
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, WEEK_GRAPH_CORNER_RADIUS))
 		using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
 			g.FillPath(brush, path);
-        DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
+		DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
 	}
 
 	private void DrawMonthTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 		long thisMonthSeconds = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).Ticks / TimeSpan.TicksPerSecond;
-        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, MONTH_GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
-        Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-        Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisMonthSeconds, daysInCurrentMonth, daysInCurrentMonth, 0, 0, MONTH_GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
+		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		using (GraphicsPath path = GetRoundedRectanglePath(rect, MONTH_GRAPH_CONRER_RADIUS))
-        using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
-            g.FillPath(brush, path);
+		using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
+			g.FillPath(brush, path);
 		DrawWeekTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
-    }
+	}
 
 #endregion
 
@@ -255,9 +255,9 @@ class GraphRenderer : Panel {
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            g.CompositingMode = CompositingMode.SourceOver;
+			g.CompositingMode = CompositingMode.SourceOver;
 
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
 			g.SmoothingMode = SmoothingMode.HighQuality;
 			g.Clear(Color.Gainsboro);
@@ -369,8 +369,9 @@ class GraphRenderer : Panel {
 			if (WindowMode == TimerWindowMode.Day) {
 			} else if (WindowMode == TimerWindowMode.Week) {
 
-                int offset = (int)Math.Floor((Width - 2.0 * PADDING_X) / 7);
-				DateTime newDate = DateTimeService.GetMondayOfCurrentWeek().AddDays(offset);
+				int offset = (int)Math.Floor((Width - 2.0 * PADDING_X) / 7);
+				_parent.SelectedDay = DateTimeService.GetMondayOfCurrentWeek().AddDays(offset);
+
 			} else if (WindowMode == TimerWindowMode.Month) {
 
 			}
