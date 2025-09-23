@@ -29,11 +29,13 @@
             JobTetbox = new TextBox();
             OkButton = new Button();
             CancelButton = new Button();
+            StartDateTextbox = new TextBox();
+            label1 = new Label();
             SuspendLayout();
             // 
             // NameTextbox
             // 
-            NameTextbox.Location = new Point(50, 57);
+            NameTextbox.Location = new Point(50, 46);
             NameTextbox.Name = "NameTextbox";
             NameTextbox.Size = new Size(238, 23);
             NameTextbox.TabIndex = 0;
@@ -41,7 +43,7 @@
             // NameLabel
             // 
             NameLabel.AutoSize = true;
-            NameLabel.Location = new Point(50, 39);
+            NameLabel.Location = new Point(50, 28);
             NameLabel.Name = "NameLabel";
             NameLabel.Size = new Size(60, 15);
             NameLabel.TabIndex = 1;
@@ -50,7 +52,7 @@
             // JobLabel
             // 
             JobLabel.AutoSize = true;
-            JobLabel.Location = new Point(50, 103);
+            JobLabel.Location = new Point(50, 92);
             JobLabel.Name = "JobLabel";
             JobLabel.Size = new Size(60, 15);
             JobLabel.TabIndex = 2;
@@ -58,7 +60,7 @@
             // 
             // JobTetbox
             // 
-            JobTetbox.Location = new Point(50, 121);
+            JobTetbox.Location = new Point(50, 110);
             JobTetbox.Name = "JobTetbox";
             JobTetbox.Size = new Size(238, 23);
             JobTetbox.TabIndex = 3;
@@ -83,11 +85,29 @@
             CancelButton.UseVisualStyleBackColor = true;
             CancelButton.Click += CancelButton_Click;
             // 
+            // textBox1
+            // 
+            StartDateTextbox.Location = new Point(50, 172);
+            StartDateTextbox.Name = "textBox1";
+            StartDateTextbox.Size = new Size(238, 23);
+            StartDateTextbox.TabIndex = 7;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(50, 154);
+            label1.Name = "label1";
+            label1.Size = new Size(58, 15);
+            label1.TabIndex = 6;
+            label1.Text = "Start Date";
+            // 
             // SettingsPopup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(342, 268);
+            Controls.Add(StartDateTextbox);
+            Controls.Add(label1);
             Controls.Add(CancelButton);
             Controls.Add(OkButton);
             Controls.Add(JobTetbox);
@@ -108,5 +128,7 @@
         private TextBox JobTetbox;
         private Button OkButton;
         private new Button CancelButton;
+        private TextBox StartDateTextbox;
+        private Label label1;
     }
 }

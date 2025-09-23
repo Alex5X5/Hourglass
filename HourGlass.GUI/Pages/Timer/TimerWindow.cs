@@ -31,12 +31,14 @@ public partial class TimerWindow : Form {
 	private readonly Image image = Bitmap.FromFile(PathService.AssetsPath("Präsentation3.png"));
 	private bool Stop = false;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public DateTime SelectedWeek {
         set => SelectedWeekStartSeconds = (int)(value.Ticks / TimeSpan.TicksPerSecond);
         get => new(SelectedWeekStartSeconds);
     }
 
-	public DateTime SelectedDay {
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public DateTime SelectedDay {
         set => SelectedDayStartSeconds = (int)(value.Ticks / TimeSpan.TicksPerSecond);
         get => new(SelectedDayStartSeconds);
     }

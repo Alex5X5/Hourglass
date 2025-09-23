@@ -1,12 +1,23 @@
-﻿namespace Hourglass.Util; 
+﻿namespace Hourglass.Util;
 
+using Hourglass.Util.Services;
 using System;
 
 public static class DateTimeService {
 
-	public static readonly DateTime START_DATE = new(2024, 8, 5);
+	public static readonly DateTime START_DATE = GetStartDate();
 
-    public static DateTime? InterpretDayAndTimeString(string s) {
+	private static DateTime GetStartDate() {
+		try {
+			var val = Convert.ToDateTime(SettingsService.GetSetting(SettingsService.START_DATE_KEY));
+			return val;
+		} catch (FormatException) {
+			var val = new DateTime(2024, 8, 5);
+            return val;
+		}
+	}
+
+	public static DateTime? InterpretDayAndTimeString(string s) {
 		try {
 			int startIndex = 0;
 			int finishIndex = finishIndex = s.IndexOf('.', startIndex);
@@ -29,10 +40,10 @@ public static class DateTimeService {
 		} catch (ArgumentOutOfRangeException) {
 			return null;
 		}
-    }
+	}
 
-    public static string ToTimeString(DateTime time) =>
-        $"{time.Hour}:{time.Minute}:{time.Second}";
+	public static string ToTimeString(DateTime time) =>
+		$"{time.Hour}:{time.Minute}:{time.Second}";
 
 	public static string ToHourMinuteString(long totalSeconds) {
 		long hours = totalSeconds / TimeSpan.SecondsPerHour;
@@ -40,21 +51,21 @@ public static class DateTimeService {
 		return (hours < 10 ? "0" + Convert.ToString(hours) : Convert.ToString(hours)) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
 	}
 
-    public static string ToDayAndTimeString(DateTime time) =>
+	public static string ToDayAndTimeString(DateTime time) =>
 		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
 
 	public static DateTime GetMondayOfCurrentWeek() {
-        DateTime today = DateTime.Today;
-        int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
-        return today.AddDays(-daysSinceMonday);
-    }
+		DateTime today = DateTime.Today;
+		int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+		return today.AddDays(-daysSinceMonday);
+	}
 	
 	public static DateTime GetFridayOfCurrentWeek() =>
-        GetMondayOfCurrentWeek().AddDays(4);
+		GetMondayOfCurrentWeek().AddDays(4);
 
 	public static DateTime GetFirstDayOfCurrentMonth() =>
 		new(DateTime.Today.Year, DateTime.Today.Month, 1);
 
 	public static int GetCurrentWeekCount() =>
-        (int) Math.Floor((DateTime.Today - START_DATE).Days / 7.0) + 1;
+		(int) Math.Floor((DateTime.Today - START_DATE).Days / 7.0) + 1;
 }
