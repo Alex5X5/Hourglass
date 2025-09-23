@@ -61,7 +61,7 @@ public static class DateTimeService {
 
 	public static DateTime GetMondayOfCurrentWeek() {
 		DateTime today = DateTime.Today;
-		int daysSinceMonday = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+		int daysSinceMonday = (int)today.DayOfWeek - 1;
 		return today.AddDays(-daysSinceMonday);
 	}
 
@@ -69,8 +69,12 @@ public static class DateTimeService {
 		int daysSinceMonday = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
 		return date.AddDays(-daysSinceMonday);
 	}
-	
-	public static DateTime GetFridayOfCurrentWeek() =>
+
+	public static DateTime FloorDay(DateTime date) =>
+		new(date.Year, date.Month, date.Day);
+
+
+    public static DateTime GetFridayOfCurrentWeek() =>
 		GetMondayOfCurrentWeek().AddDays(4);
 	
 	public static DateTime GetFridayOfWeekAtDate(DateTime date) =>

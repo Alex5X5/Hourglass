@@ -33,18 +33,18 @@ public partial class TimerWindow : Form {
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public DateTime SelectedWeek {
-        set => SelectedWeekStartSeconds = (int)(value.Ticks / TimeSpan.TicksPerSecond);
-        get => new(SelectedWeekStartSeconds);
+        set => SelectedWeekStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
+        get => new(SelectedWeekStartSeconds * TimeSpan.TicksPerSecond);
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public DateTime SelectedDay {
-        set => SelectedDayStartSeconds = (int)(value.Ticks / TimeSpan.TicksPerSecond);
-        get => new(SelectedDayStartSeconds);
+        set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
+        get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
     }
 
-    private int SelectedWeekStartSeconds = (int)(DateTime.Now.Ticks / TimeSpan.TicksPerSecond);
-	private int SelectedDayStartSeconds = (int)(DateTime.Now.Ticks / TimeSpan.TicksPerSecond);
+    private long SelectedWeekStartSeconds = DateTimeService.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond;
+	private long SelectedDayStartSeconds = DateTimeService.FloorDay(DateTime.Today).Ticks / TimeSpan.TicksPerSecond;
 
     TimerWindowMode windowMode = TimerWindowMode.Day;
 
@@ -288,11 +288,21 @@ public partial class TimerWindow : Form {
 	}
 
 	public void OnSelectedDayChanged(DateTime newSelectedDay) {
+		Console.WriteLine($"Selected month {newSelectedDay}");
 
+		windowMode = TimerWindowMode.Day;
+		GraphPanel.WindowMode = windowMode;
+		Console.WriteLine(windowMode);
+		Invalidate();
 	}
 
 	public void OnSelectedWeekChanged(DateTime newSelectedDay) {
-
+		Console.WriteLine($"Selected week {newSelectedDay}");
+	
+		windowMode = TimerWindowMode.Week;
+        GraphPanel.WindowMode = windowMode;
+        Console.WriteLine(windowMode);
+		Invalidate();
 	}
 
     #endregion
@@ -379,7 +389,7 @@ public partial class TimerWindow : Form {
 	}
 
 	private void WeekModeButtonPaint(PaintEventArgs args) {
-		int currentDay = DateTimeService.GetMondayOfCurrentWeek().DayOfWeek switch {
+		int currentDay = DateTime.Now.DayOfWeek switch {
 			DayOfWeek.Monday => 0,
 			DayOfWeek.Tuesday => 1,
 			DayOfWeek.Wednesday => 2,

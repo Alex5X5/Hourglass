@@ -366,14 +366,12 @@ class GraphRenderer : Panel {
 			}
 		}
 		if (!taskClicked) {
-			if (WindowMode == TimerWindowMode.Day) {
-			} else if (WindowMode == TimerWindowMode.Week) {
-
-				int offset = (int)Math.Floor((Width - 2.0 * PADDING_X) / 7);
-				_parent.SelectedDay = DateTimeService.GetMondayOfCurrentWeek().AddDays(offset);
-
+			if (WindowMode == TimerWindowMode.Week) {
+				int offset = (int)Math.Floor((mousePos.X - PADDING_X) * 7.0 / Width);
+				_parent.OnSelectedDayChanged(DateTimeService.GetMondayOfWeekAtDate(_parent.SelectedWeek).AddDays(offset));
 			} else if (WindowMode == TimerWindowMode.Month) {
-
+				int offset = (int)Math.Floor((double)(Width - PADDING_X) / DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+				_parent.OnSelectedWeekChanged(DateTimeService.GetMondayOfWeekAtDate(DateTimeService.GetFirstDayOfMonthAtDate(DateTime.Now)));
 			}
 		}
 	}
