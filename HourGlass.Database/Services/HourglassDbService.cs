@@ -77,7 +77,7 @@ public class HourglassDbService : IHourglassDbService {
 	public async Task<List<Models.Task>> QueryTasksOfMonthAtDateAsync(DateTime date) {
 		DateTime month = DateTimeService.GetFirstDayOfMonthAtDate(date);
 		long intervallStartSeconds = month.Ticks / TimeSpan.TicksPerSecond;
-		long intervallFinishSeconds = intervallStartSeconds + DateTime.DaysInMonth(date.Year, date.Month) * TimeSpan.TicksPerDay;
+		long intervallFinishSeconds = intervallStartSeconds + DateTime.DaysInMonth(month.Year, month.Month) * TimeSpan.SecondsPerDay;
 		return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
 	}
 

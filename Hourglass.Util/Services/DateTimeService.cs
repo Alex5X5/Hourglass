@@ -12,6 +12,17 @@ public static class DateTimeService {
 			() => START_DATE = GetStartDate();
 	}
 
+	public static DateTime FloorDay(DateTime date) =>
+		new(date.Year, date.Month, date.Day);
+
+	public static DateTime FloorWeek(DateTime date) =>
+		date.AddDays((-(int)date.DayOfWeek)+1);
+
+	public static DateTime FloorMonth(DateTime date) =>
+			new(date.Year, date.Month, 1);
+
+
+
 	private static DateTime GetStartDate() {
 		try {
 			var val = Convert.ToDateTime(SettingsService.GetSetting(SettingsService.START_DATE_KEY));
@@ -66,15 +77,12 @@ public static class DateTimeService {
 	}
 
 	public static DateTime GetMondayOfWeekAtDate(DateTime date) {
-		int daysSinceMonday = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
-		return date.AddDays(-daysSinceMonday);
+		//int daysSinceMonday = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+		//return date.AddDays(-daysSinceMonday);
+		return FloorWeek(date);
 	}
 
-	public static DateTime FloorDay(DateTime date) =>
-		new(date.Year, date.Month, date.Day);
-
-
-    public static DateTime GetFridayOfCurrentWeek() =>
+	public static DateTime GetFridayOfCurrentWeek() =>
 		GetMondayOfCurrentWeek().AddDays(4);
 	
 	public static DateTime GetFridayOfWeekAtDate(DateTime date) =>

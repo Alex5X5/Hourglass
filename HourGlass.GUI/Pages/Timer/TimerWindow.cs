@@ -55,12 +55,12 @@ public partial class TimerWindow : Form {
 		_dbService = dbService;
 		pdf = new PdfService(_dbService);
 		GraphRenderers = new(){
-			{ TimerWindowMode.Day , new DayGraphRenderer()},
-			{ TimerWindowMode.Week , new WeekGraphRenderer() },
-			{ TimerWindowMode.Month , new MonthGraphRenderer() }
+			{ TimerWindowMode.Day , new DayGraphRenderer(_dbService, this)},
+			{ TimerWindowMode.Week , new WeekGraphRenderer(_dbService, this) },
+			{ TimerWindowMode.Month , new MonthGraphRenderer(_dbService, this) }
 		};
 		InitializeComponent();
-		ChangeGraphRendererMode(TimerWindowMode.Day);
+		ChangeGraphRendererMode(TimerWindowMode.Day, SelectedDay);
 		GraphRenderThread = new Thread(
 			() => {
 				while (!CanRaiseEvents)
@@ -259,18 +259,18 @@ public partial class TimerWindow : Form {
 
 	private void DayModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("day mode button click");
-		ChangeGraphRendererMode(TimerWindowMode.Day);
+		ChangeGraphRendererMode(TimerWindowMode.Day, SelectedDay);
 	}
 
 	private void WeekModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("week mode button click");
-        ChangeGraphRendererMode(TimerWindowMode.Week);
-    }
+		ChangeGraphRendererMode(TimerWindowMode.Week, SelectedDay);
+	}
 
 	private void MonthModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("month mode button click");
-        ChangeGraphRendererMode(TimerWindowMode.Month);
-    }
+		ChangeGraphRendererMode(TimerWindowMode.Month, SelectedDay);
+	}
 
 	#endregion
 
@@ -291,21 +291,16 @@ public partial class TimerWindow : Form {
 		
 	}
 
-	public void ChangeSelectedDay(DateTime newSelectedDay) {
-		Console.WriteLine($"Selected month {newSelectedDay}");
-
-		windowMode = TimerWindowMode.Day;
-		SelectedDay = newSelectedDay;
-		GraphPanel.WindowMode = windowMode;
-		Console.WriteLine(windowMode);
-		Invalidate();
-	}
-
-	public void ChangeGraphRendererMode(TimerWindowMode newMode) {
-		if(GraphPanel!=null)
+	public void ChangeGraphRendererMode(TimerWindowMode newMode, DateTime newSelectedDay) {
+        SelectedDay = newSelectedDay;
+        if (GraphPanel != null) {
 			GraphPanel.Visible = false;
+			GraphPanel.Invalidate();
+		}
 		GraphPanel = GraphRenderers[newMode];
 		GraphPanel.Visible = true;
+		GraphPanel.Invalidate();
+		Invalidate();
 	}
 
 	#endregion

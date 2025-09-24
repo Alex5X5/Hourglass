@@ -191,11 +191,11 @@ public partial class TimerWindow {
 		SettingsButton.TabIndex = 17;
 		SettingsButton.Text = "Sett";
 		SettingsButton.UseVisualStyleBackColor = true;
-        SettingsButton.Click += SettingsButtonClick;
-        // 
-        // ElapsedTimeLabel
-        // 
-        ElapsedTimeLabel.BackColor = Color.FromArgb(255,166,166,166);
+		SettingsButton.Click += SettingsButtonClick;
+		// 
+		// ElapsedTimeLabel
+		// 
+		ElapsedTimeLabel.BackColor = Color.FromArgb(255,166,166,166);
 		ElapsedTimeLabel.Font = new Font("Segoe UI", 17F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		ElapsedTimeLabel.Location = new Point(321, 163);
 		ElapsedTimeLabel.Name = "ElapsedTimeLabel";
@@ -230,8 +230,9 @@ public partial class TimerWindow {
 		// 
 		foreach(TimerWindowMode mode in GraphRenderers.Keys) {
 			GraphRenderer renderer = GraphRenderers[mode];
-            renderer.Location = new Point(430, 350);
-            renderer.Size = new Size(996, 494);
+			renderer.Location = new Point(430, 350);
+			renderer.Size = new Size(996, 494);
+			renderer.Visible = false;
 		}
 		// 
 		// ExportButton
@@ -269,8 +270,9 @@ public partial class TimerWindow {
 		Controls.Add(StartTextbox);
 		Controls.Add(StopButton);
 		Controls.Add(StopRestartButton);
-        foreach (TimerWindowMode mode in GraphRenderers.Keys)
+		foreach (TimerWindowMode mode in GraphRenderers.Keys) {
 			Controls.Add(GraphRenderers[mode]);
+		}
 		Name = "TimerWindow";
 		Text = "Timer";
 		FormClosing += TimerWindow_Close;
@@ -279,9 +281,9 @@ public partial class TimerWindow {
 		PerformLayout();
 	}
 
-    #endregion
+	#endregion
 
-    private Button StopRestartButton;
+	private Button StopRestartButton;
 	private AnimatedButton StopButton;
 	private TextBox StartTextbox;
 	private TextBox FinishTextbox;
