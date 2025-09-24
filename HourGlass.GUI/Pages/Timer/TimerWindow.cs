@@ -2,6 +2,7 @@
 using Hourglass.GUI.Pages.ExportProgressPopup;
 using Hourglass.GUI.Pages.SettingsPopup;
 using Hourglass.GUI.Pages.Timer;
+using Hourglass.GUI.Pages.Timer.GraphRenderer;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
@@ -20,39 +21,46 @@ public partial class TimerWindow : Form {
 	private readonly Thread GraphRenderThread;
 	private readonly Thread TimerUpdaterThread;
 
-    private bool invokeInProgress = false;
+	private bool invokeInProgress = false;
 	private bool stopInvoking = false;
 	public bool ShuttingDown { get { return stopInvoking; } }
 
-    private readonly IPdfService pdf;
+	private readonly IPdfService pdf;
 
 	private Hourglass.Database.Models.Task? RunningTask = null;
 
 	private readonly Image image = Bitmap.FromFile(PathService.AssetsPath("Präsentation3.png"));
 	private bool Stop = false;
 
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public DateTime SelectedWeek {
-        set => SelectedWeekStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
-        get => new(SelectedWeekStartSeconds * TimeSpan.TicksPerSecond);
-    }
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+	public DateTime SelectedWeek {
+		set => SelectedWeekStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
+		get => new(SelectedWeekStartSeconds * TimeSpan.TicksPerSecond);
+	}
 
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public DateTime SelectedDay {
-        set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
-        get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
-    }
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+	public DateTime SelectedDay {
+		set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
+		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
+	}
 
-    private long SelectedWeekStartSeconds = DateTimeService.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond;
+	private long SelectedWeekStartSeconds = DateTimeService.GetMondayOfCurrentWeek().Ticks / TimeSpan.TicksPerSecond;
 	private long SelectedDayStartSeconds = DateTimeService.FloorDay(DateTime.Today).Ticks / TimeSpan.TicksPerSecond;
 
-    TimerWindowMode windowMode = TimerWindowMode.Day;
+	private readonly Dictionary<TimerWindowMode, GraphRenderer> GraphRenderers;
+
+	TimerWindowMode windowMode = TimerWindowMode.Day;
 
 	public TimerWindow(IHourglassDbService dbService) {
 		_dbService = dbService;
 		pdf = new PdfService(_dbService);
-        InitializeComponent();
-
+		GraphRenderers = new(){
+			{ TimerWindowMode.Day , new DayGraphRenderer()},
+			{ TimerWindowMode.Week , new WeekGraphRenderer() },
+			{ TimerWindowMode.Month , new MonthGraphRenderer() }
+		};
+		InitializeComponent();
+		ChangeGraphRendererMode(TimerWindowMode.Day);
 		GraphRenderThread = new Thread(
 			() => {
 				while (!CanRaiseEvents)
@@ -63,73 +71,72 @@ public partial class TimerWindow : Form {
 				}
 			}
 		);
-
 		TimerUpdaterThread = new Thread(UpdateTimers);
 		RunningTask = _dbService.QueryCurrentTaskAsync().Result;
 		if (RunningTask != null) {
 			SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
-            SetTextBoxTextSafely(DescriptionTextBox, RunningTask.description);
+			SetTextBoxTextSafely(DescriptionTextBox, RunningTask.description);
 			StartButton.Disable();
 		} else {
 			StopButton.Disable();
 		}
 	}
 
-    #region timer update methods
+	#region timer update methods
 
-    private void SetLabelTextSafely(Label label, string text) {
-            if (Disposing)
-                return;
-            if (label == null)
-                return;
-            if (label.Disposing)
-                return;
-            if (label.InvokeRequired) {
-                if (stopInvoking != true) {
-                    invokeInProgress = true;
-                    label?.Invoke(() => label.Text = text);
-                    invokeInProgress = false;
-                }
-                return;
-            } else
-                label.Text = text;
-    }
+	private void SetLabelTextSafely(Label label, string text) {
+			if (Disposing)
+				return;
+			if (label == null)
+				return;
+			if (label.Disposing)
+				return;
+			if (label.InvokeRequired) {
+				if (stopInvoking != true) {
+					invokeInProgress = true;
+					label?.Invoke(() => label.Text = text);
+					invokeInProgress = false;
+				}
+				return;
+			} else
+				label.Text = text;
+	}
 
-    private void SetTextBoxTextSafely(TextBox label, string text) {
-            if (Disposing)
-                return;
-            if (label == null)
-                return;
-            if (label.Disposing)
-                return;
-            if (label.InvokeRequired) {
-                if (stopInvoking != true) {
-                    invokeInProgress = true;
-                    label?.Invoke(() => label.Text = text);
-                    invokeInProgress = false;
-                }
-                return;
-            } else
-                label.Text = text;
-    }
+	private void SetTextBoxTextSafely(TextBox label, string text) {
+			if (Disposing)
+				return;
+			if (label == null)
+				return;
+			if (label.Disposing)
+				return;
+			if (label.InvokeRequired) {
+				if (stopInvoking != true) {
+					invokeInProgress = true;
+					label?.Invoke(() => label.Text = text);
+					invokeInProgress = false;
+				}
+				return;
+			} else
+				label.Text = text;
+	}
 
-    private void SetTextBoxTextSafely(RichTextBox label, string text) {
-            if (Disposing)
-                return;
-            if (label == null)
-                return;
-            if (label.Disposing)
-                return;
-            if (label.InvokeRequired) {
-                if (stopInvoking != true) {
-                    invokeInProgress = true;
-                    label?.Invoke(() => label.Text = text);
-                    invokeInProgress = false;
-                }
-                return;
-            } else
-                label.Text = text;
-    }
+	private void SetTextBoxTextSafely(RichTextBox label, string text) {
+			if (Disposing)
+				return;
+			if (label == null)
+				return;
+			if (label.Disposing)
+				return;
+			if (label.InvokeRequired) {
+				if (stopInvoking != true) {
+					invokeInProgress = true;
+					label?.Invoke(() => label.Text = text);
+					invokeInProgress = false;
+				}
+				return;
+			} else
+				label.Text = text;
+	}
 
 	private void UpdateTimers() {
 		while (!CanRaiseEvents)
@@ -210,21 +217,21 @@ public partial class TimerWindow : Form {
 			() => {
 				Thread.Sleep(100);
 				SetTextBoxTextSafely(FinishTextbox, "");
-                SetTextBoxTextSafely(DescriptionTextBox, "");
-                SetLabelTextSafely(ElapsedTimeLabel, "");
-            }
+				SetTextBoxTextSafely(DescriptionTextBox, "");
+				SetLabelTextSafely(ElapsedTimeLabel, "");
+			}
 		);
 		StartButton.Enable();
 		StopButton.Disable();
 	}
 
-    private void SettingsButtonClick(object sender, EventArgs e) {
+	private void SettingsButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("showing settings");
-        SettingsPopup popup =  new SettingsPopup();
+		SettingsPopup popup = new();
 		popup.ShowDialog();
-    }
+	}
 
-    private void StopRestartButtonClick(object sender, EventArgs e) {
+	private void StopRestartButtonClick(object sender, EventArgs e) {
 		StopButtonClick(sender, e);
 		StartButtonClick(sender, e);
 	}
@@ -244,35 +251,32 @@ public partial class TimerWindow : Form {
 						});
 			}
 		).Start();
-    }
+	}
 
 	private void ImportButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("import button click");
 	}
 
 	private void DayModeButtonButtonClick(object sender, EventArgs e) {
-        Console.WriteLine("day mode button click");
-		windowMode = TimerWindowMode.Day;
-		GraphPanel.WindowMode = windowMode;
+		Console.WriteLine("day mode button click");
+		ChangeGraphRendererMode(TimerWindowMode.Day);
 	}
 
 	private void WeekModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("week mode button click");
-        windowMode = TimerWindowMode.Week;
-		GraphPanel.WindowMode = windowMode;
-	}
+        ChangeGraphRendererMode(TimerWindowMode.Week);
+    }
 
 	private void MonthModeButtonButtonClick(object sender, EventArgs e) {
 		Console.WriteLine("month mode button click");
-        windowMode = TimerWindowMode.Month;
-		GraphPanel.WindowMode = windowMode;
-	}
+        ChangeGraphRendererMode(TimerWindowMode.Month);
+    }
 
-    #endregion
+	#endregion
 
-    #region externally callable events
+	#region externally callable events
 
-    public void OnContiniueTask(Hourglass.Database.Models.Task task) {
+	public void OnContiniueTask(Hourglass.Database.Models.Task task) {
 		RunningTask = task;
 		Task.Run(
 			() => {
@@ -287,44 +291,43 @@ public partial class TimerWindow : Form {
 		
 	}
 
-	public void OnSelectedDayChanged(DateTime newSelectedDay) {
+	public void ChangeSelectedDay(DateTime newSelectedDay) {
 		Console.WriteLine($"Selected month {newSelectedDay}");
 
 		windowMode = TimerWindowMode.Day;
+		SelectedDay = newSelectedDay;
 		GraphPanel.WindowMode = windowMode;
 		Console.WriteLine(windowMode);
 		Invalidate();
 	}
 
-	public void OnSelectedWeekChanged(DateTime newSelectedDay) {
-		Console.WriteLine($"Selected week {newSelectedDay}");
-	
-		windowMode = TimerWindowMode.Week;
-        GraphPanel.WindowMode = windowMode;
-        Console.WriteLine(windowMode);
-		Invalidate();
+	public void ChangeGraphRendererMode(TimerWindowMode newMode) {
+		if(GraphPanel!=null)
+			GraphPanel.Visible = false;
+		GraphPanel = GraphRenderers[newMode];
+		GraphPanel.Visible = true;
 	}
 
-    #endregion
+	#endregion
 
-    private void TimerWindow_Load(object sender, EventArgs e) {
+	private void TimerWindow_Load(object sender, EventArgs e) {
 		GraphRenderThread.Start();
 		TimerUpdaterThread.Start();
 	}
 
 	private async void TimerWindow_Close(object sender, FormClosingEventArgs e) {
 		Stop = true;
-        if (invokeInProgress) {
-            e.Cancel = true;
-            stopInvoking = true;
-            await Task.Factory.StartNew(
+		if (invokeInProgress) {
+			e.Cancel = true;
+			stopInvoking = true;
+			await Task.Factory.StartNew(
 				() => {
 					while (invokeInProgress) ;
 				}
 			);
-            Close();
-        }
-    }
+			Close();
+		}
+	}
 
 	public static Bitmap ResizeImage(Image image, int width, int height) {
 		var destRect = new Rectangle(0, 0, width, height);
@@ -367,7 +370,7 @@ public partial class TimerWindow : Form {
 		}
 	}
 
-    protected override void OnPaintBackground(PaintEventArgs args) { }
+	protected override void OnPaintBackground(PaintEventArgs args) { }
 
 	protected override void OnPaint(PaintEventArgs args) {
 		args.Graphics.DrawImage(image, 0, 0, ClientSize.Width, ClientSize.Height);

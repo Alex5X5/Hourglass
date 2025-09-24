@@ -1,5 +1,6 @@
 ﻿using Hourglass.GUI.GuiComponents;
 using Hourglass.GUI.Pages.Timer;
+using Hourglass.GUI.Pages.Timer.GraphRenderer;
 using Hourglass.Util;
 using Hourglass.Util.Services;
 using System.Windows.Forms;
@@ -82,7 +83,7 @@ public partial class TimerWindow {
 		);
 		StartTextbox = new TextBox();
 		FinishTextbox = new TextBox();
-		GraphPanel = new GraphRenderer();
+
 		DescriptionLabel = new Label();
 		StartLabel = new Label();
 		FinishLabel = new Label();
@@ -97,7 +98,6 @@ public partial class TimerWindow {
 		//WeekModeButton = new Button();
 		//MonthModeButton = new Button();
 		button2 = new Button();
-		GraphPanel = new GraphRenderer(_dbService, windowMode, this);
 		SuspendLayout();
 		// 
 		// StopRestartButton
@@ -226,13 +226,13 @@ public partial class TimerWindow {
 		button2.Text = "Sett";
 		button2.UseVisualStyleBackColor = true;
 		// 
-		// GraphPanel
+		// GraphRenderers
 		// 
-		GraphPanel.Location = new Point(430, 350);
-		GraphPanel.Name = "GraphPanel";
-		GraphPanel.Size = new Size(996, 494);
-		GraphPanel.TabIndex = 22;
-		GraphPanel._dbService = _dbService;
+		foreach(TimerWindowMode mode in GraphRenderers.Keys) {
+			GraphRenderer renderer = GraphRenderers[mode];
+            renderer.Location = new Point(430, 350);
+            renderer.Size = new Size(996, 494);
+		}
 		// 
 		// ExportButton
 		// 
@@ -269,7 +269,8 @@ public partial class TimerWindow {
 		Controls.Add(StartTextbox);
 		Controls.Add(StopButton);
 		Controls.Add(StopRestartButton);
-		Controls.Add(GraphPanel);
+        foreach (TimerWindowMode mode in GraphRenderers.Keys)
+			Controls.Add(GraphRenderers[mode]);
 		Name = "TimerWindow";
 		Text = "Timer";
 		FormClosing += TimerWindow_Close;
