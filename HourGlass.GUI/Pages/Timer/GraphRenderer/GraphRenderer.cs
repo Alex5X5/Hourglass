@@ -28,7 +28,7 @@ public abstract class GraphRenderer : Panel {
 	protected abstract int GRAPH_MINIMAL_WIDTH { get; }
 	protected abstract int GRAPH_CORNER_RADIUS { get; }
 
-	protected const int PADDING_X = 50, PADDING_Y = 30;
+	protected const int PADDING_X = 50, PADDING_Y = 30, TIMELINE_MARK_HEIGHT = 7;
 
 	#endregion fields
 
@@ -49,24 +49,24 @@ public abstract class GraphRenderer : Panel {
 
 	protected abstract void DrawTaskDescriptionStub(Graphics g, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength);
 
-	protected abstract void DrawTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY);
+	protected abstract void DrawTaskGraph(Graphics g, Database.Models.Task task, int i);
 
-	protected Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, ref int graphPosY, int columns) {
-		int xAxisSegmentSize = (image.Width - 2 * PADDING_X) / xAxisSegmentCount;
-		int yAxisSegmentSize = (int)((image.Height - 2 * PADDING_Y) / (yAxisSegmentCount * 1.5));
-		long duration = task.finish - task.start;
-		double proportion = (double)xAxisSegmentSize / xAxisSegmentDuration;
-		int graphLength = (int)Math.Floor(duration * proportion);
+	protected Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, int i, int columns) {
+		double xAxisSegmentSize = (image.Width - 2.0 * PADDING_X) / xAxisSegmentCount;
+		double yAxisSegmentSize = (image.Height - 2.0 * PADDING_Y) / (yAxisSegmentCount + 1.0);
+		double proportion = xAxisSegmentSize / xAxisSegmentDuration;
 		int graphPosX = (int)Math.Floor((task.start - originSecond) * proportion) + PADDING_X;
-		int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
+		long duration = task.finish - task.start;
+		int graphLength = (int)Math.Floor(duration * proportion);
+        int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
 		Rectangle res = new(
 			graphPosX - additionalWidth,
-			graphPosY - additionalHeight,
+            (int)(yAxisSegmentSize * i * 1.5) - additionalHeight + PADDING_Y,
 			width,
-			yAxisSegmentSize + additionalHeight * 2
+            (int)(yAxisSegmentSize) + additionalHeight * 2
 		);
-		graphPosY += yAxisSegmentSize;
-		graphPosY += yAxisSegmentSize / 2;
+		//graphPosY += yAxisSegmentSize;
+		//graphPosY += yAxisSegmentSize / 2;
 		//using (Graphics g = Graphics.FromImage(image))
 		//using (Brush b = new SolidBrush(Color.AliceBlue))
 		//	g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);
@@ -113,7 +113,7 @@ public abstract class GraphRenderer : Panel {
 				if (tasks != null && tasks.Count > 0) {
 					int graphPosY = PADDING_Y;
 					for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-						DrawTaskGraph(g, tasks[i], ref graphPosY);
+						DrawTaskGraph(g, tasks[i], i);
 					}
 				}
 			}
@@ -133,6 +133,7 @@ public abstract class GraphRenderer : Panel {
 			g.Clear(Color.Gainsboro);
 		int graphPosY = PADDING_Y;
 		bool taskClicked = false;
+		int i = 0;
 		foreach (Database.Models.Task task in tasks) {
             taskClicked = WindowMode switch {
                 TimerWindowMode.Day =>
@@ -145,7 +146,7 @@ public abstract class GraphRenderer : Panel {
                         GRAPH_CLICK_ADDITIONAL_WIDTH,
                         GRAPH_CLICK_ADDITIONAL_WIDTH,
                         GRAPH_MINIMAL_WIDTH,
-                        ref graphPosY,
+                        i,
                         1
                     ).Contains(mousePos),
 				TimerWindowMode.Week =>
@@ -158,32 +159,30 @@ public abstract class GraphRenderer : Panel {
                         GRAPH_CLICK_ADDITIONAL_WIDTH,
                         GRAPH_CLICK_ADDITIONAL_WIDTH,
                         GRAPH_MINIMAL_WIDTH,
-                        ref graphPosY,
+                        i,
                         1
                     ).Contains(mousePos),
 				TimerWindowMode.Month =>
 					GetTaskRectanlge(
                         task,
                         TimeSpan.SecondsPerDay,
-                        DateTimeService.GetFirstDayOfCurrentMonth().Ticks / TimeSpan.TicksPerSecond,
+                        DateTimeService.FloorMonth(DateTime.Now).Ticks / TimeSpan.TicksPerSecond,
                         daysInCurrentMonth,
-                        daysInCurrentMonth,
+                        MAX_TASKS,
                         GRAPH_CLICK_ADDITIONAL_WIDTH,
-                        GRAPH_CLICK_ADDITIONAL_WIDTH,
+                        GRAPH_CLICK_ADDITIONAL_HEIGHT,
                         GRAPH_MINIMAL_WIDTH,
-                        ref graphPosY,
+                        i,
                         1
                     ).Contains(mousePos),
 				_ => false
-
             };
 			if (taskClicked) {
 				TaskDetails.TaskDetailsPopup taskDetailsWindow = new(task, _dbService, _parent);
 				taskDetailsWindow.ShowDialog();
 				break;
 			}
-		}
-		if (!taskClicked) {
+			i++;
 		}
 	}
 

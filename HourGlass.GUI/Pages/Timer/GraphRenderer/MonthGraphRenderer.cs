@@ -8,13 +8,13 @@ using System.Drawing.Drawing2D;
 
 public class MonthGraphRenderer : GraphRenderer {
 
-	protected override int MAX_TASKS => 20;
+	protected override int MAX_TASKS => 30;
 
 	public override int TASK_GRAPH_COLUMN_COUNT => 3;
 
 
-	protected override int GRAPH_CLICK_ADDITIONAL_WIDTH => 5;
-	protected override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 2;
+	protected override int GRAPH_CLICK_ADDITIONAL_WIDTH => 6;
+	protected override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 4;
 
 	protected override int GRAPH_MINIMAL_WIDTH => 2;
 	protected override int GRAPH_CORNER_RADIUS => 2;
@@ -52,7 +52,7 @@ public class MonthGraphRenderer : GraphRenderer {
 		for (int i = 0; i < daysInCurrentMonth+1; i++) {
             int xPos = PADDING_X + (Width - 2 * PADDING_X) * i / daysInCurrentMonth;
             g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
-			g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, (int)Math.Floor(Height - PADDING_Y * 1.25));
+			g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, Height - PADDING_Y - TIMELINE_MARK_HEIGHT);
 		}
 	}
 
@@ -79,11 +79,12 @@ public class MonthGraphRenderer : GraphRenderer {
         return;
     }
 
-    protected override void DrawTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
+    protected override void DrawTaskGraph(Graphics g, Database.Models.Task task, int i) {
 		//Console.WriteLine("MonthGraphRenderer Task Graph");
-		long monthSeconds = DateTimeService.FloorMonth(DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
+		DateTime month = DateTimeService.FloorMonth(DateTime.Now);
+        long monthSeconds = month.Ticks / TimeSpan.TicksPerSecond;
 		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, monthSeconds, daysInCurrentMonth, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
+        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, monthSeconds, daysInCurrentMonth, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);

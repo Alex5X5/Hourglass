@@ -30,7 +30,7 @@ public class WeekGraphRenderer : GraphRenderer {
 			for (int i = 0; i < 8; i++) {
 				int xPos = (Width - 2 * PADDING_X) * i / 7 + PADDING_X;
 				g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
-				g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, (int)Math.Floor(Height - PADDING_Y * 1.25));
+				g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, Height - PADDING_Y - TIMELINE_MARK_HEIGHT);
 
 			}
 		}
@@ -70,9 +70,9 @@ public class WeekGraphRenderer : GraphRenderer {
         return;
     }
 
-	protected override void DrawTaskGraph(Graphics g, Database.Models.Task task, ref int graphPosY) {
+	protected override void DrawTaskGraph(Graphics g, Database.Models.Task task, int i) {
         long thisWeekSeconds = DateTimeService.FloorWeek(_parent.SelectedDay).Ticks / TimeSpan.TicksPerSecond;
-        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, ref graphPosY, 1);
+        Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
         Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
         Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
         using (GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS))
