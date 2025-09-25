@@ -239,15 +239,16 @@ partial class TaskDetailsPopup {
         ContiniueButton.UseVisualStyleBackColor = true;
         ContiniueButton.Click += ContiniueButtonClick;
         // 
-        // button1
+        // RestartButton
         // 
         RestartButton.Font = new Font("Segoe UI", 12F);
         RestartButton.Location = new Point(189, 290);
-        RestartButton.Name = "button1";
+        RestartButton.Name = "RestartButton";
         RestartButton.Size = new Size(98, 35);
         RestartButton.TabIndex = 19;
-        RestartButton.Text = "Continiue";
+        RestartButton.Text = "Start New";
         RestartButton.UseVisualStyleBackColor = true;
+        RestartButton.Click += StartNewButton_Click;
         // 
         // TaskDetailsPopup
         // 

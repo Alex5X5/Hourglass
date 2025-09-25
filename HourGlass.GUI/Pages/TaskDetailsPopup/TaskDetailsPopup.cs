@@ -5,12 +5,11 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 using HourGlass.GUI.Pages.Timer;
 
-public partial class TaskDetailsPopup : Form
-{
+public partial class TaskDetailsPopup : Form {
     public static readonly Color TASK_BACKGROUND_ORANGE = Color.FromArgb(255, 128, 0);
-    public static readonly Color TASK_BACKGROUND_RED= Color.Firebrick;
-    public static readonly Color TASK_BACKGROUND_LIGTH_BLUE= Color.LightSeaGreen;
-    public static readonly Color TASK_BACKGROUND_DARK_BLUE= Color.SteelBlue;
+    public static readonly Color TASK_BACKGROUND_RED = Color.Firebrick;
+    public static readonly Color TASK_BACKGROUND_LIGTH_BLUE = Color.LightSeaGreen;
+    public static readonly Color TASK_BACKGROUND_DARK_BLUE = Color.SteelBlue;
     public static readonly Color TASK_BACKGROUND_LIGHT_GREEN = Color.LimeGreen;
     public static readonly Color TASK_BACKGROUND_DARK_GREEN = Color.Green;
 
@@ -81,12 +80,12 @@ public partial class TaskDetailsPopup : Form
         _dbService.UpdateTaskAsync(_task);
     }
 
-    private void ColorDarkBlueButton_Click(object sender, EventArgs e)  {
+    private void ColorDarkBlueButton_Click(object sender, EventArgs e) {
         _task.DisplayColor = TASK_BACKGROUND_DARK_BLUE;
         _dbService.UpdateTaskAsync(_task);
     }
 
-    private void ColorRedButton_Click(object sender, EventArgs e)  {
+    private void ColorRedButton_Click(object sender, EventArgs e) {
         _task.DisplayColor = TASK_BACKGROUND_RED;
         _dbService.UpdateTaskAsync(_task);
     }
@@ -96,8 +95,13 @@ public partial class TaskDetailsPopup : Form
         _dbService.UpdateTaskAsync(_task);
     }
 
-    private void ColorDarkGreenButton_Click(object sender, EventArgs e)  {
+    private void ColorDarkGreenButton_Click(object sender, EventArgs e) {
         _task.DisplayColor = TASK_BACKGROUND_DARK_GREEN;
         _dbService.UpdateTaskAsync(_task);
+    }
+
+    private async void StartNewButton_Click(object sender, EventArgs e) {
+        await _parent.RestartTask(_task);
+        Close();
     }
 }

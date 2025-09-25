@@ -303,6 +303,26 @@ public partial class TimerWindow : Form {
 		Invalidate();
 	}
 
+	public async Task RestartTask(Hourglass.Database.Models.Task task) {
+		StopRestartButtonClick(StopRestartButton, EventArgs.Empty);
+		if(RunningTask == null)
+			return;
+		RunningTask.description = task.description;
+		RunningTask.project = task.project;
+		RunningTask.ticket = task.ticket;
+        RunningTask.displayColorRed = task.displayColorRed;
+        RunningTask.displayColorGreen = task.displayColorGreen;
+		RunningTask.displayColorBlue = task.displayColorBlue;
+        await Task.Run(
+            () => {
+                Thread.Sleep(100);
+                if (RunningTask != null)
+                    SetTextBoxTextSafely(DescriptionTextBox, task.description);
+            }
+        );
+        await _dbService.UpdateTaskAsync(RunningTask);
+    }
+
 	#endregion
 
 	private void TimerWindow_Load(object sender, EventArgs e) {
