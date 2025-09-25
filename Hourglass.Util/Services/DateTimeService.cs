@@ -71,10 +71,8 @@ public static class DateTimeService {
 		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
 
 	public static DateTime GetMondayOfCurrentWeek() {
-		DateTime today = DateTime.Today;
-		int daysSinceMonday = (int)today.DayOfWeek - 1;
-		return today.AddDays(-daysSinceMonday);
-	}
+        return FloorWeek(DateTime.Now);
+    }
 
 	public static DateTime GetMondayOfWeekAtDate(DateTime date) {
 		return FloorWeek(date);

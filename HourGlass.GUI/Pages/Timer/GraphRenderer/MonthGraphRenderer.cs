@@ -17,7 +17,7 @@ public class MonthGraphRenderer : GraphRenderer {
 	protected override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 4;
 
 	protected override int GRAPH_MINIMAL_WIDTH => 2;
-	protected override int GRAPH_CORNER_RADIUS => 2;
+	protected override int GRAPH_CORNER_RADIUS => 4;
 
 	public MonthGraphRenderer(IHourglassDbService dbService, TimerWindow timerWindow) : base(dbService, timerWindow, TimerWindowMode.Month) { }
 	
