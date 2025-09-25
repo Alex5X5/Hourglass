@@ -16,7 +16,7 @@ public static class DateTimeService {
 		new(date.Year, date.Month, date.Day);
 
 	public static DateTime FloorWeek(DateTime date) =>
-		date.AddDays((-(int)date.DayOfWeek)+1);
+		FloorDay(date.AddDays((-(int)date.DayOfWeek)+1));
 
 	public static DateTime FloorMonth(DateTime date) =>
 			new(date.Year, date.Month, 1);
@@ -77,8 +77,6 @@ public static class DateTimeService {
 	}
 
 	public static DateTime GetMondayOfWeekAtDate(DateTime date) {
-		//int daysSinceMonday = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
-		//return date.AddDays(-daysSinceMonday);
 		return FloorWeek(date);
 	}
 
@@ -95,8 +93,8 @@ public static class DateTimeService {
 		new(date.Year, date.Month, 1);
 
 	public static int GetCurrentWeekCount() =>
-		(int) Math.Floor((DateTime.Today - START_DATE).Days / 7.0) + 1;
+		GetWeekCountAtDate(DateTime.Now);
 
 	public static int GetWeekCountAtDate(DateTime date) =>
-		(int) Math.Floor((DateTime.Today - date).Days / 7.0) + 1;
+		(int) Math.Floor((FloorWeek(date) - START_DATE).Days / 7.0) + 1;
 }

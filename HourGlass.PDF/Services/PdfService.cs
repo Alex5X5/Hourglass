@@ -43,14 +43,14 @@ public unsafe partial class PdfService : IPdfService {
 	}
 
 	private void PrintCharsBefore(char* ptr) {
-        Console.Write($"chars before insert pos:");
-        char* charBefore = ptr - 25;
-        for (int i = 0; i < 25; i++) {
-            Console.Write($"{*charBefore}");
-            charBefore++;
-        }
-        Console.WriteLine();
-    }
+		Console.Write($"chars before insert pos:");
+		char* charBefore = ptr - 25;
+		for (int i = 0; i < 25; i++) {
+			Console.Write($"{*charBefore}");
+			charBefore++;
+		}
+		Console.WriteLine();
+	}
 
 	public void LoadIndexers() {
 		Console.WriteLine("loading indexers");
@@ -79,7 +79,7 @@ public unsafe partial class PdfService : IPdfService {
 					i += 4;
 					Indexers[key] = ((IntPtr)previouslastSectionCharacter, (IntPtr)_content);
 					previouslastSectionCharacter = _content;
-                } else if (_content[0] == '(' && _content[1] == ')' && _content[2] == ' ' && _content[3] == 'T' && _content[4] == 'j') {
+				} else if (_content[0] == '(' && _content[1] == ')' && _content[2] == ' ' && _content[3] == 'T' && _content[4] == 'j') {
 					fieldCount++;
 					_content += 1;
 					i += 1;
@@ -90,30 +90,31 @@ public unsafe partial class PdfService : IPdfService {
 			_content++;
 			i++;
 		}
-        Indexers[LAST_SECTION_INDEXER] = ((IntPtr)previouslastSectionCharacter, (IntPtr)(text+charCount));
+		Indexers[LAST_SECTION_INDEXER] = ((IntPtr)previouslastSectionCharacter, (IntPtr)(text+charCount));
 		IndexersLoaded = true;
 		stopwatch.Stop();
 		Console.WriteLine("finished loading indexers");
 		Console.WriteLine($"loading indexers took {stopwatch.ElapsedMilliseconds / 1000.0} seconds");
 	}
 
-    public void Export(IProgressReporter progressReporter) {
+	public void Export(IProgressReporter progressReporter, DateTime selectedWeek) {
 		if (!IndexersLoaded)
 			return;
 		Stopwatch totalStopwatch = new();
 		totalStopwatch.Start();
-        Console.WriteLine("started expoting");
-        Stopwatch prepareContentStopwatch = new();
-        prepareContentStopwatch.Start();
-        Console.WriteLine("started preparing content for the document");
-        List<Database.Models.Task> tasks = _dbService.QueryTasksOfCurrentWeekAsync().Result;
-        Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
-            { "monday", DayOfWeek.Monday },
-            { "tuesday", DayOfWeek.Tuesday },
-            { "wendsday", DayOfWeek.Wednesday },
-            { "thursday", DayOfWeek.Thursday },
-            { "friday", DayOfWeek.Friday }
-        };
+		Console.WriteLine("started expoting");
+		selectedWeek = DateTimeService.FloorWeek(selectedWeek);
+		Stopwatch prepareContentStopwatch = new();
+		prepareContentStopwatch.Start();
+		Console.WriteLine("started preparing content for the document");
+		List<Database.Models.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
+			{ "monday", DayOfWeek.Monday },
+			{ "tuesday", DayOfWeek.Tuesday },
+			{ "wendsday", DayOfWeek.Wednesday },
+			{ "thursday", DayOfWeek.Thursday },
+			{ "friday", DayOfWeek.Friday }
+		};
 		long totalWeekSeconds = 0;
 		string query = "";
 		string value = "";
@@ -121,38 +122,38 @@ public unsafe partial class PdfService : IPdfService {
 		int totalSteps = tasks.Count * progressUpdatesPerTask;
 		int currentStep = 0;
 		int percentage = 0;
-        foreach (string dayName in days.Keys) {
-            int offset = 0;
-            string[] lines = ["", "", "", "", "", ""];
-            List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
-            if (tasks_.Count == 0)
-                continue;
-            foreach (Database.Models.Task task in tasks_) {
-                if (progressReporter.IsCancellationRequested) {
-                    progressReporter.ReportProgress(currentStep, "Cancelling...");
-                    Thread.Sleep(500);
-                    return;
-                }
-                if (task.running)
+		foreach (string dayName in days.Keys) {
+			int offset = 0;
+			string[] lines = ["", "", "", "", "", ""];
+			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			if (tasks_.Count == 0)
+				continue;
+			foreach (Database.Models.Task task in tasks_) {
+				if (progressReporter.IsCancellationRequested) {
+					progressReporter.ReportProgress(currentStep, "Cancelling...");
+					Thread.Sleep(500);
+					return;
+				}
+				if (task.running)
 					continue;
-                string[] compiledTask = CompileTask(task);
-                try {
-                    Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-                    query = $"{dayName}_hour_range_{offset + 1}";
-                    value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
-                    BufferAnnotationValueUnsafe(query, value);
-                    BufferFieldValueUnsafe(query, value);
-                    query = $"{dayName}_hour_{offset + 1}";
-                    value = DateTimeService.ToHourMinuteString(task.finish-task.start);
-                    BufferAnnotationValueUnsafe(query, value);
-                    BufferFieldValueUnsafe(query, value);
-                    offset += compiledTask.Length;
-                } catch (ArgumentOutOfRangeException) {
+				string[] compiledTask = CompileTask(task);
+				try {
+					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+					query = $"{dayName}_hour_range_{offset + 1}";
+					value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
+					BufferAnnotationValueUnsafe(query, value);
+					BufferFieldValueUnsafe(query, value);
+					query = $"{dayName}_hour_{offset + 1}";
+					value = DateTimeService.ToHourMinuteString(task.finish-task.start);
+					BufferAnnotationValueUnsafe(query, value);
+					BufferFieldValueUnsafe(query, value);
+					offset += compiledTask.Length;
+				} catch (ArgumentOutOfRangeException) {
 					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
 					Console.WriteLine($"description of task was:'{task.description}'");
 					break;
-                } catch (ArgumentException) {
-                    Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+				} catch (ArgumentException) {
+					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
 					Console.WriteLine($"description of task was:'{task.description}'");
 					break;
 				}
@@ -160,39 +161,38 @@ public unsafe partial class PdfService : IPdfService {
 				currentStep++;
 				percentage = (int)(currentStep * 100.0 / totalSteps);
 				progressReporter.ReportProgress(percentage, $"Processing day {dayName}...");
-            }
-            for (int i = 0; i < lines.Length; i++) {
-                query = $"{dayName}_line_{i + 1}";
+			}
+			for (int i = 0; i < lines.Length; i++) {
+				query = $"{dayName}_line_{i + 1}";
 				BufferAnnotationValueUnsafe(query, lines[i]);
 				BufferFieldValueUnsafe(query, lines[i]);
-            }
-        }
-        query = $"total_hour";
-        value = DateTimeService.ToHourMinuteString(totalWeekSeconds);
-        BufferAnnotationValueUnsafe(query, value);
-        BufferFieldValueUnsafe(query, value);
-        SetUtilityFields();
-        prepareContentStopwatch.Stop();
-        SetUtilityFields();
-        Console.Write("finished preparing content for the document\n");
-        Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
+			}
+		}
+		query = $"total_hour";
+		value = DateTimeService.ToHourMinuteString(totalWeekSeconds);
+		BufferAnnotationValueUnsafe(query, value);
+		BufferFieldValueUnsafe(query, value);
+		SetUtilityFields(selectedWeek);
+		prepareContentStopwatch.Stop();
+		Console.Write("finished preparing content for the document\n");
+		Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 		char* document = BuildDocument(out int documentCharCount);
 		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
-		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName()}"), fileSize);
-        NativeMemory.Free(resultFile);
-        NativeMemory.Free(document);
-        InsertOperations.Clear();
-        totalStopwatch.Stop();
+		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName(selectedWeek)}"), fileSize);
+		NativeMemory.Free(resultFile);
+		NativeMemory.Free(document);
+		InsertOperations.Clear();
+		totalStopwatch.Stop();
 		Console.Write("finished exporting unsafe\n");
 		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
-        progressReporter.ReportProgress(100, "finished exporting");
-    }
+		progressReporter.ReportProgress(100, "finished exporting");
+	}
 
-    public void Import() {
-        throw new NotImplementedException();
-    }
+	public void Import() {
+		throw new NotImplementedException();
+	}
 
-    public static string[] CompileTask(Database.Models.Task task) {
+	public static string[] CompileTask(Database.Models.Task task) {
 		const int MAX_LINE_LENGTH = 85;
 		string source = "";
 		List<string> res = [];
@@ -216,24 +216,26 @@ public unsafe partial class PdfService : IPdfService {
 		return res.ToArray();
 	}
 
-	private void SetUtilityFields() {
-        BufferAnnotationValueUnsafe("week", Convert.ToString(DateTimeService.GetCurrentWeekCount()));
-        BufferFieldValueUnsafe("week", Convert.ToString(DateTimeService.GetCurrentWeekCount()));
-        BufferAnnotationValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
-        BufferFieldValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
-        BufferAnnotationValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
-        BufferFieldValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
-        DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
-		DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
-        BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
-        BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
-        BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
-        BufferFieldValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
-    }
+	private void SetUtilityFields(DateTime selectedWeek) {
+		BufferAnnotationValueUnsafe("week", Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek)));
+		BufferFieldValueUnsafe("week", Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek)));
+		BufferAnnotationValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
+		BufferFieldValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
+		BufferAnnotationValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
+		BufferFieldValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
+		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+		DateTime dayTo = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+		BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
+		BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
+		BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
+		BufferFieldValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
+	}
 
-	private string GetNewFileName() {
-        DateTime dayFrom = DateTimeService.GetMondayOfCurrentWeek();
-        DateTime dayTo = DateTimeService.GetFridayOfCurrentWeek();
-		return $"Ausbildungsnachweis{DateTimeService.GetCurrentWeekCount()}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
-    }
+	private string GetNewFileName(DateTime selectedWeek) {
+		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+		DateTime dayTo = DateTimeService.GetFridayOfWeekAtDate(selectedWeek);
+		string path = $"Ausbildungsnachweis{DateTimeService.GetWeekCountAtDate(selectedWeek)}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
+		Console.WriteLine($"generated file path:{path}");
+		return path;
+	}
 }

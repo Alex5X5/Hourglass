@@ -15,8 +15,8 @@ public class WeekGraphRenderer : GraphRenderer {
 	protected override int GRAPH_CLICK_ADDITIONAL_WIDTH => 8;
 	protected override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 5;
 
-	protected override int GRAPH_MINIMAL_WIDTH => 8;
-	protected override int GRAPH_CORNER_RADIUS => 12;
+	protected override int GRAPH_MINIMAL_WIDTH => 5;
+	protected override int GRAPH_CORNER_RADIUS => 5;
 
 	public WeekGraphRenderer(IHourglassDbService dbService, TimerWindow timerWindow) : base(dbService, timerWindow, TimerWindowMode.Week) { }
 

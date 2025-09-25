@@ -65,8 +65,6 @@ public abstract class GraphRenderer : Panel {
 			width,
             (int)(yAxisSegmentSize) + additionalHeight * 2
 		);
-		//graphPosY += yAxisSegmentSize;
-		//graphPosY += yAxisSegmentSize / 2;
 		//using (Graphics g = Graphics.FromImage(image))
 		//using (Brush b = new SolidBrush(Color.AliceBlue))
 		//	g.FillRectangle(b, res.X, res.Y, res.Width, res.Height);

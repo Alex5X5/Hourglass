@@ -57,17 +57,21 @@ public class HourglassDbService : IHourglassDbService {
 		await QueryTasksOfHourAtDateAsync(DateTime.Now);
 
 	public async Task<List<Models.Task>> QueryTasksOfDayAtDateAsync(DateTime date) {
-		long intervallStartSeconds = new DateTime(date.Year, date.Month, date.Day).Ticks / TimeSpan.TicksPerSecond;
-		long intervallFinishSeconds = intervallStartSeconds + TimeSpan.SecondsPerDay;
-		return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
-	}
+        long intervallStartSeconds = DateTimeService.FloorDay(date).Ticks / TimeSpan.TicksPerSecond;
+        long intervallFinishSeconds = intervallStartSeconds + TimeSpan.SecondsPerDay -1;
+        DateTime start = new(intervallStartSeconds * TimeSpan.TicksPerSecond);
+        DateTime finfish = new(intervallFinishSeconds * TimeSpan.TicksPerSecond);
+        return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
+    }
 
 	public async Task<List<Models.Task>> QueryTasksOfCurrentDayAsync() =>
 		await QueryTasksOfDayAtDateAsync(DateTime.Now);
 
 	public async Task<List<Models.Task>> QueryTasksOfWeekAtDateAsync(DateTime date) {
 		long intervallStartSeconds = DateTimeService.GetMondayOfWeekAtDate(date).Ticks / TimeSpan.TicksPerSecond;
-		long intervallFinishSeconds = intervallStartSeconds + TimeSpan.TicksPerDay * 7;
+		long intervallFinishSeconds = intervallStartSeconds + TimeSpan.SecondsPerDay * 7 -1;
+		DateTime start = new(intervallStartSeconds*TimeSpan.TicksPerSecond);
+		DateTime finfish = new(intervallFinishSeconds*TimeSpan.TicksPerSecond);
 		return await QueryTasksInIntervallAsync(intervallStartSeconds, intervallFinishSeconds);
 	}
 

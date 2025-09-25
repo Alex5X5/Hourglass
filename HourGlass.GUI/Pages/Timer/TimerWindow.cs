@@ -244,7 +244,7 @@ public partial class TimerWindow : Form {
 		popup.Show(this);
 		new Thread(
 			() => {
-				pdf.Export(progressReporter);
+				pdf.Export(progressReporter, SelectedDay);
 				Invoke(
 						() => {
 							ExportButton.Enabled = true;
