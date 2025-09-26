@@ -32,13 +32,10 @@ public abstract class GraphRenderer : Panel {
 
 	#endregion fields
 
-	protected GraphRenderer(IHourglassDbService dbService, TimerWindow parent, TimerWindowMode windowMode) : this() {
+	protected GraphRenderer(IHourglassDbService dbService, TimerWindow parent, TimerWindowMode windowMode) : base() {
 		_parent = parent;
 		_dbService = dbService;
 		WindowMode = windowMode;
-	}
-
-	public GraphRenderer() : base() {
 		image = new Bitmap(Width, Height);
 		DoubleBuffered = true;
 	}

@@ -25,5 +25,13 @@ namespace Hourglass.GUI.Pages.SettingsPopup {
         private void CancelButton_Click(object sender, EventArgs e) {
             Close();
         }
+
+        private void label5_Click(object sender, EventArgs e) {
+
+        }
+
+        private void SettingsPopup_Load(object sender, EventArgs e) {
+            webBrowser1.Navigate(@"C:\Users\lehnerale\source\repos\Hourglass\HourGlass\bin\Debug\net9.0-windows\win-x64\Hourglass\Nachweise\Ausbildungsnachweis71_22.9. 2025-26.9. 2025.pdf");
+        }
     }
 }

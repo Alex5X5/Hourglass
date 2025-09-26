@@ -1,2 +1,5 @@
-kein updated des Start feldes während idle
-automatisches secten einer Farbe je nachdem ob eine Description Stichwörter entält
+! kein updated des Start feldes während idle
+? automatisches selecten einer Farbe je nachdem ob eine Description Stichwörter entält
+? preview für das exportieren der pdf.
+! verschiedene stufen der Exportierung der Zeit.
+? auslesen aus der Webseite der Berufsschule. 
