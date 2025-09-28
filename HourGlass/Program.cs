@@ -1,35 +1,42 @@
 namespace HourGlass;
 
-using Hourglass.Database.Services.Interfaces;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.ReactiveUI;
+
 using Hourglass.Database.Services;
+using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI;
 using Hourglass.PDF;
-using Hourglass.Util.Services;
 using Hourglass.Util;
+using Hourglass.Util.Services;
 
 public class Program {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    public static void Main() {
-
-		//int i = 1;
-		//DateTime n = DateTimeService.START_DATE;
-		//while (n <= DateTime.Now) {
-		//	Console.WriteLine($"{i}st week starts at {n}");
-		//	i++;
-		//	n = n.AddDays(7);
-		//}
-		//return;
+	/// <summary>
+	///  The main entry point for the application.
+	/// </summary>
+	[STAThread]
+	public static void Main(string[] args) {
 
 		PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
+
+		//IHourglassDbService dbService = new HourglassDbService();
+
+		BuildAvaloniaApp()
+			.StartWithClassicDesktopLifetime(args);
+
 		//EncryptionService service = new("test"); 
 		//service.EncryptFile(PathService.FilesPath("database"));
 
 		//Application.Run(new Hourglass.GUI.Pages.LoginPopup.LoginPopup());
-		IHourglassDbService dbService = new HourglassDbService();
-		Application.Run(new GUI.Pages.Timer.TimerWindow(dbService));
-        
-    }
+
+	}
+
+	public static AppBuilder BuildAvaloniaApp()
+		=> AppBuilder.Configure<App>()
+			.UsePlatformDetect()
+			.WithInterFont()
+			.LogToTrace()
+			.UseReactiveUI();
 }

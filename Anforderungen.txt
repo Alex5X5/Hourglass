@@ -3,3 +3,6 @@
 ? preview für das exportieren der pdf.
 ! verschiedene stufen der Exportierung der Zeit.
 ? auslesen aus der Webseite der Berufsschule. 
+?zeit mondus als buttons in gui
+
+keine start stop beschriftung -> start/stor nwuestart symbole neben timeer feldern
