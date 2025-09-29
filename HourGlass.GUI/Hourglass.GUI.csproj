@@ -46,6 +46,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\Components\GraphModeButtons\DayGraphModeButton.axaml.cs">
+      <DependentUpon>DayGraphModeButton.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Pages\TasksPageView.axaml.cs">
+      <DependentUpon>TasksPageView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Pages\ProjectPageView.axaml.cs">
+      <DependentUpon>ProjectPageView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Pages\TimerPageView.axaml.cs">
+      <DependentUpon>TimerPageView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

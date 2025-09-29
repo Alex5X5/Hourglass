@@ -1,33 +1,60 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Hourglass.GUI.Views.MainView"
-             x:DataType="vm:MainViewModel">
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
-  </Design.DataContext>
-  <Grid>
-	  <Grid.RowDefinitions>
-		  <RowDefinition Height="2*" MinHeight="10" />
-		  <RowDefinition Height="*" />
-		  <RowDefinition Height="5*" MinHeight="10" />
-	  </Grid.RowDefinitions>
-	  <Grid.ColumnDefinitions>
-		  <ColumnDefinition Width="2*" />
-		  <ColumnDefinition Width="5*" />
-		  <ColumnDefinition Width="*" />
-	  </Grid.ColumnDefinitions>
-	  <Button Grid.Column="2"
-			  Grid.Row="0"
-			  Grid.ColumnSpan="1"/>
-	  <Rectangle Name="myRectangle" Fill="Blue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" />
-	  <Rectangle Fill="Blue" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
-	  <Rectangle Fill="Red" Grid.Column="1" Grid.Row="1"/>
-  </Grid>
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels"
+			 xmlns:graph-panels="clr-namespace:Hourglass.GUI.Views.Components.GraphPanels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="Hourglass.GUI.Views.MainView"
+			 x:DataType="vm:MainViewModel">
+		<Design.DataContext>
+			<!-- This only sets the DataContext for the previewer in an IDE,
+				 to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+			<vm:MainViewModel />
+		</Design.DataContext>
+		<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="9*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="4*" />
+		</Grid.ColumnDefinitions>
+		<Rectangle Fill="#FFFFFF" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="1" />
+		<Rectangle Fill="#DF4807" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" />
+		<Panel Background="#D9D9D9" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
+		</Panel>
+		<Panel Background="#BABABA" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="4*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<Button Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<Button Grid.Column="5" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<Button Grid.Column="7" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<Button Grid.Column="9" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+			</Grid>
+		</Panel>
+		<graph-panels:DayGraphPanel Grid.Column="1" Grid.Row="2" />
+	</Grid>
 
 </UserControl>
