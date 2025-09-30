@@ -41,14 +41,43 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="3*" />
-					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="TimerModeButton_Click"/>
-				<Button Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="GraphModeButton_Click"/>
-				<Button Grid.Column="5" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ExportModeButton_Click"/>
-				<Button Grid.Column="7" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ProjectModeButton_Click"/>
-				<Button Grid.Column="9" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+				<Button Grid.Row="1"
+						Grid.Column="1"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Click="TimerModeButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Timer" Foreground="Black" FontSize="15"/>
+					</StackPanel>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="3"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Click="GraphModeButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Graph" Foreground="Black" FontSize="15"/>
+					</StackPanel>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="5"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Click="ExportModeButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Export" Foreground="Black" FontSize="15"/>
+					</StackPanel>
+				</Button>
+				<Button Grid.Row="1"
+						Grid.Column="7"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Click="ProjectModeButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Projects" Foreground="Black" FontSize="15"/>
+					</StackPanel>
+				</Button>
 			</Grid>
 		</Panel>
 		<!--<pages:TimerPageView Name="timerPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsTimerPageVisible}"/>
