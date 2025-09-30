@@ -1,8 +1,10 @@
+using Hourglass.GUI.ViewModels;
+using Hourglass.GUI.ViewModels.Pages;
+
 namespace Hourglass.GUI.Views.Pages;
 
-using Avalonia.Controls;
+public partial class TimerPageView : PageViewBase {
 
-public partial class TimerPageView : UserControl {
 	public TimerPageView() : base() {
 		InitializeComponent();
 	}

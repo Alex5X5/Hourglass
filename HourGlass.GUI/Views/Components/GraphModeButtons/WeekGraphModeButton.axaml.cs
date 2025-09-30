@@ -4,14 +4,14 @@ using Hourglass.GUI.ViewModels.Pages;
 
 namespace Hourglass.GUI.Views.Components.GraphModeButtons;
 
-public partial class DayGraphModebutton : Avalonia.Controls.Button{
-	public DayGraphModebutton() : base() {
+public partial class WeekGraphModebutton : Avalonia.Controls.Button {
+	public WeekGraphModebutton() : base() {
 		InitializeComponent();
 	}
 
 	public override void Render(DrawingContext context) {
 		base.Render(context);
-		string text = "day";
+		string text = "week";
 		// Create formatted text
 		var formattedText = new FormattedText(
 			text,

@@ -6,7 +6,7 @@ using Hourglass.Database.Services.Interfaces;
 using System;
 
 
-public abstract class GraphPanel : UserControl {
+public abstract class GraphPanelViewBase : UserControl {
 
 	#region fields
 
@@ -32,10 +32,10 @@ public abstract class GraphPanel : UserControl {
 
 	#endregion fields
 
-	public GraphPanel() : base() {
+	public GraphPanelViewBase() : base() {
 	}
 
-	public GraphPanel(IHourglassDbService dbService) : this() {
+	public GraphPanelViewBase(IHourglassDbService dbService) : this() {
 		_dbService = dbService;
 	}
 
@@ -69,10 +69,12 @@ public abstract class GraphPanel : UserControl {
 
 	public override void Render(DrawingContext context) {
 		base.Render(context);
-		var brush = new SolidColorBrush(Color.FromArgb(255, 200, 40, 150)); // Adjust thickness if necessary
-		context.FillRectangle(brush, new(MAX_TASKS, 10, 10, 10));
-		DrawTaskDescriptionStub(context, new() {description="blablabla"}, 100, 100, 300);
+		if (!IsVisible)
+			return;
+		var brush = new SolidColorBrush(Color.FromArgb(255, 100, 40, 150)); // Adjust thickness if necessary
 		//args.Graphics.Clear(Color.Gainsboro);
+		context.FillRectangle(brush, new Avalonia.Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height));
+		DrawTaskDescriptionStub(context, new() {description="blablabla"}, 100, 100, 300);
 
 		//if (image.Width != Width | image.Height != Height) {
 		//	image.Dispose();

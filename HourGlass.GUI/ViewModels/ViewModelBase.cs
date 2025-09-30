@@ -1,7 +1,8 @@
-﻿using ReactiveUI;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using ReactiveUI;
 
 namespace Hourglass.GUI.ViewModels;
 
-public class ViewModelBase : ReactiveObject
-{
+public abstract class ViewModelBase : ReactiveObject {
 }

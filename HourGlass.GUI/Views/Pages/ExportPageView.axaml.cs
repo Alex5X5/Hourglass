@@ -1,14 +1,16 @@
 namespace Hourglass.GUI.Views.Pages;
 
-public partial class ProjectPageView : PageViewBase {
+using Avalonia.Controls;
+using Avalonia.Media;
 
-	public ProjectPageView() : base() {
+public partial class ExportPageView : PageViewBase {
+	public ExportPageView() : base() {
 		InitializeComponent();
 	}
 
 	//public override void Render(DrawingContext context) {
 	//	base.Render(context);
-	//	string text = "project page view";
+	//	string text = "export page view";
 	//	// Create formatted text
 	//	var formattedText = new FormattedText(
 	//		text,

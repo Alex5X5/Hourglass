@@ -4,11 +4,11 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
-			 x:Class="Hourglass.GUI.Views.Pages.ProjectPageView"
-			 x:DataType="vm:ProjectPageViewModel"
+			 x:Class="Hourglass.GUI.Views.Pages.ExportPageView"
+			 x:DataType="vm:ExportPageViewModel"
 			 x:CompileBindings="True">
 	<Design.DataContext>
-		<vm:ProjectPageViewModel />
+		<vm:ExportPageViewModel />
 	</Design.DataContext>
-	<Rectangle Fill="#BB0000" />
+	<Rectangle Fill="#00BB00" />
 </UserControl>

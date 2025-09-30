@@ -21,6 +21,7 @@
 		<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.6" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.6" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -46,11 +47,29 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\Components\GraphModeButtons\MonthGraphModeButton.axaml.cs">
+      <DependentUpon>MonthGraphModeButton.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Components\GraphModeButtons\WeekGraphModeButton.axaml.cs">
+      <DependentUpon>WeekGraphModeButton.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Components\GraphModeButtons\DayGraphModeButton.axaml.cs">
       <DependentUpon>DayGraphModeButton.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Pages\TasksPageView.axaml.cs">
-      <DependentUpon>TasksPageView.axaml</DependentUpon>
+    <Compile Update="Views\Components\GraphPanels\MonthGraphPanelView.axaml.cs">
+      <DependentUpon>MonthGraphPanelView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Components\GraphPanels\WeekGraphPanelView.axaml.cs">
+      <DependentUpon>WeekGraphPanelView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Components\GraphPanels\DayGraphPanelView.axaml.cs">
+      <DependentUpon>DayGraphPanelView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Pages\ExportPageView.axaml.cs">
+      <DependentUpon>ExportPageView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Pages\GraphPageView.axaml.cs">
+      <DependentUpon>GraphPageView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Pages\ProjectPageView.axaml.cs">
       <DependentUpon>ProjectPageView.axaml</DependentUpon>

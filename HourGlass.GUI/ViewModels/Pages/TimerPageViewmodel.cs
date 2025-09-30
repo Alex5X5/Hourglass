@@ -1,23 +1,11 @@
-﻿namespace Hourglass.GUI.ViewModels.Pages;
+﻿using Hourglass.GUI.ViewModels.Components.GraphPanels;
 
-using System.ComponentModel;
+using ReactiveUI;
 
-public class TimerPageViewmodel : ViewModelBase, INotifyPropertyChanged {
+namespace Hourglass.GUI.ViewModels.Pages;
 
-	public bool IsDayViewVisible {
-		get; private set;
+public class TimerPageViewModel : PageViewModelBase {
+	public TimerPageViewModel() : base() {
+		
 	}
-	public bool IsWeekViewVisible {
-		get; private set;
-	}
-	public bool IsMonthViewVisible {
-		get; private set;
-	}
-
-	public TimerPageViewmodel() {
-
-	}
-
-	// Property changed implementation...
-	public string Greeting => "Welcome to Avalonia!";
 }

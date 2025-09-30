@@ -3,16 +3,14 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels"
-			 xmlns:graph-panels="clr-namespace:Hourglass.GUI.Views.Components.GraphPanels"
+			 xmlns:pages="using:Hourglass.GUI.Views.Pages"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="Hourglass.GUI.Views.MainView"
-			 x:DataType="vm:MainViewModel">
-		<Design.DataContext>
-			<!-- This only sets the DataContext for the previewer in an IDE,
-				 to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-			<vm:MainViewModel />
-		</Design.DataContext>
-		<Grid>
+			 x:DataType="vm:MainViewViewModel">
+	<Design.DataContext>
+		<vm:MainViewViewModel />
+	</Design.DataContext>
+	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="3*" />
 			<RowDefinition Height="*" />
@@ -22,7 +20,7 @@
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="4*" />
 		</Grid.ColumnDefinitions>
-		<Rectangle Fill="#FFFFFF" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="1" />
+		<!--<Rectangle Fill="#ABABAB" Grid.Column="1" Grid.Row="2" />-->
 		<Rectangle Fill="#DF4807" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" />
 		<Panel Background="#D9D9D9" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
 		</Panel>
@@ -46,15 +44,17 @@
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-				<Button Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-				<Button Grid.Column="5" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-				<Button Grid.Column="7" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-				<Button Grid.Column="9" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-
+				<Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="TimerModeButton_Click"/>
+				<Button Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="GraphModeButton_Click"/>
+				<Button Grid.Column="5" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ExportModeButton_Click"/>
+				<Button Grid.Column="7" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="ProjectModeButton_Click"/>
+				<Button Grid.Column="9" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 			</Grid>
 		</Panel>
-		<graph-panels:DayGraphPanel Grid.Column="1" Grid.Row="2" />
+		<!--<pages:TimerPageView Name="timerPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsTimerPageVisible}"/>
+		<pages:ExportPageView Name="exportPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsExportPageVisible}"/>
+		<pages:ProjectPageView Name="projectPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsProjectPageVisible}"/>
+		<pages:GraphPageView Name="graphPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsGraphsPageVisible}"/>-->
+		<TransitioningContentControl Background="Yellow" Content="{Binding CurrentPage}" Grid.Row="2" Grid.Column="1" />
 	</Grid>
-
 </UserControl>
