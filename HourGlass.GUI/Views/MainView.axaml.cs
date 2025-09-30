@@ -9,7 +9,7 @@ public partial class MainView : UserControl {
 
 	public MainView() {
 		InitializeComponent();
-		DataContext = new MainViewViewModel();
+		//DataContext = new MainViewViewModel();
 		if (DataContext is MainViewViewModel viewModel)
 			viewModel.ChangePage<TimerPageViewModel>();
 	}

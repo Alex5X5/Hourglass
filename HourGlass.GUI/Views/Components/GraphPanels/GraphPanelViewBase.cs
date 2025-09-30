@@ -39,7 +39,7 @@ public abstract class GraphPanelViewBase : UserControl {
 		_dbService = dbService;
 	}
 
-	//protected abstract Task<List<Database.Models.Task>> GetTasksAsync();
+	protected abstract Task<List<Database.Models.Task>> GetTasksAsync();
 
 	protected abstract void DrawTimeline(DrawingContext context);
 

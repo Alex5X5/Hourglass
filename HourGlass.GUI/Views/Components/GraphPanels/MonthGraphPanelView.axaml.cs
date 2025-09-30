@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Media;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Point = Avalonia.Point;
 
@@ -77,9 +78,10 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 		//}
 	}
 
-	//protected async override Task<List<Database.Models.Task>> GetTasksAsync() {
-		
-	//	return await Task.Run(()=>new List<Database.Models.Task>());
-	//	//throw new NotImplementedException();
-	//}
+	protected async override Task<List<Database.Models.Task>> GetTasksAsync() {
+		if (DataContext is WeekGraphPanelViewModel model)
+			if (model.dbService != null)
+				return await model.dbService.QueryTasksAsync();
+		return [];
+	}
 }

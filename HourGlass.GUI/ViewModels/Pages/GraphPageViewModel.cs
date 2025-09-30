@@ -17,13 +17,14 @@ public class GraphPageViewModel : PageViewModelBase {
 		}
 	}
 
-	private readonly GraphPanelViewModelBase[] GraphPanels = [
-		new DayGraphPanelViewModel(),
-		new WeekGraphPanelViewModel(),
-		new MonthGraphPanelViewModel()
-	];
+	private readonly GraphPanelViewModelBase[] GraphPanels;
 
 	public GraphPageViewModel() : base() {
+		GraphPanels = [
+			new DayGraphPanelViewModel() { dbService = dbService },
+			new WeekGraphPanelViewModel() { dbService = dbService },
+			new MonthGraphPanelViewModel() { dbService = dbService }
+		];
 		_CurrentGraphPanel = GraphPanels[0];
 	}
 
