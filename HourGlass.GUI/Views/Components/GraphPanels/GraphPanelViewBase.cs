@@ -28,7 +28,9 @@ public abstract class GraphPanelViewBase : UserControl {
 	protected abstract int GRAPH_MINIMAL_WIDTH { get; }
 	protected abstract int GRAPH_CORNER_RADIUS { get; }
 
-	protected const int PADDING_X = 50, PADDING_Y = 30, TIMELINE_MARK_HEIGHT = 7;
+	protected double PADDING_X => Bounds.Width / 30;
+	protected double PADDING_Y => Bounds.Height / 30;
+	protected double TIMELINE_MARK_HEIGHT => 7;
 
 	#endregion fields
 
@@ -47,15 +49,15 @@ public abstract class GraphPanelViewBase : UserControl {
 
 	protected abstract void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i);
 
-	protected Rectangle GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, int i, int columns) {
+	protected Avalonia.Rect GetTaskRectanlge(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, int additionalWidth, int additionalHeight, int minimalWidth, int i, int columns) {
 		double xAxisSegmentSize = (image.Width - 2.0 * PADDING_X) / xAxisSegmentCount;
 		double yAxisSegmentSize = (image.Height - 2.0 * PADDING_Y) / (yAxisSegmentCount + 1.0);
 		double proportion = xAxisSegmentSize / xAxisSegmentDuration;
-		int graphPosX = (int)Math.Floor((task.start - originSecond) * proportion) + PADDING_X;
+		double graphPosX = (task.start - originSecond) * proportion + PADDING_X;
 		long duration = task.finish - task.start;
-		int graphLength = (int)Math.Floor(duration * proportion);
-		int width = (graphLength > minimalWidth ? graphLength : minimalWidth) + additionalWidth * 2;
-		Rectangle res = new(
+		double graphLength = duration * proportion;
+		double width = graphLength > minimalWidth ? graphLength : minimalWidth + additionalWidth * 2;
+		Avalonia.Rect res = new(
 			graphPosX - additionalWidth,
 			(int)(yAxisSegmentSize * i * 1.5) - additionalHeight + PADDING_Y,
 			width,
@@ -72,8 +74,9 @@ public abstract class GraphPanelViewBase : UserControl {
 		if (!IsVisible)
 			return;
 		var brush = new SolidColorBrush(Color.FromArgb(255, 100, 40, 150)); // Adjust thickness if necessary
-		//args.Graphics.Clear(Color.Gainsboro);
+																			//args.Graphics.Clear(Color.Gainsboro);
 		context.FillRectangle(brush, new Avalonia.Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height));
+		DrawTimeline(context);
 		DrawTaskDescriptionStub(context, new() {description="blablabla"}, 100, 100, 300);
 
 		//if (image.Width != Width | image.Height != Height) {

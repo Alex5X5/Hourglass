@@ -6,6 +6,8 @@ using Avalonia.Media;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 
+using static System.Net.Mime.MediaTypeNames;
+
 using Point = Avalonia.Point;
 
 public partial class MonthGraphPanelView : GraphPanelViewBase {
@@ -59,23 +61,29 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {
-		context.DrawLine(new Pen(new SolidColorBrush(Colors.Green)), new(10,10), new(100,100));
-		//using (Brush textBrush = new SolidBrush(Color.Black))
-		//using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170, 170, 170))))
-		//using (Pen timeline = new(Brushes.Black)) {
-		//	g.DrawLine(timeline, PADDING_X, Height - PADDING_Y, Width - PADDING_X, Height - PADDING_Y);
-		//	for (int i = 0; i < 25; i++) {
-		//		int xPos = (Width - 2 * PADDING_X) * i / 24 + PADDING_X;
-		//		g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
-		//		g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, Height - PADDING_Y - TIMELINE_MARK_HEIGHT);
-		//		g.DrawString(
-		//			Convert.ToString(i) + ":00",
-		//			new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
-		//			textBrush,
-		//			new Point((Width - 2 * PADDING_X) * (i + 1) / 24, Height - PADDING_Y + 5)
-		//		);
-		//	}
-		//}
+		Pen timeLine = new(new SolidColorBrush(Colors.Black));
+		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
+		int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+		double xAxisSegmentSize = (Width - 2 * PADDING_X) / daysInCurrentMonth;
+		context.DrawLine(timeLine, new(PADDING_X, PADDING_Y), new(100, 100));
+		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
+		for (int i = 0; i < 25; i++) {
+			double xPos = (Bounds.Width - 2 * PADDING_X) * i / 24 + PADDING_X;
+			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
+			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
+			//var formattedText = new FormattedText(
+			//	Convert.ToString(i) + ":00",
+			//	System.Globalization.CultureInfo.CurrentCulture,
+			//	FlowDirection.LeftToRight,
+			//	new Typeface("Arial"),
+			//	16,
+			//	new SolidColorBrush(Colors.Gray)
+			//);
+			//context.DrawText(
+			//	formattedText,
+			//	new Point((Width - 2 * PADDING_X) * (i + 1) / 24, Height - PADDING_Y + 5)
+			//);
+		}
 	}
 
 	protected async override Task<List<Database.Models.Task>> GetTasksAsync() {
