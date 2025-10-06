@@ -4,7 +4,10 @@ using Avalonia;
 using Avalonia.Media;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util;
 
 using Point = Avalonia.Point;
 
@@ -12,26 +15,40 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 
 	public override int TASK_GRAPH_COLUMN_COUNT => throw new NotImplementedException();
 
-	protected override int MAX_TASKS => 1000;
+	public override int MAX_TASKS => 1000;
 
-	protected override int GRAPH_CLICK_ADDITIONAL_WIDTH => throw new NotImplementedException();
+	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => throw new NotImplementedException();
 
-	protected override int GRAPH_CLICK_ADDITIONAL_HEIGHT => throw new NotImplementedException();
+	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => throw new NotImplementedException();
 
-	protected override int GRAPH_MINIMAL_WIDTH => throw new NotImplementedException();
+	public override int GRAPH_MINIMAL_WIDTH => throw new NotImplementedException();
 
-	protected override int GRAPH_CORNER_RADIUS => throw new NotImplementedException();
+	public override int GRAPH_CORNER_RADIUS => throw new NotImplementedException();
 
-	public DayGraphPanelView() : base() {
+	public DayGraphPanelView() : this(null, null) {
+
+	}
+
+	public DayGraphPanelView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
 		InitializeComponent();
 	}
 
-	public DayGraphPanelView(IHourglassDbService dbService) : base(dbService) {
-		InitializeComponent();
+	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
+		Console.WriteLine("DayGraphPanel draw task graph");
+		long todaySeconds = DateTimeService.FloorDay(DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
+		//long todaySeconds = nowSeconds - nowSeconds % TimeSpan.SecondsPerDay;
+		Rect rect = GetTaskRectanlgeBase(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
+		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		//using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);
+		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
+		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue));
+		//g.FillPath(brush, path);
+		context.FillRectangle(brush, rect);
+		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
 
-	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, int graphPosX, int graphPosY, int graphLength) {
-		// Draw rectangle background
+	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
 		var rect = new Rect(100, 100, 50, 20);
 		context.DrawRectangle(Background, null, rect);
 		string text = "day graph panel string";
@@ -53,35 +70,27 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		context.DrawText(formattedText, new Point(100,100));
 	}
 
-	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
-		Console.WriteLine("DayGraphPanel draw task graph");
-		//throw new NotImplementedException();
-	}
-
 	protected override void DrawTimeline(DrawingContext context) {
-		context.DrawLine(new Pen(new SolidColorBrush(Colors.Green)), new(10,10), new(100,100));
-		//using (Brush textBrush = new SolidBrush(Color.Black))
-		//using (Pen hintLines = new(new SolidBrush(Color.FromArgb(170, 170, 170))))
-		//using (Pen timeline = new(Brushes.Black)) {
-		//	g.DrawLine(timeline, PADDING_X, Height - PADDING_Y, Width - PADDING_X, Height - PADDING_Y);
-		//	for (int i = 0; i < 25; i++) {
-		//		int xPos = (Width - 2 * PADDING_X) * i / 24 + PADDING_X;
-		//		g.DrawLine(hintLines, xPos, Height - PADDING_Y, xPos, PADDING_Y);
-		//		g.DrawLine(timeline, xPos, Height - PADDING_Y, xPos, Height - PADDING_Y - TIMELINE_MARK_HEIGHT);
-		//		g.DrawString(
-		//			Convert.ToString(i) + ":00",
-		//			new("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0),
-		//			textBrush,
-		//			new Point((Width - 2 * PADDING_X) * (i + 1) / 24, Height - PADDING_Y + 5)
-		//		);
-		//	}
-		//}
+		Pen timeLine = new(new SolidColorBrush(Colors.Black));
+		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
+		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
+		for (int i = 0; i < 25; i++) {
+			double xPos = (Bounds.Width - 2 * PADDING_X) * i / 24 + PADDING_X;
+			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
+			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
+		}
 	}
 
-	protected async override Task<List<Database.Models.Task>> GetTasksAsync() {
-		if (DataContext is WeekGraphPanelViewModel model)
-			if (model.dbService != null)
-				return await model.dbService.QueryTasksAsync();
-		return [];
-	}
+	public override Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i) =>
+		GetTaskRectanlgeBase(
+			task,
+			DateTime.Today.Ticks / TimeSpan.TicksPerSecond,
+			TimeSpan.SecondsPerDay,
+			DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month),
+			MAX_TASKS,
+			additionalWidth,
+			additionalHeght,
+			GRAPH_MINIMAL_WIDTH,
+			i,
+			1);
 }

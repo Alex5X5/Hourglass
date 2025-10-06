@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public static class SettingsService {
+public class SettingsService {
 
     public static event Action OnSettingsReload = () => { };
 
@@ -33,6 +33,10 @@ public static class SettingsService {
                 res[keyvaluePair[0]] = string.Join(':', keyvaluePair.Skip(1));
         }
         return res;
+    }
+
+    public SettingsService() { 
+        
     }
 
     public static void SaveSettings() {

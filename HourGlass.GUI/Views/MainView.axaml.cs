@@ -5,13 +5,17 @@ using Avalonia.Controls;
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
 
-public partial class MainView : UserControl {
+public partial class MainView : ViewBase {
 
-	public MainView() {
-		InitializeComponent();
-		//DataContext = new MainViewViewModel();
+	public MainView() : this(null, null) {
+
+	}
+
+	public MainView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+		DataContext = new MainViewViewModel(this, services);
 		if (DataContext is MainViewViewModel viewModel)
 			viewModel.ChangePage<TimerPageViewModel>();
+		InitializeComponent();
 	}
 
 	private void TimerModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {

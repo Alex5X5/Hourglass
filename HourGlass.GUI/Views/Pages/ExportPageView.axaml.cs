@@ -3,8 +3,15 @@ namespace Hourglass.GUI.Views.Pages;
 using Avalonia.Controls;
 using Avalonia.Media;
 
+using Hourglass.GUI.ViewModels;
+
 public partial class ExportPageView : PageViewBase {
-	public ExportPageView() : base() {
+
+	public ExportPageView() : this(null, null) {
+
+	}
+
+	public ExportPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
 		InitializeComponent();
 	}
 

@@ -19,9 +19,9 @@ public class Task {
 	public Project? project { set; get; }
 	public Ticket? ticket { set; get;}
 	
-	public int displayColorRed { set; get; } = 255;
-	public int displayColorGreen { set; get; } = 255;
-	public int displayColorBlue { set; get; } = 255;
+	public byte displayColorRed { set; get; } = 255;
+	public byte displayColorGreen { set; get; } = 255;
+	public byte displayColorBlue { set; get; } = 255;
 
     [NotMapped]
 	public DateTime StartDateTime {

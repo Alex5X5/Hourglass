@@ -46,7 +46,8 @@
 						Grid.Column="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="TimerModeButton_Click">
+						Click="TimerModeButton_Click"
+						Name="TimerModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Timer" Foreground="Black" FontSize="15"/>
 					</StackPanel>
@@ -55,7 +56,8 @@
 						Grid.Column="3"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="GraphModeButton_Click">
+						Click="GraphModeButton_Click"
+						Name="GraphModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Graph" Foreground="Black" FontSize="15"/>
 					</StackPanel>
@@ -64,7 +66,8 @@
 						Grid.Column="5"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="ExportModeButton_Click">
+						Click="ExportModeButton_Click"
+						Name="ExportModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Export" Foreground="Black" FontSize="15"/>
 					</StackPanel>
@@ -73,7 +76,8 @@
 						Grid.Column="7"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="ProjectModeButton_Click">
+						Click="ProjectModeButton_Click"
+						Name="ProjecctModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Projects" Foreground="Black" FontSize="15"/>
 					</StackPanel>
@@ -84,6 +88,6 @@
 		<pages:ExportPageView Name="exportPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsExportPageVisible}"/>
 		<pages:ProjectPageView Name="projectPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsProjectPageVisible}"/>
 		<pages:GraphPageView Name="graphPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsGraphsPageVisible}"/>-->
-		<TransitioningContentControl Background="Yellow" Content="{Binding CurrentPage}" Grid.Row="2" Grid.Column="1" />
+		<ContentControl Background="Yellow" Content="{Binding CurrentPage}" Grid.Row="2" Grid.Column="1" />
 	</Grid>
 </UserControl>

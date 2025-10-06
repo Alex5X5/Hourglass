@@ -2,12 +2,19 @@ using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Hourglass.GUI.Views.Pages;
 
 public partial class GraphPageView : PageViewBase {
-	public GraphPageView() : base() {
+
+	public GraphPageView() : this(null, null) {
+
+	}
+
+	public GraphPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
 		InitializeComponent();
-		DataContext = new GraphPageViewModel();
+		DataContext = Services?.GetRequiredService<GraphPageViewModel>() ?? new GraphPageViewModel();
 		if (DataContext is GraphPageViewModel viewModel)
 			viewModel.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}

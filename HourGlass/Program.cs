@@ -21,8 +21,6 @@ public class Program {
 		PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
 
-		//IHourglassDbService dbService = new HourglassDbService();
-
 		BuildAvaloniaApp()
 			.StartWithClassicDesktopLifetime(args);
 

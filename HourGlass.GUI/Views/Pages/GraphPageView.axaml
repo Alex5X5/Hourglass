@@ -9,7 +9,8 @@
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 x:Class="Hourglass.GUI.Views.Pages.GraphPageView"
 			 x:DataType="vm:GraphPageViewModel"
-			 x:CompileBindings="True">
+			 x:CompileBindings="True"
+			 Name="parent">
 	<Design.DataContext>
 		<page-models:GraphPageViewModel />
 	</Design.DataContext>
@@ -47,6 +48,6 @@
 				<mode-buttons:MonthGraphModebutton Grid.Row="5" Grid.Column="1" Click="MonthModeButton_Click" />
 			</Grid>
 		</Panel>
-		<TransitioningContentControl Background="Yellow" Content="{Binding CurrentGraphPanel}" Grid.Row="1" Grid.Column="1" />
+		<ContentControl Background="Yellow" Content="{Binding CurrentGraphPanel}" Grid.Row="1" Grid.Column="1" />
 	</Grid>
 </UserControl>

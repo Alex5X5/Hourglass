@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
 using System;
+using Hourglass.GUI.Views;
 
 public class ViewLocator : IDataTemplate {
 	public Control Build(object? data) {
@@ -13,13 +14,22 @@ public class ViewLocator : IDataTemplate {
 			return new TextBlock { Text = "data was null" };
 		}
 
-		var name = data.GetType().FullName!.Replace("ViewModel", "View");
-		var type = Type.GetType(name);
-
-		if (type != null) {
-			return (Control)Activator.CreateInstance(type)!;
+		var viewTypeName = data.GetType().FullName!.Replace("ViewModel", "View");
+		var viewType = Type.GetType(viewTypeName);
+		var modelType = data.GetType();
+		if (viewType != null) {
+			ViewBase res;
+			if (data is ViewModelBase model) {
+				res = (ViewBase)Activator.CreateInstance(viewType, [model, model.Services])!;
+				model.owner = res;
+				return res;
+			}
+			res = (ViewBase)Activator.CreateInstance(viewType)!;
+			res.DataContext = Activator.CreateInstance(modelType);
+			res.GetType().GetField("owner")?.SetValue(res, this);
+			return res;
 		} else {
-			return new TextBlock { Text = "Not Found: " + name };
+			return new TextBlock { Text = "Not Found: " + viewTypeName };
 		}
 	}
 

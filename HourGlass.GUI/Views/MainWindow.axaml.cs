@@ -1,27 +1,21 @@
-﻿using Avalonia.Controls;
+﻿namespace Hourglass.GUI.Views;
 
-using Hourglass.Database.Services.Interfaces;
+using Avalonia.Controls;
 using Hourglass.GUI.ViewModels;
-using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.ViewModels.Pages;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Hourglass.GUI.Views;
 
 public partial class MainWindow : Window {
 
-	IHourglassDbService? _DbService;
-	public IHourglassDbService? DbService {
-		get => _DbService;
-		set {
-			_DbService ??= value;
-			if (DataContext is MainViewViewModel viewModel)
-				viewModel.DbService = value;
-		}
+	public IServiceProvider? Services { set; get; }
+
+	public MainWindow() : this(null) {
+
 	}
 
-	public MainWindow() {
+	public MainWindow(IServiceProvider? services) : base() {
+		Services = services;
+		DataContext = Services?.GetService<MainWindowViewModel>();
         InitializeComponent();
-        DataContext = new MainViewViewModel();
 	}
-
 }

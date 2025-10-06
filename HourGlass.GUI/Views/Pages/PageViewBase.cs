@@ -1,5 +1,14 @@
-﻿namespace Hourglass.GUI.Views.Pages;
+﻿using Hourglass.GUI.ViewModels;
 
-public abstract class PageViewBase : Avalonia.Controls.UserControl{
-	
+namespace Hourglass.GUI.Views.Pages;
+
+public abstract class PageViewBase : ViewBase {
+
+	public PageViewBase() {
+
+	}
+
+	public PageViewBase(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	}
+
 }

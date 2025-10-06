@@ -3,7 +3,7 @@
 using Hourglass.Util.Services;
 using System;
 
-public static class DateTimeService {
+public class DateTimeService {
 
 	public static DateTime START_DATE = GetStartDate();
 

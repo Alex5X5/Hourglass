@@ -1,11 +1,16 @@
 ﻿using Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.GUI.Views;
+using Hourglass.GUI.Views.Pages;
+using Hourglass.PDF;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using ReactiveUI;
 
 namespace Hourglass.GUI.ViewModels.Pages;
 
 public class GraphPageViewModel : PageViewModelBase {
-
+	
 	private GraphPanelViewModelBase _CurrentGraphPanel;
 	public GraphPanelViewModelBase CurrentGraphPanel {
 		get {
@@ -19,11 +24,15 @@ public class GraphPageViewModel : PageViewModelBase {
 
 	private readonly GraphPanelViewModelBase[] GraphPanels;
 
-	public GraphPageViewModel() : base() {
+	public GraphPageViewModel() : this(null, null) {
+
+	}
+
+	public GraphPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
 		GraphPanels = [
-			new DayGraphPanelViewModel() { dbService = dbService },
-			new WeekGraphPanelViewModel() { dbService = dbService },
-			new MonthGraphPanelViewModel() { dbService = dbService }
+			Services?.GetRequiredService<DayGraphPanelViewModel>() ?? new DayGraphPanelViewModel(),
+			Services?.GetRequiredService<WeekGraphPanelViewModel>() ?? new WeekGraphPanelViewModel(),
+			Services?.GetRequiredService<MonthGraphPanelViewModel>() ?? new MonthGraphPanelViewModel()
 		];
 		_CurrentGraphPanel = GraphPanels[0];
 	}

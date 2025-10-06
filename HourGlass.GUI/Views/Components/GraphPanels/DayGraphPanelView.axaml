@@ -6,5 +6,7 @@
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Components.GraphPanels"
 			 x:Class="Hourglass.GUI.Views.Components.GraphPanels.DayGraphPanelView"
 			 x:DataType="vm:DayGraphPanelViewModel"
-			 x:CompileBindings="True">
+			 x:CompileBindings="True"
+			 Tapped="OnClick"
+			 DoubleTapped="OnDoubleClick">
 </UserControl>
