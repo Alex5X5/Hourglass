@@ -5,7 +5,7 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:page-models="using:Hourglass.GUI.ViewModels.Pages"
 			 xmlns:panels="using:Hourglass.GUI.Views.Components.GraphPanels"
-			 xmlns:mode-buttons="using:Hourglass.GUI.Views.Components.GraphModeButtons"
+			 xmlns:mode-button-icons="using:Hourglass.GUI.Views.Components.GraphModeButtons"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 x:Class="Hourglass.GUI.Views.Pages.GraphPageView"
 			 x:DataType="vm:GraphPageViewModel"
@@ -60,27 +60,36 @@
 				<Button Background="#D9D9D9"
 						BorderBrush="#C5C5C5"
 						BorderThickness="3"
-						HorizontalAlignment="Stretch"
 						Grid.Row="1"
 						Grid.Column="1"
 						Click="DayModeButton_Click"
-						VerticalAlignment="Stretch" />
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0">
+					<mode-button-icons:DayGraphModeButtonIcon HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				</Button>
 				<Button Background="#D9D9D9"
 						BorderBrush="#C5C5C5"
 						BorderThickness="3"
-						HorizontalAlignment="Stretch"
 						Grid.Row="3"
 						Grid.Column="1"
 						Click="WeekModeButton_Click"
-						VerticalAlignment="Stretch" />
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0">
+					<mode-button-icons:WeekGraphModeButtonIcon HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				</Button>
 				<Button Background="#D9D9D9"
 						BorderBrush="#C5C5C5"
 						BorderThickness="3"
-						HorizontalAlignment="Stretch"
 						Grid.Row="5"
 						Grid.Column="1"
 						Click="MonthModeButton_Click"
-						VerticalAlignment="Stretch" />
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						Padding="0,0,0,0">
+					<mode-button-icons:MonthGraphModeButtonIcon HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				</Button>
 			</Grid>
 		</Panel>
 		<Border Grid.Row="1"
