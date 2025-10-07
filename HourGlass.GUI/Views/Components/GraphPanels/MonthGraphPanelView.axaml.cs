@@ -82,22 +82,21 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 			double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
-		}
-		for (int i = 0; i < daysInCurrentMonth; i++) {
-			double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
-			var formattedText = new FormattedText(
-				Convert.ToString(i+1),
-				System.Globalization.CultureInfo.CurrentCulture,
-				FlowDirection.LeftToRight,
-				new Typeface("Arial"),
-				13,
-				textBrush
-			);
-			Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
-			context.DrawText(
-				formattedText,
-				textPos
-			);
+			if (i < daysInCurrentMonth) {
+				var formattedText = new FormattedText(
+					Convert.ToString(i+1),
+					System.Globalization.CultureInfo.CurrentCulture,
+					FlowDirection.LeftToRight,
+					new Typeface("Arial"),
+					13,
+					textBrush
+				);
+				Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
+				context.DrawText(
+					formattedText,
+					textPos
+				);
+			}
 		}
 	}
 
