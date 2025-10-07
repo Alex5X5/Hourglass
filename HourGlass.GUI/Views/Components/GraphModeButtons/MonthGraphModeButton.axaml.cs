@@ -1,6 +1,5 @@
+using Avalonia.Interactivity;
 using Avalonia.Media;
-
-using Hourglass.GUI.ViewModels.Pages;
 
 namespace Hourglass.GUI.Views.Components.GraphModeButtons;
 

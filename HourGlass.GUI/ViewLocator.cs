@@ -18,6 +18,8 @@ public class ViewLocator : IDataTemplate {
 		var viewType = Type.GetType(viewTypeName);
 		var modelType = data.GetType();
 		if (viewType != null) {
+			if (!modelType.IsSubclassOf(typeof(ViewModelBase)))
+				return new TextBlock { Text = $"{modelType.Name} is not a view model type"};
 			ViewBase res;
 			if (data is ViewModelBase model) {
 				res = (ViewBase)Activator.CreateInstance(viewType, [model, model.Services])!;

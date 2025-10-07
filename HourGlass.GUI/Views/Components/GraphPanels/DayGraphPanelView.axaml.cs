@@ -43,7 +43,6 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		//using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue));
-		//g.FillPath(brush, path);
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
@@ -52,7 +51,6 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		var rect = new Rect(100, 100, 50, 20);
 		context.DrawRectangle(Background, null, rect);
 		string text = "day graph panel string";
-		// Create formatted text
 		var formattedText = new FormattedText(
 			text,
 			System.Globalization.CultureInfo.CurrentCulture,
@@ -66,7 +64,6 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		var x = (Bounds.Width - formattedText.Width) / 2;
 		var y = (Bounds.Height - formattedText.Height) / 2;
 
-		// Draw the text
 		context.DrawText(formattedText, new Point(100,100));
 	}
 

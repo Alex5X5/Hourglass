@@ -42,6 +42,7 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue));
 		//g.FillPath(brush, path);
+		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
 

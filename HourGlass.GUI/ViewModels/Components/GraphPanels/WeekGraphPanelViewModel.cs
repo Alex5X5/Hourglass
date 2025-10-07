@@ -18,8 +18,8 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksAsync() : [];
-	
+		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(dateTimeService.SelectedDay) : [];
+
 	public override void OnClick(object? sender, TappedEventArgs e) {
 		Console.WriteLine("Week graph panel click");
 	}

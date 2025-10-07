@@ -14,9 +14,9 @@ public partial class GraphPageView : PageViewBase {
 
 	public GraphPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
 		InitializeComponent();
-		DataContext = Services?.GetRequiredService<GraphPageViewModel>() ?? new GraphPageViewModel();
-		if (DataContext is GraphPageViewModel viewModel)
-			viewModel.ChangeGraphPanel<DayGraphPanelViewModel>();
+		DataContext = new GraphPageViewModel(this, services);
+		if (DataContext is GraphPageViewModel model_)
+			model_.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}
 
 	private void DayModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {

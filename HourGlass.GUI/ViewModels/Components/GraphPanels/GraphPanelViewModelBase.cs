@@ -2,25 +2,35 @@
 
 using Avalonia.Input;
 
+using Hourglass.Database.Services;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.Views;
 using Hourglass.GUI.Views.Components.GraphPanels;
+using Hourglass.Util;
 
 public abstract class GraphPanelViewModelBase : ViewModelBase {
 
-	protected IHourglassDbService? dbService;
-	protected GraphPageViewModel parent;
+	public GraphPageViewModel? parent;
+	public DateTimeService? dateTimeService;
+	public IHourglassDbService? dbService;
 
 	public GraphPanelViewModelBase() : this(null, null) {
 
 	}
 
 	public GraphPanelViewModelBase(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+		dbService = (IHourglassDbService?)Services?.GetService(typeof(HourglassDbService));
+		dateTimeService = (DateTimeService?)services?.GetService(typeof(DateTimeService));
+	}
+
+	public override void OnFinishedRegisteringViews(List<ViewBase> views, IServiceProvider? services) {
+		base.OnFinishedRegisteringViews(views, services);
+		//dbService = (HourglassDbService?)services?.GetService(typeof(HourglassDbService));
 	}
 
 	public async virtual Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksAsync() : [];
+		await dbService.QueryTasksAsync() ?? [];
 
 	public abstract void OnClick(object? sender, TappedEventArgs e);
 	public abstract void OnDoubleClick(object? sender, TappedEventArgs e);
@@ -28,7 +38,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	public async void OnClickBase(Avalonia.Point mousePos, int xAxisSegmentCount, int xAxisSegmentDuration) {
 		Console.WriteLine("base graph panel click");
 		List<Database.Models.Task>? tasks = await GetTasksAsync();
-		if ((object?)owner is GraphPanelViewBase view) {
+		if (owner is GraphPanelViewBase view) {
 			bool taskClicked = false;
 			int i = 0;
 			foreach (Database.Models.Task task in tasks) {

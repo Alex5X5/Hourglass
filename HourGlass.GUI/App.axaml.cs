@@ -1,6 +1,9 @@
 ﻿namespace Hourglass.GUI;
 
+using Avalonia.Metadata;
+
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
@@ -14,6 +17,8 @@ using Hourglass.Util.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 
+
+
 public partial class App : Application {
 
 	public override void Initialize() {
@@ -21,12 +26,14 @@ public partial class App : Application {
 	}
 
 	public override void OnFrameworkInitializationCompleted() {
-		IServiceCollection collection = new ServiceCollection();
-		collection.AddCommonServices();
-		collection.AddViewModels();
-		IServiceProvider services = collection.BuildServiceProvider();
+		IServiceCollection commonServiceCollection = new ServiceCollection();
+		commonServiceCollection.AddCommonServices();
+		IServiceProvider commonServices = commonServiceCollection.BuildServiceProvider();
+		IServiceCollection viewCollection = new ServiceCollection();
+		viewCollection.AddViewModels();
+		IServiceProvider services = viewCollection.BuildServiceProvider();
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
-			desktop.MainWindow = new MainWindow(services);
+			desktop.MainWindow = new MainWindow(commonServices);
 		} else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform) {
 			singleViewPlatform.MainView = new MainView();
 		}
@@ -37,19 +44,26 @@ public partial class App : Application {
 public static class ServiceCollectionExtensions {
 	
 	public static void AddCommonServices(this IServiceCollection collection) {
-		if (!Avalonia.Controls.Design.IsDesignMode)
-			collection.AddSingleton(new HourglassDbService());
-		collection.AddSingleton(new DateTimeService());
-		collection.AddSingleton(new SettingsService());
+		SettingsService settingsService = new();
+		collection.AddSingleton(settingsService);
+		DateTimeService	dateTimeService = new();
+		collection.AddSingleton(dateTimeService);
+		if (!Design.IsDesignMode) {
+			HourglassDbService dbService = new(dateTimeService);
+			collection.AddSingleton(dbService);
+		}
 	}
 	
 	public static void AddViewModels(this IServiceCollection collection) {
-		collection.AddTransient(serviceProvider =>
-			new MainWindowViewModel(serviceProvider.GetService<MainWindow>(), serviceProvider)
+		collection.AddTransient(
+			serviceProvider => {
+				Window window = serviceProvider.GetService<MainWindow>();
+				return new MainWindowViewModel(window, serviceProvider);
+			}
 		);
 
 		collection.AddTransient(serviceProvider =>
-			new MainViewViewModel(serviceProvider.GetService<MainView>(), serviceProvider)
+			new MainViewModel(serviceProvider.GetService<MainView>(), serviceProvider)
 		);
 
 		collection.AddTransient(serviceProvider =>

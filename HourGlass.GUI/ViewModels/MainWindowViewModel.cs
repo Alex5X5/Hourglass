@@ -10,7 +10,10 @@ using System;
 
 public class MainWindowViewModel : ReactiveObject {
 
-	public IServiceProvider? Services { set; get; }
+	public IServiceProvider? Services {
+		set;
+		get;
+	}
 	public Window? owner;
 
 	public MainWindowViewModel() : this(null, null) {

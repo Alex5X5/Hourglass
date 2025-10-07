@@ -7,6 +7,14 @@ public class DateTimeService {
 
 	public static DateTime START_DATE = GetStartDate();
 
+	private long SelectedDayStartSeconds = FloorDay(DateTime.Today).Ticks / TimeSpan.TicksPerSecond;
+
+	public DateTime SelectedDay {
+		set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
+		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
+	}
+
+
 	static DateTimeService() {
 		SettingsService.OnSettingsReload += 
 			() => START_DATE = GetStartDate();
@@ -20,9 +28,7 @@ public class DateTimeService {
 
 	public static DateTime FloorMonth(DateTime date) =>
 			new(date.Year, date.Month, 1);
-
-
-
+	
 	private static DateTime GetStartDate() {
 		try {
 			var val = Convert.ToDateTime(SettingsService.GetSetting(SettingsService.START_DATE_KEY));

@@ -48,7 +48,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	protected Avalonia.Rect GetTaskRectanlgeBase(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, double additionalWidth, double additionalHeight, double minimalWidth, int i, int columns) {
 		double xAxisSegmentSize = (Bounds.Width - 2.0 * PADDING_X) / xAxisSegmentCount;
-		double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (yAxisSegmentCount + 1.0);
+		double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (yAxisSegmentCount * 1.5);
 		double proportion = xAxisSegmentSize / xAxisSegmentDuration;
 		double graphPosX = (task.start - originSecond) * proportion + PADDING_X;
 		long duration = task.finish - task.start;
@@ -71,24 +71,8 @@ public abstract class GraphPanelViewBase : ViewBase {
 			return;
 		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
 
-		context.FillRectangle(brush, new Avalonia.Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height));
+		context.FillRectangle(brush, Bounds);
 		DrawTimeline(context);
-		//DrawTaskDescriptionStub(context, new() {description="blablabla"}, 100, 100, 300);
-
-		//if (image.Width != Width | image.Height != Height) {
-		//	image.Dispose();
-		//	image = new Bitmap((int)Width, (int)Height, PixelFormat.Format32bppArgb);
-		//}
-		//using (Graphics g = Graphics.FromImage(image)) {
-		//	g.SmoothingMode = SmoothingMode.AntiAlias;
-		//	g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-		//	g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-		//	g.CompositingMode = CompositingMode.SourceOver;
-
-		//	g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-		//	g.SmoothingMode = SmoothingMode.HighQuality;
-		//	//g.Clear(Color.Gainsboro);
 		List<Database.Models.Task> tasks = [];
 		if(DataContext is GraphPanelViewModelBase model)
 			tasks = await model.GetTasksAsync();
@@ -98,9 +82,6 @@ public abstract class GraphPanelViewBase : ViewBase {
 				DrawTaskGraph(context, tasks[i], i);
 			}
 		}
-		//}
-		//args.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-		//args.Graphics.DrawImage(image, 0, 0, Width, Height);
 	}
 
 	public void OnClick(object? sender, TappedEventArgs e) {

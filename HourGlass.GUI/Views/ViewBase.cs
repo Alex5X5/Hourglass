@@ -2,9 +2,10 @@
 
 using Hourglass.GUI.ViewModels;
 
-public class ViewBase : Avalonia.Controls.UserControl {
+public abstract class ViewBase : Avalonia.Controls.UserControl {
 
 	public IServiceProvider? Services { set; get; }
+	public IServiceProvider? Views { set; get; }
 
 	public ViewBase() {
 		
@@ -15,4 +16,15 @@ public class ViewBase : Avalonia.Controls.UserControl {
 		Services = services;
 		DataContext = model;
 	}
+
+	public virtual void OnRegisteringViews(List<ViewBase> views) {
+		views.Add(this);
+	}
+
+	public virtual void OnFinishedRegisteringViews(List<ViewBase> views, IServiceProvider services) {
+		if (DataContext is ViewModelBase model)
+			model.OnFinishedRegisteringViews(views, services);
+	}
+
+	//public abstract void CollectViews(IServiceCollection views);
 }

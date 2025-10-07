@@ -2,13 +2,13 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels"
 			 xmlns:pages="using:Hourglass.GUI.Views.Pages"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="Hourglass.GUI.Views.MainView"
-			 x:DataType="vm:MainViewViewModel">
+			 x:DataType="vm:MainViewModel">
 	<Design.DataContext>
-		<vm:MainViewViewModel />
+		<vm:MainViewModel />
 	</Design.DataContext>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -22,9 +22,8 @@
 		</Grid.ColumnDefinitions>
 		<!--<Rectangle Fill="#ABABAB" Grid.Column="1" Grid.Row="2" />-->
 		<Rectangle Fill="#DF4807" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" />
-		<Panel Background="#D9D9D9" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2">
-		</Panel>
-		<Panel Background="#BABABA" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+		<Panel Background="#D9D9D9" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
+		<Panel Background="#BABABA" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
@@ -46,7 +45,7 @@
 						Grid.Column="1"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="TimerModeButton_Click"
+						Command="{Binding GoToTimerCommand}"
 						Name="TimerModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Timer" Foreground="Black" FontSize="15"/>
@@ -56,7 +55,7 @@
 						Grid.Column="3"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="GraphModeButton_Click"
+						Command="{Binding GoToGraphsCommand}"
 						Name="GraphModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Graph" Foreground="Black" FontSize="15"/>
@@ -66,7 +65,7 @@
 						Grid.Column="5"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="ExportModeButton_Click"
+						Command="{Binding GoToExportCommand}"
 						Name="ExportModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Export" Foreground="Black" FontSize="15"/>
@@ -76,7 +75,7 @@
 						Grid.Column="7"
 						HorizontalAlignment="Stretch"
 						VerticalAlignment="Stretch"
-						Click="ProjectModeButton_Click"
+						Command="{Binding GoToProjectCommand}"
 						Name="ProjecctModeButton">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="Projects" Foreground="Black" FontSize="15"/>
@@ -84,10 +83,6 @@
 				</Button>
 			</Grid>
 		</Panel>
-		<!--<pages:TimerPageView Name="timerPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsTimerPageVisible}"/>
-		<pages:ExportPageView Name="exportPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsExportPageVisible}"/>
-		<pages:ProjectPageView Name="projectPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsProjectPageVisible}"/>
-		<pages:GraphPageView Name="graphPage" Grid.Column="1" Grid.Row="2" IsVisible="{Binding IsGraphsPageVisible}"/>-->
-		<ContentControl Background="Yellow" Content="{Binding CurrentPage}" Grid.Row="2" Grid.Column="1" />
+		<ContentControl Background="White" Content="{Binding CurrentPage}" Grid.Row="2" Grid.Column="1" />
 	</Grid>
 </UserControl>

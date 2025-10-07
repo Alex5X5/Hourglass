@@ -13,10 +13,14 @@ using System.Threading.Tasks;
 
 public class HourglassDbService : IHourglassDbService {
 
+	private readonly DateTimeService dateTimeService;
+
 	DatabaseAccessor<HourglassDbContext> _accessor = 
 		new(PathService.FilesPath("database"), DatabasePathFormat.FileName, null);
 
-	public HourglassDbService() { }
+	public HourglassDbService(DateTimeService dateTimeService) {
+		this.dateTimeService = dateTimeService;
+	}
 
 	public async Task<List<Ticket>> QueryTicketsAsync()=>
 		await _accessor.QueryAllAsync<Ticket>();

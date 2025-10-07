@@ -1,17 +1,15 @@
-using Avalonia.Media;
-
-using Hourglass.GUI.ViewModels.Pages;
-
 namespace Hourglass.GUI.Views.Components.GraphModeButtons;
 
-public partial class DayGraphModebutton : Avalonia.Controls.Button{
+using Avalonia.Media;
+
+public partial class DayGraphModebutton : Avalonia.Controls.Button {
 	public DayGraphModebutton() : base() {
 		InitializeComponent();
 	}
 
 	public override void Render(DrawingContext context) {
 		base.Render(context);
-		string text = "day";
+		string text = "month";
 		// Create formatted text
 		var formattedText = new FormattedText(
 			text,
