@@ -1,3 +1,5 @@
+using Avalonia.Interactivity;
+
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
 
@@ -10,6 +12,10 @@ public partial class TimerPageView : PageViewBase {
 	}
 
 	public TimerPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
-		InitializeComponent();
+		InitializeComponent(); 
+	}
+
+	public void StartButton_Click(object? sender, RoutedEventArgs args) {
+		
 	}
 }

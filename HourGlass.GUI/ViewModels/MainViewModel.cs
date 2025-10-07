@@ -2,6 +2,8 @@
 
 using CommunityToolkit.Mvvm.Input;
 
+using Hourglass.Database.Services;
+using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.Views;
 using Hourglass.GUI.Views.Pages;
@@ -12,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 
 public partial class MainViewModel : ViewModelBase {
+
+	private IHourglassDbService dbService;
 
 	public DateTime SelectedDay {
 		set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
@@ -37,6 +41,8 @@ public partial class MainViewModel : ViewModelBase {
 	}
 
 	public MainViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+		dbService = (IHourglassDbService)services?.GetService(typeof(HourglassDbService));
+		Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
 		Pages = 
 		//[
 		//	Services?.GetRequiredService<TimerPageViewModel>() ?? new TimerPageViewModel(),
@@ -45,10 +51,10 @@ public partial class MainViewModel : ViewModelBase {
 		//	Services?.GetRequiredService<ExportPageViewModel>() ?? new ExportPageViewModel()
 		//];
 		[
-			new TimerPageViewModel(Services?.GetService<TimerPageView>(), services),
-			new GraphPageViewModel(Services?.GetService<GraphPageView>(), services),
-			new ProjectPageViewModel(Services?.GetService<ProjectPageView>(), services),
-			new ExportPageViewModel(Services?.GetService<ExportPageView>(), services)
+			new TimerPageViewModel(Services?.GetService<TimerPageView>(), services) { RunningTask = task },
+			new GraphPageViewModel(Services?.GetService<GraphPageView>(), services) { RunningTask = task },
+			new ProjectPageViewModel(Services?.GetService<ProjectPageView>(), services) { RunningTask = task },
+			new ExportPageViewModel(Services?.GetService<ExportPageView>(), services) { RunningTask = task }
 		];
 		_CurrentPage = Pages[0];
 
