@@ -62,12 +62,6 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 		context.DrawText(formattedText, new Point(100, 100));
 	}
 
-	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
-		Console.WriteLine("MonthGraphPanel draw task graph");
-		long thisMonthSeconds = DateTimeService.ToSeconds(DateTimeService.FloorMonth((DataContext as MonthGraphPanelViewModel)?.dateTimeService?.SelectedDay ?? DateTime.Now));
-		DrawTaskGraphBase(context, task, i, thisMonthSeconds);
-	}
-
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
@@ -96,20 +90,6 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 			}
 		}
 	}
-
-	public override Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i) =>
-		GetTaskRectanlgeBase(
-			task,
-			TimeSpan.SecondsPerDay,
-			DateTimeService.ToSeconds(DateTimeService.FloorMonth((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now)),
-			DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month),
-			MAX_TASKS,
-			additionalWidth,
-			additionalHeght,
-			GRAPH_MINIMAL_WIDTH,
-			i,
-			1
-		);
 
 	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
 		if (DataContext is GraphPanelViewModelBase model) {

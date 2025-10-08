@@ -37,18 +37,7 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 	public DayGraphPanelView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
 		InitializeComponent();
 	}
-
-	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
-		Console.WriteLine("DayGraphPanel draw task graph");
-		long todaySeconds = DateTimeService.FloorDay(DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
-		Rect rect = GetTaskRectanlgeBase(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
-		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, 0));
-		context.FillRectangle(brush, rect);
-		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
-	}
-
+	
 	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
 		var rect = new Rect(100, 100, 50, 20);
 		context.DrawRectangle(Background, null, rect);
@@ -94,20 +83,6 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 			);
 		}
 	}
-
-	public override Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i) =>
-		GetTaskRectanlgeBase(
-			task,
-			TimeSpan.SecondsPerHour,
-			DateTimeService.ToSeconds(DateTimeService.FloorDay((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now)),
-			24,
-			MAX_TASKS,
-			additionalWidth,
-			additionalHeght,
-			GRAPH_MINIMAL_WIDTH,
-			i,
-			1
-		);
 	
 	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
 		if (DataContext is GraphPanelViewModelBase model) {

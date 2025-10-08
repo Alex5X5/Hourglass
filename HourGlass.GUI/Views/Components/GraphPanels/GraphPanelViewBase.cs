@@ -50,20 +50,16 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	protected abstract void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength);
 
-	protected abstract void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i);
-
-	public abstract Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i);
-
 	public abstract void OnDoubleClick(object? sender, TappedEventArgs e);
 
-	protected Rect GetTaskRectanlgeBase(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, double additionalWidth, double additionalHeight, double minimalWidth, int i, int columns) {
-		double xAxisSegmentSize = (Bounds.Width - 2.0 * PADDING_X) / xAxisSegmentCount;
-		double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (yAxisSegmentCount * 1.5);
-		double proportion = xAxisSegmentSize / xAxisSegmentDuration;
-		double graphPosX = (task.start - originSecond) * proportion + PADDING_X;
+	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
+		double xAxisSegmentSize = (Bounds.Width - 2.0 * PADDING_X) / X_AXIS_SEGMENT_COUNT;
+		double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5);
+		double proportion = xAxisSegmentSize / X_AXIS_SEGMENT_DURATION;
+		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
 		long duration = task.finish - task.start;
 		double graphLength = duration * proportion;
-		double width = graphLength > minimalWidth ? graphLength : minimalWidth + additionalWidth * 2;
+		double width = graphLength > GRAPH_MINIMAL_WIDTH ? graphLength : GRAPH_MINIMAL_WIDTH + additionalWidth * 2;
 		Rect res = new(
 			graphPosX - additionalWidth,
 			yAxisSegmentSize * i * 1.5 - additionalHeight + PADDING_Y,
@@ -73,12 +69,12 @@ public abstract class GraphPanelViewBase : ViewBase {
 		return res;
 	}
 
-	protected void DrawTaskGraphBase(DrawingContext context, Database.Models.Task task, int i, long originSecond) {
+	private void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
 		Rect rect = GetTaskRectanlge(task, 0, 0, i);
-		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
-		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, 0));
+		//Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		//Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		////Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
+		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, 0, task.displayColorBlue));
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}

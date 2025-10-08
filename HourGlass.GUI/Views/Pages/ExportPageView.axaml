@@ -10,5 +10,16 @@
 	<Design.DataContext>
 		<vm:ExportPageViewModel />
 	</Design.DataContext>
-	<Rectangle Fill="#00BB00" />
+	<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+		<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+					  VerticalScrollBarVisibility="Visible"
+					  Grid.Column="1"
+					  Grid.Row="1">
+			<Viewbox Stretch="Uniform">				
+				<Grid Width="17" Height="12" Background="Beige">
+					
+				</Grid>
+			</Viewbox>
+		</ScrollViewer>
+	</Grid>
 </UserControl>

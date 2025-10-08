@@ -38,17 +38,6 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 		InitializeComponent();
 	}
 
-	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
-		Console.WriteLine("WeekGraphPanel draw task graph");
-		long todaySeconds = DateTimeService.FloorDay(DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
-		Rect rect = GetTaskRectanlge(task, 0, 0, i);
-		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, 0));
-		context.FillRectangle(brush, rect);
-		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
-	}
-
 	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
 	}
 
@@ -80,21 +69,6 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 			}
 		}
 	}
-
-	public override Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i) =>
-		GetTaskRectanlgeBase(
-			task,
-			TimeSpan.SecondsPerDay,
-			DateTimeService.ToSeconds(DateTimeService.FloorWeek((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now)),
-			7,
-			MAX_TASKS,
-			additionalWidth,
-			additionalHeght,
-			GRAPH_MINIMAL_WIDTH,
-			i,
-			1
-		);
-
 
 	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
 		if (DataContext is GraphPanelViewModelBase model) {
