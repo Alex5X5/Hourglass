@@ -5,8 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Services;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Views;
-using Hourglass.PDF;
-using Hourglass.Util;
 
 using System.ComponentModel;
 

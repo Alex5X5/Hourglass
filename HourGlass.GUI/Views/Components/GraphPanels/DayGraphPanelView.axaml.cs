@@ -15,15 +15,15 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 
 	public override int TASK_GRAPH_COLUMN_COUNT => throw new NotImplementedException();
 
-	public override int MAX_TASKS => 1000;
+	public override int MAX_TASKS => 5;
 
-	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => throw new NotImplementedException();
+	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 5;
 
-	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => throw new NotImplementedException();
+	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 2;
 
-	public override int GRAPH_MINIMAL_WIDTH => throw new NotImplementedException();
+	public override int GRAPH_MINIMAL_WIDTH => 8;
 
-	public override int GRAPH_CORNER_RADIUS => throw new NotImplementedException();
+	public override int GRAPH_CORNER_RADIUS => 12;
 
 	public DayGraphPanelView() : this(null, null) {
 
@@ -42,7 +42,7 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
-		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue));
+		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, 0));
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
@@ -77,21 +77,19 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 			double xPos = (Bounds.Width - 2 * PADDING_X) * i / 24 + PADDING_X;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
-			if (i < 24) {
-				var formattedText = new FormattedText(
-					Convert.ToString(i + 1) + ":00",
-					System.Globalization.CultureInfo.CurrentCulture,
-					FlowDirection.LeftToRight,
-					new Typeface("Arial"),
-					11,
-					textBrush
-				);
-				Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
-				context.DrawText(
-					formattedText,
-					textPos
-				);
-			}
+			var formattedText = new FormattedText(
+				Convert.ToString(i) + ":00",
+				System.Globalization.CultureInfo.CurrentCulture,
+				FlowDirection.LeftToRight,
+				new Typeface("Arial"),
+				11,
+				textBrush
+			);
+			Point textPos = new(xPos - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
+			context.DrawText(
+				formattedText,
+				textPos
+			);
 		}
 	}
 

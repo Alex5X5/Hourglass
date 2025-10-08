@@ -22,8 +22,8 @@
 		</Grid.ColumnDefinitions>
 		<!--<Rectangle Fill="#ABABAB" Grid.Column="1" Grid.Row="2" />-->
 		<Rectangle Fill="#DF4807" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" />
-		<Panel Background="#D9D9D9" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
-		<Panel Background="#BABABA" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" >
+		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
+		<Panel Background="{ StaticResource SrhGray }" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />

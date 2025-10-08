@@ -3,8 +3,6 @@ namespace Hourglass.GUI.Views.Components.GraphPanels;
 using Avalonia;
 using Avalonia.Media;
 
-using Hourglass.Database.Models;
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
@@ -13,9 +11,9 @@ using Point = Avalonia.Point;
 
 public partial class MonthGraphPanelView : GraphPanelViewBase {
 
-	public override int TASK_GRAPH_COLUMN_COUNT => 4;
+	public override int TASK_GRAPH_COLUMN_COUNT => 2;
 
-	public override int MAX_TASKS => 2;
+	public override int MAX_TASKS => 30;
 
 	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 6;
 
@@ -59,14 +57,11 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
 		Console.WriteLine("DayGraphPanel draw task graph");
 		long todaySeconds = DateTimeService.FloorMonth((DataContext as MonthGraphPanelViewModel)?.dateTimeService?.SelectedDay ?? DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
-		//long todaySeconds = nowSeconds - nowSeconds % TimeSpan.SecondsPerDay;
 		Rect rect = GetTaskRectanlgeBase(task, TimeSpan.SecondsPerDay, todaySeconds, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month), MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		//using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		Brush brush = new SolidColorBrush(Color.FromArgb(255, 10, task.displayColorGreen, task.displayColorBlue));
-		//g.FillPath(brush, path);
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}

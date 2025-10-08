@@ -7,7 +7,16 @@
 	<Application.DataTemplates>
 		<locator:ViewLocator/>
 	</Application.DataTemplates>
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="/Styles/GlobalColors.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
+
 	<Application.Styles>
+		<StyleInclude Source="/Styles/Buttons.axaml" />
 		<FluentTheme />
 	</Application.Styles>
 </Application>

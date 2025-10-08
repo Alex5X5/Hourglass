@@ -11,17 +11,18 @@ using Point = Avalonia.Point;
 
 public partial class WeekGraphPanelView : GraphPanelViewBase {
 
-	public override int TASK_GRAPH_COLUMN_COUNT => throw new NotImplementedException();
+	public override int MAX_TASKS => 20;
 
-	public override int MAX_TASKS => 1000;
+	public override int TASK_GRAPH_COLUMN_COUNT => 8;
 
-	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => throw new NotImplementedException();
 
-	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => throw new NotImplementedException();
+	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 8;
 
-	public override int GRAPH_MINIMAL_WIDTH => throw new NotImplementedException();
+	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 5;
 
-	public override int GRAPH_CORNER_RADIUS => throw new NotImplementedException();
+	public override int GRAPH_MINIMAL_WIDTH => 5;
+
+	public override int GRAPH_CORNER_RADIUS => 5;
 
 	public WeekGraphPanelView() : this(null, null) {
 
@@ -34,39 +35,15 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
 		Console.WriteLine("DayGraphPanel draw task graph");
 		long todaySeconds = DateTimeService.FloorDay(DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
-		//long todaySeconds = nowSeconds - nowSeconds % TimeSpan.SecondsPerDay;
 		Rect rect = GetTaskRectanlgeBase(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		//using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);
-		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue));
-		//g.FillPath(brush, path);
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
 
 	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
-		// Draw rectangle background
-		var rect = new Rect(100, 100, 50, 20);
-		context.DrawRectangle(Background, null, rect);
-		string text = "week graph panel string";
-		// Create formatted text
-		var formattedText = new FormattedText(
-			text,
-			System.Globalization.CultureInfo.CurrentCulture,
-			FlowDirection.LeftToRight,
-			new Typeface("Arial"),
-			16, // Font size
-			new SolidColorBrush(Colors.Gray)
-		);
-
-		// Center the text
-		var x = (Bounds.Width - formattedText.Width) / 2;
-		var y = (Bounds.Height - formattedText.Height) / 2;
-
-		// Draw the text
-		context.DrawText(formattedText, new Point(100,100));
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {

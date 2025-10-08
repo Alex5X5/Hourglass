@@ -16,7 +16,7 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 	}
 
 
-	public async override Task<List<Database.Models.Task>> GetTasksAsync()=>
+	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService.SelectedDay) : [];
 
 	public override void OnClick(object? sender, TappedEventArgs e) {
