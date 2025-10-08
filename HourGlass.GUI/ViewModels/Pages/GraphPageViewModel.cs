@@ -14,9 +14,7 @@ public class GraphPageViewModel : PageViewModelBase {
 	
 	private GraphPanelViewModelBase _CurrentGraphPanel;
 	public GraphPanelViewModelBase CurrentGraphPanel {
-		get {
-			return _CurrentGraphPanel;
-		}
+		get => _CurrentGraphPanel;
 		private set {
 			Console.WriteLine($"settin current page to {value.GetType().Name}");
 			this.RaiseAndSetIfChanged(ref _CurrentGraphPanel, value);

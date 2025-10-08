@@ -12,8 +12,7 @@
 		<Setter Property="FontSize" Value="13" />
 	</Style>
 	<Style Selector="TextBlock.FieldDescriptor">
-		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="Foreground" Value="Blue" />
 		<Setter Property="Padding" Value="10,0,0,0" />
-		<Setter Property="FontSize" Value="13" />
 	</Style>
 </Styles>

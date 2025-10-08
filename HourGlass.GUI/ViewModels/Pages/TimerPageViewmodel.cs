@@ -2,21 +2,32 @@
 
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.Database.Services;
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Views;
 
+using ReactiveUI;
+
 using System.ComponentModel;
+using System.Reactive;
 
 public partial class TimerPageViewModel : PageViewModelBase {
 
-	private IHourglassDbService dbService;
-	
-	public string DescriptionString {
-		set; get;
-	}
+	public string DescriptionTextboxText { set; get; } = "description ...";
+	public string ProjectTextboxText { set; get; } = "a project";
+	public string TicketTextboxText { set; get; } = "a ticket";
+	public string StartTextboxText { set; get; } = "started at";
+	public string FinishTextboxText { set; get; } = "finished at";
+
+	private bool descriptionTextboxEdited = false;
+
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
+
+	public TimerPageViewModel() : this(null, null) {
+
+	}
+
+	public TimerPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	}
 
 	protected virtual void OnPropertyChanged(string propertyName) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -28,7 +39,7 @@ public partial class TimerPageViewModel : PageViewModelBase {
 		IEnumerable<Database.Models.Project> projects = await dbService.QueryProjectsAsync();
 		Database.Models.Project? project = projects.FirstOrDefault(x => x.Name == "");
 		RunningTask = await dbService.StartNewTaskAsnc(
-			DescriptionString,
+			DescriptionTextboxText,
 			project,
 			new Database.Models.Worker { name = "new user" },
 			null
@@ -44,6 +55,9 @@ public partial class TimerPageViewModel : PageViewModelBase {
 		//StartButton.Disable();
 	}
 
+	public ReactiveCommand<Unit, Unit> GotFocusCommand { get; }
+		= ReactiveCommand.Create(() => { });
+
 	[RelayCommand]
 	private void StopTask() {
 		Console.WriteLine("stopping ccurrent task!");
@@ -54,15 +68,12 @@ public partial class TimerPageViewModel : PageViewModelBase {
 		Console.WriteLine("restarting task!");
 	}
 
-	public TimerPageViewModel() : this(null, null) {
-
+	[RelayCommand]
+	private void OnFocus() {
+		Console.WriteLine("restarting task!");
 	}
 
-	public TimerPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
-		DescriptionString = "Description ...";
-		dbService = (IHourglassDbService)services?.GetService(typeof(HourglassDbService))!;
-		Console.WriteLine(this.RunningTask);
-	}
+
 
 
 }
