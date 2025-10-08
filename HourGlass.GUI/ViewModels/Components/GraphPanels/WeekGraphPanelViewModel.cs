@@ -1,30 +1,29 @@
-using Avalonia.Input;
+namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.Views;
-using Hourglass.GUI.Views.Components.GraphPanels;
-
-namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.Util;
 
 public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
-	public WeekGraphPanelViewModel() : this(null, null) {
-
+	public WeekGraphPanelViewModel() : this(null, null, null) {
+		
 	}
 
-	public WeekGraphPanelViewModel(ViewBase? model, IServiceProvider? services) : base(model, services) {
+	public WeekGraphPanelViewModel(GraphPageViewModel? controller, ViewBase? model, IServiceProvider? services) : base(controller, model, services) {
 
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(dateTimeService.SelectedDay) : [];
 
-	public override void OnClick(object? sender, TappedEventArgs e) {
-		Console.WriteLine("Week graph panel click");
+	public override void OnClick(Database.Models.Task task) {
+		Console.WriteLine("week graph panel model click");
 	}
 
-	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
-		Console.WriteLine("Week graph panel double click");
+	public override void OnDoubleClick(DateTime clickedTime) {
+		Console.WriteLine("week graph panel model double click");
+		dateTimeService.SelectedDay = DateTimeService.FloorDay(clickedTime);
+		controller.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}
 }

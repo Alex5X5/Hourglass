@@ -59,7 +59,7 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	}
 
 	public TimerPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
-		DescriptionString = "test";
+		DescriptionString = "Description ...";
 		dbService = (IHourglassDbService)services?.GetService(typeof(HourglassDbService))!;
 		Console.WriteLine(this.RunningTask);
 	}

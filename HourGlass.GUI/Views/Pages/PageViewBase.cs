@@ -4,6 +4,8 @@ namespace Hourglass.GUI.Views.Pages;
 
 public abstract class PageViewBase : ViewBase {
 
+	
+
 	public PageViewBase() {
 
 	}

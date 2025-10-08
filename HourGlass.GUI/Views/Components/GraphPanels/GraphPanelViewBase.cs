@@ -1,14 +1,12 @@
 ﻿namespace Hourglass.GUI.Views.Components.GraphPanels;
 
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.ViewModels.Pages;
 
 public abstract class GraphPanelViewBase : ViewBase {
 
@@ -26,9 +24,17 @@ public abstract class GraphPanelViewBase : ViewBase {
 	public abstract int GRAPH_MINIMAL_WIDTH { get; }
 	public abstract int GRAPH_CORNER_RADIUS { get; }
 
+	public abstract long TIME_INTERVALL_START_SECONDS { get; }
+	public abstract long TIME_INTERVALL_FINISH_SECONDS { get; }
+	public long TIME_INTERVALL_DURATION => TIME_INTERVALL_FINISH_SECONDS - TIME_INTERVALL_START_SECONDS;
+	public long X_AXIS_SEGMENT_DURATION => TIME_INTERVALL_DURATION / X_AXIS_SEGMENT_COUNT;
+
+	public abstract int X_AXIS_SEGMENT_COUNT { get; }
+	public abstract int Y_AXIS_SEGMENT_COUNT { get; }
+
 	protected double PADDING_X => Bounds.Width / 30;
 	protected double PADDING_Y => Bounds.Height / 30;
-	protected double TIMELINE_MARK_HEIGHT => 7;
+	protected static double TIMELINE_MARK_HEIGHT => 7;
 
 	#endregion fields
 
@@ -46,7 +52,11 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	protected abstract void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i);
 
-	protected Avalonia.Rect GetTaskRectanlgeBase(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, double additionalWidth, double additionalHeight, double minimalWidth, int i, int columns) {
+	public abstract Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i);
+
+	public abstract void OnDoubleClick(object? sender, TappedEventArgs e);
+
+	protected Rect GetTaskRectanlgeBase(Database.Models.Task task, long xAxisSegmentDuration, long originSecond, int xAxisSegmentCount, int yAxisSegmentCount, double additionalWidth, double additionalHeight, double minimalWidth, int i, int columns) {
 		double xAxisSegmentSize = (Bounds.Width - 2.0 * PADDING_X) / xAxisSegmentCount;
 		double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (yAxisSegmentCount * 1.5);
 		double proportion = xAxisSegmentSize / xAxisSegmentDuration;
@@ -54,7 +64,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 		long duration = task.finish - task.start;
 		double graphLength = duration * proportion;
 		double width = graphLength > minimalWidth ? graphLength : minimalWidth + additionalWidth * 2;
-		Avalonia.Rect res = new(
+		Rect res = new(
 			graphPosX - additionalWidth,
 			yAxisSegmentSize * i * 1.5 - additionalHeight + PADDING_Y,
 			width,
@@ -63,7 +73,15 @@ public abstract class GraphPanelViewBase : ViewBase {
 		return res;
 	}
 
-	public abstract Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i);
+	protected void DrawTaskGraphBase(DrawingContext context, Database.Models.Task task, int i, long originSecond) {
+		Rect rect = GetTaskRectanlge(task, 0, 0, i);
+		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
+		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, 0));
+		context.FillRectangle(brush, rect);
+		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
+	}
 
 	public async override void Render(DrawingContext context) {
 		base.Render(context);
@@ -84,13 +102,34 @@ public abstract class GraphPanelViewBase : ViewBase {
 		}
 	}
 
-	public void OnClick(object? sender, TappedEventArgs e) {
-		if (DataContext is GraphPanelViewModelBase model)
-			model.OnClick(sender, e);
+	public async void OnClick(object? sender, TappedEventArgs e) {
+		Console.WriteLine("base graph panel click");
+		Point mousePos = e.GetPosition(this);
+		if (DataContext is GraphPanelViewModelBase model) {
+			int i = 0;
+			Database.Models.Task? clickedTask = null;
+			foreach (var task in await model.GetTasksAsync()) {
+				Rect rect = GetTaskRectanlge(task, GRAPH_CLICK_ADDITIONAL_WIDTH, GRAPH_CLICK_ADDITIONAL_HEIGHT, i);
+				i++;
+				if (rect.Contains(mousePos)) {
+					clickedTask = task;
+					break;
+				} else {
+					continue;
+				}
+			}
+			if(clickedTask!= null)
+				model.OnClick(clickedTask);
+		}
 	}
 
-	public void OnDoubleClick(object? sender, TappedEventArgs e) {
-		if (DataContext is GraphPanelViewModelBase model)
-			model.OnDoubleClick(sender, e);
+	protected void OnDoubleClickBase(TappedEventArgs e, long timeIntervallStartSecond, long timeIntervallFinishSecond) {
+		Console.WriteLine("base graph panel double click");
+		Point mousePos = e.GetPosition(this);
+		double offset = mousePos.X - PADDING_X;
+		long timeIntervallSeconds = timeIntervallFinishSecond - timeIntervallStartSecond;
+		double clickSeconds = timeIntervallStartSecond + timeIntervallSeconds * offset / (Bounds.Width - 2 * PADDING_X);
+		DateTime clickDate = new DateTime((long)clickSeconds * TimeSpan.TicksPerSecond);
+		(DataContext as GraphPanelViewModelBase)?.OnDoubleClick(clickDate);
 	}
 }

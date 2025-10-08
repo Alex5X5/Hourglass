@@ -31,9 +31,9 @@ public class GraphPageViewModel : PageViewModelBase {
 
 	public GraphPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
 		GraphPanels = [
-			new DayGraphPanelViewModel(Services?.GetService<DayGraphPanelView>(), services),
-			new WeekGraphPanelViewModel(Services?.GetService<WeekGraphPanelView>(), services),
-			new MonthGraphPanelViewModel(Services?.GetService<MonthGraphPanelView>(), services)
+			new DayGraphPanelViewModel(this, Services?.GetService<DayGraphPanelView>(), services),
+			new WeekGraphPanelViewModel(this, Services?.GetService<WeekGraphPanelView>(), services),
+			new MonthGraphPanelViewModel(this, Services?.GetService<MonthGraphPanelView>(), services)
 		];
 		_CurrentGraphPanel = GraphPanels[0];
 	}

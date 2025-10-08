@@ -34,8 +34,8 @@
 		</Style>
 		<Style Selector="^:pressed /template/ ContentPresenter">
 			<Setter Property="BorderThickness" Value="{ StaticResource ClickBorderThickness }" />
-			<Setter Property="Background" Value="#C0C0C0" />
-			<Setter Property="BorderBrush" Value="#A1A1A1" />
+			<Setter Property="Background" Value="{ StaticResource SrhGrayDark1 }" />
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark2 }" />
 			<Setter Property="RenderTransform" Value="matrix(0.95,0.0,0.0,0.95,0,0) "/>
 		</Style>
 

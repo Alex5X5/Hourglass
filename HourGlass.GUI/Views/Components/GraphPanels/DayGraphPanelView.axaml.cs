@@ -1,19 +1,18 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Media;
 
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 
 using Point = Avalonia.Point;
 
 public partial class DayGraphPanelView : GraphPanelViewBase {
 
-	public override int TASK_GRAPH_COLUMN_COUNT => throw new NotImplementedException();
+	public override int TASK_GRAPH_COLUMN_COUNT => 1;
 
 	public override int MAX_TASKS => 5;
 
@@ -24,6 +23,12 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 	public override int GRAPH_MINIMAL_WIDTH => 8;
 
 	public override int GRAPH_CORNER_RADIUS => 12;
+
+	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorDay((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now));
+	public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay -1;
+
+	public override int X_AXIS_SEGMENT_COUNT => 24;
+	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
 	public DayGraphPanelView() : this(null, null) {
 
@@ -36,12 +41,9 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 	protected override void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
 		Console.WriteLine("DayGraphPanel draw task graph");
 		long todaySeconds = DateTimeService.FloorDay(DateTime.Now).Ticks / TimeSpan.TicksPerSecond;
-		//long todaySeconds = nowSeconds - nowSeconds % TimeSpan.SecondsPerDay;
 		Rect rect = GetTaskRectanlgeBase(task, TimeSpan.SecondsPerHour, todaySeconds, 24, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		//using GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS);
-		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, 0));
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
@@ -96,13 +98,22 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 	public override Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeght, int i) =>
 		GetTaskRectanlgeBase(
 			task,
-			DateTime.Today.Ticks / TimeSpan.TicksPerSecond,
-			TimeSpan.SecondsPerDay,
-			DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month),
+			TimeSpan.SecondsPerHour,
+			DateTimeService.ToSeconds(DateTimeService.FloorDay((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now)),
+			24,
 			MAX_TASKS,
 			additionalWidth,
 			additionalHeght,
 			GRAPH_MINIMAL_WIDTH,
 			i,
-			1);
+			1
+		);
+	
+	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
+		if (DataContext is GraphPanelViewModelBase model) {
+			DateTime startDate = DateTimeService.FloorDay(model.dateTimeService?.SelectedDay ?? DateTime.Now);
+			DateTime finishDate = startDate.AddDays(1).AddSeconds(-1);
+			OnDoubleClickBase(e, DateTimeService.ToSeconds(startDate), DateTimeService.ToSeconds(finishDate));
+		}
+	}
 }

@@ -43,43 +43,27 @@
 				</Grid.ColumnDefinitions>
 				<Button Grid.Row="1"
 						Grid.Column="1"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
 						Command="{Binding GoToTimerCommand}"
 						Name="TimerModeButton">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Timer" Foreground="Black" FontSize="15"/>
-					</StackPanel>
+						<TextBlock Classes="ButtonContent" Text="Timer" FontSize="15"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="3"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
 						Command="{Binding GoToGraphsCommand}"
 						Name="GraphModeButton">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Graph" Foreground="Black" FontSize="15"/>
-					</StackPanel>
+						<TextBlock Classes="ButtonContent" Text="Graph" FontSize="15"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="5"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
 						Command="{Binding GoToExportCommand}"
 						Name="ExportModeButton">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Export" Foreground="Black" FontSize="15"/>
-					</StackPanel>
+						<TextBlock Classes="ButtonContent" Text="Export" FontSize="15"/>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="7"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
 						Command="{Binding GoToProjectCommand}"
 						Name="ProjecctModeButton">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Projects" Foreground="Black" FontSize="15"/>
-					</StackPanel>
+						<TextBlock Classes="ButtonContent" Text="Projects" FontSize="15"/>
 				</Button>
 			</Grid>
 		</Panel>

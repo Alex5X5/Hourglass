@@ -1,30 +1,29 @@
-using Avalonia.Input;
+namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.Views;
-using Hourglass.GUI.Views.Components.GraphPanels;
-
-namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.Util;
 
 public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
-	public MonthGraphPanelViewModel() : this(null, null) {
+	public MonthGraphPanelViewModel() : this(null, null, null) {
 
 	}
 
-	public MonthGraphPanelViewModel(ViewBase? model, IServiceProvider? services) : base(model, services) {
+	public MonthGraphPanelViewModel(GraphPageViewModel? controller, ViewBase? model, IServiceProvider? services) : base(controller, model, services) {
 
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService.SelectedDay) : [];
 
-	public override void OnClick(object? sender, TappedEventArgs e) {
-		Console.WriteLine("Month Grpah panel click");
+	public override void OnClick(Database.Models.Task task) {
+		Console.WriteLine("month graph panel model click");
 	}
 
-	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
-		Console.WriteLine("Month Grpah panel double click");
+	public override void OnDoubleClick(DateTime clickedTime) {
+		Console.WriteLine("month graph panel model double click");
+		dateTimeService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
+		controller.ChangeGraphPanel<WeekGraphPanelViewModel>();
 	}
 }

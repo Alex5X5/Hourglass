@@ -7,10 +7,10 @@ public class DateTimeService {
 
 	public static DateTime START_DATE = GetStartDate();
 
-	private long SelectedDayStartSeconds = FloorDay(DateTime.Today).Ticks / TimeSpan.TicksPerSecond;
+	private long SelectedDayStartSeconds = ToSeconds(DateTime.Today);
 
 	public DateTime SelectedDay {
-		set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
+		set => SelectedDayStartSeconds = ToSeconds(value);
 		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
 	}
 
@@ -20,6 +20,9 @@ public class DateTimeService {
 			() => START_DATE = GetStartDate();
 	}
 
+	public static long ToSeconds(DateTime date) =>
+		date.Ticks / TimeSpan.TicksPerSecond;
+
 	public static DateTime FloorDay(DateTime date) =>
 		new(date.Year, date.Month, date.Day);
 
@@ -28,15 +31,18 @@ public class DateTimeService {
 
 	public static DateTime FloorMonth(DateTime date) =>
 			new(date.Year, date.Month, 1);
-	
+
+	public static int DaysInCurrentMonth() =>
+		DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+
 	private static DateTime GetStartDate() {
+		DateTime date;
 		try {
-			var val = Convert.ToDateTime(SettingsService.GetSetting(SettingsService.START_DATE_KEY));
-			return val;
+			date = Convert.ToDateTime(SettingsService.GetSetting(SettingsService.START_DATE_KEY));
 		} catch (FormatException) {
-			var val = new DateTime(2024, 8, 5);
-			return val;
+			date = new DateTime(2024, 8, 5);
 		}
+		return date;
 	}
 
 	public static DateTime? InterpretDayAndTimeString(string s) {

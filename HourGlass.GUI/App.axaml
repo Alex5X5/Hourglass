@@ -17,6 +17,7 @@
 
 	<Application.Styles>
 		<StyleInclude Source="/Styles/Buttons.axaml" />
+		<StyleInclude Source="/Styles/TextBlocks.axaml" />
 		<FluentTheme />
 	</Application.Styles>
 </Application>

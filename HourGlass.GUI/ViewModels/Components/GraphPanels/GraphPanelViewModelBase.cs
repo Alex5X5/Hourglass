@@ -11,15 +11,16 @@ using Hourglass.Util;
 
 public abstract class GraphPanelViewModelBase : ViewModelBase {
 
-	public GraphPageViewModel? parent;
+	protected GraphPageViewModel? controller;
 	public DateTimeService? dateTimeService;
 	public IHourglassDbService? dbService;
 
-	public GraphPanelViewModelBase() : this(null, null) {
+	public GraphPanelViewModelBase() : this(null, null, null) {
 
 	}
 
-	public GraphPanelViewModelBase(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public GraphPanelViewModelBase(GraphPageViewModel? controller, ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+		this.controller = controller;
 		dbService = (IHourglassDbService?)Services?.GetService(typeof(HourglassDbService));
 		dateTimeService = (DateTimeService?)services?.GetService(typeof(DateTimeService));
 	}
@@ -32,11 +33,12 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	public async virtual Task<List<Database.Models.Task>> GetTasksAsync() =>
 		await dbService.QueryTasksAsync() ?? [];
 
-	public abstract void OnClick(object? sender, TappedEventArgs e);
-	public abstract void OnDoubleClick(object? sender, TappedEventArgs e);
+	public abstract void OnClick(Database.Models.Task task);
+
+	public abstract void OnDoubleClick(DateTime clickedTime);
 
 	public async void OnClickBase(Avalonia.Point mousePos, int xAxisSegmentCount, int xAxisSegmentDuration) {
-		Console.WriteLine("base graph panel click");
+		Console.WriteLine("base graph panel model click");
 		List<Database.Models.Task>? tasks = await GetTasksAsync();
 		if (owner is GraphPanelViewBase view) {
 			bool taskClicked = false;
@@ -112,7 +114,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	}
 
 	public void OnDoubleClick_() {
-		Console.WriteLine("base graph panel double click");
+		Console.WriteLine("base graph panel model double click");
 		//Point mousePos = PointToClient(MousePosition);
 		//int daysInCurrentMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 		//if (WindowMode == TimerWindowMode.Week) {

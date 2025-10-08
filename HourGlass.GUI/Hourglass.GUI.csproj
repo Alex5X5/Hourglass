@@ -47,13 +47,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Views\Components\GraphModeButtons\MonthGraphModeButtonIcon.axaml.cs">
+    <Compile Update="Views\Components\GraphModeButtonIcons\MonthGraphModeButtonIcon.axaml.cs">
       <DependentUpon>MonthGraphModeButtonIcon.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Components\GraphModeButtons\WeekGraphModeButtonIcon.axaml.cs">
+    <Compile Update="Views\Components\GraphModeButtonIcons\WeekGraphModeButtonIcon.axaml.cs">
       <DependentUpon>WeekGraphModeButtonIcon.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Components\GraphModeButtons\DayGraphModeButtonIcon.axaml.cs">
+    <Compile Update="Views\Components\GraphModeButtonIcons\DayGraphModeButtonIcon.axaml.cs">
       <DependentUpon>DayGraphModeButtonIcon.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Components\GraphPanels\MonthGraphPanelView.axaml.cs">

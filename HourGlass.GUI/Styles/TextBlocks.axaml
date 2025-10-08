@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+		<StackPanel Width="100" Height="100">
+			<TextBlock Classes="SrhDefault" Width="50" Height="50" />
+		</StackPanel>
+	</Design.PreviewWith>
+	<Style Selector="TextBlock.ButtonContent">
+		<Setter Property="Foreground" Value="Green" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="FontSize" Value="13" />
+	</Style>
+	<Style Selector="TextBlock.FieldDescriptor">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="Padding" Value="10,0,0,0" />
+		<Setter Property="FontSize" Value="13" />
+	</Style>
+</Styles>
