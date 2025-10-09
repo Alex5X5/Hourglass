@@ -6,12 +6,11 @@ public abstract class PageViewModelBase : ViewModelBase {
 
 	public Database.Models.Task? RunningTask;
 
-	public MainViewModel mainViewModel;
-
 	public PageViewModelBase() : this(null, null) {
 	}
 
-	public PageViewModelBase(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public PageViewModelBase(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
+	
 	}
 
 }

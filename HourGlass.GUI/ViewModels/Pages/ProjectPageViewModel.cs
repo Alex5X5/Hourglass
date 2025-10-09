@@ -8,7 +8,7 @@ public class ProjectPageViewModel : PageViewModelBase {
 
 	}
 
-	public ProjectPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public ProjectPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
 
 	}
 }

@@ -27,11 +27,11 @@ public partial class MainViewModel : ViewModelBase {
 
 	private PageViewModelBase _CurrentPage;
 	
-	public MainViewModel() : this(null, null) {
+	public MainViewModel() : this(null) {
 		
 	}
 
-	public MainViewModel(ViewBase? owner, IServiceProvider? services) : base(null, services) {
+	public MainViewModel(IServiceProvider? services) : base(null, services) {
 		dbService = (IHourglassDbService?)services?.GetService(typeof(HourglassDbService));
 		Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
 		Pages = 
@@ -42,19 +42,13 @@ public partial class MainViewModel : ViewModelBase {
 		//	Services?.GetRequiredService<ExportPageViewModel>() ?? new ExportPageViewModel()
 		//];
 		[
-			new TimerPageViewModel(Services?.GetService<TimerPageView>(), services) { mainViewModel = this, RunningTask = task },
-			new GraphPageViewModel(Services?.GetService<GraphPageView>(), services) { mainViewModel = this, RunningTask = task },
-			new ProjectPageViewModel(Services?.GetService<ProjectPageView>(), services) { mainViewModel = this, RunningTask = task },
-			new ExportPageViewModel(Services?.GetService<ExportPageView>(), services) { mainViewModel = this, RunningTask = task }
+			new TimerPageViewModel(this, services) { RunningTask = task },
+			new GraphPageViewModel(this, services) { RunningTask = task },
+			new ProjectPageViewModel(this, services) { RunningTask = task },
+			new ExportPageViewModel(this, services) { RunningTask = task }
 		];
 		_CurrentPage = Pages[0];
 
-	}
-
-	public override void OnFinishedRegisteringViews(List<ViewBase> views, IServiceProvider? services) {
-		base.OnFinishedRegisteringViews(views, services);
-		foreach (var page in Pages)
-			page.OnFinishedRegisteringViews(views, services);
 	}
 
 	public void ChangePage<PageT>() where PageT : PageViewModelBase {

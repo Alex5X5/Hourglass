@@ -1,7 +1,6 @@
 namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.GUI.Views;
 using Hourglass.Util;
 
 public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
@@ -10,12 +9,12 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public MonthGraphPanelViewModel(GraphPageViewModel? controller, ViewBase? model, IServiceProvider? services) : base(controller, model, services) {
+	public MonthGraphPanelViewModel(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base(controller, panelController, services) {
 
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService.SelectedDay) : [];
+		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
 	public override void OnClick(Database.Models.Task task) {
 		Console.WriteLine("month graph panel model click");
@@ -23,7 +22,8 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("month graph panel model double click");
-		dateTimeService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
-		graphPageViewModel.ChangeGraphPanel<WeekGraphPanelViewModel>();
+		if (dateTimeService != null)
+			dateTimeService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
+		graphPageViewModel?.ChangeGraphPanel<WeekGraphPanelViewModel>();
 	}
 }

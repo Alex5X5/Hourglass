@@ -10,12 +10,12 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 		
 	}
 
-	public DayGraphPanelViewModel(GraphPageViewModel? controller, ViewBase? model, IServiceProvider? services) : base(controller, model, services) {
+	public DayGraphPanelViewModel(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base(controller, panelController, services) {
 
 	}
 	
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService.SelectedDay) : [];
+		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
 	public override void OnClick(Database.Models.Task task) {
 		Console.WriteLine("day graph panel model click");

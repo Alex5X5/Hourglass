@@ -27,19 +27,13 @@ public class GraphPageViewModel : PageViewModelBase {
 
 	}
 
-	public GraphPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public GraphPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
 		GraphPanels = [
-			new DayGraphPanelViewModel(this, Services?.GetService<DayGraphPanelView>(), services),
-			new WeekGraphPanelViewModel(this, Services?.GetService<WeekGraphPanelView>(), services),
-			new MonthGraphPanelViewModel(this, Services?.GetService<MonthGraphPanelView>(), services)
+			new DayGraphPanelViewModel(controller, this, services),
+			new WeekGraphPanelViewModel(controller, this, services),
+			new MonthGraphPanelViewModel(controller, this, services)
 		];
 		_CurrentGraphPanel = GraphPanels[0];
-	}
-
-	public override void OnFinishedRegisteringViews(List<ViewBase> views, IServiceProvider? services) {
-		base.OnFinishedRegisteringViews(views, services);
-		foreach (var panel in GraphPanels)
-			panel.OnFinishedRegisteringViews(views, services);
 	}
 
 	public void ChangeGraphPanel<PanelT>() where PanelT : GraphPanelViewModelBase {

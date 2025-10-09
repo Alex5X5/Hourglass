@@ -12,8 +12,6 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	#region fields
 
-	protected IHourglassDbService _dbService;
-
 	public abstract int TASK_GRAPH_COLUMN_COUNT { get; }
 
 	public abstract int MAX_TASKS { get; }

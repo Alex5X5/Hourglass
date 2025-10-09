@@ -1,19 +1,16 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
-
-using Hourglass.GUI.Views;
 using Hourglass.PDF;
-using Hourglass.PDF.Services.Interfaces;
 
 public partial class ExportPageViewModel : PageViewModelBase {
 
-	private readonly IPdfService pdf;
+	private readonly PdfService pdf;
 
 	public ExportPageViewModel() : this(null, null) {
 	}
 
-	public ExportPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public ExportPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
 		pdf = new PdfService(dbService);
 	}
 

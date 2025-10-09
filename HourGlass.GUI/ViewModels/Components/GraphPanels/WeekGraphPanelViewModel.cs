@@ -10,12 +10,12 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 		
 	}
 
-	public WeekGraphPanelViewModel(GraphPageViewModel? controller, ViewBase? model, IServiceProvider? services) : base(controller, model, services) {
+	public WeekGraphPanelViewModel(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base(controller, panelController, services) {
 
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(dateTimeService.SelectedDay) : [];
+		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
 	public override void OnClick(Database.Models.Task task) {
 		Console.WriteLine("week graph panel model click");
@@ -23,7 +23,8 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("week graph panel model double click");
-		dateTimeService.SelectedDay = DateTimeService.FloorDay(clickedTime);
-		graphPageViewModel.ChangeGraphPanel<DayGraphPanelViewModel>();
+		if(dateTimeService!=null)
+			dateTimeService.SelectedDay = DateTimeService.FloorDay(clickedTime);
+		graphPageViewModel?.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}
 }

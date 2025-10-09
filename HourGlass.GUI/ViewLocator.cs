@@ -23,7 +23,7 @@ public class ViewLocator : IDataTemplate {
 			ViewBase res;
 			if (data is ViewModelBase model) {
 				res = (ViewBase)Activator.CreateInstance(viewType, [model, model.Services])!;
-				model.owner = res;
+				model.controller = res;
 				return res;
 			}
 			res = (ViewBase)Activator.CreateInstance(viewType)!;

@@ -55,32 +55,32 @@ public static class ServiceCollectionExtensions {
 	}
 	
 	public static void AddViewModels(this IServiceCollection collection) {
-		collection.AddTransient(
-			serviceProvider => {
-				Window window = serviceProvider.GetService<MainWindow>();
-				return new MainWindowViewModel(window, serviceProvider);
-			}
-		);
+		//collection.AddTransient(
+		//	serviceProvider => {
+		//		Window window = serviceProvider.GetService<MainWindow>();
+		//		return new MainWindowViewModel(window, serviceProvider);
+		//	}
+		//);
 
-		collection.AddTransient(serviceProvider =>
-			new MainViewModel(serviceProvider.GetService<MainView>(), serviceProvider)
-		);
+		//collection.AddTransient(serviceProvider =>
+		//	new MainViewModel(serviceProvider.GetService<MainView>(), serviceProvider)
+		//);
 
-		collection.AddTransient(serviceProvider =>
-			new ExportPageViewModel(serviceProvider.GetService<ExportPageView>(), serviceProvider)
-		);
+		//collection.AddTransient(serviceProvider =>
+		//	new ExportPageViewModel(serviceProvider.GetService<ExportPageView>(), serviceProvider)
+		//);
 
-		collection.AddTransient(serviceProvider =>
-			new GraphPageViewModel(serviceProvider.GetService<GraphPageView>(), serviceProvider)
-		);
+		//collection.AddTransient(serviceProvider =>
+		//	new GraphPageViewModel(serviceProvider.GetService<GraphPageView>(), serviceProvider)
+		//);
 
-		collection.AddTransient(serviceProvider =>
-			new TimerPageViewModel(serviceProvider.GetService<TimerPageView>(), serviceProvider)
-		);
+		//collection.AddTransient(serviceProvider =>
+		//	new TimerPageViewModel(serviceProvider.GetService<TimerPageView>(), serviceProvider)
+		//);
 
-		collection.AddTransient(serviceProvider =>
-			new ProjectPageViewModel(serviceProvider.GetService<ProjectPageView>(), serviceProvider)
-		);
+		//collection.AddTransient(serviceProvider =>
+		//	new ProjectPageViewModel(serviceProvider.GetService<ProjectPageView>(), serviceProvider)
+		//);
 	}
 }
 

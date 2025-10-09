@@ -10,11 +10,11 @@ using System.ComponentModel;
 
 public partial class TimerPageViewModel : PageViewModelBase {
 
-	public string DescriptionTextboxText { set; get; }
-	public string ProjectTextboxText { set; get; }
-	public string TicketTextboxText { set; get; }
-	public string StartTextboxText { set; get; }
-	public string FinishTextboxText { set; get; }
+	public string DescriptionTextboxText { set; get; } = "";
+	public string ProjectTextboxText { set; get; } = "";
+	public string TicketTextboxText { set; get; } = "";
+	public string StartTextboxText { set; get; } = "";
+	public string FinishTextboxText { set; get; } = "";
 
 	public Project SelectedProject { get; set; }
     public List<Project> AvailableProjects { get; set; }
@@ -25,7 +25,7 @@ public partial class TimerPageViewModel : PageViewModelBase {
 
 	}
 
-	public TimerPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public TimerPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
 		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },

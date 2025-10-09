@@ -11,7 +11,7 @@ public partial class MainView : ViewBase {
 
 	public MainView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
 		InitializeComponent();
-		DataContext = new MainViewModel(this, services);
+		DataContext = new MainViewModel(services);
 		if (DataContext is MainViewModel viewModel)
 			viewModel.ChangePage<TimerPageViewModel>();
 	}
