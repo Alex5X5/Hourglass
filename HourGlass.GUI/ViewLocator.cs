@@ -23,7 +23,7 @@ public class ViewLocator : IDataTemplate {
 				return new TextBlock { Text = $"{modelType.Name} is not a view model type"};
 			ViewBase res;
 			if (data is ViewModelBase model) {
-				res = (ViewBase)Activator.CreateInstance(viewType, [model.controller, model.Services])!;
+				res = (ViewBase)Activator.CreateInstance(viewType, [model, model.Services])!;
 				return res;
 			}
 			res = (ViewBase)Activator.CreateInstance(viewType)!;
