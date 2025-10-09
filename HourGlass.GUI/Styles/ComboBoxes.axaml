@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+		<StackPanel Width="500" Height="100">
+			<ComboBox SelectedIndex="0" >
+				<ComboBoxItem>Text Item 1</ComboBoxItem>
+				<ComboBoxItem>Text Item 2</ComboBoxItem>
+			</ComboBox>
+		</StackPanel>
+	</Design.PreviewWith>
+
+	<Style Selector="ComboBox">
+		<Setter Property="BorderBrush" Value="Gold" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="Background" Value="#D9D9D9" />
+		<Setter Property="Foreground" Value="Green" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="CornerRadius" Value="0" />
+		<Setter Property="FontSize" Value="13" />
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="BorderBrush" Value="Orange" />
+			<Setter Property="BorderThickness" Value="3" />
+			<Setter Property="Background" Value="#E9E9E9" />
+		</Style>
+
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="LightBlue" />
+			<Setter Property="BorderThickness" Value="2" />
+			<Setter Property="Background" Value="#C0C0C0" />
+		</Style>
+	</Style>
+
+</Styles>

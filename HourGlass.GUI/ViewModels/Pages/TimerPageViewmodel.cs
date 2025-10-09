@@ -2,12 +2,11 @@
 
 using CommunityToolkit.Mvvm.Input;
 
+using Hourglass.Database.Models;
 using Hourglass.GUI.Views;
 
-using ReactiveUI;
-
 using System.ComponentModel;
-using System.Reactive;
+using System.Runtime.CompilerServices;
 
 public partial class TimerPageViewModel : PageViewModelBase {
 
@@ -17,8 +16,8 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	public string StartTextboxText { set; get; } = "started at";
 	public string FinishTextboxText { set; get; } = "finished at";
 
-	private bool descriptionTextboxEdited = false;
-
+	public Project SelectedFont { get; set; }
+    public List<Project> FontFamilies { get; set; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -27,6 +26,12 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	}
 
 	public TimerPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+		FontFamilies = [
+			new Project() { Name="test project" },
+			new Project() { Name = "failing project" },
+			new Project() { Name = "sucessfull project" }
+		];
+		SelectedFont = FontFamilies[0];
 	}
 
 	protected virtual void OnPropertyChanged(string propertyName) {
@@ -34,9 +39,9 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	}
 
 	[RelayCommand]
-	private async Task StartTask() {
+	private async System.Threading.Tasks.Task StartTask() {
 		Console.WriteLine("OnStartButtonClick");
-		IEnumerable<Database.Models.Project> projects = await dbService.QueryProjectsAsync();
+		IEnumerable<Database.Models.Project> projects = await dbService?.QueryProjectsAsync() ?? [];
 		Database.Models.Project? project = projects.FirstOrDefault(x => x.Name == "");
 		RunningTask = await dbService.StartNewTaskAsnc(
 			DescriptionTextboxText,
@@ -55,9 +60,6 @@ public partial class TimerPageViewModel : PageViewModelBase {
 		//StartButton.Disable();
 	}
 
-	public ReactiveCommand<Unit, Unit> GotFocusCommand { get; }
-		= ReactiveCommand.Create(() => { });
-
 	[RelayCommand]
 	private void StopTask() {
 		Console.WriteLine("stopping ccurrent task!");
@@ -67,13 +69,4 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	private void RestartTask() {
 		Console.WriteLine("restarting task!");
 	}
-
-	[RelayCommand]
-	private void OnFocus() {
-		Console.WriteLine("restarting task!");
-	}
-
-
-
-
 }

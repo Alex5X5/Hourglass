@@ -23,39 +23,6 @@
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
-		<Grid.Styles>
-			<!-- Add Styles Here -->
-			<Style Selector="TextBox">
-				<Setter Property="BorderBrush" Value="Gold" />
-				<Setter Property="BorderThickness" Value="3" />
-				<Setter Property="Background" Value="#D9D9D9" />
-				<Setter Property="Foreground" Value="#050505" />
-				<Setter Property="HorizontalAlignment" Value="Stretch" />
-				<Setter Property="CornerRadius" Value="0" />
-				<Setter Property="VerticalAlignment" Value="Stretch" />
-			</Style>
-
-			<Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-				<Setter Property="BorderBrush" Value="Orange" />
-				<Setter Property="BorderThickness" Value="3" />
-				<Setter Property="Background" Value="#E9E9E9" />
-			</Style>
-
-			<Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-				<Setter Property="BorderBrush" Value="LightBlue" />
-				<Setter Property="BorderThickness" Value="2" />
-				<Setter Property="Background" Value="#C0C0C0" />
-			</Style>
-
-			<!--
-			<Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-				<Setter Property="BorderBrush" Value="{DynamicResource HoverGradient}"></Setter>
-				<Setter Property="BorderThickness" Value="{DynamicResource PrimaryBorderThickness}"></Setter>
-				<Setter Property="Background" Value="{DynamicResource PrimaryHoverBackground}"></Setter>
-			</Style>
-			-->
-
-		</Grid.Styles>
 		<Grid Grid.Row="1" Grid.Column="1" >
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*" />
@@ -88,7 +55,18 @@
 			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
 			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
 			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
-			<TextBox Grid.Row="7" Grid.Column="2" Text="{ Binding ProjectTextboxText }" />
+			<ComboBox SelectedIndex="0"
+					  Grid.Row="7"
+					  Grid.Column="2"
+					  MaxDropDownHeight="300"
+					  ItemsSource="{Binding FontFamilies}"
+					  SelectedValue="{Binding SelectedFont}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
 				<Button Background="#D9D9D9"
 						BorderBrush="#C5C5C5"

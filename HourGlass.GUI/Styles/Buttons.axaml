@@ -10,7 +10,6 @@
 			<ResourceDictionary>
 				<ResourceDictionary.MergedDictionaries>
 					<ResourceInclude Source="/Styles/ButtonConstants.axaml"/>
-					<ResourceInclude Source="/Styles/GlobalColors.axaml"/>
 				</ResourceDictionary.MergedDictionaries>
 			</ResourceDictionary>
 		</Style.Resources>
