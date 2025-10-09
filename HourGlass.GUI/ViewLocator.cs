@@ -8,7 +8,8 @@ using Avalonia.Controls.Templates;
 using System;
 using Hourglass.GUI.Views;
 
-public class ViewLocator : IDataTemplate {
+public class ViewLocator : IDataTemplate {	
+
 	public Control Build(object? data) {
 		if (data is null) {
 			return new TextBlock { Text = "data was null" };
@@ -22,8 +23,7 @@ public class ViewLocator : IDataTemplate {
 				return new TextBlock { Text = $"{modelType.Name} is not a view model type"};
 			ViewBase res;
 			if (data is ViewModelBase model) {
-				res = (ViewBase)Activator.CreateInstance(viewType, [model, model.Services])!;
-				model.controller = res;
+				res = (ViewBase)Activator.CreateInstance(viewType, [model.controller, model.Services])!;
 				return res;
 			}
 			res = (ViewBase)Activator.CreateInstance(viewType)!;

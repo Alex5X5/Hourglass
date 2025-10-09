@@ -22,8 +22,6 @@ public abstract class ViewBase : Avalonia.Controls.UserControl {
 	}
 
 	public virtual void OnFinishedRegisteringViews(List<ViewBase> views, IServiceProvider services) {
-		if (DataContext is ViewModelBase model)
-			model.OnFinishedRegisteringViews(views, services);
 	}
 
 	//public abstract void CollectViews(IServiceCollection views);

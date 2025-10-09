@@ -10,9 +10,9 @@ public partial class GraphPageView : PageViewBase {
 
 	}
 
-	public GraphPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public GraphPageView(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
 		InitializeComponent();
-		DataContext = new GraphPageViewModel(this, services);
+		DataContext = new GraphPageViewModel(controller, services);
 		if (DataContext is GraphPageViewModel model_)
 			model_.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}

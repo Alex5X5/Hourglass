@@ -25,7 +25,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase {
 
 	}
 
-	public TaskDetailsPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
+	public TaskDetailsPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
 		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },

@@ -17,8 +17,7 @@ public partial class MainWindow : Window {
         InitializeComponent();
 		DataContext = new MainWindowViewModel(this, commonServices);
 		mainView.OnRegisteringViews(views);
-		mainView.DataContext = new MainViewModel(mainView, commonServices);
-		mainView.OnFinishedRegisteringViews(views, commonServices);
+		mainView.DataContext = new MainViewModel(commonServices);
 		//IServiceCollection viewCollection = new ServiceCollection();
 		//viewCollection.AddViewModels();
 		//IServiceProvider viewModels = viewCollection.BuildServiceProvider();
