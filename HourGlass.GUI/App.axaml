@@ -18,7 +18,8 @@
 	<Application.Styles>
 		<StyleInclude Source="/Styles/Buttons.axaml" />
 		<StyleInclude Source="/Styles/TextBlocks.axaml" />
-		<StyleInclude Source="/Styles/Comboboxes.axaml" />
+		<StyleInclude Source="/Styles/ComboBoxes.axaml" />
+		<StyleInclude Source="/Styles/Boxes.axaml" />
 		<FluentTheme />
 	</Application.Styles>
 </Application>

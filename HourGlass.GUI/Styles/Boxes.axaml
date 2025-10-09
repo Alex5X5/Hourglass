@@ -5,26 +5,34 @@
 			<TextBox Text="test" />
 		</StackPanel>
 	</Design.PreviewWith>
-
-	<Style Selector="TextBox">
-		<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-		<Setter Property="BorderThickness" Value="2" />
-		<Setter Property="Background" Value="#D9D9D9" />
-		<Setter Property="Foreground" Value="#050505" />
+	<Style Selector="TextBox, ComboBox">
+		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
+		<Setter Property="BorderThickness" Value="3" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="Foreground" Value="Black" />
 		<Setter Property="CornerRadius" Value="0" />
-
-		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="BorderBrush" Value="Orange" />
+		<!--
+		<Style Selector="^:pointerover /template/ ContentPresenter">
 			<Setter Property="BorderThickness" Value="2" />
-			<Setter Property="Background" Value="#E9E9E9" />
+			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="BorderBrush" Value="#C5C5C5" />
 		</Style>
 
+		-->
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+		</Style>
 		<Style Selector="^:focus /template/ Border">
-			<Setter Property="BorderBrush" Value="LightBlue" />
-			<Setter Property="BorderThickness" Value="2" />
-			<Setter Property="Background" Value="#C0C0C0" />
+			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
+			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
 		</Style>
 	</Style>
 </Styles>

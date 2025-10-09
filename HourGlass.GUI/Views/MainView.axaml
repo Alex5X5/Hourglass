@@ -62,7 +62,7 @@
 				<Button Grid.Row="1"
 						Grid.Column="7"
 						Command="{Binding GoToProjectCommand}"
-						Name="ProjecctModeButton">
+						Name="ProjectModeButton">
 						<TextBlock Classes="ButtonContent" Text="Projects" FontSize="15"/>
 				</Button>
 			</Grid>

@@ -4,20 +4,20 @@ using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
 using Hourglass.GUI.Views;
+using Hourglass.Util;
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 public partial class TimerPageViewModel : PageViewModelBase {
 
-	public string DescriptionTextboxText { set; get; } = "description ...";
-	public string ProjectTextboxText { set; get; } = "a project";
-	public string TicketTextboxText { set; get; } = "a ticket";
-	public string StartTextboxText { set; get; } = "started at";
-	public string FinishTextboxText { set; get; } = "finished at";
+	public string DescriptionTextboxText { set; get; }
+	public string ProjectTextboxText { set; get; }
+	public string TicketTextboxText { set; get; }
+	public string StartTextboxText { set; get; }
+	public string FinishTextboxText { set; get; }
 
-	public Project SelectedFont { get; set; }
-    public List<Project> FontFamilies { get; set; }
+	public Project SelectedProject { get; set; }
+    public List<Project> AvailableProjects { get; set; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -26,12 +26,12 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	}
 
 	public TimerPageViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
-		FontFamilies = [
+		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },
 			new Project() { Name = "sucessfull project" }
 		];
-		SelectedFont = FontFamilies[0];
+		SelectedProject = AvailableProjects[0];
 	}
 
 	protected virtual void OnPropertyChanged(string propertyName) {
@@ -40,15 +40,15 @@ public partial class TimerPageViewModel : PageViewModelBase {
 
 	[RelayCommand]
 	private async System.Threading.Tasks.Task StartTask() {
-		Console.WriteLine("OnStartButtonClick");
-		IEnumerable<Database.Models.Project> projects = await dbService?.QueryProjectsAsync() ?? [];
-		Database.Models.Project? project = projects.FirstOrDefault(x => x.Name == "");
-		RunningTask = await dbService.StartNewTaskAsnc(
-			DescriptionTextboxText,
-			project,
-			new Database.Models.Worker { name = "new user" },
-			null
-		);
+		Console.WriteLine("start task button click!");
+		if(dbService!=null)
+			RunningTask = await dbService.StartNewTaskAsnc(
+				DescriptionTextboxText,
+				null,
+				new Worker { name = "new user" },
+				null
+			);
+		UpdateTextFields();
 		//await Task.Run(
 		//	() => {
 		//		Thread.Sleep(100);
@@ -61,12 +61,34 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	}
 
 	[RelayCommand]
-	private void StopTask() {
-		Console.WriteLine("stopping ccurrent task!");
+	private async System.Threading.Tasks.Task StopTask() {
+		Console.WriteLine("stop task button click!");
+		if(dbService!=null)
+			RunningTask = await dbService.FinishCurrentTaskAsync(
+				RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
+				DateTimeService.ToSeconds(DateTime.Now),
+				DescriptionTextboxText,
+				SelectedProject,
+				null
+			);
+		UpdateTextFields();
 	}
 
 	[RelayCommand]
 	private void RestartTask() {
-		Console.WriteLine("restarting task!");
+		Console.WriteLine("restart task button click! (not yet implemented)");
+		UpdateTextFields();
+	}
+
+	public void OnLoad() {
+		Console.WriteLine("loading Timer Page");
+		UpdateTextFields();
+	}
+
+	public void UpdateTextFields() {
+		DescriptionTextboxText = RunningTask?.description ?? "";
+		StartTextboxText = RunningTask != null ? DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime) : "";
+		SelectedProject = RunningTask?.project ?? AvailableProjects[0];
+		TicketTextboxText = RunningTask?.ticket?.description ?? "";
 	}
 }
