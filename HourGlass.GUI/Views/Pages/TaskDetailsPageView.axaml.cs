@@ -10,9 +10,11 @@ public partial class TaskDetailsPageView : PageViewBase {
 
 	private bool initialDescriptionTextboxClear = true;
 
-	public TaskDetailsPageView()
-    {
-        InitializeComponent();
+	public TaskDetailsPageView() : this(null, null) {
+	}
+
+	public TaskDetailsPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+		InitializeComponent();
 		startButton.GotFocus += (sender, args) => {
 			startButton.InvalidateVisual();
 			Console.WriteLine("start button got focus!");

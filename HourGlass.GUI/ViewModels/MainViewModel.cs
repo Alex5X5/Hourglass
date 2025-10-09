@@ -5,11 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Services;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.GUI.Views;
-using Hourglass.GUI.Views.Pages;
-using Hourglass.Util;
-
-using Microsoft.Extensions.DependencyInjection;
 
 using ReactiveUI;
 
@@ -34,7 +29,7 @@ public partial class MainViewModel : ViewModelBase {
 	public MainViewModel(IServiceProvider? services) : base(null, services) {
 		dbService = (IHourglassDbService?)services?.GetService(typeof(HourglassDbService));
 		Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
-		Pages = 
+		Pages =
 		//[
 		//	Services?.GetRequiredService<TimerPageViewModel>() ?? new TimerPageViewModel(),
 		//	Services?.GetRequiredService<GraphPageViewModel>() ?? new GraphPageViewModel(),
@@ -45,7 +40,8 @@ public partial class MainViewModel : ViewModelBase {
 			new TimerPageViewModel(this, services) { RunningTask = task },
 			new GraphPageViewModel(this, services) { RunningTask = task },
 			new ProjectPageViewModel(this, services) { RunningTask = task },
-			new ExportPageViewModel(this, services) { RunningTask = task }
+			new ExportPageViewModel(this, services) { RunningTask = task },
+			new TaskDetailsPageViewModel(this, services)
 		];
 		_CurrentPage = Pages[0];
 

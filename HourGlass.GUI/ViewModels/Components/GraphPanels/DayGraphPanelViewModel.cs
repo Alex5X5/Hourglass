@@ -18,6 +18,7 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
 	public override void OnClick(Database.Models.Task task) {
+		controller?.ChangePage<TaskDetailsPageViewModel>();
 		Console.WriteLine("day graph panel model click");
 	}
 

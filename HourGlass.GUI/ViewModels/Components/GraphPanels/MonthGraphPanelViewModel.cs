@@ -17,6 +17,7 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
 	public override void OnClick(Database.Models.Task task) {
+		controller?.ChangePage<TaskDetailsPageViewModel>();
 		Console.WriteLine("month graph panel model click");
 	}
 

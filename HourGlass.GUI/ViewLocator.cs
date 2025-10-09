@@ -8,7 +8,7 @@ using Avalonia.Controls.Templates;
 using System;
 using Hourglass.GUI.Views;
 
-public class ViewLocator : IDataTemplate {	
+public class ViewLocator : IDataTemplate {
 
 	public Control Build(object? data) {
 		if (data is null) {
@@ -22,13 +22,14 @@ public class ViewLocator : IDataTemplate {
 			if (!modelType.IsSubclassOf(typeof(ViewModelBase)))
 				return new TextBlock { Text = $"{modelType.Name} is not a view model type"};
 			ViewBase res;
+			
 			if (data is ViewModelBase model) {
 				res = (ViewBase)Activator.CreateInstance(viewType, [model, model.Services])!;
 				return res;
 			}
+
 			res = (ViewBase)Activator.CreateInstance(viewType)!;
 			res.DataContext = Activator.CreateInstance(modelType);
-			res.GetType().GetField("owner")?.SetValue(res, this);
 			return res;
 		} else {
 			return new TextBlock { Text = "Not Found: " + viewTypeName };
