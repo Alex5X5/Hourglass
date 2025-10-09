@@ -11,18 +11,14 @@ using Hourglass.Util;
 
 public abstract class GraphPanelViewModelBase : ViewModelBase {
 
-	protected GraphPageViewModel? controller;
-	public DateTimeService? dateTimeService;
-	public IHourglassDbService? dbService;
+	protected GraphPageViewModel? graphPageViewModel;
 
 	public GraphPanelViewModelBase() : this(null, null, null) {
 
 	}
 
 	public GraphPanelViewModelBase(GraphPageViewModel? controller, ViewBase? owner, IServiceProvider? services) : base(owner, services) {
-		this.controller = controller;
-		dbService = (IHourglassDbService?)Services?.GetService(typeof(HourglassDbService));
-		dateTimeService = (DateTimeService?)services?.GetService(typeof(DateTimeService));
+		graphPageViewModel = controller;
 	}
 
 	public override void OnFinishedRegisteringViews(List<ViewBase> views, IServiceProvider? services) {

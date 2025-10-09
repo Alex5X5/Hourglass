@@ -188,6 +188,92 @@ public unsafe partial class PdfService : IPdfService {
 		progressReporter.ReportProgress(100, "finished exporting");
 	}
 
+
+
+	public void Export(DateTime selectedWeek) {
+		if (!IndexersLoaded)
+			return;
+		Stopwatch totalStopwatch = new();
+		totalStopwatch.Start();
+		Console.WriteLine("started expoting");
+		selectedWeek = DateTimeService.FloorWeek(selectedWeek);
+		Stopwatch prepareContentStopwatch = new();
+		prepareContentStopwatch.Start();
+		Console.WriteLine("started preparing content for the document");
+		List<Database.Models.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
+			{ "monday", DayOfWeek.Monday },
+			{ "tuesday", DayOfWeek.Tuesday },
+			{ "wendsday", DayOfWeek.Wednesday },
+			{ "thursday", DayOfWeek.Thursday },
+			{ "friday", DayOfWeek.Friday }
+		};
+		long totalWeekSeconds = 0;
+		string query = "";
+		string value = "";
+		const int progressUpdatesPerTask = 1;
+		int totalSteps = tasks.Count * progressUpdatesPerTask;
+		int currentStep = 0;
+		int percentage = 0;
+		foreach (string dayName in days.Keys) {
+			int offset = 0;
+			string[] lines = ["", "", "", "", "", ""];
+			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			if (tasks_.Count == 0)
+				continue;
+			foreach (Database.Models.Task task in tasks_) {
+				if (task.running)
+					continue;
+				string[] compiledTask = CompileTask(task);
+				try {
+					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+					query = $"{dayName}_hour_range_{offset + 1}";
+					value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
+					BufferAnnotationValueUnsafe(query, value);
+					BufferFieldValueUnsafe(query, value);
+					query = $"{dayName}_hour_{offset + 1}";
+					value = DateTimeService.ToHourMinuteString(task.finish - task.start);
+					BufferAnnotationValueUnsafe(query, value);
+					BufferFieldValueUnsafe(query, value);
+					offset += compiledTask.Length;
+				} catch (ArgumentOutOfRangeException) {
+					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+					Console.WriteLine($"description of task was:'{task.description}'");
+					break;
+				} catch (ArgumentException) {
+					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+					Console.WriteLine($"description of task was:'{task.description}'");
+					break;
+				}
+				totalWeekSeconds += task.finish - task.start;
+				currentStep++;
+				percentage = (int)(currentStep * 100.0 / totalSteps);
+			}
+			for (int i = 0; i < lines.Length; i++) {
+				query = $"{dayName}_line_{i + 1}";
+				BufferAnnotationValueUnsafe(query, lines[i]);
+				BufferFieldValueUnsafe(query, lines[i]);
+			}
+		}
+		query = $"total_hour";
+		value = DateTimeService.ToHourMinuteString(totalWeekSeconds);
+		BufferAnnotationValueUnsafe(query, value);
+		BufferFieldValueUnsafe(query, value);
+		SetUtilityFields(selectedWeek);
+		prepareContentStopwatch.Stop();
+		Console.Write("finished preparing content for the document\n");
+		Console.WriteLine($"preparing content took {prepareContentStopwatch.ElapsedMilliseconds / 1000.0} seconds");
+		char* document = BuildDocument(out int documentCharCount);
+		byte* resultFile = FileService.EncodeBufferAnsi(document, documentCharCount, out int fileSize);
+		FileService.WriteFileUnsafe(resultFile, PathService.FilesPath($"Nachweise/{GetNewFileName(selectedWeek)}"), fileSize);
+		NativeMemory.Free(resultFile);
+		NativeMemory.Free(document);
+		InsertOperations.Clear();
+		totalStopwatch.Stop();
+		Console.Write("finished exporting unsafe\n");
+		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
+	}
+
 	public void Import() {
 		throw new NotImplementedException();
 	}

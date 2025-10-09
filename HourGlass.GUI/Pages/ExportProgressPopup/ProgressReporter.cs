@@ -1,5 +1,4 @@
 ﻿using Hourglass.PDF.Services.Interfaces;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Hourglass.GUI.Pages.ExportProgressPopup;
 

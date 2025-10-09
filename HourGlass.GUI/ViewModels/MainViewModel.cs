@@ -15,15 +15,6 @@ using ReactiveUI;
 
 public partial class MainViewModel : ViewModelBase {
 
-	private IHourglassDbService dbService;
-
-	public DateTime SelectedDay {
-		set => SelectedDayStartSeconds = value.Ticks / TimeSpan.TicksPerSecond;
-		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
-	}
-
-	private long SelectedDayStartSeconds = DateTimeService.FloorDay(DateTime.Today).Ticks / TimeSpan.TicksPerSecond;
-
 	public PageViewModelBase CurrentPage {
         get { return _CurrentPage; }
         private set {
@@ -40,8 +31,8 @@ public partial class MainViewModel : ViewModelBase {
 		
 	}
 
-	public MainViewModel(ViewBase? owner, IServiceProvider? services) : base(owner, services) {
-		dbService = (IHourglassDbService)services?.GetService(typeof(HourglassDbService));
+	public MainViewModel(ViewBase? owner, IServiceProvider? services) : base(null, services) {
+		dbService = (IHourglassDbService?)services?.GetService(typeof(HourglassDbService));
 		Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
 		Pages = 
 		//[
@@ -51,10 +42,10 @@ public partial class MainViewModel : ViewModelBase {
 		//	Services?.GetRequiredService<ExportPageViewModel>() ?? new ExportPageViewModel()
 		//];
 		[
-			new TimerPageViewModel(Services?.GetService<TimerPageView>(), services) { RunningTask = task },
-			new GraphPageViewModel(Services?.GetService<GraphPageView>(), services) { RunningTask = task },
-			new ProjectPageViewModel(Services?.GetService<ProjectPageView>(), services) { RunningTask = task },
-			new ExportPageViewModel(Services?.GetService<ExportPageView>(), services) { RunningTask = task }
+			new TimerPageViewModel(Services?.GetService<TimerPageView>(), services) { mainViewModel = this, RunningTask = task },
+			new GraphPageViewModel(Services?.GetService<GraphPageView>(), services) { mainViewModel = this, RunningTask = task },
+			new ProjectPageViewModel(Services?.GetService<ProjectPageView>(), services) { mainViewModel = this, RunningTask = task },
+			new ExportPageViewModel(Services?.GetService<ExportPageView>(), services) { mainViewModel = this, RunningTask = task }
 		];
 		_CurrentPage = Pages[0];
 

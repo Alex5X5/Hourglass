@@ -1,0 +1,151 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
+             xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+			 x:Class="Hourglass.GUI.Views.Pages.TaskDetailsPageView"
+			 x:DataType="vm:TaskDetailsPageViewModel"
+			 x:CompileBindings="True"
+			 Loaded="UserControl_Loaded">
+	<Design.DataContext>
+		<vm:TimerPageViewModel />
+	</Design.DataContext>
+	<Grid Background="White" >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="15*" />
+			<RowDefinition Height="2*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="6*" />
+			<ColumnDefinition Width="3*" />
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="True">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="12*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="2*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="Start" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
+			<TextBox Grid.Row="1" Grid.Column="0" Text="{ Binding StartTextboxText }" />
+			<TextBlock Text="Finish" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
+			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
+			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
+			<TextBox Name="DescriptionTextbox"
+					 Grid.Row="4"
+					 Grid.Column="0"
+					 Grid.ColumnSpan="1"
+					 Text="{ Binding DescriptionTextboxText }"
+					 GotFocus="TextBox_GotFocus"
+					 KeyDown="TextBox_KeyDown"/>
+			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
+			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
+			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
+			<ComboBox SelectedIndex="0"
+					  Grid.Row="7"
+					  Grid.Column="2"
+					  MaxDropDownHeight="300"
+					  ItemsSource="{Binding AvailableProjects}"
+					  SelectedValue="{Binding SelectedProject}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<Grid Grid.Row="4"
+				  Grid.Column="2"
+				  RowDefinitions="2*, *, 2*, *, 2*"
+				  ColumnDefinitions="*, *, *"
+				  ShowGridLines="True" >
+				<Viewbox Grid.Row="0" Grid.Column="0" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="0" Grid.Column="1" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="0" Grid.Column="2" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="2" Grid.Column="0" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="2" Grid.Column="1" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="2" Grid.Column="2" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="4" Grid.Column="1" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+				<Viewbox Grid.Row="4" Grid.Column="2" Stretch="Uniform">
+					<StackPanel Width="1" Height="1" Background="Beige">
+						<Button Classes=""/>
+					</StackPanel>
+				</Viewbox>
+
+			</Grid>
+			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, *, 3*, *, 3*, *, 3*, *, 3*" >
+				<Button Name="startButton"
+						Command="{ Binding StartTaskCommand }" >
+					<TextBlock Classes="ButtonContent" Text="Start" />
+				</Button>
+				<Button Name="stopButton"
+						Grid.Column="2"
+						Command="{ Binding StopTaskCommand }" >
+					<TextBlock Classes="ButtonContent" Text="Stop" />
+				</Button>
+				<Button Name="restartButton"
+						Grid.Column="4"
+						Command="{ Binding RestartTaskCommand }" >
+					<TextBlock Classes="ButtonContent" Text="Restart" />
+				</Button>
+				<Button Name="applyButton"
+						Grid.Column="6"
+						Command="{ Binding RestartTaskCommand }" >
+					<TextBlock Classes="ButtonContent" Text="Restart" />
+				</Button>
+				<Button Name="deleteButton"
+						Grid.Column="8"
+						Command="{ Binding RestartTaskCommand }" >
+					<TextBlock Classes="ButtonContent" Text="Restart" />
+				</Button>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>

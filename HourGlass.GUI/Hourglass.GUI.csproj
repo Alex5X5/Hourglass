@@ -78,6 +78,9 @@
     <Compile Update="Views\Pages\TimerPageView.axaml.cs">
       <DependentUpon>TimerPageView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Pages\TaskDetailsPageView.axaml.cs">
+      <DependentUpon>TaskDetailsPageView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
