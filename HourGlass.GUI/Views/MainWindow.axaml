@@ -9,5 +9,5 @@
 		x:DataType="vm:MainWindowViewModel"
 		x:CompileBindings="True"
 		Title="Hourglass.GUI">
-	<views:MainView Name="mainView" Tag="{Binding Services}"/>
+	<views:MainView Name="mainView" />
 </Window>

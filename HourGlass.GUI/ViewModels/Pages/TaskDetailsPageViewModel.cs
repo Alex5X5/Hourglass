@@ -3,12 +3,16 @@
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
-using Hourglass.GUI.Views;
+using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 
 using System.ComponentModel;
 
 public partial class TaskDetailsPageViewModel : PageViewModelBase {
+
+	private IHourglassDbService dbService;
+	//private DateTimeService dateTimeService;
+	private MainViewModel controller;
 
 	public string DescriptionTextboxText { set; get; }
 	public string ProjectTextboxText { set; get; }
@@ -21,11 +25,12 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase {
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
-	public TaskDetailsPageViewModel() : this(null, null) {
+	public TaskDetailsPageViewModel() : this(null) {
 
 	}
 
-	public TaskDetailsPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService) : base() {
+		this.dbService = dbService;
 		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },

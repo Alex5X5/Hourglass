@@ -30,11 +30,7 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 	public override int X_AXIS_SEGMENT_COUNT => 24;
 	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-	public DayGraphPanelView() : this(null, null) {
-
-	}
-
-	public DayGraphPanelView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public DayGraphPanelView() : base() {
 		InitializeComponent();
 	}
 	

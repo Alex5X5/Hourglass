@@ -30,11 +30,7 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 	public override int X_AXIS_SEGMENT_COUNT => 7;
 	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-	public WeekGraphPanelView() : this(null, null) {
-
-	}
-
-	public WeekGraphPanelView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public WeekGraphPanelView() : base() {
 		InitializeComponent();
 	}
 

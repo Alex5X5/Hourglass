@@ -4,7 +4,6 @@ using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 
@@ -36,11 +35,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	#endregion fields
 
-	public GraphPanelViewBase() : this(null, null) {
-		
-	}
-
-	public GraphPanelViewBase(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public GraphPanelViewBase() : base() {
 		
 	}
 

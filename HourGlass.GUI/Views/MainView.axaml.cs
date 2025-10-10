@@ -5,13 +5,13 @@ using Hourglass.GUI.ViewModels.Pages;
 
 public partial class MainView : ViewBase {
 
-	public MainView() : this(null, null) {
+	public MainView() : this(null) {
 
 	}
 
-	public MainView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public MainView(MainViewModel model) : base() {
 		InitializeComponent();
-		DataContext = new MainViewModel(services);
+		//DataContext = model;
 		if (DataContext is MainViewModel viewModel)
 			viewModel.ChangePage<TimerPageViewModel>();
 	}

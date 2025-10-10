@@ -2,7 +2,6 @@
 
 using Avalonia.Controls;
 using Hourglass.GUI.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 
 public partial class MainWindow : Window {
@@ -13,9 +12,9 @@ public partial class MainWindow : Window {
 
 	}
 
-	public MainWindow(IServiceProvider? commonServices) : base() {
+	public MainWindow(MainWindowViewModel? model) : base() {
         InitializeComponent();
-		DataContext = new MainWindowViewModel(this, commonServices);
+		//DataContext = model;
 		//mainView.OnRegisteringViews(views);
 		//mainView.DataContext = new MainViewModel(commonServices);
 		//IServiceCollection viewCollection = new ServiceCollection();

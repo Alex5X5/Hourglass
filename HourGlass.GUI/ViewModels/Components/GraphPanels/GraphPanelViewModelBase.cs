@@ -1,19 +1,23 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
+using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.GUI.Views;
-using Hourglass.GUI.Views.Components.GraphPanels;
+using Hourglass.Util;
 
 public abstract class GraphPanelViewModelBase : ViewModelBase {
 
-	protected GraphPageViewModel? graphPageViewModel;
+	public IHourglassDbService dbService { set; get; }
+	public DateTimeService dateTimeService { set; get; }
+	protected MainViewModel controller;
+	protected GraphPageViewModel? panelController;
+
 
 	public GraphPanelViewModelBase() : this(null, null, null) {
 
 	}
 
-	public GraphPanelViewModelBase(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base(controller, services) {
-		graphPageViewModel = panelController;
+	public GraphPanelViewModelBase(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base() {
+		this.panelController = panelController;
 	}
 
 	public async virtual Task<List<Database.Models.Task>> GetTasksAsync() =>

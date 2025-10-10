@@ -1,14 +1,7 @@
-﻿using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.Views;
-using Hourglass.GUI.Views.Components.GraphPanels;
-using Hourglass.GUI.Views.Pages;
-using Hourglass.PDF;
+﻿namespace Hourglass.GUI.ViewModels.Pages;
 
-using Microsoft.Extensions.DependencyInjection;
-
+using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using ReactiveUI;
-
-namespace Hourglass.GUI.ViewModels.Pages;
 
 public class GraphPageViewModel : PageViewModelBase {
 	
@@ -21,24 +14,21 @@ public class GraphPageViewModel : PageViewModelBase {
 		}
 	}
 
-	private readonly GraphPanelViewModelBase[] GraphPanels;
+	private ViewModelFactory<GraphPanelViewModelBase> panelFactory;
 
-	public GraphPageViewModel() : this(null, null) {
+	public GraphPageViewModel() : this(null) {
 
 	}
 
-	public GraphPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
+	public GraphPageViewModel(ViewModelFactory<GraphPanelViewModelBase> panelFactory) : base() {
+		this.panelFactory = panelFactory;
 		Console.WriteLine("constructing graph page view model");
-		GraphPanels = [
-			new DayGraphPanelViewModel(controller, this, services),
-			new WeekGraphPanelViewModel(controller, this, services),
-			new MonthGraphPanelViewModel(controller, this, services)
-		];
-		_CurrentGraphPanel = GraphPanels[0];
 	}
 
 	public void ChangeGraphPanel<PanelT>() where PanelT : GraphPanelViewModelBase {
-		CurrentGraphPanel = GraphPanels.First(x => x.GetType() == typeof(PanelT));
+		if (panelFactory == null)
+			return;
+		CurrentGraphPanel = panelFactory.GetPageViewModel<PanelT>();
 		Console.WriteLine($"chaged type of panel to:{_CurrentGraphPanel.GetType().Name}");
 	}
 }

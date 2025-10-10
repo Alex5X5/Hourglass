@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
+using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Views;
 using Hourglass.Util;
 
@@ -21,11 +22,14 @@ public partial class TimerPageViewModel : PageViewModelBase {
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
-	public TimerPageViewModel() : this(null, null) {
+	IHourglassDbService dbService;
 
+	public TimerPageViewModel() : this(null) { 
+	
 	}
 
-	public TimerPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
+	public TimerPageViewModel(IHourglassDbService dbService) : base() {
+		this.dbService = dbService;
 		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },

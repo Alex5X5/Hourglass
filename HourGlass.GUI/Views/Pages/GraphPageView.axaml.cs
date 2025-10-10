@@ -6,12 +6,14 @@ using Hourglass.GUI.ViewModels.Pages;
 
 public partial class GraphPageView : PageViewBase {
 
-	public GraphPageView() : this(null, null) {
+	public GraphPageView() : this(null) {
 
 	}
 
-	public GraphPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public GraphPageView(GraphPageViewModel model) : base(model, null) {
 		InitializeComponent();
+		if(DataContext==null && model!=null)
+			DataContext = model;
 		//if (DataContext is GraphPageViewModel model_)
 		//	model_.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}

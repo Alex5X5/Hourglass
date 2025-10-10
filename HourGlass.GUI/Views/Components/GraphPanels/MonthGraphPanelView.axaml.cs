@@ -30,12 +30,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 	public override int X_AXIS_SEGMENT_COUNT => DateTimeService.DaysInCurrentMonth();
 	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-
-	public MonthGraphPanelView() : this(null, null) {
-
-	}
-
-	public MonthGraphPanelView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public MonthGraphPanelView() : base() {
 		InitializeComponent();
 	}
 
@@ -70,7 +65,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		int daysInCurrentMonth = DateTimeService.DaysInCurrentMonth();
 		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / daysInCurrentMonth;
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < daysInCurrentMonth; i++) {
 			double xPos = xAxisSegmentSize * i + PADDING_X;
 			if (i % 7 == 5 | i % 7 == 6)
 				context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));

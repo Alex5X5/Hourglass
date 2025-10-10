@@ -25,6 +25,6 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 		Console.WriteLine("month graph panel model double click");
 		if (dateTimeService != null)
 			dateTimeService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
-		graphPageViewModel?.ChangeGraphPanel<WeekGraphPanelViewModel>();
+		panelController?.ChangeGraphPanel<WeekGraphPanelViewModel>();
 	}
 }

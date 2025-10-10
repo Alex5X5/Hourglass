@@ -2,11 +2,13 @@
 
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.Database.Services;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util;
 
 using ReactiveUI;
+
+using static Hourglass.GUI.PageInstanciator;
 
 public partial class MainViewModel : ViewModelBase {
 
@@ -18,37 +20,40 @@ public partial class MainViewModel : ViewModelBase {
 		}
 	}
 
-	private readonly PageViewModelBase[] Pages;
-
 	private PageViewModelBase _CurrentPage;
+
+	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	
-	public MainViewModel() : this(null) {
+	public MainViewModel() : this(null, null, null) {
 		
 	}
 
-	public MainViewModel(IServiceProvider? services) : base(null, services) {
-		dbService = (IHourglassDbService?)services?.GetService(typeof(HourglassDbService));
-		Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
-		Pages =
+	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory) : base() {
+		this.pageFactory = pageFactory;
+		//dbService = (IHourglassDbService?)services?.GetService(typeof(HourglassDbService));
+		//Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
+		//Pages =
 		//[
 		//	Services?.GetRequiredService<TimerPageViewModel>() ?? new TimerPageViewModel(),
 		//	Services?.GetRequiredService<GraphPageViewModel>() ?? new GraphPageViewModel(),
 		//	Services?.GetRequiredService<ProjectPageViewModel>() ?? new ProjectPageViewModel(),
 		//	Services?.GetRequiredService<ExportPageViewModel>() ?? new ExportPageViewModel()
 		//];
-		[
-			new TimerPageViewModel(this, services) { RunningTask = task },
-			new GraphPageViewModel(this, services) { RunningTask = task },
-			new ProjectPageViewModel(this, services) { RunningTask = task },
-			new ExportPageViewModel(this, services) { RunningTask = task },
-			new TaskDetailsPageViewModel(this, services)
-		];
-		_CurrentPage = Pages[0];
-
+		//[
+		//	new TimerPageViewModel(this, services) { RunningTask = task },
+		//	new GraphPageViewModel(this, services) { RunningTask = task },
+		//	new ProjectPageViewModel(this, services) { RunningTask = task },
+		//	new ExportPageViewModel(this, services) { RunningTask = task },
+		//	new TaskDetailsPageViewModel(this, services)
+		//];
+		//if(pageFactory!=null)
+			//CurrentPage = pageFactory.GetPageViewModel<GraphPageViewModel>();
 	}
 
 	public void ChangePage<PageT>() where PageT : PageViewModelBase {
-		CurrentPage = Pages.First(x => x.GetType() == typeof(PageT));
+		if (pageFactory == null)
+			return;
+		CurrentPage = pageFactory.GetPageViewModel<PageT>();
 		Console.WriteLine($"chaged type of page to:{_CurrentPage.GetType().Name}");
 		Console.WriteLine($"new page is {_CurrentPage.GetType().IsVisible} visible");
 	}
