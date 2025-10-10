@@ -8,16 +8,19 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 
 	public IHourglassDbService dbService { set; get; }
 	public DateTimeService dateTimeService { set; get; }
-	protected MainViewModel controller;
-	protected GraphPageViewModel? panelController;
 
+	protected GraphPageViewModel panelController;
+	protected MainViewModel pageController;
 
-	public GraphPanelViewModelBase() : this(null, null, null) {
-
+	public GraphPanelViewModelBase() : this(null, null, null, null) {
+		
 	}
-
-	public GraphPanelViewModelBase(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base() {
+	
+	public GraphPanelViewModelBase(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController) : base() {
+		this.dbService = dbService;
+		this.dateTimeService = dateTimeService;
 		this.panelController = panelController;
+		this.pageController = pageController;
 	}
 
 	public async virtual Task<List<Database.Models.Task>> GetTasksAsync() =>

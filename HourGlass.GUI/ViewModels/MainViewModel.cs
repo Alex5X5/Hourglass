@@ -44,8 +44,8 @@ public partial class MainViewModel : ViewModelBase {
 		//	new ExportPageViewModel(this, services) { RunningTask = task },
 		//	new TaskDetailsPageViewModel(this, services)
 		//];
-		//if(pageFactory!=null)
-			//CurrentPage = pageFactory.GetPageViewModel<GraphPageViewModel>();
+		if(pageFactory != null)
+			CurrentPage = pageFactory.GetPageViewModel<TimerPageViewModel>();
 	}
 
 	public void ChangePage<PageT>() where PageT : PageViewModelBase {

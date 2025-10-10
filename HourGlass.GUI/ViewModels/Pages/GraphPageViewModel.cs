@@ -22,6 +22,7 @@ public class GraphPageViewModel : PageViewModelBase {
 
 	public GraphPageViewModel(ViewModelFactory<GraphPanelViewModelBase> panelFactory) : base() {
 		this.panelFactory = panelFactory;
+		//CurrentGraphPanel = panelFactory.GetPageViewModel<DayGraphPanelViewModel>();
 		Console.WriteLine("constructing graph page view model");
 	}
 

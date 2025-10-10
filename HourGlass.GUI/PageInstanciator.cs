@@ -25,12 +25,6 @@ public class PageInstanciator {
 	}
 
 	public PageInstanciator() {
-		serviceCollection.AddSingleton<Func<Type, PageViewModelBase>>(
-			(serviceProvider) =>
-				(pageType) =>
-					(PageViewModelBase?)serviceProvider.GetService(pageType)
-						?? throw new InvalidOperationException($"Page of type {pageType?.FullName} has no registered view model")
-		);
 	}
 
 	public void AddCommonServiceSingleton(Type serviceType) {

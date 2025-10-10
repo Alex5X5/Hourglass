@@ -1,15 +1,17 @@
 namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
+using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 
 public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
-	public MonthGraphPanelViewModel() : this(null, null, null) {
+	public MonthGraphPanelViewModel() : this(null, null, null, null) {
 
 	}
 
-	public MonthGraphPanelViewModel(MainViewModel? controller, GraphPageViewModel? panelController, IServiceProvider? services) : base(controller, panelController, services) {
+	public MonthGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController)
+		: base(dbService, dateTimeService, panelController, pageController) {
 
 	}
 
@@ -17,7 +19,7 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
 	public override void OnClick(Database.Models.Task task) {
-		controller?.ChangePage<TaskDetailsPageViewModel>();
+		pageController.ChangePage<TaskDetailsPageViewModel>();
 		Console.WriteLine("month graph panel model click");
 	}
 
