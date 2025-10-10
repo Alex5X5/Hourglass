@@ -33,7 +33,7 @@ public partial class App : Application {
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>(new SettingsService());
 		DateTimeService dateTimeService = new();
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>(dateTimeService);
-		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
+		//instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 
 		if (!Design.IsDesignMode) {
 			HourglassDbService dbService = new(dateTimeService);
@@ -44,27 +44,17 @@ public partial class App : Application {
 
 		//instanciator.AddCommonServiceSingleton<PageViewFactory, PageViewFactory>();
 		instanciator.RegisterPageSingleton<MainViewModel>();
-		instanciator.AddCommonServiceSingleton<MainWindowViewModel, MainWindowViewModel>();
+		instanciator.RegisterPageSingleton<MainWindowViewModel>();
 
 		instanciator.RegisterPageSingleton<GraphPageViewModel>();
 		instanciator.RegisterPageTransient<ExportPageViewModel>();
 		instanciator.RegisterPageTransient<ProjectPageViewModel>();
 		instanciator.RegisterPageTransient<TaskDetailsPageViewModel>();
 		instanciator.RegisterPageTransient<TimerPageViewModel>();
+
 		instanciator.RegisterPageTransient<DayGraphPanelViewModel>();
 		instanciator.RegisterPageTransient<WeekGraphPanelViewModel>();
 		instanciator.RegisterPageTransient<MonthGraphPanelViewModel>();
-
-		// TopLevel provider
-		//collection.AddSingleton<Func<TopLevel?>>(x => () =>
-		//{
-		//	if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime topWindow)
-		//		return TopLevel.GetTopLevel(topWindow.MainWindow);
-		//	else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-		//		return TopLevel.GetTopLevel(singleViewPlatform.MainView);
-
-		//	return null;
-		//});
 
 		var services = instanciator.BuildPages();
 
@@ -77,18 +67,6 @@ public partial class App : Application {
 				DataContext = services.GetRequiredService<MainViewModel>()
 			};
 		}
-
-		//IServiceCollection commonServiceCollection = new ServiceCollection();
-		//commonServiceCollection.AddCommonServices();
-		//IServiceProvider commonServices = commonServiceCollection.BuildServiceProvider();
-		//IServiceCollection viewCollection = new ServiceCollection();
-		//viewCollection.AddViewModels();
-		//IServiceProvider services = viewCollection.BuildServiceProvider();
-		//if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
-		//	desktop.MainWindow = new MainWindow(commonServices);
-		//} else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform) {
-		//	singleViewPlatform.MainView = new MainView();
-		//}
 
 		base.OnFrameworkInitializationCompleted();
 	}

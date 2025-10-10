@@ -6,7 +6,6 @@
 		xmlns:views="clr-namespace:Hourglass.GUI.Views"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="Hourglass.GUI.Views.MainWindow"
-		x:DataType="vm:MainWindowViewModel"
 		x:CompileBindings="True"
 		Title="Hourglass.GUI">
 	<views:MainView Name="mainView" />

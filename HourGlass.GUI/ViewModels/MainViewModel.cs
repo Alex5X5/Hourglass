@@ -8,8 +8,6 @@ using Hourglass.Util;
 
 using ReactiveUI;
 
-using static Hourglass.GUI.PageInstanciator;
-
 public partial class MainViewModel : ViewModelBase {
 
 	public PageViewModelBase CurrentPage {
