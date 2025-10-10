@@ -63,11 +63,20 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {
+		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 166, 166, 166));
+		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		int daysInCurrentMonth = DateTimeService.DaysInCurrentMonth();
 		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / daysInCurrentMonth;
+		for (int i = 0; i < 7; i++) {
+			double xPos = xAxisSegmentSize * i + PADDING_X;
+			if (i % 7 == 5 | i % 7 == 6)
+				context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
+			if (i + 1 == (int)DateTime.Today.DayOfWeek)
+				context.FillRectangle(todayBackgroundColor, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
+		}
 		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
 		for (int i = 0; i < daysInCurrentMonth + 1; i++) {
 			double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;

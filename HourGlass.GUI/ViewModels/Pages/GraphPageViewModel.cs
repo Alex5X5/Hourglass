@@ -28,6 +28,7 @@ public class GraphPageViewModel : PageViewModelBase {
 	}
 
 	public GraphPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
+		Console.WriteLine("constructing graph page view model");
 		GraphPanels = [
 			new DayGraphPanelViewModel(controller, this, services),
 			new WeekGraphPanelViewModel(controller, this, services),

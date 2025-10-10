@@ -1,17 +1,20 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
+using Avalonia.Controls;
+
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.PDF;
 
 public partial class ExportPageViewModel : PageViewModelBase {
 
-	private readonly PdfService pdf;
+	private readonly PdfService? pdf;
 
 	public ExportPageViewModel() : this(null, null) {
 	}
 
 	public ExportPageViewModel(MainViewModel? controller, IServiceProvider? services) : base(controller, services) {
-		pdf = new PdfService(dbService);
+		if(!Design.IsDesignMode)
+			pdf = new PdfService(dbService);
 	}
 
 	[RelayCommand]
@@ -24,7 +27,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 		Console.WriteLine("export button click!");
 		new Thread(
 			() => {
-				pdf.Export(dateTimeService?.SelectedDay ?? DateTime.Now);
+				pdf?.Export(dateTimeService?.SelectedDay ?? DateTime.Now);
 			}
 		).Start();
 	}
