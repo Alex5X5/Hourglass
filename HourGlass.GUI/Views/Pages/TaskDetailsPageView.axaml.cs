@@ -3,17 +3,13 @@ namespace Hourglass.GUI.Views.Pages;
 using Avalonia.Controls;
 using Avalonia.Input;
 
-using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
 
 public partial class TaskDetailsPageView : PageViewBase {
 
-	private bool initialDescriptionTextboxClear = true;
+	//private bool initialDescriptionTextboxClear = true;
 
-	public TaskDetailsPageView() : this(null, null) {
-	}
-
-	public TaskDetailsPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public TaskDetailsPageView() : base() {
 		InitializeComponent();
 		startButton.GotFocus += (sender, args) => {
 			startButton.InvalidateVisual();
@@ -23,11 +19,14 @@ public partial class TaskDetailsPageView : PageViewBase {
 
 	private void TextBox_GotFocus(object? sender, GotFocusEventArgs e) {
 		Console.WriteLine("got focus!");
-		if (initialDescriptionTextboxClear) {
-			Console.WriteLine("initial focus!");
-			DescriptionTextbox.Clear();
-			initialDescriptionTextboxClear = false;
-		}
+		Console.WriteLine((DataContext as TaskDetailsPageViewModel)?.SelectedTask.description);
+		Console.WriteLine(DescriptionTextbox.Text);
+		
+		//if (initialDescriptionTextboxClear) {
+		//	Console.WriteLine("initial focus!");
+		//	DescriptionTextbox.Clear();
+		//	initialDescriptionTextboxClear = false;
+		//}
 	}
 
 	private void TextBox_KeyDown(object? sender, KeyEventArgs e) {
@@ -38,11 +37,16 @@ public partial class TaskDetailsPageView : PageViewBase {
 			startButton.Focus();
 			Console.WriteLine($"button is focused {startButton.IsFocused}");
 		}
+		//Console.WriteLine((DataContext as TaskDetailsPageViewModel)?.SelectedTask.description);
+		//Console.WriteLine((DataContext as TaskDetailsPageViewModel)?.DescriptionTextboxText);
+		//Console.WriteLine(DescriptionTextbox.Text);
+		//DescriptionTextbox.InvalidateVisual();
 	}
 
 	private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("Timer Page loaded!");
-		(DataContext as TimerPageViewModel)?.OnLoad();
+		Console.WriteLine("Task Details View loaded!");
+		(DataContext as TaskDetailsPageViewModel)?.OnLoad();
+		//Console.WriteLine(DescriptionTextbox.Text);
 	}
 
 	//private void TextBox_KeyDown(object? sender, Avalonia. e) {

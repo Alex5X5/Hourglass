@@ -18,10 +18,10 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
-	public override void OnClick(Database.Models.Task task) {
-		pageController.ChangePage<TaskDetailsPageViewModel>();
-		Console.WriteLine("day graph panel model click");
-	}
+	//public override void OnClick(Database.Models.Task task) {
+	//	pageController.ChangePage<TaskDetailsPageViewModel>();
+	//	Console.WriteLine("day graph panel model click");
+	//}
 
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("day graph panel model double click");

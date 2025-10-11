@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
@@ -8,11 +9,10 @@ using Hourglass.Util;
 
 using System.ComponentModel;
 
-public partial class TaskDetailsPageViewModel : PageViewModelBase {
+public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
 	private IHourglassDbService dbService;
-	//private DateTimeService dateTimeService;
-	private MainViewModel controller;
+	private DateTimeService dateTimeService;
 
 	public string DescriptionTextboxText { set; get; }
 	public string ProjectTextboxText { set; get; }
@@ -20,23 +20,34 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase {
 	public string StartTextboxText { set; get; }
 	public string FinishTextboxText { set; get; }
 
+	private Task selectedTask;
+	public Task SelectedTask {
+		set {
+			selectedTask = value;
+			UpdateTextFields();
+		}
+		get => selectedTask;
+	}
+
 	public Project SelectedProject { get; set; }
     public List<Project> AvailableProjects { get; set; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
-	public TaskDetailsPageViewModel() : this(null) {
+	public TaskDetailsPageViewModel() : this(null, null) {
 
 	}
 
-	public TaskDetailsPageViewModel(IHourglassDbService dbService) : base() {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService, DateTimeService dateTimeService) : base() {
 		this.dbService = dbService;
+		this.dateTimeService = dateTimeService;
 		AvailableProjects = [
-			new Project() { Name="test project" },
+			new Project() { Name = "test project" },
 			new Project() { Name = "failing project" },
 			new Project() { Name = "sucessfull project" }
 		];
 		SelectedProject = AvailableProjects[0];
+		UpdateTextFields();
 	}
 
 	protected virtual void OnPropertyChanged(string propertyName) {
@@ -85,15 +96,41 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase {
 		UpdateTextFields();
 	}
 
+
+	[RelayCommand]
+	private void DeleteTask() {
+		Console.WriteLine("delete task button click!");
+		dbService.DeleteTaskAsync(SelectedTask);
+		UpdateTextFields();
+	}
+
+
+	[RelayCommand]
+	private void ApplyChanges() {
+		Console.WriteLine("apply changes button click! (not yet implemented)");
+		Console.WriteLine($"task description:{DescriptionTextboxText}");
+		Console.WriteLine($"start time text:{StartTextboxText}");
+		Console.WriteLine($"finish time text:{FinishTextboxText}");
+		Console.WriteLine($"project name:{SelectedProject.Name}");
+		Console.WriteLine($"ticket name:{TicketTextboxText}");
+		//UpdateTextFields();
+	}
+
 	public void OnLoad() {
-		Console.WriteLine("loading Timer Page");
+		Console.WriteLine("loading Task Details Page Model");
 		UpdateTextFields();
 	}
 
 	public void UpdateTextFields() {
-		DescriptionTextboxText = RunningTask?.description ?? "";
-		StartTextboxText = RunningTask != null ? DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime) : "";
-		SelectedProject = RunningTask?.project ?? AvailableProjects[0];
-		TicketTextboxText = RunningTask?.ticket?.description ?? "";
+		DescriptionTextboxText = SelectedTask?.description ?? "";
+		StartTextboxText = SelectedTask != null ? DateTimeService.ToDayAndTimeString(SelectedTask.StartDateTime) : "";
+		FinishTextboxText = SelectedTask != null ? DateTimeService.ToDayAndTimeString(SelectedTask.FinishDateTime) : "";
+		SelectedProject = SelectedTask?.project ?? AvailableProjects[0];
+		TicketTextboxText = SelectedTask?.ticket?.description ?? "";
+		OnPropertyChanged(nameof(DescriptionTextboxText));
+		OnPropertyChanged(nameof(StartTextboxText));
+		OnPropertyChanged(nameof(FinishTextboxText));
+		OnPropertyChanged(nameof(SelectedProject));
+		OnPropertyChanged(nameof(TicketTextboxText));
 	}
 }

@@ -26,7 +26,9 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	public async virtual Task<List<Database.Models.Task>> GetTasksAsync() =>
 		await dbService.QueryTasksAsync() ?? [];
 
-	public abstract void OnClick(Database.Models.Task task);
+	public virtual void OnClick(Database.Models.Task task) {
+		pageController.GoToTaskdetails(task);
+	}
 
 	public abstract void OnDoubleClick(DateTime clickedTime);
 

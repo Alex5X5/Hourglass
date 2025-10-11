@@ -10,6 +10,7 @@ using ReactiveUI;
 
 public partial class MainViewModel : ViewModelBase {
 
+	private PageViewModelBase _CurrentPage;
 	public PageViewModelBase CurrentPage {
         get { return _CurrentPage; }
         private set {
@@ -18,34 +19,23 @@ public partial class MainViewModel : ViewModelBase {
 		}
 	}
 
-	private PageViewModelBase _CurrentPage;
+	public Database.Models.Task? RunningTask { set; get; }
 
 	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
+	private IHourglassDbService dbService;
+	private DateTimeService dateTimeService;
 	
-	public MainViewModel() : this(null, null, null) {
+	public MainViewModel() {
 		
 	}
 
 	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory) : base() {
+		this.dbService = dbService;
+		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
-		//dbService = (IHourglassDbService?)services?.GetService(typeof(HourglassDbService));
-		//Database.Models.Task? task = dbService?.QueryCurrentTaskAsync().Result;
-		//Pages =
-		//[
-		//	Services?.GetRequiredService<TimerPageViewModel>() ?? new TimerPageViewModel(),
-		//	Services?.GetRequiredService<GraphPageViewModel>() ?? new GraphPageViewModel(),
-		//	Services?.GetRequiredService<ProjectPageViewModel>() ?? new ProjectPageViewModel(),
-		//	Services?.GetRequiredService<ExportPageViewModel>() ?? new ExportPageViewModel()
-		//];
-		//[
-		//	new TimerPageViewModel(this, services) { RunningTask = task },
-		//	new GraphPageViewModel(this, services) { RunningTask = task },
-		//	new ProjectPageViewModel(this, services) { RunningTask = task },
-		//	new ExportPageViewModel(this, services) { RunningTask = task },
-		//	new TaskDetailsPageViewModel(this, services)
-		//];
-		if(pageFactory != null)
-			CurrentPage = pageFactory.GetPageViewModel<TimerPageViewModel>();
+		RunningTask = dbService.QueryCurrentTaskAsync().Result;
+		
+		CurrentPage = pageFactory.GetPageViewModel<TimerPageViewModel>();
 	}
 
 	public void ChangePage<PageT>() where PageT : PageViewModelBase {
@@ -78,6 +68,16 @@ public partial class MainViewModel : ViewModelBase {
 	private void GoToProject() {
 		Console.WriteLine("project mode button click!");
 		ChangePage<ProjectPageViewModel>();
+	}
+
+	public void GoToTaskdetails(Database.Models.Task task) {
+		if(pageFactory==null)
+			return;
+		ChangePage<TaskDetailsPageViewModel>();
+		if (CurrentPage is TaskDetailsPageViewModel model) {
+			model.SelectedTask = task;
+			model.UpdateTextFields();
+		}
 	}
 }
 

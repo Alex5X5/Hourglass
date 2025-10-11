@@ -47,10 +47,11 @@
 			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
 			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
 			<TextBox Name="DescriptionTextbox"
+					 Foreground="Green"
 					 Grid.Row="4"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="1"
-					 Text="{ Binding DescriptionTextboxText }"
+					 Text="{ Binding DescriptionTextboxText, Mode=TwoWay }"
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"/>
 			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
@@ -137,12 +138,12 @@
 				</Button>
 				<Button Name="applyButton"
 						Grid.Column="6"
-						Command="{ Binding RestartTaskCommand }" >
+						Command="{ Binding ApplyChangesCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Restart" />
 				</Button>
 				<Button Name="deleteButton"
 						Grid.Column="8"
-						Command="{ Binding RestartTaskCommand }" >
+						Command="{ Binding DeleteTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Restart" />
 				</Button>
 			</Grid>
