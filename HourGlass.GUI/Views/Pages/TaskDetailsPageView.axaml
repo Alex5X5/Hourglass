@@ -23,7 +23,7 @@
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="True">
+		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="False">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="3*" />
@@ -51,7 +51,7 @@
 					 Grid.Row="4"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="1"
-					 Text="{ Binding DescriptionTextboxText, Mode=TwoWay }"
+					 Text="{ Binding DescriptionTextboxText }"
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"/>
 			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
@@ -73,58 +73,40 @@
 				  Grid.Column="2"
 				  RowDefinitions="2*, *, 2*, *, 2*"
 				  ColumnDefinitions="*, *, *"
-				  ShowGridLines="True" >
+				  ShowGridLines="False" >
 				<Viewbox Grid.Row="0" Grid.Column="0" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="1" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="2" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="0" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="1" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="2" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="1" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="2" Stretch="Uniform">
-					<StackPanel Width="1" Height="1" Background="Beige">
-						<Button Classes=""/>
-					</StackPanel>
+					<Button Width="100" Height="100" Background="Beige" />
 				</Viewbox>
 
 			</Grid>
-			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, *, 3*, *, 3*, *, 3*, *, 3*" >
+			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
 				<Button Name="startButton"
 						Command="{ Binding StartTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Start" />
+					<TextBlock Classes="ButtonContent" Text="Continiue" />
 				</Button>
 				<Button Name="stopButton"
 						Grid.Column="2"
@@ -134,19 +116,33 @@
 				<Button Name="restartButton"
 						Grid.Column="4"
 						Command="{ Binding RestartTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Restart" />
+					<TextBlock Classes="ButtonContent" Text="Start New" />
 				</Button>
 				<Button Name="applyButton"
 						Grid.Column="6"
 						Command="{ Binding ApplyChangesCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Restart" />
+					<TextBlock Classes="ButtonContent" Text="Save" />
 				</Button>
 				<Button Name="deleteButton"
 						Grid.Column="8"
 						Command="{ Binding DeleteTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Restart" />
+					<TextBlock Classes="ButtonContent" Text="Delete" />
 				</Button>
 			</Grid>
+		</Grid>
+		<Grid Grid.Row="1"
+			  ColumnDefinitions="5*,2*,2*">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="28*" />
+			</Grid.RowDefinitions>
+
+			<Button Grid.Row="1"
+					Grid.Column="1"
+					Command="{ Binding CancelCommand }" >
+				<TextBlock Classes="ButtonContent" Text="Back" />
+			</Button>
 		</Grid>
 	</Grid>
 </UserControl>

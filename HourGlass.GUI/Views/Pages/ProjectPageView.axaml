@@ -28,7 +28,11 @@
 				<RowDefinition Height="3*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="2*" />
-				<RowDefinition Height="12*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="3*" />
@@ -51,13 +55,18 @@
 					  SelectedValue="{Binding SelectedProject}">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding Name}" />
+						<Grid ColumnDefinitions="4*, *, 2*">
+							<TextBlock Text="{Binding Name}" Grid.Column="0"/>
+							<Button Name="restartButton" Grid.Column="2" >
+								<TextBlock Classes="ButtonContent" Text="Delete" />
+							</Button>
+						</Grid>
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 					  <!--
 					  -->
-			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
+			<Grid Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
 				<Button Name="startButton">
 					<!--
 						Command="{ Binding StartTaskCommand }" 
@@ -70,7 +79,7 @@
 				</Button>
 				<Button Name="restartButton"
 						Grid.Column="4" >
-					<TextBlock Classes="ButtonContent" Text="Restart" />
+					<TextBlock Classes="ButtonContent" Text="Save" />
 				</Button>
 			</Grid>
 		</Grid>

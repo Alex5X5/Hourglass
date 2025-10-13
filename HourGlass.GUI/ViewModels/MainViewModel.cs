@@ -10,6 +10,8 @@ using ReactiveUI;
 
 public partial class MainViewModel : ViewModelBase {
 
+	private PageViewModelBase? lastPage;
+
 	private PageViewModelBase _CurrentPage;
 	public PageViewModelBase CurrentPage {
         get { return _CurrentPage; }
@@ -41,9 +43,17 @@ public partial class MainViewModel : ViewModelBase {
 	public void ChangePage<PageT>() where PageT : PageViewModelBase {
 		if (pageFactory == null)
 			return;
+		lastPage = CurrentPage;
 		CurrentPage = pageFactory.GetPageViewModel<PageT>();
 		Console.WriteLine($"chaged type of page to:{_CurrentPage.GetType().Name}");
 		Console.WriteLine($"new page is {_CurrentPage.GetType().IsVisible} visible");
+	}
+
+	public void GoBack() {
+		if (lastPage != null) {
+			CurrentPage = lastPage;
+			lastPage = null;
+		}
 	}
 
 	[RelayCommand]

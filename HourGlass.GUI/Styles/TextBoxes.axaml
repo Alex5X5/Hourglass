@@ -3,7 +3,7 @@
 	<Design.PreviewWith>
 		<StackPanel Width="500" Height="100">
 		<TextBox Text="test" />
-		</StackPanel>
+		</StackPanel>		
 	</Design.PreviewWith>
 	
 	<Style Selector="TextBox">

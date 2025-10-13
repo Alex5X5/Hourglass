@@ -13,5 +13,4 @@
 		<Setter Property="Padding" Value="10,0,0,0" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 	</Style>
-
 </Styles>
