@@ -3,6 +3,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:local="using:Hourglass.GUI.Views.Components"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
 			 x:Class="Hourglass.GUI.Views.Pages.ExportPageView"
 			 x:DataType="vm:ExportPageViewModel"
@@ -16,9 +17,19 @@
 					  Grid.Column="1"
 					  Grid.Row="1">
 			<Viewbox Stretch="Uniform">				
-				<Grid Width="17" Height="12" Background="Beige">
-					
-				</Grid>
+				<Canvas Background="Beige" Width="850" Height="600" >
+					<Rectangle Fill="Blue" Width="63" Height="41" Canvas.Left="40" Canvas.Top="31">
+						<Rectangle.OpacityMask>
+							<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+								<LinearGradientBrush.GradientStops>
+									<GradientStop Offset="0" Color="Black"/>
+									<GradientStop Offset="1" Color="Transparent"/>
+								</LinearGradientBrush.GradientStops>
+							</LinearGradientBrush>
+						</Rectangle.OpacityMask>
+					</Rectangle>
+					<Line StartPoint="120,185" EndPoint="30,115" Stroke="Red" StrokeThickness="2"/>
+				</Canvas>
 			</Viewbox>
 		</ScrollViewer>
 		<Grid Grid.Row="3"

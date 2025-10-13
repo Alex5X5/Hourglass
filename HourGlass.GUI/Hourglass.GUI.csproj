@@ -48,6 +48,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\Components\DocumentPreviewer.axaml.cs">
+      <DependentUpon>DocumentPreviewer.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Components\GraphModeButtonIcons\MonthGraphModeButtonIcon.axaml.cs">
       <DependentUpon>MonthGraphModeButtonIcon.axaml</DependentUpon>
     </Compile>

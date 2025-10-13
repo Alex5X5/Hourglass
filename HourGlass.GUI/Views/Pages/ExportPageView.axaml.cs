@@ -1,10 +1,6 @@
-namespace Hourglass.GUI.Views.Pages;
-
-using Avalonia.Controls;
 using Avalonia.Media;
 
-using Hourglass.GUI.ViewModels;
-using Hourglass.PDF.Services.Interfaces;
+namespace Hourglass.GUI.Views.Pages;
 
 public partial class ExportPageView : PageViewBase {
 
