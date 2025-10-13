@@ -13,14 +13,6 @@
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="Foreground" Value="Black" />
 		<Setter Property="CornerRadius" Value="0" />
-		<!--
-		<Style Selector="^:pointerover /template/ ContentPresenter">
-			<Setter Property="BorderThickness" Value="2" />
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="#C5C5C5" />
-		</Style>
-
-		-->
 		<Style Selector="^:pointerover /template/ Border">
 			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
 			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
@@ -33,6 +25,9 @@
 		<Style Selector="^:focus /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
 			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
 		</Style>
 	</Style>
 </Styles>

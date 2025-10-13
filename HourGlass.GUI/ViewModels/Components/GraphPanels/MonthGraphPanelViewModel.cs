@@ -18,10 +18,10 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
-	public override void OnClick(Database.Models.Task task) {
-		pageController.ChangePage<TaskDetailsPageViewModel>();
-		Console.WriteLine("month graph panel model click");
-	}
+	//public override void OnClick(Database.Models.Task task) {
+	//	pageController.ChangePage<TaskDetailsPageViewModel>();
+	//	Console.WriteLine("month graph panel model click");
+	//}
 
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("month graph panel model double click");

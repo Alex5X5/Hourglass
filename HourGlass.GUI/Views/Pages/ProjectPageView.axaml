@@ -10,5 +10,78 @@
 	<Design.DataContext>
 		<vm:ProjectPageViewModel />
 	</Design.DataContext>
-	<Rectangle Fill="#BB0000" />
+
+	<Grid Background="White" >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="15*" />
+			<RowDefinition Height="2*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="9*" />
+			<ColumnDefinition Width="3*" />
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Row="1" Grid.Column="1" >
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="3*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="5*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="Project Name" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
+			<TextBox Grid.Row="1" Grid.Column="0" Text="Name ..." />
+			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
+			<ComboBox SelectedIndex="0"
+					  Grid.Row="1"
+					  Grid.Column="2"
+					  MaxDropDownHeight="300"
+					  ItemsSource="{Binding AvailableProjects}"
+					  SelectedValue="{Binding SelectedProject}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<Grid ColumnDefinitions="4*, *, 2*">
+							<TextBlock Text="{Binding Name}" Grid.Column="0"/>
+							<Button Name="restartButton" Grid.Column="2" >
+								<TextBlock Classes="ButtonContent" Text="Delete" />
+							</Button>
+						</Grid>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+					  <!--
+					  -->
+			<Grid Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
+				<Button Name="startButton">
+					<!--
+						Command="{ Binding StartTaskCommand }" 
+				-->
+					<TextBlock Classes="ButtonContent" Text="Start" />
+				</Button>
+				<Button Name="stopButton"
+						Grid.Column="2" >
+					<TextBlock Classes="ButtonContent" Text="Stop" />
+				</Button>
+				<Button Name="restartButton"
+						Grid.Column="4" >
+					<TextBlock Classes="ButtonContent" Text="Save" />
+				</Button>
+			</Grid>
+		</Grid>
+	</Grid>
 </UserControl>

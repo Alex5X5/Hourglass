@@ -19,10 +19,10 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
 
-	public override void OnClick(Database.Models.Task task) {
-		pageController.ChangePage<TaskDetailsPageViewModel>();
-		Console.WriteLine("week graph panel model click");
-	}
+	//public override void OnClick(Database.Models.Task task) {
+	//	pageController.ChangePage<TaskDetailsPageViewModel>();
+	//	Console.WriteLine("week graph panel model click");
+	//}
 
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("week graph panel model double click");
