@@ -18,10 +18,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputType>WinExe</OutputType>
+	<DefineConstants>$(DefineConstants);PUBLISHED</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="11.3.6" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
 		<PrivateAssets>all</PrivateAssets>

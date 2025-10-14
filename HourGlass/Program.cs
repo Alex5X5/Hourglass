@@ -1,4 +1,4 @@
-namespace HourGlass;
+namespace Hourglass;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -10,6 +10,8 @@ using Hourglass.GUI;
 using Hourglass.PDF;
 using Hourglass.Util;
 using Hourglass.Util.Services;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 public class Program {
 	/// <summary>
@@ -18,7 +20,10 @@ public class Program {
 	[STAThread]
 	public static void Main(string[] args) {
 
-		PathService.PrintDetailedInfo();
+#if PUBLISHED
+		InstallerService.CheckIsInAppdata();
+#endif
+        PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
 
 		BuildAvaloniaApp()

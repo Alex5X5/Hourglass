@@ -8,7 +8,13 @@ using System.Text;
 
 public static class PathService {
 
-	public static void ExtractFiles(string resourceNamespacePrefix) {
+	public const string APP_NAME = "Hourglass\\";
+
+	public static readonly string APP_FILES_DIRECTORY = Path.Combine(GetMainEntryPointDirectory(), APP_NAME);
+
+	public static readonly string APP_DATA_DIRECTORY = Path.Combine(GetAppDataDirectory(), APP_NAME);
+
+    public static void ExtractFiles(string resourceNamespacePrefix) {
 		// Get executing assembly
 		var assembly = Assembly.GetCallingAssembly();
 		var resourceNames = assembly.GetManifestResourceNames();
@@ -44,19 +50,22 @@ public static class PathService {
         }
 	}
 
-    public static string FilesPath(string fileName) =>
-        GetMainEntryPointPath() + @"\Hourglass\" + fileName;
-    
-	public static string AssetsPath(string fileName) =>
+	public static string FilesPath(string fileName) =>
+		Path.Combine(APP_FILES_DIRECTORY, fileName);
+
+    public static string AppDataFilesPath(string fileName) =>
+		Path.Combine(APP_DATA_DIRECTORY, fileName);
+
+    public static string AssetsPath(string fileName) =>
 		FilesPath(@"Assets\" + fileName);
 
-	public static string GetMainEntryPointPath() {
+    public static string GetMainEntryPointPath() {
 		// Method 1: Try to get the entry assembly (most reliable for executable applications)
 		Assembly entryAssembly = Assembly.GetEntryAssembly();
 		if (entryAssembly != null) {
 			string assemblyPath = entryAssembly.Location;
 			if (!string.IsNullOrEmpty(assemblyPath) && File.Exists(assemblyPath)) {
-				return Path.GetDirectoryName(assemblyPath);
+				return assemblyPath;
 			}
 		}
 
@@ -65,7 +74,7 @@ public static class PathService {
 		if (executingAssembly != null) {
 			string assemblyPath = executingAssembly.Location;
 			if (!string.IsNullOrEmpty(assemblyPath) && File.Exists(assemblyPath)) {
-				return Path.GetDirectoryName(assemblyPath);
+				return assemblyPath;
 			}
 		}
 
@@ -74,7 +83,7 @@ public static class PathService {
 			Process currentProcess = Process.GetCurrentProcess();
 			string processPath = currentProcess.MainModule?.FileName;
 			if (!string.IsNullOrEmpty(processPath) && File.Exists(processPath)) {
-				return Path.GetDirectoryName(processPath);
+				return processPath;
 			}
 		} catch (Exception) {
 			// Process.MainModule can throw exceptions in some contexts
@@ -91,22 +100,28 @@ public static class PathService {
 				string possiblePath = Path.Combine(appDomainPath,
 					Path.ChangeExtension(appName, ext));
 				if (File.Exists(possiblePath)) {
-					return Path.GetDirectoryName(possiblePath);
+					return possiblePath;
 				}
 			}
 
 			// If no specific file found, return the base directory
-			return Path.GetDirectoryName(appDomainPath);
+			return appDomainPath;
 		}
 
 		throw new InvalidOperationException("Unable to determine the main entry point path");
 	}
 
-	/// <summary>
-	/// Alternative method that attempts to find the source file path (for development scenarios)
-	/// Note: This only works in debug builds with specific compiler settings
-	/// </summary>
-	public static string GetSourceFilePath() {
+	public static string GetMainEntryPointDirectory() =>
+		Path.GetDirectoryName(GetMainEntryPointPath())!;
+
+    public static string GetMainEntryPointFileName() =>
+        Path.GetFileName(GetMainEntryPointPath());
+
+    /// <summary>
+    /// Alternative method that attempts to find the source file path (for development scenarios)
+    /// Note: This only works in debug builds with specific compiler settings
+    /// </summary>
+    public static string GetSourceFilePath() {
 		try {
 			// Get the stack trace to find the calling method
 			StackTrace stackTrace = new StackTrace(true);
@@ -131,11 +146,18 @@ public static class PathService {
 		return null;
 	}
 
-	public static void PrintDetailedInfo() {
+	public static string GetAppDataDirectory() =>
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+    public static void PrintDetailedInfo() {
 		Console.WriteLine("=== Main Entry Point Detection Details ===");
 
-		// Entry Assembly
-		Assembly entryAssembly = Assembly.GetEntryAssembly();
+        Console.WriteLine($"Entry Point Path: {GetMainEntryPointPath() ?? "Not available"}");
+        Console.WriteLine($"Entry Point Directory: {GetMainEntryPointDirectory() ?? "Not available"}");
+        Console.WriteLine($"Entry Point File Name: {GetMainEntryPointFileName() ?? "Not available"}");
+
+        // Entry Assembly
+        Assembly entryAssembly = Assembly.GetEntryAssembly();
 		Console.WriteLine($"Entry Assembly: {entryAssembly?.FullName ?? "Not available"}");
 		Console.WriteLine($"Entry Assembly Location: {entryAssembly?.Location ?? "Not available"}");
 

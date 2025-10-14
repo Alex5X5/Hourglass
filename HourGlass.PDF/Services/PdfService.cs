@@ -12,7 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-public unsafe partial class PdfService : IPdfService {
+public unsafe partial class PdfService : IPdfService, IDisposable {
 
 	private const string LAST_SECTION_INDEXER = "eof";
 
@@ -39,6 +39,7 @@ public unsafe partial class PdfService : IPdfService {
 	}
 
 	public void Dispose() {
+		GC.SuppressFinalize(this);
 		NativeMemory.Free(text);
 	}
 

@@ -18,6 +18,8 @@ using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 
 using Microsoft.Extensions.DependencyInjection;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 public partial class App : Application {
 
@@ -25,8 +27,8 @@ public partial class App : Application {
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public override void OnFrameworkInitializationCompleted() {
-		PageInstanciator instanciator = new(this);
+	public async override void OnFrameworkInitializationCompleted() {
+        PageInstanciator instanciator = new(this);
 		instanciator.AddContentBindingType<GraphPanelViewModelBase>();
 		instanciator.AddContentBindingType<PageViewModelBase>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>(new SettingsService());
@@ -36,9 +38,8 @@ public partial class App : Application {
 		if (!Design.IsDesignMode) {
 			HourglassDbService dbService = new(dateTimeService);
 			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
-		}
-		if (!Design.IsDesignMode)
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
+		}
 
 
 		instanciator.RegisterPageTransient<TimerPageViewModel>();
