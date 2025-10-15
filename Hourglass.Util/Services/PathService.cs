@@ -59,6 +59,9 @@ public static class PathService {
     public static string AssetsPath(string fileName) =>
 		FilesPath(@"Assets\" + fileName);
 
+	public static string DesktopPath(string fileName) =>
+		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), fileName);
+
     public static string GetMainEntryPointPath() {
 		// Method 1: Try to get the entry assembly (most reliable for executable applications)
 		Assembly entryAssembly = Assembly.GetEntryAssembly();

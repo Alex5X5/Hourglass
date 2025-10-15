@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+	<OutputType>Library</OutputType>
+	<TargetFramework>net9.0-windows</TargetFramework>
+	<Nullable>enable</Nullable>
 	<SelfContained>true</SelfContained>
 	<PublishSingleFile>true</PublishSingleFile>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
 	<UseWindowsForms>true</UseWindowsForms>
-    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<UseWindowsForms>true</UseWindowsForms>
+	<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
 	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
 
@@ -32,66 +32,66 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="GuiComponents\ButtonDropdown.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Pages\Timer\GraphRenderer\DayGraphRenderer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Pages\Timer\GraphRenderer\WeekGraphRenderer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Pages\Timer\GraphRenderer\MonthGraphRenderer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\DocumentPreviewer.axaml.cs">
-      <DependentUpon>DocumentPreviewer.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\GraphModeButtonIcons\MonthGraphModeButtonIcon.axaml.cs">
-      <DependentUpon>MonthGraphModeButtonIcon.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\GraphModeButtonIcons\WeekGraphModeButtonIcon.axaml.cs">
-      <DependentUpon>WeekGraphModeButtonIcon.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\GraphModeButtonIcons\DayGraphModeButtonIcon.axaml.cs">
-      <DependentUpon>DayGraphModeButtonIcon.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\GraphPanels\MonthGraphPanelView.axaml.cs">
-      <DependentUpon>MonthGraphPanelView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\GraphPanels\WeekGraphPanelView.axaml.cs">
-      <DependentUpon>WeekGraphPanelView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Components\GraphPanels\DayGraphPanelView.axaml.cs">
-      <DependentUpon>DayGraphPanelView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Pages\ExportPageView.axaml.cs">
-      <DependentUpon>ExportPageView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Pages\GraphPageView.axaml.cs">
-      <DependentUpon>GraphPageView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Pages\ProjectPageView.axaml.cs">
-      <DependentUpon>ProjectPageView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Pages\TimerPageView.axaml.cs">
-      <DependentUpon>TimerPageView.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\Pages\TaskDetailsPageView.axaml.cs">
-      <DependentUpon>TaskDetailsPageView.axaml</DependentUpon>
-    </Compile>
+	<Compile Update="GuiComponents\ButtonDropdown.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Update="Pages\Timer\GraphRenderer\DayGraphRenderer.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Update="Pages\Timer\GraphRenderer\WeekGraphRenderer.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Update="Pages\Timer\GraphRenderer\MonthGraphRenderer.cs">
+	  <SubType>Component</SubType>
+	</Compile>
+	<Compile Update="Properties\Resources.Designer.cs">
+	  <DesignTime>True</DesignTime>
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>Resources.resx</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\DocumentPreviewer.axaml.cs">
+	  <DependentUpon>DocumentPreviewer.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\GraphModeButtonIcons\MonthGraphModeButtonIcon.axaml.cs">
+	  <DependentUpon>MonthGraphModeButtonIcon.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\GraphModeButtonIcons\WeekGraphModeButtonIcon.axaml.cs">
+	  <DependentUpon>WeekGraphModeButtonIcon.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\GraphModeButtonIcons\DayGraphModeButtonIcon.axaml.cs">
+	  <DependentUpon>DayGraphModeButtonIcon.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\GraphPanels\MonthGraphPanelView.axaml.cs">
+	  <DependentUpon>MonthGraphPanelView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\GraphPanels\WeekGraphPanelView.axaml.cs">
+	  <DependentUpon>WeekGraphPanelView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Components\GraphPanels\DayGraphPanelView.axaml.cs">
+	  <DependentUpon>DayGraphPanelView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\ExportPageView.axaml.cs">
+	  <DependentUpon>ExportPageView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\GraphPageView.axaml.cs">
+	  <DependentUpon>GraphPageView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\ProjectPageView.axaml.cs">
+	  <DependentUpon>ProjectPageView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\TimerPageView.axaml.cs">
+	  <DependentUpon>TimerPageView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\TaskDetailsPageView.axaml.cs">
+	  <DependentUpon>TaskDetailsPageView.axaml</DependentUpon>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+	<EmbeddedResource Update="Properties\Resources.resx">
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
   </ItemGroup>
 
 </Project>

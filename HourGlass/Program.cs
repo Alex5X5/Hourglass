@@ -1,17 +1,11 @@
 namespace Hourglass;
 
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 
-using Hourglass.Database.Services;
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI;
-using Hourglass.PDF;
-using Hourglass.Util;
+using Hourglass.Installer;
 using Hourglass.Util.Services;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 
 public class Program {
 	/// <summary>
@@ -20,24 +14,42 @@ public class Program {
 	[STAThread]
 	public static void Main(string[] args) {
 
-#if PUBLISHED
-		InstallerService.CheckIsInAppdata();
-#endif
         PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
 
-		BuildAvaloniaApp()
-			.StartWithClassicDesktopLifetime(args);
+//#if PUBLISHED
+//        InstallerService.CheckIsInAppdata();
+//        if (!InstallerService.IsInstalled())
+//			BuildInstallerApp()
+//				.StartWithClassicDesktopLifetime(args);
+//		else
+//#endif
+//			BuildMainApp()
+//				.StartWithClassicDesktopLifetime(args);
 
-		//EncryptionService service = new("test"); 
-		//service.EncryptFile(PathService.FilesPath("database"));
+        if (!InstallerService.IsInstalled())
+			BuildInstallerApp()
+				.StartWithClassicDesktopLifetime(args);
+		else
+			BuildMainApp()
+				.StartWithClassicDesktopLifetime(args);
 
-		//Application.Run(new Hourglass.GUI.Pages.LoginPopup.LoginPopup());
+        //EncryptionService service = new("test"); 
+        //service.EncryptFile(PathService.FilesPath("database"));
 
-	}
+        //Application.Run(new Hourglass.GUI.Pages.LoginPopup.LoginPopup());
 
-	public static AppBuilder BuildAvaloniaApp()
+    }
+
+	public static AppBuilder BuildMainApp()
 		=> AppBuilder.Configure<App>()
+			.UsePlatformDetect()
+			.WithInterFont()
+			.LogToTrace()
+			.UseReactiveUI();
+	
+	public static AppBuilder BuildInstallerApp()
+		=> AppBuilder.Configure<InstallerApp>()
 			.UsePlatformDetect()
 			.WithInterFont()
 			.LogToTrace()
