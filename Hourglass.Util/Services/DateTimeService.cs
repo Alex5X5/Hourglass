@@ -2,7 +2,6 @@
 
 using Hourglass.Util.Services;
 using System;
-using System.Diagnostics;
 
 public class DateTimeService {
 
@@ -14,7 +13,6 @@ public class DateTimeService {
 		set => SelectedDayStartSeconds = ToSeconds(value);
 		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
 	}
-
 
 	static DateTimeService() {
 		SettingsService.OnSettingsReload += 

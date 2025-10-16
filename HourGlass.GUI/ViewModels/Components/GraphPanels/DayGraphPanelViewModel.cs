@@ -1,6 +1,7 @@
 namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 
@@ -10,8 +11,8 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController)
-		: base(dbService, dateTimeService, panelController, pageController) {
+	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
+		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
 
 	}
 

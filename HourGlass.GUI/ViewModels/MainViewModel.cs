@@ -84,10 +84,6 @@ public partial class MainViewModel : ViewModelBase {
 		if(pageFactory==null)
 			return;
 		ChangePage<TaskDetailsPageViewModel>();
-		if (CurrentPage is TaskDetailsPageViewModel model) {
-			model.SelectedTask = task;
-			model.UpdateTextFields();
-		}
 	}
 }
 

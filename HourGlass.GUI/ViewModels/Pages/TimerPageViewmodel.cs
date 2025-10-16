@@ -4,32 +4,77 @@ using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.GUI.Views;
+using Hourglass.GUI.Services;
 using Hourglass.Util;
 
 using System.ComponentModel;
 
-public partial class TimerPageViewModel : PageViewModelBase {
+public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
-	public string DescriptionTextboxText { set; get; } = "";
-	public string ProjectTextboxText { set; get; } = "";
-	public string TicketTextboxText { set; get; } = "";
-	public string StartTextboxText { set; get; } = "";
-	public string FinishTextboxText { set; get; } = "";
+    private IHourglassDbService dbService;
+	private CacheService cacheService;
+    private ViewModelFactory<MainViewModel> pageFactory;
+    private MainViewModel controller;
 
-	public Project SelectedProject { get; set; }
+    public string DescriptionTextboxText {
+		set {
+			if(cacheService?.RunningTask != null)
+				cacheService.RunningTask.description = value;
+			OnPropertyChanged(nameof(DescriptionTextboxText));
+		}
+		get => cacheService?.RunningTask?.description ?? "";
+	}
+	public string ProjectTextboxText {
+        set {
+            if (cacheService?.RunningTask != null)
+                cacheService.RunningTask.description = value;
+            OnPropertyChanged(nameof(ProjectTextboxText));
+        }
+        get => cacheService?.RunningTask?.project?.Name ?? "";
+    }
+    public string TicketTextboxText {
+        get => cacheService?.RunningTask?.ticket?.name ?? "";
+    }
+	public string StartTextboxText {
+        set {
+			if (cacheService?.RunningTask != null) {
+				DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.RunningTask.StartDateTime;
+                cacheService.RunningTask.start = DateTimeService.ToSeconds(start);
+            }
+            OnPropertyChanged(nameof(StartTextboxText));
+        }
+        get => cacheService?.RunningTask != null ? DateTimeService.ToTimeString(cacheService.RunningTask.StartDateTime) : "";
+    }
+    public string FinishTextboxText {
+        set {
+            if (cacheService?.SelectedTask != null) {
+                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
+                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
+            }
+            OnPropertyChanged(nameof(FinishTextboxText));
+        }
+        get => cacheService?.RunningTask != null ? DateTimeService.ToTimeString(cacheService.RunningTask.FinishDateTime) : "";
+    }
+
+    public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
+    public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
+    public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
+
+    public Project SelectedProject { get; set; }
     public List<Project> AvailableProjects { get; set; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
-	IHourglassDbService dbService;
 
-	public TimerPageViewModel() : this(null) { 
+	public TimerPageViewModel() : this(null, null) { 
 	
 	}
 
-	public TimerPageViewModel(IHourglassDbService dbService) : base() {
+	public TimerPageViewModel(IHourglassDbService dbService, CacheService cacheService) : base() {
 		this.dbService = dbService;
+		this.cacheService = cacheService;
+		cacheService.OnRunningTaksChanged +=
+			task => AllBindingPropertiesChanged();
 		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },
@@ -37,6 +82,17 @@ public partial class TimerPageViewModel : PageViewModelBase {
 		];
 		SelectedProject = AvailableProjects[0];
 	}
+
+	private void AllBindingPropertiesChanged() {
+        OnPropertyChanged(nameof(DescriptionTextboxText));
+        OnPropertyChanged(nameof(StartTextboxText));
+        OnPropertyChanged(nameof(FinishTextboxText));
+        OnPropertyChanged(nameof(TicketTextboxText));
+        OnPropertyChanged(nameof(ProjectTextboxText));
+        OnPropertyChanged(nameof(IsStartButtonEnabled));
+        OnPropertyChanged(nameof(IsStopButtonEnabled));
+        OnPropertyChanged(nameof(IsRestartButtonEnabled));
+    }
 
 	protected virtual void OnPropertyChanged(string propertyName) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -46,13 +102,12 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	private async System.Threading.Tasks.Task StartTask() {
 		Console.WriteLine("start task button click!");
 		if(dbService!=null)
-			RunningTask = await dbService.StartNewTaskAsnc(
+			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
 				null,
 				new Worker { name = "new user" },
 				null
 			);
-		UpdateTextFields();
 		//await Task.Run(
 		//	() => {
 		//		Thread.Sleep(100);
@@ -68,31 +123,32 @@ public partial class TimerPageViewModel : PageViewModelBase {
 	private async System.Threading.Tasks.Task StopTask() {
 		Console.WriteLine("stop task button click!");
 		if(dbService!=null)
-			RunningTask = await dbService.FinishCurrentTaskAsync(
-				RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
+            cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
+				cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
 				DateTimeService.ToSeconds(DateTime.Now),
 				DescriptionTextboxText,
 				SelectedProject,
 				null
 			);
-		UpdateTextFields();
+		//UpdateTextFields();
 	}
 
 	[RelayCommand]
 	private void RestartTask() {
 		Console.WriteLine("restart task button click! (not yet implemented)");
-		UpdateTextFields();
+		//UpdateTextFields();
 	}
 
 	public void OnLoad() {
 		Console.WriteLine("loading Timer Page");
-		UpdateTextFields();
+		//UpdateTextFields();
 	}
 
-	public void UpdateTextFields() {
-		DescriptionTextboxText = RunningTask?.description ?? "";
-		StartTextboxText = RunningTask != null ? DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime) : "";
-		SelectedProject = RunningTask?.project ?? AvailableProjects[0];
-		TicketTextboxText = RunningTask?.ticket?.description ?? "";
-	}
+	//public void UpdateTextFields() {
+		//DescriptionTextboxText = cacheService.RunningTask?.description ?? "";
+		//StartTextboxText = cacheService.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
+		//SelectedProject = cacheService.RunningTask?.project ?? AvailableProjects[0];
+		//TicketTextboxText = cacheService.RunningTask?.ticket?.description ?? "";
+  //      OnPropertyChanged(nameof(DescriptionTextboxText));
+    //}
 }

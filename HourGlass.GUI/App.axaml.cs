@@ -18,8 +18,7 @@ using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 
 using Microsoft.Extensions.DependencyInjection;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
+using Hourglass.GUI.Services;
 
 public partial class App : Application {
 
@@ -39,6 +38,7 @@ public partial class App : Application {
 			HourglassDbService dbService = new(dateTimeService);
 			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
+			instanciator.AddCommonServiceSingleton<CacheService, CacheService>();
 		}
 
 

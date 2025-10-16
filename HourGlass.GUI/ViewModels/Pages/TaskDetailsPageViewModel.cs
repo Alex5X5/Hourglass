@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.Services;
 using Hourglass.Util;
 
 using System.ComponentModel;
@@ -11,28 +12,64 @@ using System.ComponentModel;
 public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
 	private IHourglassDbService dbService;
-	private DateTimeService dateTimeService;
-	private ViewModelFactory<MainViewModel> pageFactory;
+    private CacheService cacheService;
+    private ViewModelFactory<MainViewModel> pageFactory;
 	private MainViewModel controller;
 
-	public string DescriptionTextboxText { set; get; }
-	public string ProjectTextboxText { set; get; }
-	public string TicketTextboxText { set; get; }
-	public string StartTextboxText { set; get; }
-	public string FinishTextboxText { set; get; }
 
-	public bool IsContiniueButtonEnabled { set; get; }
-	public bool IsStartNewButtonEnabled { set; get; }
-	public bool IsSaveButtonEnabled { set; get; }
-	public bool IsStopButtonEnabled { set; get; }
-	public bool IsDeleteButtonEnabled { set; get; }
+    public string DescriptionTextboxText {
+        set {
+            if (cacheService?.SelectedTask != null)
+                cacheService.SelectedTask.description = value;
+            OnPropertyChanged(nameof(DescriptionTextboxText));
+        }
+        get => cacheService?.SelectedTask?.description ?? "";
+    }
+    public string ProjectTextboxText {
+        set {
+            if (cacheService?.SelectedTask != null)
+                cacheService.SelectedTask.description = value;
+            OnPropertyChanged(nameof(ProjectTextboxText));
+        }
+        get => cacheService?.SelectedTask?.project?.Name ?? "";
+    }
+    public string TicketTextboxText {
+        get => cacheService?.SelectedTask?.ticket?.name ?? "";
+    }
+    public string StartTextboxText {
+        set {
+            if (cacheService?.SelectedTask != null) {
+                DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.StartDateTime;
+                cacheService.SelectedTask.start = DateTimeService.ToSeconds(start);
+            }
+            OnPropertyChanged(nameof(StartTextboxText));
+        }
+        get => cacheService?.SelectedTask != null ? DateTimeService.ToTimeString(cacheService.SelectedTask.StartDateTime) : "";
+    }
+    public string FinishTextboxText {
+        set {
+            if (cacheService?.SelectedTask != null) {
+                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
+                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
+            }
+            OnPropertyChanged(nameof(FinishTextboxText));
+        }
+        get => cacheService?.RunningTask != null ? DateTimeService.ToTimeString(cacheService.SelectedTask.FinishDateTime) : "";
+    }
+
+    public bool IsContiniueButtonEnabled { get => cacheService?.SelectedTask != null; }
+	public bool IsStartNewButtonEnabled { get => cacheService?.SelectedTask == null; }
+	private bool didChange;
+	public bool IsSaveButtonEnabled { get => didChange; }
+	public bool IsStopButtonEnabled { get => cacheService?.SelectedTask?.running == true; }
+    public bool IsDeleteButtonEnabled { get => true; }
 
 	private Task selectedTask;
 	public Task SelectedTask {
 		set {
 			selectedTask = value;
-			UpdateTextFields();
-		}
+            //UpdateTextFields();
+        }
 		get => selectedTask;
 	}
 
@@ -45,9 +82,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	}
 
-	public TaskDetailsPageViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController) : base() {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService) : base() {
 		this.dbService = dbService;
-		this.dateTimeService = dateTimeService;
+		this.cacheService = cacheService;
 		controller = pageController;
 		AvailableProjects = [
 			new Project() { Name = "test project" },
@@ -55,10 +92,18 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 			new Project() { Name = "sucessfull project" }
 		];
 		SelectedProject = AvailableProjects[0];
-		UpdateTextFields();
 	}
+    private void AllBindingPropertiesChanged() {
+        OnPropertyChanged(nameof(DescriptionTextboxText));
+        OnPropertyChanged(nameof(StartTextboxText));
+        OnPropertyChanged(nameof(FinishTextboxText));
+        OnPropertyChanged(nameof(TicketTextboxText));
+        OnPropertyChanged(nameof(ProjectTextboxText));
+    }
 
-	protected virtual void OnPropertyChanged(string propertyName) {
+
+    protected virtual void OnPropertyChanged(string propertyName) {
+		didChange = true;
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
@@ -66,7 +111,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	private async System.Threading.Tasks.Task StartTask() {
 		Console.WriteLine("start task button click!");
 		if(dbService!=null)
-			RunningTask = await dbService.StartNewTaskAsnc(
+			 cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
 				null,
 				new Worker { name = "new user" },
@@ -88,8 +133,8 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	private async System.Threading.Tasks.Task StopTask() {
 		Console.WriteLine("stop task button click!");
 		if(dbService!=null)
-			RunningTask = await dbService.FinishCurrentTaskAsync(
-				RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
+            cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
+                cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
 				DateTimeService.ToSeconds(DateTime.Now),
 				DescriptionTextboxText,
 				SelectedProject,
@@ -148,20 +193,20 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	public void OnLoad() {
 		Console.WriteLine("loading Task Details Page Model");
-		UpdateTextFields();
-	}
+        OnPropertyChanged(nameof(DescriptionTextboxText));
+        OnPropertyChanged(nameof(StartTextboxText));
+        OnPropertyChanged(nameof(FinishTextboxText));
+        OnPropertyChanged(nameof(TicketTextboxText));
+        OnPropertyChanged(nameof(ProjectTextboxText));
+        //UpdateTextFields();
+    }
 
 	public void UpdateTextFields() {
 		DescriptionTextboxText = SelectedTask?.description ?? "";
 		StartTextboxText = SelectedTask != null ? DateTimeService.ToDayAndTimeString(SelectedTask.StartDateTime) : "";
 		FinishTextboxText = SelectedTask != null ? DateTimeService.ToDayAndTimeString(SelectedTask.FinishDateTime) : "";
 		SelectedProject = SelectedTask?.project ?? AvailableProjects[0];
-		TicketTextboxText = SelectedTask?.ticket?.description ?? "";
-		OnPropertyChanged(nameof(DescriptionTextboxText));
-		OnPropertyChanged(nameof(StartTextboxText));
-		OnPropertyChanged(nameof(FinishTextboxText));
-		OnPropertyChanged(nameof(SelectedProject));
-		OnPropertyChanged(nameof(TicketTextboxText));
+		//TicketTextboxText = SelectedTask?.ticket?.description ?? "";
 	}
 
 	[RelayCommand]

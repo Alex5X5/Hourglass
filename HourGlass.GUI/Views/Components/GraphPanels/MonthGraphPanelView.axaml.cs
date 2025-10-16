@@ -65,33 +65,33 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		int daysInCurrentMonth = DateTimeService.DaysInCurrentMonth();
 		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / daysInCurrentMonth;
-		for (int i = 0; i < daysInCurrentMonth; i++) {
-			double xPos = xAxisSegmentSize * i + PADDING_X;
-			if (i % 7 == 5 | i % 7 == 6)
-				context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
-			if (i + 1 == (int)DateTime.Today.DayOfWeek)
-				context.FillRectangle(todayBackgroundColor, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
-		}
-		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
+        int weekDayCounter = (int)DateTimeService.GetFirstDayOfCurrentMonth().DayOfWeek;
+        for (int i = 0; i < daysInCurrentMonth; i++) {
+            double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
+            if (weekDayCounter % 7 == 6 | weekDayCounter % 7 == 0)
+                context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
+            if (weekDayCounter == DateTime.Today.Day + 2)
+                context.FillRectangle(todayBackgroundColor, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
+            weekDayCounter++;
+            var formattedText = new FormattedText(
+                Convert.ToString(i + 1),
+                System.Globalization.CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface("Arial"),
+                13,
+                textBrush
+            );
+            Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
+            context.DrawText(
+                formattedText,
+                textPos
+            );
+        }
+        context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
 		for (int i = 0; i < daysInCurrentMonth + 1; i++) {
 			double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
-			if (i < daysInCurrentMonth) {
-				var formattedText = new FormattedText(
-					Convert.ToString(i + 1),
-					System.Globalization.CultureInfo.CurrentCulture,
-					FlowDirection.LeftToRight,
-					new Typeface("Arial"),
-					13,
-					textBrush
-				);
-				Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
-				context.DrawText(
-					formattedText,
-					textPos
-				);
-			}
 		}
 	}
 

@@ -70,16 +70,19 @@
 			</ComboBox>
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
 				<Button Name="startButton"
+						IsEnabled="{ Binding IsStartButtonEnabled }"
 						Command="{ Binding StartTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Start" />
 				</Button>
 				<Button Name="stopButton"
 						Grid.Column="2"
+						IsEnabled="{ Binding IsStopButtonEnabled }"
 						Command="{ Binding StopTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Stop" />
 				</Button>
 				<Button Name="restartButton"
 						Grid.Column="4"
+						IsEnabled="{ Binding IsRestartButtonEnabled }"
 						Command="{ Binding RestartTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Restart" />
 				</Button>

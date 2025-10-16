@@ -12,18 +12,17 @@
 	</Design.DataContext>
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="3*" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="9*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="18*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="4*" />
 		</Grid.ColumnDefinitions>
 		<!--<Rectangle Fill="#ABABAB" Grid.Column="1" Grid.Row="2" />-->
-		<Rectangle Fill="#DF4807" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" />
-		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
-		<Panel Background="{ StaticResource SrhGray }" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" >
+		<Rectangle Fill="#DF4807" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" />
+		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" />
+		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
