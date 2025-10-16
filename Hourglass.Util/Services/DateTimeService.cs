@@ -2,6 +2,7 @@
 
 using Hourglass.Util.Services;
 using System;
+using System.Diagnostics;
 
 public class DateTimeService {
 
@@ -74,8 +75,8 @@ public class DateTimeService {
 		$"{time.Hour}:{time.Minute}:{time.Second}";
 
 	public static string ToHourMinuteString(long totalSeconds) {
-		long hours = totalSeconds / TimeSpan.SecondsPerHour;
-		long minutes = (long)Math.Ceiling((totalSeconds % TimeSpan.SecondsPerHour) / (float)TimeSpan.SecondsPerMinute);
+		long hours = (totalSeconds % TimeSpan.SecondsPerDay) / TimeSpan.SecondsPerHour;
+		long minutes = ((totalSeconds % TimeSpan.SecondsPerDay) % TimeSpan.SecondsPerHour) / TimeSpan.SecondsPerMinute;
 		return (hours < 10 ? "0" + Convert.ToString(hours) : Convert.ToString(hours)) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
 	}
 

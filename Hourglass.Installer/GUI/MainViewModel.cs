@@ -25,10 +25,7 @@ public partial class MainViewModel : ReactiveObject {
     public async Task DoWorkAsync() {
         if (installerService == null)
             return;
-
-        var progress = new Progress<int>(value => {
-            ProgressBarValue = value; // Automatically runs on UI thread
-        });
+        var progress = new Progress<int>( value => ProgressBarValue = value);
         await InstallerService.InstallAsync(progress);
     }
 }

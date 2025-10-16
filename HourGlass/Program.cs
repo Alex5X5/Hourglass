@@ -6,6 +6,7 @@ using Avalonia.ReactiveUI;
 using Hourglass.GUI;
 using Hourglass.Installer;
 using Hourglass.Util.Services;
+using System.Diagnostics;
 
 public class Program {
 	/// <summary>
@@ -13,32 +14,20 @@ public class Program {
 	/// </summary>
 	[STAThread]
 	public static void Main(string[] args) {
-
-        PathService.PrintDetailedInfo();
+		PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
+		BuildMainApp()
+			.StartWithClassicDesktopLifetime(args);
 
 //#if PUBLISHED
-//        InstallerService.CheckIsInAppdata();
-//        if (!InstallerService.IsInstalled())
+//		InstallerService.CheckIsInAppdata();
+//		if (!InstallerService.IsInstalled())
 //			BuildInstallerApp()
 //				.StartWithClassicDesktopLifetime(args);
 //		else
 //#endif
 //			BuildMainApp()
 //				.StartWithClassicDesktopLifetime(args);
-
-        if (!InstallerService.IsInstalled())
-			BuildInstallerApp()
-				.StartWithClassicDesktopLifetime(args);
-		else
-			BuildMainApp()
-				.StartWithClassicDesktopLifetime(args);
-
-        //EncryptionService service = new("test"); 
-        //service.EncryptFile(PathService.FilesPath("database"));
-
-        //Application.Run(new Hourglass.GUI.Pages.LoginPopup.LoginPopup());
-
     }
 
 	public static AppBuilder BuildMainApp()
@@ -48,10 +37,10 @@ public class Program {
 			.LogToTrace()
 			.UseReactiveUI();
 	
-	public static AppBuilder BuildInstallerApp()
-		=> AppBuilder.Configure<InstallerApp>()
-			.UsePlatformDetect()
-			.WithInterFont()
-			.LogToTrace()
-			.UseReactiveUI();
+	//public static AppBuilder BuildInstallerApp()
+	//	=> AppBuilder.Configure<InstallerApp>()
+	//		.UsePlatformDetect()
+	//		.WithInterFont()
+	//		.LogToTrace()
+	//		.UseReactiveUI();
 }

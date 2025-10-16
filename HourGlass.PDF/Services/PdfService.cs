@@ -229,7 +229,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				try {
 					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
 					query = $"{dayName}_hour_range_{offset + 1}";
-					value = DateTimeService.ToTimeString(task.StartDateTime) + " - " + DateTimeService.ToTimeString(task.FinishDateTime);
+					value = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
 					BufferAnnotationValueUnsafe(query, value);
 					BufferFieldValueUnsafe(query, value);
 					query = $"{dayName}_hour_{offset + 1}";
