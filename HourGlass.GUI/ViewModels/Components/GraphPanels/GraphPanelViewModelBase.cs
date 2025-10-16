@@ -14,6 +14,8 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	protected GraphPageViewModel panelController;
 	protected MainViewModel pageController;
 
+	public abstract string Title { get; }
+
 	public GraphPanelViewModelBase() : this(null, null, null, null, null) {
 		
 	}

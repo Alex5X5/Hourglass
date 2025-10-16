@@ -8,7 +8,9 @@ using Hourglass.Util;
 
 using ReactiveUI;
 
-public partial class MainViewModel : ViewModelBase {
+using System.ComponentModel;
+
+public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private PageViewModelBase? lastPage;
 
@@ -18,16 +20,18 @@ public partial class MainViewModel : ViewModelBase {
         private set {
 			Console.WriteLine($"settin current page to {value.GetType().Name}");
 			this.RaiseAndSetIfChanged(ref _CurrentPage, value);
+			this.RaisePropertyChanged(nameof(Title));
 		}
 	}
 
-	public Database.Models.Task? RunningTask { set; get; }
+	public string Title { get => _CurrentPage.Title; }
+	public new event PropertyChangedEventHandler? TitleChanged;
 
 	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
 	private DateTimeService dateTimeService;
 	
-	public MainViewModel() {
+	public MainViewModel() : this(null, null, null) {
 		
 	}
 
@@ -35,7 +39,6 @@ public partial class MainViewModel : ViewModelBase {
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
-		RunningTask = dbService.QueryCurrentTaskAsync().Result;
 		
 		CurrentPage = pageFactory.GetPageViewModel<TimerPageViewModel>();
 	}
@@ -84,6 +87,10 @@ public partial class MainViewModel : ViewModelBase {
 		if(pageFactory==null)
 			return;
 		ChangePage<TaskDetailsPageViewModel>();
+	}
+
+	protected void OnPropertyChanged(string propertyName) {
+		TitleChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }
 

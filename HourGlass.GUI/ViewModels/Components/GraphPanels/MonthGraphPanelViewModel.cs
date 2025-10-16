@@ -7,6 +7,8 @@ using Hourglass.Util;
 
 public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
+	public override string Title => "Month Tasks Overview";
+
 	public MonthGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}

@@ -11,6 +11,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 
 	private readonly DateTimeService? dateTimeService;
 	private readonly IPdfService? pdf;
+	public override string Title => "Export";
 
 	public ExportPageViewModel() : this(null, null) {
 	}

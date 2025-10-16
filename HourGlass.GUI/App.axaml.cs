@@ -24,9 +24,11 @@ public partial class App : Application {
 
 	public override void Initialize() {
 		AvaloniaXamlLoader.Load(this);
+		PathService.PrintDetailedInfo();
+		PathService.ExtractFiles("Hourglass");
 	}
 
-	public async override void OnFrameworkInitializationCompleted() {
+	public override void OnFrameworkInitializationCompleted() {
         PageInstanciator instanciator = new(this);
 		instanciator.AddContentBindingType<GraphPanelViewModelBase>();
 		instanciator.AddContentBindingType<PageViewModelBase>();
@@ -40,7 +42,6 @@ public partial class App : Application {
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
 			instanciator.AddCommonServiceSingleton<CacheService, CacheService>();
 		}
-
 
 		instanciator.RegisterPageTransient<TimerPageViewModel>();
 		instanciator.RegisterPageSingleton<MainViewModel>();

@@ -8,6 +8,8 @@ using Hourglass.Util;
 
 public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
+	public override string Title => "Week Tasks Overview";
+
 	public WeekGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}

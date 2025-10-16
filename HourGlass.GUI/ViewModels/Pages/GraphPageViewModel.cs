@@ -4,24 +4,30 @@ using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using ReactiveUI;
 
 public class GraphPageViewModel : PageViewModelBase {
-	
+
+
 	private GraphPanelViewModelBase _CurrentGraphPanel;
 	public GraphPanelViewModelBase CurrentGraphPanel {
 		get => _CurrentGraphPanel;
 		private set {
 			Console.WriteLine($"settin current page to {value.GetType().Name}");
 			this.RaiseAndSetIfChanged(ref _CurrentGraphPanel, value);
+			controller.RaisePropertyChanged(nameof(controller.Title));
 		}
 	}
 
 	private ViewModelFactory<GraphPanelViewModelBase> panelFactory;
+	private MainViewModel controller;
 
-	public GraphPageViewModel() : this(null) {
+	public override string Title => _CurrentGraphPanel?.Title ?? "";
+
+	public GraphPageViewModel() : this(null, null) {
 
 	}
 
-	public GraphPageViewModel(ViewModelFactory<GraphPanelViewModelBase> panelFactory) : base() {
+	public GraphPageViewModel(ViewModelFactory<GraphPanelViewModelBase> panelFactory, MainViewModel controller) : base() {
 		this.panelFactory = panelFactory;
+		this.controller = controller;
 		//CurrentGraphPanel = panelFactory.GetPageViewModel<DayGraphPanelViewModel>();
 		Console.WriteLine("constructing graph page view model");
 	}

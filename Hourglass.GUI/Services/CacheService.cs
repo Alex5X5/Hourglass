@@ -1,5 +1,7 @@
 ﻿namespace Hourglass.GUI.Services;
 
+using Hourglass.Database.Services.Interfaces;
+
 using System;
 
 public class CacheService {
@@ -24,6 +26,7 @@ public class CacheService {
     }
     public event Action<Database.Models.Task?>? OnSelectedTaksChanged;
 
-    public CacheService() {
+    public CacheService(IHourglassDbService dbService) {
+        RunningTask = dbService.QueryCurrentTaskAsync().Result;
     }
 }

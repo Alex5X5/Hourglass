@@ -75,31 +75,58 @@
 				  ColumnDefinitions="*, *, *"
 				  ShowGridLines="False" >
 				<Viewbox Grid.Row="0" Grid.Column="0" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color1Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="1" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color2Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="2" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color3Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="0" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color4Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="1" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color5Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="2" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color6Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color7Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="1" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color8Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="2" Stretch="Uniform">
-					<Button Width="100" Height="100" Background="Beige" />
+					<Button Width="100"
+							Height="100"
+							Background="Beige"
+							Command="{ Binding Color9Button_ClickCommand }" />
 				</Viewbox>
 
 			</Grid>

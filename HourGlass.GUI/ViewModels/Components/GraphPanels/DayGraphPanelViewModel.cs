@@ -7,6 +7,8 @@ using Hourglass.Util;
 
 public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
+	public override string Title => "Day Tasks Overview";
+
 	public DayGraphPanelViewModel() : base() {
 
 	}

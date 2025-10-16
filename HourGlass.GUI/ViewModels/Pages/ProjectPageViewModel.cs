@@ -4,6 +4,8 @@ using Hourglass.Database.Models;
 
 public class ProjectPageViewModel : PageViewModelBase {
 
+	public override string Title => "Projects";
+
 	public Project SelectedProject { get; set; }
 	public List<Project> AvailableProjects { get; set; }
 

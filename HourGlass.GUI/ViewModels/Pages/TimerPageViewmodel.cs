@@ -56,7 +56,9 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         get => cacheService?.RunningTask != null ? DateTimeService.ToTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
-    public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
+	public override string Title => "Timer";
+	
+	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
     public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
 
@@ -108,15 +110,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				new Worker { name = "new user" },
 				null
 			);
-		//await Task.Run(
-		//	() => {
-		//		Thread.Sleep(100);
-		//		if (RunningTask != null)
-		//			SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
-		//	}
-		//);
-		//StopButton.Enable();
-		//StartButton.Disable();
 	}
 
 	[RelayCommand]
@@ -130,25 +123,16 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				SelectedProject,
 				null
 			);
-		//UpdateTextFields();
 	}
 
 	[RelayCommand]
 	private void RestartTask() {
 		Console.WriteLine("restart task button click! (not yet implemented)");
-		//UpdateTextFields();
+		AllBindingPropertiesChanged();
 	}
 
 	public void OnLoad() {
 		Console.WriteLine("loading Timer Page");
-		//UpdateTextFields();
+		AllBindingPropertiesChanged();
 	}
-
-	//public void UpdateTextFields() {
-		//DescriptionTextboxText = cacheService.RunningTask?.description ?? "";
-		//StartTextboxText = cacheService.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
-		//SelectedProject = cacheService.RunningTask?.project ?? AvailableProjects[0];
-		//TicketTextboxText = cacheService.RunningTask?.ticket?.description ?? "";
-  //      OnPropertyChanged(nameof(DescriptionTextboxText));
-    //}
 }

@@ -4,18 +4,13 @@ using Avalonia;
 using Avalonia.ReactiveUI;
 
 using Hourglass.GUI;
-using Hourglass.Installer;
-using Hourglass.Util.Services;
-using System.Diagnostics;
 
 public class Program {
 	/// <summary>
 	///  The main entry point for the application.
 	/// </summary>
 	[STAThread]
-	public static void Main(string[] args) {
-		PathService.PrintDetailedInfo();
-		PathService.ExtractFiles("Hourglass");
+	public static void Main(string[] args) =>
 		BuildMainApp()
 			.StartWithClassicDesktopLifetime(args);
 
@@ -28,7 +23,7 @@ public class Program {
 //#endif
 //			BuildMainApp()
 //				.StartWithClassicDesktopLifetime(args);
-    }
+    //}
 
 	public static AppBuilder BuildMainApp()
 		=> AppBuilder.Configure<App>()
