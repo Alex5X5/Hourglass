@@ -72,19 +72,43 @@
 				<Button Name="startButton"
 						IsEnabled="{ Binding IsStartButtonEnabled }"
 						Command="{ Binding StartTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Start" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Start" />
+						</Viewbox>
+					</Grid>
 				</Button>
 				<Button Name="stopButton"
 						Grid.Column="2"
 						IsEnabled="{ Binding IsStopButtonEnabled }"
 						Command="{ Binding StopTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Stop" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Stop" />
+						</Viewbox>
+					</Grid>
 				</Button>
 				<Button Name="restartButton"
 						Grid.Column="4"
 						IsEnabled="{ Binding IsRestartButtonEnabled }"
 						Command="{ Binding RestartTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Restart" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Restart" />
+						</Viewbox>
+					</Grid>
 				</Button>
 			</Grid>
 		</Grid>

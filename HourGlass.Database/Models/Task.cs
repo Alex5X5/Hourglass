@@ -44,4 +44,7 @@ public class Task {
 		}
 		get => Color.FromArgb(displayColorRed, displayColorGreen, displayColorBlue);
 	}
+
+	public Task Clone() =>
+		(Task)MemberwiseClone();
 }

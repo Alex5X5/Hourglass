@@ -23,7 +23,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	public PageViewModelBase CurrentPage {
         get { return _CurrentPage; }
         private set {
-			Console.WriteLine($"settin current page to {value.GetType().Name}");
+			Console.WriteLine($"settin current page to {value?.GetType()?.Name}");
 			this.RaiseAndSetIfChanged(ref _CurrentPage, value);
 			this.RaisePropertyChanged(nameof(Title));
 		}
@@ -43,7 +43,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
 		
-		CurrentPage = pageFactory.GetPageViewModel<TimerPageViewModel>();
+		CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
 	}
 
 	public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {

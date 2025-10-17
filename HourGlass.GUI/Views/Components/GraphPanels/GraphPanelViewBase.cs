@@ -51,7 +51,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
 		long duration = task.finish - task.start;
 		double graphLength = duration * proportion;
-		double width = graphLength > GRAPH_MINIMAL_WIDTH ? graphLength : GRAPH_MINIMAL_WIDTH + additionalWidth * 2;
+		double width = (graphLength > GRAPH_MINIMAL_WIDTH ? graphLength : GRAPH_MINIMAL_WIDTH) + additionalWidth * 2;
 		Rect res = new(
 			graphPosX - additionalWidth,
 			yAxisSegmentSize * i * 1.5 - additionalHeight + PADDING_Y,
@@ -65,7 +65,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 		Rect rect = GetTaskRectanlge(task, 0, 0, i);
 		//Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		////Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
+		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, 0, task.displayColorBlue));
 		context.FillRectangle(brush, rect);
 		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);

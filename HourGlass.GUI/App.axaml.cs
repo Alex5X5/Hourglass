@@ -24,12 +24,12 @@ public partial class App : Application {
 
 	public override void Initialize() {
 		AvaloniaXamlLoader.Load(this);
-		PathService.PrintDetailedInfo();
-		PathService.ExtractFiles("Hourglass");
 	}
 
 	public override void OnFrameworkInitializationCompleted() {
-        PageInstanciator instanciator = new(this);
+		PathService.PrintDetailedInfo();
+		PathService.ExtractFiles("Hourglass");
+		PageInstanciator instanciator = new(this);
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>(new SettingsService());
 		DateTimeService dateTimeService = new();
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>(dateTimeService);
