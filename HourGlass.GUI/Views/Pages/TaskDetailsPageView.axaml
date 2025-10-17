@@ -132,7 +132,7 @@
 			</Grid>
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
 				<Button Name="startButton"
-						Command="{ Binding StartTaskCommand }" >
+						Command="{ Binding ContiniueTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Continiue" />
 				</Button>
 				<Button Name="stopButton"

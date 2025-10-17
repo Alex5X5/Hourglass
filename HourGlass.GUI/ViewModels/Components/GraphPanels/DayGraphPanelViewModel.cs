@@ -13,10 +13,11 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
-		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
+	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, CacheService cacheService)
+		: base(dbService, dateTimeService, null, pageController, cacheService) { }
 
-	}
+	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
+		: base(dbService, dateTimeService, panelController, pageController, cacheService) { }
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];

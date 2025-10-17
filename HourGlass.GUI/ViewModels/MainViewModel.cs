@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 
@@ -12,7 +13,11 @@ using System.ComponentModel;
 
 public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
-	private PageViewModelBase? lastPage;
+    private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
+    private IHourglassDbService dbService;
+    private DateTimeService dateTimeService;
+
+    private PageViewModelBase? lastPage;
 
 	private PageViewModelBase _CurrentPage;
 	public PageViewModelBase CurrentPage {
@@ -27,9 +32,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	public string Title { get => _CurrentPage.Title; }
 	public new event PropertyChangedEventHandler? TitleChanged;
 
-	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
-	private IHourglassDbService dbService;
-	private DateTimeService dateTimeService;
+	private bool IsFirstGraphPageChange = true;
 	
 	public MainViewModel() : this(null, null, null) {
 		
@@ -43,11 +46,11 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		CurrentPage = pageFactory.GetPageViewModel<TimerPageViewModel>();
 	}
 
-	public void ChangePage<PageT>() where PageT : PageViewModelBase {
+	public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {
 		if (pageFactory == null)
 			return;
 		lastPage = CurrentPage;
-		CurrentPage = pageFactory.GetPageViewModel<PageT>();
+		CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation);
 		Console.WriteLine($"chaged type of page to:{_CurrentPage.GetType().Name}");
 		Console.WriteLine($"new page is {_CurrentPage.GetType().IsVisible} visible");
 	}
@@ -68,7 +71,12 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	[RelayCommand]
 	private void GoToGraphs() {
 		Console.WriteLine("graph mode button click!");
-		ChangePage<GraphPageViewModel>();
+		ChangePage<GraphPageViewModel>(
+			IsFirstGraphPageChange ? page=> {
+				page.ChangeGraphPanel<DayGraphPanelViewModel>();
+				IsFirstGraphPageChange = false;
+			} : null
+		);
 	}
 
 	[RelayCommand]

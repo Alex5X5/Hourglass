@@ -2,9 +2,6 @@
 
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-
-using Hourglass.GUI.ViewModels.Pages;
-
 using Microsoft.Extensions.DependencyInjection;
 
 public class PageInstanciator {

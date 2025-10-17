@@ -15,11 +15,6 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
     private CacheService cacheService;
 	private MainViewModel controller;
 
-	public Task SelectedTask {
-		set { cacheService.SelectedTask = value; 
-		}
-	}
-
 	public override string Title => "Task Details";
 
 
@@ -163,13 +158,13 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 
 	[RelayCommand]
-	private void ContiniueTask() {
+	private async System.Threading.Tasks.Task ContiniueTask() {
 		Console.WriteLine("continiue task button click!");
 		if (cacheService.SelectedTask == null)
 			return;
 		if(cacheService.RunningTask != null)
 			return;
-		dbService.ContiniueTaskAsync(cacheService.SelectedTask);
+		cacheService.RunningTask = await dbService.ContiniueTaskAsync(cacheService.SelectedTask);
 		controller.GoBack();
 	}
 
@@ -193,14 +188,6 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		Console.WriteLine("loading Task Details Page Model");
 		AllBindingPropertiesChanged();
     }
-
-	//public void UpdateTextFields() {
-	//	DescriptionTextboxText = cacheService.SelectedTask?.description ?? "";
-	//	StartTextboxText = cacheService.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.StartDateTime) : "";
-	//	FinishTextboxText = cacheService.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.FinishDateTime) : "";
-	//	SelectedProject = cacheService.SelectedTask?.project ?? AvailableProjects[0];
-	//	//TicketTextboxText = SelectedTask?.ticket?.description ?? "";
-	//}
 
 	[RelayCommand]
 	public void Color1Button_Click() {

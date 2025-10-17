@@ -5,7 +5,6 @@ using ReactiveUI;
 
 public class GraphPageViewModel : PageViewModelBase {
 
-
 	private GraphPanelViewModelBase _CurrentGraphPanel;
 	public GraphPanelViewModelBase CurrentGraphPanel {
 		get => _CurrentGraphPanel;
@@ -28,13 +27,10 @@ public class GraphPageViewModel : PageViewModelBase {
 	public GraphPageViewModel(ViewModelFactory<GraphPanelViewModelBase> panelFactory, MainViewModel controller) : base() {
 		this.panelFactory = panelFactory;
 		this.controller = controller;
-		//CurrentGraphPanel = panelFactory.GetPageViewModel<DayGraphPanelViewModel>();
 		Console.WriteLine("constructing graph page view model");
-	}
+    }
 
 	public void ChangeGraphPanel<PanelT>() where PanelT : GraphPanelViewModelBase {
-		if (panelFactory == null)
-			return;
 		CurrentGraphPanel = panelFactory.GetPageViewModel<PanelT>();
 		Console.WriteLine($"chaged type of panel to:{_CurrentGraphPanel.GetType().Name}");
 	}

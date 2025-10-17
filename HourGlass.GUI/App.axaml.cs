@@ -30,8 +30,6 @@ public partial class App : Application {
 
 	public override void OnFrameworkInitializationCompleted() {
         PageInstanciator instanciator = new(this);
-		instanciator.AddContentBindingType<GraphPanelViewModelBase>();
-		instanciator.AddContentBindingType<PageViewModelBase>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>(new SettingsService());
 		DateTimeService dateTimeService = new();
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>(dateTimeService);
@@ -43,12 +41,14 @@ public partial class App : Application {
 			instanciator.AddCommonServiceSingleton<CacheService, CacheService>();
 		}
 
+		instanciator.AddContentBindingType<PageViewModelBase>();
 		instanciator.RegisterPageTransient<TimerPageViewModel>();
 		instanciator.RegisterPageSingleton<MainViewModel>();
 		instanciator.RegisterPageTransient<ExportPageViewModel>();
 		instanciator.RegisterPageTransient<ProjectPageViewModel>();
 		instanciator.RegisterPageTransient<TaskDetailsPageViewModel>();
 
+		instanciator.AddContentBindingType<GraphPanelViewModelBase>();
 		instanciator.RegisterPageSingleton<GraphPageViewModel>();
 		instanciator.RegisterPageTransient<DayGraphPanelViewModel>();
 		instanciator.RegisterPageTransient<WeekGraphPanelViewModel>();

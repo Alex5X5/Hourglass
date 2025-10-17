@@ -11,7 +11,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	public DateTimeService dateTimeService { set; get; }
 	public CacheService cacheService;
 
-	protected GraphPageViewModel panelController;
+	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
 
 	public abstract string Title { get; }
