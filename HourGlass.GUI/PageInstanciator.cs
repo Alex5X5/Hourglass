@@ -43,6 +43,7 @@ public class PageInstanciator {
 	public void RegisterPageTransient<T>() where T : class {
 		serviceCollection.AddTransient<T>();
 	}
+
 	public void RegisterWindow<T>() where T : Window {
 		serviceCollection.AddSingleton<T>();
 	}
@@ -73,4 +74,8 @@ public class ViewModelFactory<ViewBaseType>(Func<Type, ViewBaseType> factory) {
 		afterCreation?.Invoke((T?)viewModel);
 		return viewModel;
 	}
+}
+
+public class TopLevelSupplier(){
+	
 }

@@ -1,9 +1,11 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
+using Avalonia.Controls;
+using Avalonia.Platform.Storage;
+
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
 
@@ -26,7 +28,14 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	}
 
 	[RelayCommand]
-	private void Import() {
+	private async void Import() {
+		//var topLevel = TopLevel.GetTopLevel();
+
+		//// Start async operation to open the dialog.
+		//var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions {
+		//	Title = "Open Text File",
+		//	AllowMultiple = false
+		//});
 		Console.WriteLine("import button click! (not yet implemented)");
 	}
 
