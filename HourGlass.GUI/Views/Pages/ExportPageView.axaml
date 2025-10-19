@@ -24,6 +24,9 @@
 								<Setter Property="StrokeThickness" Value="2" />
 								<Setter Property="Stroke" Value="Black" />
 							</Style>
+							<Style Selector="Line.Fat">
+								<Setter Property="StrokeThickness" Value="3" />
+							</Style>
 						</Canvas.Styles>
 						<!--
 						<Rectangle Fill="Blue" Width="63" Height="41" Canvas.Left="40" Canvas.Top="31">
@@ -35,61 +38,59 @@
 									</LinearGradientBrush.GradientStops>
 								</LinearGradientBrush>
 							</Rectangle.OpacityMask>
-
-
-							1.17270195
 						</Rectangle>
 						-->
-						<Line StartPoint="62, 87.0" EndPoint="547, 87.0" />
-						<Line StartPoint="62, 755" EndPoint="547.6, 755" />
-						<Line StartPoint="62, 803" EndPoint="547.7, 803" />
-
-						<Line StartPoint="62, 86" EndPoint="62, 804" />
-						<Line StartPoint="547, 86" EndPoint="547, 804" />
-
-						<Line StartPoint="211, 754" EndPoint="211, 803" />
-						<Line StartPoint="314, 754" EndPoint="314, 803" />
-						<Line StartPoint="426, 754" EndPoint="426, 803" />
-
 						<Line StartPoint="327, 28.7" EndPoint="548.9, 28.7" />
 						<Line StartPoint="327, 50.4" EndPoint="548.9, 50.4" />
 						<Line StartPoint="201, 72.8" EndPoint="238.6, 72.8" />
 						<Line StartPoint="327, 72.8" EndPoint="388.9, 72.8" />
 						<Line StartPoint="427.2, 72.8" EndPoint="505.4, 72.8" />
-						<Line StartPoint="42.3, 117.3" EndPoint="547.6, 117.3" />
+						
+						<Line StartPoint="61, 87" EndPoint="548, 87" Classes="Fat" />
+						<Line StartPoint="62, 755" EndPoint="548, 755" Classes="Fat" />
+						<Line StartPoint="62, 692" EndPoint="548, 692" />
+						<Line StartPoint="61, 803" EndPoint="548, 803" Classes="Fat" />
+
+
+						<Line StartPoint="62, 85.5" EndPoint="62, 804.5" Classes="Fat" />
+						<Line StartPoint="547, 85.5" EndPoint="547, 804.5" Classes="Fat" />
+						<Line StartPoint="387.6, 87" EndPoint="387.6, 692" Classes="Fat" />
+						<Line StartPoint="426, 87" EndPoint="426, 692" Classes="Fat" />
+
+						<Line StartPoint="211, 754" EndPoint="211, 803" />
+						<Line StartPoint="314, 754" EndPoint="314, 803" />
+						<Line StartPoint="426, 754" EndPoint="426, 803" />
+						<Line StartPoint="42.3, 117.3" EndPoint="547.6, 117.3" Classes="Fat" />
 						<Line StartPoint="62, 136.6" EndPoint="547.6, 136.6" />
 						<Line StartPoint="62, 155.1" EndPoint="547.6, 155.1" />
 						<Line StartPoint="62, 173.6" EndPoint="547.6, 173.6" />
 						<Line StartPoint="62, 192.1" EndPoint="547.6, 192.1" />
 						<Line StartPoint="62, 210.6" EndPoint="547.6, 210.6" />
-						<Line StartPoint="42.3, 228.4" EndPoint="547.6, 228.4" />
+						<Line StartPoint="42.3, 228.4" EndPoint="547.6, 228.4" Classes="Fat" />
 						<Line StartPoint="62, 247.6" EndPoint="547.6, 247.6" />
 						<Line StartPoint="62, 266.1" EndPoint="547.6, 266.1" />
 						<Line StartPoint="62, 284.7" EndPoint="547.6, 284.7" />
 						<Line StartPoint="62, 303.2" EndPoint="547.6, 303.2" />
 						<Line StartPoint="62, 321.7" EndPoint="547.6, 321.7" />
-						<Line StartPoint="42.3, 339.4" EndPoint="547.6, 339.4" />
+						<Line StartPoint="42.3, 339.4" EndPoint="547.6, 339.4" Classes="Fat" />
 						<Line StartPoint="62, 358.7" EndPoint="547.6, 358.7" />
 						<Line StartPoint="62, 377.2" EndPoint="547.6, 377.2" />
 						<Line StartPoint="62, 395.7" EndPoint="547.6, 395.7" />
 						<Line StartPoint="62, 414.2" EndPoint="547.6, 414.2" />
 						<Line StartPoint="62, 432.7" EndPoint="547.6, 432.7" />
-						<Line StartPoint="42.3, 450.5" EndPoint="547.6, 450.5" />
+						<Line StartPoint="42.3, 450.5" EndPoint="547.6, 450.5" Classes="Fat" />
 						<Line StartPoint="62, 469.8" EndPoint="547.6, 469.8" />
 						<Line StartPoint="62, 488.3" EndPoint="547.6, 488.3" />
 						<Line StartPoint="62, 506.8" EndPoint="547.6, 506.8" />
 						<Line StartPoint="62, 525.3" EndPoint="547.6, 525.3" />
 						<Line StartPoint="62, 543.8" EndPoint="547.6, 543.8" />
-						<Line StartPoint="42.3, 561.6" EndPoint="547.6, 561.6" />
+						<Line StartPoint="42.3, 561.6" EndPoint="547.6, 561.6" Classes="Fat" />
 						<Line StartPoint="62, 580.8" EndPoint="547.6, 580.8" />
 						<Line StartPoint="62, 599.3" EndPoint="547.6, 599.3" />
 						<Line StartPoint="62, 617.8" EndPoint="547.6, 617.8" />
 						<Line StartPoint="62, 636.3" EndPoint="547.6, 636.3" />
 						<Line StartPoint="62, 654.9" EndPoint="547.6, 654.9" />
-						<Line StartPoint="42.3, 672.6" EndPoint="547.6, 672.6" />
-						<Line StartPoint="62, 691.9" EndPoint="547.6, 691.9" />
-						<Line StartPoint="387.6, 87" EndPoint="387.6, 691.9" />
-						<Line StartPoint="426, 87" EndPoint="426, 691.9" />
+						<Line StartPoint="42.3, 672.6" EndPoint="547.6, 672.6" Classes="Fat" />
 
 						<Line StartPoint="200, 710" EndPoint="238, 710" />
 						<Line StartPoint="200, 735" EndPoint="238, 735" />
@@ -109,28 +110,56 @@
 					</Canvas>
 					<Grid>
 						<Grid.RowDefinitions>
-							<RowDefinition Height="4*" />
-							<RowDefinition Height="18*" />
-							<RowDefinition Height="4*" />
+							<RowDefinition Height="87*" />
+							<RowDefinition Height="728*" />
+							<RowDefinition Height="38*" />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="3*" />
-							<ColumnDefinition Width="9*" />
-							<ColumnDefinition Width="3*" />
+							<ColumnDefinition Width="42*" />
+							<ColumnDefinition Width="508*" />
+							<ColumnDefinition Width="48*" />
 						</Grid.ColumnDefinitions>
-						<Grid ShowGridLines="True" Grid.Row="1" Grid.Column="1">
+						<Grid Grid.Row="1" Grid.Column="1" >
 							<Grid.RowDefinitions>
-								<RowDefinition Height="4*" />
-								<RowDefinition Height="2*" />
-								<RowDefinition Height="18*" />
+								<RowDefinition Height="14*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="8.5*" />
+								<RowDefinition Height="29*" />
+								<RowDefinition Height="23*" />
 							</Grid.RowDefinitions>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="3*" />
-								<ColumnDefinition Width="2*" />
-								<ColumnDefinition Width="22*" />
-								<ColumnDefinition Width="3*" />
-								<ColumnDefinition Width="9*" />
-								<ColumnDefinition Width="3*" />
+								<ColumnDefinition Width="68*" />
+								<ColumnDefinition Width="7*" />
+								<ColumnDefinition Width="24*" />
 							</Grid.ColumnDefinitions>
 						</Grid>
 					</Grid>
