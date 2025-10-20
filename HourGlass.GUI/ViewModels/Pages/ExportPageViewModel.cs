@@ -16,7 +16,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	public override string Title => "Export";
 
 	private PdfDocumentData pdfData;
-	public ObservableCollection<TextboxItem> TextboxItems { get; set; }
+	public ObservableCollection<TextboxItem> TableItems { get; set; }
 
 	public ExportPageViewModel() : this(null, null) {
 	}
@@ -29,9 +29,11 @@ public partial class ExportPageViewModel : PageViewModelBase {
 		this.dateTimeService = dateTimeService;
 		this.pdf = pdf;
 		pdfData = pdf?.GetExportData(dateTimeService?.SelectedDay ?? DateTime.Now) ?? new PdfDocumentData();
-		TextboxItems = [];
-		for (int i = 0; i < pdfData.Data.Length; i++) {
-			TextboxItems.Add(new TextboxItem { RowIndex = i+1, Text = pdfData.Data[i][0] });
+		TableItems = [];
+		for (int i = 0; i < PdfDocumentData.WEEK_LINE_COUNT; i++) {
+			TableItems.Add(new DescriptionItem { RowIndex = i+1, Text = pdfData.Data[i][PdfDocumentData.TASK_DESCRIPTION_COLUMN] });
+			TableItems.Add(new HourItem { RowIndex = i+1, Text = pdfData.Data[i][PdfDocumentData.HOUR_COLUMN] });
+			TableItems.Add(new HourRangeItem { RowIndex = i+1, Text = pdfData.Data[i][PdfDocumentData.HOUR_RANGE_COLUMN] });
 		}
 	}
 
@@ -58,7 +60,25 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	}
 }
 
-public class TextboxItem {
+public abstract class TextboxItem {
 	public int RowIndex { get; set; } = 0;
+
+	public abstract int ColumnIndex { get; }
+
 	public string Text { get; set; } = "";
+}
+
+public class DescriptionItem : TextboxItem {
+	public override int ColumnIndex => PdfDocumentData.TASK_DESCRIPTION_COLUMN + 1;
+
+}
+
+public class HourItem : TextboxItem {
+	public override int ColumnIndex => PdfDocumentData.HOUR_COLUMN + 1;
+
+}
+
+public class HourRangeItem : TextboxItem {
+	public override int ColumnIndex => PdfDocumentData.HOUR_RANGE_COLUMN + 1;
+
 }

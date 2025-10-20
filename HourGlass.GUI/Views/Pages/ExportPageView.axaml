@@ -66,8 +66,8 @@
 
 						<Line StartPoint="62, 85.5" EndPoint="62, 804.5" Classes="Fat" />
 						<Line StartPoint="547, 85.5" EndPoint="547, 804.5" Classes="Fat" />
-						<Line StartPoint="387.6, 87" EndPoint="387.6, 692" Classes="Fat" />
-						<Line StartPoint="426, 87" EndPoint="426, 692" Classes="Fat" />
+						<Line StartPoint="385.3, 87" EndPoint="385.3, 692" Classes="Fat" />
+						<Line StartPoint="424.4, 87.5" EndPoint="424.4, 692" Classes="Fat" />
 
 						<Line StartPoint="211, 754" EndPoint="211, 803" />
 						<Line StartPoint="314, 754" EndPoint="314, 803" />
@@ -262,24 +262,27 @@
 							<ColumnDefinition Width="48*" />
 						</Grid.ColumnDefinitions>
 						<Grid ShowGridLines="True" Grid.Row="1" Grid.Column="1" >
-							<ItemsControl ItemsSource="{Binding TextboxItems}">
+							<ItemsControl ItemsSource="{Binding TableItems}">
 								<ItemsControl.Styles>
 									<Style Selector="TextBox">
 										<Setter Property="MinHeight" Value="0" />
 										<Setter Property="MinWidth" Value="0" />
 										<Setter Property="Foreground" Value="Black" />
-										<Setter Property="FontSize" Value="8" />
-										<Setter Property="Padding" Value="0,0,0,0" />
-										<Setter Property="Margin" Value="3,3,4,1" />
+										<Setter Property="FontSize" Value="7" />
+										<Setter Property="Padding" Value="3,3,0,0" />
 										<Setter Property="BorderThickness" Value="0" />
 										<Setter Property="HorizontalAlignment" Value="Stretch" />
 										<Setter Property="VerticalAlignment" Value="Stretch" />
 									</Style>
-									<Style Selector="TextBox.TaskContent">
-									</Style>
 									<Style x:DataType="vm:TextboxItem" Selector="ItemsControl > ContentPresenter">
 										<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
-										<Setter Property="Grid.Column" Value="1" />
+										<Setter Property="Grid.Column" Value="{Binding ColumnIndex}" />
+									</Style>
+									<Style x:DataType="vm:DescriptionItem" Selector="ItemsControl > ContentPresenter">
+										<Setter Property="Margin" Value="3,3,3,1" />
+									</Style>
+									<Style x:DataType="vm:HourRangeItem" Selector="ItemsControl > ContentPresenter">
+										<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
 									</Style>
 								</ItemsControl.Styles>
 								<ItemsControl.ItemsPanel>

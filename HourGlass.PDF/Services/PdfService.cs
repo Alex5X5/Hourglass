@@ -14,6 +14,8 @@ using System.Threading;
 
 public unsafe partial class PdfService : IPdfService, IDisposable {
 
+	public const int MAX_LINE_LENGTH = 85;
+
 	private const string LAST_SECTION_INDEXER = "eof";
 
 	public static bool IndexersLoaded { private set; get; } = false;
@@ -348,7 +350,6 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	}
 
 	public static string[] CompileTask(Database.Models.Task task) {
-		const int MAX_LINE_LENGTH = 85;
 		string source = "";
 		List<string> res = [];
 		if (task.project != null)
