@@ -53,6 +53,16 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Console.WriteLine();
 	}
 
+	private bool WaitForIndexing() {
+		int counter = 0;
+		while (counter < 10) {
+			if (IndexersLoaded)
+				return true;
+			Thread.Sleep(200);
+		}
+		return false;
+	}
+
 	public void LoadIndexers() {
 		Console.WriteLine("loading indexers");
 		Stopwatch stopwatch = new();
@@ -193,7 +203,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 
 	public void Export(DateTime selectedWeek) {
 		if (!IndexersLoaded)
-			return;
+			if(!WaitForIndexing())
+				return;
 		Stopwatch totalStopwatch = new();
 		totalStopwatch.Start();
 		Console.WriteLine("started expoting");
@@ -275,6 +286,63 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Console.WriteLine($"exporting took {totalStopwatch.ElapsedMilliseconds / 1000.0} seconds");
 	}
 
+	public PdfDocumentData? GetExportData(DateTime selectedWeek) {
+		if (!IndexersLoaded)
+			if (!WaitForIndexing())
+				return null;
+		PdfDocumentData data = new PdfDocumentData();
+		List<Database.Models.Task> tasks = _dbService.QueryTasksOfWeekAtDateAsync(selectedWeek).Result;
+		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
+			{ "monday", DayOfWeek.Monday },
+			{ "tuesday", DayOfWeek.Tuesday },
+			{ "wendsday", DayOfWeek.Wednesday },
+			{ "thursday", DayOfWeek.Thursday },
+			{ "friday", DayOfWeek.Friday }
+		};
+		long totalWeekSeconds = 0;
+		int dayCounter = 0;
+		foreach (string dayName in days.Keys) {
+			int offset = 0;
+			string[] lines = ["", "", "", "", "", ""];
+			string time = "";
+			string hours = "";
+			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			if (tasks_.Count == 0)
+				continue;
+			foreach (Database.Models.Task task in tasks_) {
+				if (task.running)
+					continue;
+				string[] compiledTask = CompileTask(task);
+				try {
+					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+					time = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
+					hours = DateTimeService.ToHourMinuteString(task.finish - task.start);
+				} catch (ArgumentOutOfRangeException) {
+					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+					Console.WriteLine($"description of task was:'{task.description}'");
+					break;
+				} catch (ArgumentException) {
+					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+					Console.WriteLine($"description of task was:'{task.description}'");
+					break;
+				}
+				totalWeekSeconds += task.finish - task.start;
+			}
+			for (int i = 0; i < 6; i++)
+				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][0] = lines[i]; 
+			dayCounter++;
+		}
+		data.TotalTime= DateTimeService.ToHourMinuteString(totalWeekSeconds);
+		data.Week = Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek));
+		data.UserName = SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
+		data.JobName = SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name";
+		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+		DateTime dayTo = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+		data.DateFrom = $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
+		data.DateTo = $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}";
+		return data;
+	}
+
 	public void Import() {
 		throw new NotImplementedException();
 	}
@@ -324,5 +392,88 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		string path = $"Ausbildungsnachweis{DateTimeService.GetWeekCountAtDate(selectedWeek)}_{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}-{dayTo.Day}.{dayTo.Month}. {dayTo.Year}.pdf";
 		Console.WriteLine($"generated file path:{path}");
 		return path;
+	}
+}
+
+public class PdfDocumentData {
+
+	public const int DAY_LINE_COUNT = 6;
+	public const int WEEK_LINE_COUNT = 5 * DAY_LINE_COUNT;
+	public const int DOCUMENT_FIELD_COUNT = WEEK_LINE_COUNT + 9;
+
+	public const int USER_NAME_INDEX = WEEK_LINE_COUNT;
+	public const int JOB_NAME_INDEX = WEEK_LINE_COUNT + 1;
+	public const int WEEK_INDEX = WEEK_LINE_COUNT + 2;
+	public const int DATE_FOM_INDEX = WEEK_LINE_COUNT + 3;
+	public const int DATE_TO_INDEX = WEEK_LINE_COUNT + 4;
+	public const int SICK_DAYS_INDEX = WEEK_LINE_COUNT + 5;
+	public const int MISSING_DAYS_INDEX = WEEK_LINE_COUNT + 6;
+	public const int TOTAL_MISSING_DAYS_INDEX = WEEK_LINE_COUNT + 7;
+	public const int TOTAL_TIME_INDEX = WEEK_LINE_COUNT + 8;
+
+	public const int TASK_DESCRIPTION_COLUMN = 0;
+	public const int HOUR_COLUMN = 1;
+	public const int HOUR_RANGE_COLUMN = 2;
+	public const int UTILITY_DATA_COLUMN = 0;
+
+
+	public string[][] Data = new string[DOCUMENT_FIELD_COUNT][];
+
+	public Tuple<string, string, string>[] TaskData {
+		get {
+			List<Tuple<string, string, string>> l = [];
+			for (int i = 0; i < Data.GetLength(0); i++) {
+				l.Add(
+					new Tuple<string, string, string>(
+						Data[i][TASK_DESCRIPTION_COLUMN],
+						Data[i][HOUR_COLUMN],
+						Data[i][HOUR_RANGE_COLUMN]
+					)
+				);
+			}
+			return l.ToArray();
+		}
+	}
+
+	public string UserName {
+		set => Data[USER_NAME_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[USER_NAME_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string JobName {
+		set => Data[JOB_NAME_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[JOB_NAME_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string Week {
+		set => Data[WEEK_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[WEEK_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string DateFrom {
+		set => Data[DATE_FOM_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[DATE_FOM_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string DateTo {
+		set => Data[DATE_TO_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[DATE_TO_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string SickDays {
+		set => Data[SICK_DAYS_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[SICK_DAYS_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string MmissingDays {
+		set => Data[MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string TotalMissingDays {
+		set => Data[TOTAL_MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[TOTAL_MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN];
+	}
+	public string TotalTime {
+		set => Data[TOTAL_TIME_INDEX][UTILITY_DATA_COLUMN] = value;
+		get => Data[TOTAL_TIME_INDEX][UTILITY_DATA_COLUMN];
+	}
+
+	public PdfDocumentData() {
+		for (int i = 0; i < DOCUMENT_FIELD_COUNT; i++)
+			Data[i] = ["", "", "", ""];
 	}
 }

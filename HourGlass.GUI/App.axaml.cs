@@ -19,6 +19,8 @@ using Hourglass.PDF.Services.Interfaces;
 
 using Microsoft.Extensions.DependencyInjection;
 using Hourglass.GUI.Services;
+using Hourglass.GUI.Views.Components;
+using Hourglass.GUI.ViewModels.Components;
 
 public partial class App : Application {
 
@@ -40,6 +42,8 @@ public partial class App : Application {
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
 			instanciator.AddCommonServiceSingleton<CacheService, CacheService>();
 		}
+
+		instanciator.RegisterComponentTransient<DocumentPreviewerViewModel>();
 
 		instanciator.AddContentBindingType<PageViewModelBase>();
 		instanciator.RegisterPageTransient<TimerPageViewModel>();

@@ -45,5 +45,21 @@ public unsafe partial class PdfService {
         }
         Console.WriteLine("finished building document");
         return buffer;
-    }
+	}
+
+	public ValueTuple<string, string, string>[] BuildTouples() {
+		List<ValueTuple<string, string, string>> lines = [];
+		foreach (string day in new List<string> { "monday", "tuesday", "wendsday", "thursday", "friday" }) {
+			for(int i= 0; i<6; i++)
+				lines.Add(BuildTuple(day, i));
+		}
+		return lines.ToArray();
+	}
+
+	private ValueTuple<string, string, string> BuildTuple(string dayName, int lineIndex) {
+		InsertOperations.TryGetValue($"%%index-{dayName}_line_{lineIndex}", out string? line);
+		InsertOperations.TryGetValue($"%%index-{dayName}_hour_{lineIndex}", out string? hour);
+		InsertOperations.TryGetValue($"%%index-{dayName}_hour_range_{lineIndex}", out string? range);
+		return new ValueTuple<string, string, string>(line ?? "", hour ?? "", range ?? "");
+	}
 }

@@ -40,16 +40,27 @@ public class PageInstanciator {
 		serviceCollection.AddSingleton<RegisterT, InstanceT>();
 	}
 
-	public void RegisterPageTransient<T>() where T : class {
-		serviceCollection.AddTransient<T>();
-	}
-
 	public void RegisterWindow<T>() where T : Window {
 		serviceCollection.AddSingleton<T>();
 	}
 
 	public void RegisterPageSingleton<T>() where T : class {
 		serviceCollection.AddSingleton<T>();
+	}
+
+	public void RegisterPageTransient<T>() where T : class {
+		serviceCollection.AddTransient<T>();
+	}
+
+	public void RegisterComponentTransient<ComponentT>() where ComponentT : class {
+		serviceCollection.AddTransient<ComponentT>();
+		serviceCollection.AddSingleton<Func<Type, ComponentT>>(
+			(serviceProvider) =>
+				(componentType) =>
+					(ComponentT?)serviceProvider.GetService(componentType)
+						?? throw new InvalidOperationException($"Component of type {componentType?.FullName} has no registered view model")
+		);
+		serviceCollection.AddSingleton<ComponentModelFactory<ComponentT>>();
 	}
 
 	public IServiceProvider BuildPages() {
@@ -71,6 +82,15 @@ public class ViewModelFactory<ViewBaseType>(Func<Type, ViewBaseType> factory) {
 	public ViewBaseType GetPageViewModel<T>(Action<T?>? afterCreation = null)
 		where T : ViewBaseType {
 		ViewBaseType viewModel = factory(typeof(T));
+		afterCreation?.Invoke((T?)viewModel);
+		return viewModel;
+	}
+}
+
+public class ComponentModelFactory<ComponentT>(Func<Type, ComponentT> factory) {
+	public ComponentT GetPageViewModel<T>(Action<T?>? afterCreation = null)
+		where T : ComponentT {
+		ComponentT viewModel = factory(typeof(T));
 		afterCreation?.Invoke((T?)viewModel);
 		return viewModel;
 	}
