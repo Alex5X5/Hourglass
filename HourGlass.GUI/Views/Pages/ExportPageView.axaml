@@ -40,18 +40,6 @@
 								<Setter Property="FontSize" Value="14" />
 							</Style>
 						</Canvas.Styles>
-						<!--
-						<Rectangle Fill="Blue" Width="63" Height="41" Canvas.Left="40" Canvas.Top="31">
-							<Rectangle.OpacityMask>
-								<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-									<LinearGradientBrush.GradientStops>
-										<GradientStop Offset="0" Color="Black"/>
-										<GradientStop Offset="1" Color="Transparent"/>
-									</LinearGradientBrush.GradientStops>
-								</LinearGradientBrush>
-							</Rectangle.OpacityMask>
-						</Rectangle>
-						-->
 						<Line StartPoint="327, 28.7" EndPoint="548.9, 28.7" />
 						<Line StartPoint="327, 50.4" EndPoint="548.9, 50.4" />
 						<Line StartPoint="201, 72.8" EndPoint="238.6, 72.8" />
@@ -280,9 +268,6 @@
 									</Style>
 									<Style x:DataType="vm:DescriptionItem" Selector="ItemsControl > ContentPresenter">
 										<Setter Property="Margin" Value="3,3,3,1" />
-									</Style>
-									<Style x:DataType="vm:HourRangeItem" Selector="ItemsControl > ContentPresenter">
-										<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
 									</Style>
 								</ItemsControl.Styles>
 								<ItemsControl.ItemsPanel>
