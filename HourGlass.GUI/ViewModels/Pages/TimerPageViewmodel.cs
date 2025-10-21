@@ -16,13 +16,17 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 
+	private string FallbackTaskDescription = "";
+
     public string DescriptionTextboxText {
 		set {
-			if(cacheService?.RunningTask != null)
+			if (cacheService?.RunningTask != null)
 				cacheService.RunningTask.description = value;
+			else
+				FallbackTaskDescription = value;
 			OnPropertyChanged(nameof(DescriptionTextboxText));
 		}
-		get => cacheService?.RunningTask?.description ?? "";
+		get => cacheService?.RunningTask?.description ?? FallbackTaskDescription;
 	}
 	public string ProjectTextboxText {
         set {
@@ -110,6 +114,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				new Worker { name = "new user" },
 				null
 			);
+		AllBindingPropertiesChanged();
 	}
 
 	[RelayCommand]

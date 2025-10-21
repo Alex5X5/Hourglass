@@ -34,11 +34,13 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	protected abstract double TASK_DESCRIPTION_GRAPH_SPAGE { get; }
     protected abstract double TASK_DESCRIPTION_FONT_SIZE { get; }
-	
 
-	#endregion fields
+	private static int MAX_TASK_DESCRIPTION_CHARS => 30;
 
-	public GraphPanelViewBase() : base() {
+
+    #endregion fields
+
+    public GraphPanelViewBase() : base() {
 		
 	}
 
@@ -68,7 +70,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 		//Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
-		double r = Math.Min(GRAPH_CORNER_RADIUS, rect.Width);
+		double r = Math.Min(GRAPH_CORNER_RADIUS, rect.Width / 2);
         Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, 0, task.displayColorBlue));
         RectangleGeometry rrect = new(rect) { RadiusX = r, RadiusY = r };
         context.DrawGeometry(brush, null, rrect);
@@ -79,7 +81,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	private void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, Rect taskRect) {
         var formattedText = new FormattedText(
-            task.description,
+            task.description.Length <= MAX_TASK_DESCRIPTION_CHARS ? task.description : task.description[..MAX_TASK_DESCRIPTION_CHARS] + "...",
             System.Globalization.CultureInfo.CurrentCulture,
             FlowDirection.LeftToRight,
             new Typeface("Arial"),

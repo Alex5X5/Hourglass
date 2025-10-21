@@ -79,7 +79,7 @@ public class HourglassDbService : IHourglassDbService {
 		await QueryTasksOfWeekAtDateAsync(DateTime.Now);
 
 	public async Task<List<Models.Task>> QueryTasksOfMonthAtDateAsync(DateTime date) {
-        DateTime start = DateTimeService.FloorWeek(date);
+        DateTime start = DateTimeService.FloorMonth(date);
         DateTime finfish = start.AddDays(DateTime.DaysInMonth(date.Year, date.Month));
         return await QueryTasksInIntervallAsync(DateTimeService.ToSeconds(start), DateTimeService.ToSeconds(finfish));
     }
