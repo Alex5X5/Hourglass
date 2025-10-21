@@ -32,6 +32,10 @@ public abstract class GraphPanelViewBase : ViewBase {
 	protected double PADDING_Y => Bounds.Height / 30;
 	protected static double TIMELINE_MARK_HEIGHT => 7;
 
+	protected abstract double TASK_DESCRIPTION_GRAPH_SPAGE { get; }
+    protected abstract double TASK_DESCRIPTION_FONT_SIZE { get; }
+	
+
 	#endregion fields
 
 	public GraphPanelViewBase() : base() {
@@ -39,9 +43,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 	}
 
 	protected abstract void DrawTimeline(DrawingContext context);
-
-	protected abstract void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength);
-
+	
 	public abstract void OnDoubleClick(object? sender, TappedEventArgs e);
 
 	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
@@ -66,12 +68,29 @@ public abstract class GraphPanelViewBase : ViewBase {
 		//Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
-		Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, 0, task.displayColorBlue));
-		context.FillRectangle(brush, rect);
-		DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
+		double r = Math.Min(GRAPH_CORNER_RADIUS, rect.Width);
+        Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, 0, task.displayColorBlue));
+        RectangleGeometry rrect = new(rect) { RadiusX = r, RadiusY = r };
+        context.DrawGeometry(brush, null, rrect);
+		DrawTaskDescriptionStub(context, task, rect);
+        //context.FillRectangle(brush, rect);
+		//DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
 
-	public async override void Render(DrawingContext context) {
+	private void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, Rect taskRect) {
+        var formattedText = new FormattedText(
+            task.description,
+            System.Globalization.CultureInfo.CurrentCulture,
+            FlowDirection.LeftToRight,
+            new Typeface("Arial"),
+            TASK_DESCRIPTION_FONT_SIZE, // Font size
+            new SolidColorBrush(Colors.Green)
+        );
+		Point p = new Point(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
+        context.DrawText(formattedText, p);
+    }
+
+    public async override void Render(DrawingContext context) {
 		base.Render(context);
 		if (!IsVisible)
 			return;

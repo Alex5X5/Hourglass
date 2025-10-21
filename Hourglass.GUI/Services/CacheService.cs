@@ -9,7 +9,7 @@ public class CacheService {
     private Database.Models.Task? runningTask;
     public Database.Models.Task? RunningTask {
         set {
-            runningTask = value;
+            runningTask = value?.Clone();
             OnRunningTaksChanged?.Invoke(runningTask);
         }
         get => runningTask;
@@ -19,7 +19,7 @@ public class CacheService {
     private Database.Models.Task? selectedTask;
     public Database.Models.Task? SelectedTask {
         set {
-            selectedTask = value;
+            selectedTask = value?.Clone();
             OnSelectedTaksChanged?.Invoke(selectedTask);
         }
         get => selectedTask;

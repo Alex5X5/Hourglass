@@ -45,17 +45,17 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
             }
             OnPropertyChanged(nameof(StartTextboxText));
         }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToTimeString(cacheService.SelectedTask.StartDateTime) : "";
+        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.StartDateTime) : "";
     }
     public string FinishTextboxText {
         set {
             if (cacheService?.SelectedTask != null) {
                 DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
+                cacheService.SelectedTask.finish = DateTimeService.ToSeconds(finish);
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToTimeString(cacheService.SelectedTask.FinishDateTime) : "";
+        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.FinishDateTime) : "";
     }
 
     public bool IsContiniueButtonEnabled { get => cacheService?.SelectedTask != null; }
@@ -112,17 +112,18 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 				null
 			);
 		AllBindingPropertiesChanged();
-		//UpdateTextFields();
-		//await Task.Run(
-		//	() => {
-		//		Thread.Sleep(100);
-		//		if (RunningTask != null)
-		//			SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
-		//	}
-		//);
-		//StopButton.Enable();
-		//StartButton.Disable();
-	}
+        controller.GoBack();
+        //UpdateTextFields();
+        //await Task.Run(
+        //	() => {
+        //		Thread.Sleep(100);
+        //		if (RunningTask != null)
+        //			SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
+        //	}
+        //);
+        //StopButton.Enable();
+        //StartButton.Disable();
+    }
 
 	[RelayCommand]
 	private async System.Threading.Tasks.Task StopTask() {
@@ -136,8 +137,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 				null
 			);
 		AllBindingPropertiesChanged();
-		//UpdateTextFields();
-	}
+        controller.GoBack();
+        //UpdateTextFields();
+    }
 
 	[RelayCommand]
 	private void RestartTask() {
@@ -173,11 +175,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	private void ApplyChanges() {
 		if (cacheService.SelectedTask == null)
 			return;
-		cacheService.SelectedTask.description = DescriptionTextboxText;
-		cacheService.SelectedTask.StartDateTime = DateTimeService.InterpretDayAndTimeString(StartTextboxText) ?? cacheService.SelectedTask.StartDateTime;
-		cacheService.SelectedTask.FinishDateTime = DateTimeService.InterpretDayAndTimeString(FinishTextboxText) ?? cacheService.SelectedTask.FinishDateTime;
 		dbService.UpdateTaskAsync(cacheService.SelectedTask);
-	}
+        controller.GoBack();
+    }
 
 	[RelayCommand]
 	private void Cancel() {

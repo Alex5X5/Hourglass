@@ -30,31 +30,11 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 	public override int X_AXIS_SEGMENT_COUNT => DateTimeService.DaysInCurrentMonth();
 	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-	public MonthGraphPanelView() : base() {
+    protected override double TASK_DESCRIPTION_GRAPH_SPAGE => 5;
+    protected override double TASK_DESCRIPTION_FONT_SIZE => 10;
+
+    public MonthGraphPanelView() : base() {
 		InitializeComponent();
-	}
-
-	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
-		// Draw rectangle background
-		var rect = new Rect(100, 100, 50, 20);
-		context.DrawRectangle(Background, null, rect);
-		string text = "month graph panel string";
-		// Create formatted text
-		var formattedText = new FormattedText(
-			text,
-			System.Globalization.CultureInfo.CurrentCulture,
-			FlowDirection.LeftToRight,
-			new Typeface("Arial"),
-			16, // Font size
-			new SolidColorBrush(Colors.Gray)
-		);
-
-		// Center the text
-		var x = (Bounds.Width - formattedText.Width) / 2;
-		var y = (Bounds.Height - formattedText.Height) / 2;
-
-		// Draw the text
-		context.DrawText(formattedText, new Point(100, 100));
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {

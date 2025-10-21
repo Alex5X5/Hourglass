@@ -43,7 +43,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
             }
             OnPropertyChanged(nameof(StartTextboxText));
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToTimeString(cacheService.RunningTask.StartDateTime) : "";
+        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
     }
     public string FinishTextboxText {
         set {
@@ -53,7 +53,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToTimeString(cacheService.RunningTask.FinishDateTime) : "";
+        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
 	public override string Title => "Timer";
@@ -133,6 +133,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 
 	public void OnLoad() {
 		Console.WriteLine("loading Timer Page");
+		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
 		AllBindingPropertiesChanged();
 	}
 }

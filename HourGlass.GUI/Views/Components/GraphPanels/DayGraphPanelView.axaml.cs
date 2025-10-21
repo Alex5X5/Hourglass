@@ -30,30 +30,13 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 	public override int X_AXIS_SEGMENT_COUNT => 24;
 	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-	public DayGraphPanelView() : base() {
+	protected override double TASK_DESCRIPTION_GRAPH_SPAGE => 10;
+	protected override double TASK_DESCRIPTION_FONT_SIZE=> 30;
+
+    public DayGraphPanelView() : base() {
 		InitializeComponent();
 	}
 	
-	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
-		var rect = new Rect(100, 100, 50, 20);
-		context.DrawRectangle(Background, null, rect);
-		string text = "day graph panel string";
-		var formattedText = new FormattedText(
-			text,
-			System.Globalization.CultureInfo.CurrentCulture,
-			FlowDirection.LeftToRight,
-			new Typeface("Arial"),
-			16, // Font size
-			new SolidColorBrush(Colors.Gray)
-		);
-
-		// Center the text
-		var x = (Bounds.Width - formattedText.Width) / 2;
-		var y = (Bounds.Height - formattedText.Height) / 2;
-
-		context.DrawText(formattedText, new Point(100,100));
-	}
-
 	protected override void DrawTimeline(DrawingContext context) {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));

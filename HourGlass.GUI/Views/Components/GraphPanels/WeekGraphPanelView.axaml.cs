@@ -30,11 +30,11 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 	public override int X_AXIS_SEGMENT_COUNT => 7;
 	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-	public WeekGraphPanelView() : base() {
-		InitializeComponent();
-	}
+    protected override double TASK_DESCRIPTION_GRAPH_SPAGE => 5;
+    protected override double TASK_DESCRIPTION_FONT_SIZE => 10;
 
-	protected override void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, double graphPosX, double graphPosY, double graphLength) {
+    public WeekGraphPanelView() : base() {
+		InitializeComponent();
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {
@@ -50,6 +50,7 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 			if (i % 7 == 5 | i % 7 == 6)
 				context.FillRectangle(weekedDayBackground, new(xPos+1, PADDING_Y, xAxisSegmentSize-2, Bounds.Height - (2 * PADDING_Y)));
 			if (i + 1 == (int)DateTime.Today.DayOfWeek)
+				if(DateTimeService.FloorWeek((DataContext as WeekGraphPanelViewModel)!.dateTimeService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
 				context.FillRectangle(todayBackgroundColor, new(xPos+1, PADDING_Y, xAxisSegmentSize-2, Bounds.Height - (2 * PADDING_Y)));
 		}
 		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));

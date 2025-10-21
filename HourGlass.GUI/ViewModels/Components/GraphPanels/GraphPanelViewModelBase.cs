@@ -28,8 +28,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 	}
 
-	public async virtual Task<List<Database.Models.Task>> GetTasksAsync() =>
-		await dbService.QueryTasksAsync() ?? [];
+	public abstract Task<List<Database.Models.Task>> GetTasksAsync();
 
 	public virtual void OnClick(Database.Models.Task task) {
 		cacheService.SelectedTask = task;
