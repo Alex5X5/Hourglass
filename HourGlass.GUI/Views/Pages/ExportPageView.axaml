@@ -36,6 +36,10 @@
 							<Style Selector="TextBlock.Description2">
 								<Setter Property="FontSize" Value="9" />
 							</Style>
+							<Style Selector="TextBlock.Fat">
+								<Setter Property="FontSize" Value="13" />
+								<Setter Property="FontWeight" Value="Bold"/>
+							</Style>
 							<Style Selector="TextBlock.Day">
 								<Setter Property="FontSize" Value="14" />
 							</Style>
@@ -153,6 +157,10 @@
 							</TextBlock.RenderTransform>
 						</TextBlock>
 
+						<TextBlock Text="Ausbildungsnachweis Nr."
+							   Canvas.Left="30"
+							   Canvas.Top="55"
+							   Classes="Fat" />
 						<TextBlock Text="Woche vom"
 								   Canvas.Left="265"
 								   Canvas.Top="60"
@@ -237,6 +245,12 @@
 								   Canvas.Left="458"
 								   Canvas.Top="787"
 								   Classes="Description" />
+						
+						<TextBlock Text="{ Binding DateFromText }"
+								   Canvas.Left="208"
+								   Canvas.Top="54"
+								   FontSize="14"
+								   Classes="Fat" />
 					</Canvas>
 					<Grid ShowGridLines="False" >
 						<Grid.RowDefinitions>

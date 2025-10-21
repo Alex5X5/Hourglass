@@ -18,7 +18,20 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	private PdfDocumentData pdfData;
 	public ObservableCollection<TextboxItem> TableItems { get; set; }
 
-	public ExportPageViewModel() : this(null, null) {
+    public string DateFromText => Convert.ToString(dateTimeService?.SelectedDay !=null ? DateTimeService.GetWeekCountAtDate(dateTimeService.SelectedDay) : null) ?? ""; 
+    public string DateToText {
+		get {
+			if (dateTimeService == null | dateTimeService!.SelectedDay == null)
+				return "";
+            DateTime dayFrom = DateTimeService.FloorWeek(dateTimeService.SelectedDay);
+            DateTime dayTo = dayFrom.AddDays(5);
+            return $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
+            BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
+        }
+    }
+    
+
+    public ExportPageViewModel() : this(null, null) {
 	}
 
 	public ExportPageViewModel(DateTimeService? dateTimeService, IHourglassDbService? dbService) : this(dateTimeService, dbService, null) {

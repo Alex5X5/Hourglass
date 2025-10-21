@@ -61,8 +61,6 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="3*" />
-					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 				<Button Grid.Row="1"
 						Grid.Column="1"
@@ -103,20 +101,6 @@
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
 							<TextBlock Classes="ButtonContent" Text="Export" FontSize="13"/>
-						</Viewbox>
-					</Grid>
-				</Button>
-				<Button Grid.Row="1"
-						Grid.Column="7"
-						Command="{Binding GoToProjectCommand}"
-						Name="ProjectModeButton">
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Projects" FontSize="13"/>
 						</Viewbox>
 					</Grid>
 				</Button>
