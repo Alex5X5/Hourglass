@@ -314,9 +314,10 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			foreach (Database.Models.Task task in tasks_) {
 				if (task.running)
 					continue;
-				string[] compiledTask = CompileTask(task);
+				string[] compiledTask = CompileTaskPreview(task);
 				try {
 					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+					offset += compiledTask.Length;
 					time = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
 					hours = DateTimeService.ToHourMinuteString(task.finish - task.start);
 				} catch (ArgumentOutOfRangeException) {
@@ -334,13 +335,13 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][0] = lines[i]; 
 			dayCounter++;
 		}
-		data.TotalTime= DateTimeService.ToHourMinuteString(totalWeekSeconds);
+		data.TotalTime = DateTimeService.ToHourMinuteString(totalWeekSeconds);
 		data.Week = Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek));
 		data.UserName = SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
 		data.JobName = SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name";
-		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
-		DateTime dayTo = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
-		data.DateFrom = $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
+        DateTime dayFrom = DateTimeService.FloorWeek(selectedWeek);
+        DateTime dayTo = dayFrom.AddDays(5);
+        data.DateFrom = $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
 		data.DateTo = $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}";
 		return data;
 	}
@@ -372,7 +373,30 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		return res.ToArray();
 	}
 
-	private void SetUtilityFields(DateTime selectedWeek) {
+    public static string[] CompileTaskPreview(Database.Models.Task task) {
+        string source = "";
+        List<string> res = [];
+        if (task.project != null)
+            source += $"{task.project.Name}: ";
+        if (task.ticket != null)
+            source += $"{task.ticket.name}: ";
+        source += task.description;
+        while (source.Length > 0) {
+            int CharacterRemoveCount;
+            if (source.Length >= MAX_LINE_LENGTH) {
+                CharacterRemoveCount = MAX_LINE_LENGTH;
+                while (source[CharacterRemoveCount] != ' ')
+                    CharacterRemoveCount--;
+            } else
+                CharacterRemoveCount = source.Length;
+            res.Add((res.Count > 0 ? "     " : "") + source[..(source[CharacterRemoveCount - 1] == ' ' ? CharacterRemoveCount - 1 : CharacterRemoveCount)]);
+            source = source[CharacterRemoveCount..source.Length];
+        }
+        return res.ToArray();
+    }
+
+
+    private void SetUtilityFields(DateTime selectedWeek) {
 		BufferAnnotationValueUnsafe("week", Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek)));
 		BufferFieldValueUnsafe("week", Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek)));
 		BufferAnnotationValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");

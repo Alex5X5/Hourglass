@@ -17,8 +17,8 @@
 			  Grid.Row="1"
 			  Grid.Column="1">
 			<Viewbox Stretch="Uniform">
-				<Panel>
-					<Canvas Background="Beige" Width="595" Height="842" >
+				<Panel Background="Beige" Width="595" Height="842" >
+					<Canvas >
 						<Canvas.Styles>
 							<Style Selector="Line">
 								<Setter Property="StrokeThickness" Value="2" />
@@ -48,7 +48,7 @@
 						<Line StartPoint="327, 50.4" EndPoint="548.9, 50.4" />
 						<Line StartPoint="201, 72.8" EndPoint="238.6, 72.8" />
 						<Line StartPoint="327, 72.8" EndPoint="388.9, 72.8" />
-						<Line StartPoint="427.2, 72.8" EndPoint="505.4, 72.8" />
+						<Line StartPoint="427.2, 72.8" EndPoint="489.1, 72.8" />
 
 						<Line StartPoint="61, 87" EndPoint="548, 87" Classes="Fat" />
 						<Line StartPoint="62, 755" EndPoint="548, 755" Classes="Fat" />
@@ -65,36 +65,36 @@
 						<Line StartPoint="314, 754" EndPoint="314, 803" />
 						<Line StartPoint="426, 754" EndPoint="426, 803" />
 						<Line StartPoint="42.3, 117.3" EndPoint="547.6, 117.3" Classes="Fat" />
-						<Line StartPoint="62, 136.6" EndPoint="547.6, 136.6" />
-						<Line StartPoint="62, 155.1" EndPoint="547.6, 155.1" />
-						<Line StartPoint="62, 173.6" EndPoint="547.6, 173.6" />
-						<Line StartPoint="62, 192.1" EndPoint="547.6, 192.1" />
-						<Line StartPoint="62, 210.6" EndPoint="547.6, 210.6" />
-						<Line StartPoint="42.3, 228.4" EndPoint="547.6, 228.4" Classes="Fat" />
-						<Line StartPoint="62, 247.6" EndPoint="547.6, 247.6" />
-						<Line StartPoint="62, 266.1" EndPoint="547.6, 266.1" />
-						<Line StartPoint="62, 284.7" EndPoint="547.6, 284.7" />
-						<Line StartPoint="62, 303.2" EndPoint="547.6, 303.2" />
-						<Line StartPoint="62, 321.7" EndPoint="547.6, 321.7" />
-						<Line StartPoint="42.3, 339.4" EndPoint="547.6, 339.4" Classes="Fat" />
-						<Line StartPoint="62, 358.7" EndPoint="547.6, 358.7" />
-						<Line StartPoint="62, 377.2" EndPoint="547.6, 377.2" />
-						<Line StartPoint="62, 395.7" EndPoint="547.6, 395.7" />
-						<Line StartPoint="62, 414.2" EndPoint="547.6, 414.2" />
-						<Line StartPoint="62, 432.7" EndPoint="547.6, 432.7" />
-						<Line StartPoint="42.3, 450.5" EndPoint="547.6, 450.5" Classes="Fat" />
-						<Line StartPoint="62, 469.8" EndPoint="547.6, 469.8" />
-						<Line StartPoint="62, 488.3" EndPoint="547.6, 488.3" />
-						<Line StartPoint="62, 506.8" EndPoint="547.6, 506.8" />
-						<Line StartPoint="62, 525.3" EndPoint="547.6, 525.3" />
-						<Line StartPoint="62, 543.8" EndPoint="547.6, 543.8" />
-						<Line StartPoint="42.3, 561.6" EndPoint="547.6, 561.6" Classes="Fat" />
-						<Line StartPoint="62, 580.8" EndPoint="547.6, 580.8" />
-						<Line StartPoint="62, 599.3" EndPoint="547.6, 599.3" />
-						<Line StartPoint="62, 617.8" EndPoint="547.6, 617.8" />
-						<Line StartPoint="62, 636.3" EndPoint="547.6, 636.3" />
-						<Line StartPoint="62, 654.9" EndPoint="547.6, 654.9" />
-						<Line StartPoint="42.3, 672.6" EndPoint="547.6, 672.6" Classes="Fat" />
+						<Line StartPoint="62, 135.8" EndPoint="547.6, 135.8" />
+						<Line StartPoint="62, 154.3" EndPoint="547.6, 154.3" />
+						<Line StartPoint="62, 172.8" EndPoint="547.6, 172.8" />
+						<Line StartPoint="62, 191.3" EndPoint="547.6, 191.3" />
+						<Line StartPoint="62, 209.8" EndPoint="547.6, 209.8" />
+						<Line StartPoint="42.3, 228.3" EndPoint="547.6, 228.3" Classes="Fat" />
+						<Line StartPoint="62, 246.8" EndPoint="547.6, 246.8" />
+						<Line StartPoint="62, 265.3" EndPoint="547.6, 265.3" />
+						<Line StartPoint="62, 283.8" EndPoint="547.6, 283.8" />
+						<Line StartPoint="62, 302.3" EndPoint="547.6, 302.3" />
+						<Line StartPoint="62, 320.8" EndPoint="547.6, 320.8" />
+						<Line StartPoint="42.3, 339.3" EndPoint="547.6, 339.3" Classes="Fat" />
+						<Line StartPoint="62, 357.8" EndPoint="547.6, 357.8" />
+						<Line StartPoint="62, 376.3" EndPoint="547.6, 376.3" />
+						<Line StartPoint="62, 394.8" EndPoint="547.6, 394.8" />
+						<Line StartPoint="62, 413.3" EndPoint="547.6, 413.3" />
+						<Line StartPoint="62, 431.8" EndPoint="547.6, 431.8" />
+						<Line StartPoint="42.3, 450.3" EndPoint="547.6, 450.3" Classes="Fat" />
+						<Line StartPoint="62, 468.8" EndPoint="547.6, 468.8" />
+						<Line StartPoint="62, 487.3" EndPoint="547.6, 487.3" />
+						<Line StartPoint="62, 505.8" EndPoint="547.6, 505.8" />
+						<Line StartPoint="62, 524.3" EndPoint="547.6, 524.3" />
+						<Line StartPoint="62, 542.8" EndPoint="547.6, 542.8" />
+						<Line StartPoint="42.3, 561.3" EndPoint="547.6, 561.3" Classes="Fat" />
+						<Line StartPoint="62, 579.8" EndPoint="547.6, 579.8" />
+						<Line StartPoint="62, 598.3" EndPoint="547.6, 598.3" />
+						<Line StartPoint="62, 616.8" EndPoint="547.6, 616.8" />
+						<Line StartPoint="62, 635.3" EndPoint="547.6, 635.3" />
+						<Line StartPoint="62, 653.8" EndPoint="547.6, 653.8" />
+						<Line StartPoint="42.3, 672.3" EndPoint="547.6, 672.3" Classes="Fat" />
 
 						<Line StartPoint="200, 710" EndPoint="238, 710" />
 						<Line StartPoint="200, 735" EndPoint="238, 735" />
@@ -186,11 +186,11 @@
 								   Canvas.Top="97"
 								   Classes="Description" />
 						<TextBlock Text="Einzel-"
-								   Canvas.Left="393"
+								   Canvas.Left="391"
 								   Canvas.Top="92"
 								   Classes="Description2" />
 						<TextBlock Text="stunden"
-								   Canvas.Left="389"
+								   Canvas.Left="387"
 								   Canvas.Top="102"
 								   Classes="Description2" />
 						<TextBlock Text="krank"
@@ -239,106 +239,98 @@
 								   Classes="Description" />
 						<TextBlock Text="Gesetzl. Vertreter/-in"
 								   Canvas.Left="320"
-								   Canvas.Top="787"
+								   Canvas.Top="789"
 								   Classes="Description" />
 						<TextBlock Text="Berufsschule"
-								   Canvas.Left="458"
+								   Canvas.Left="461"
 								   Canvas.Top="787"
 								   Classes="Description" />
-						
-						<TextBlock Text="{ Binding DateFromText }"
-								   Canvas.Left="208"
-								   Canvas.Top="54"
+						<TextBlock Text="{ Binding WeekCount }"
+								   Canvas.Left="210"
+								   Canvas.Top="56"
 								   FontSize="14"
 								   Classes="Fat" />
+						<TextBlock Text="{ Binding DateFromText }"
+								   Canvas.Left="333"
+								   Canvas.Top="58"
+								   FontSize="10" />
+						<TextBlock Text="{ Binding DateFromText }"
+								   Canvas.Left="433"
+								   Canvas.Top="58"
+								   FontSize="10" />
 					</Canvas>
-					<Grid ShowGridLines="False" >
-						<Grid.RowDefinitions>
-							<RowDefinition Height="87*" />
-							<RowDefinition Height="728*" />
-							<RowDefinition Height="38*" />
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="42*" />
-							<ColumnDefinition Width="508*" />
-							<ColumnDefinition Width="48*" />
-						</Grid.ColumnDefinitions>
-						<Grid ShowGridLines="True" Grid.Row="1" Grid.Column="1" >
-							<ItemsControl ItemsSource="{Binding TableItems}">
-								<ItemsControl.Styles>
-									<Style Selector="TextBox">
-										<Setter Property="MinHeight" Value="0" />
-										<Setter Property="MinWidth" Value="0" />
-										<Setter Property="Foreground" Value="Black" />
-										<Setter Property="FontSize" Value="7" />
-										<Setter Property="Padding" Value="3,3,0,0" />
-										<Setter Property="BorderThickness" Value="0" />
-										<Setter Property="HorizontalAlignment" Value="Stretch" />
-										<Setter Property="VerticalAlignment" Value="Stretch" />
-									</Style>
-									<Style x:DataType="vm:TextboxItem" Selector="ItemsControl > ContentPresenter">
-										<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
-										<Setter Property="Grid.Column" Value="{Binding ColumnIndex}" />
-									</Style>
-									<Style x:DataType="vm:DescriptionItem" Selector="ItemsControl > ContentPresenter">
-										<Setter Property="Margin" Value="3,3,3,1" />
-									</Style>
-								</ItemsControl.Styles>
-								<ItemsControl.ItemsPanel>
-									<ItemsPanelTemplate>
-										<Grid>
-											<Grid.RowDefinitions>
-												<RowDefinition Height="14*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="8.5*" />
-												<RowDefinition Height="29*" />
-												<RowDefinition Height="23*" />
-											</Grid.RowDefinitions>
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="4*" />
-												<ColumnDefinition Width="66*" />
-												<ColumnDefinition Width="8*" />
-												<ColumnDefinition Width="25*" />
-											</Grid.ColumnDefinitions>
-										</Grid>
-									</ItemsPanelTemplate>
-								</ItemsControl.ItemsPanel>
-								<ItemsControl.ItemTemplate >
-									<DataTemplate>
-										<TextBox Classes="TaskContent" Text="{ Binding Text }" />
-									</DataTemplate>
-								</ItemsControl.ItemTemplate>
-							</ItemsControl>
-						</Grid>
+					
+					<Grid RowDefinitions="117.3*, 672.3*, 287*" ColumnDefinitions="46.7*, 485.6*, 47.7*" Grid.Row="1" Grid.Column="1">
+						<ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TableItems}">
+							<ItemsControl.Styles>
+								<Style Selector="TextBox">
+									<Setter Property="MinHeight" Value="0" />
+									<Setter Property="MinWidth" Value="0" />
+									<Setter Property="Foreground" Value="Black" />
+									<Setter Property="FontSize" Value="7" />
+									<Setter Property="Padding" Value="3,0,0,0" />
+									<Setter Property="BorderThickness" Value="0" />
+									<Setter Property="HorizontalAlignment" Value="Stretch" />
+									<Setter Property="VerticalAlignment" Value="Stretch" />
+								</Style>
+								<Style x:DataType="vm:TextboxItem" Selector="ItemsControl > ContentPresenter">
+									<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
+									<Setter Property="Grid.Column" Value="{Binding ColumnIndex}" />
+								</Style>
+								<Style x:DataType="vm:DescriptionItem" Selector="ItemsControl > ContentPresenter">
+									<Setter Property="Margin" Value="0,3,3,1" />
+								</Style>
+							</ItemsControl.Styles>
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<Grid>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+											<RowDefinition Height="8.4*" />
+										</Grid.RowDefinitions>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="4*" />
+											<ColumnDefinition Width="66*" />
+											<ColumnDefinition Width="8*" />
+											<ColumnDefinition Width="25*" />
+										</Grid.ColumnDefinitions>
+									</Grid>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.ItemTemplate >
+								<DataTemplate>
+									<TextBox Classes="TaskContent" Text="{ Binding Text }" />
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
 					</Grid>
 				</Panel>
 			</Viewbox>

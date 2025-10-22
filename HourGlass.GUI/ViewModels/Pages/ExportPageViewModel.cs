@@ -18,18 +18,9 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	private PdfDocumentData pdfData;
 	public ObservableCollection<TextboxItem> TableItems { get; set; }
 
-    public string DateFromText => Convert.ToString(dateTimeService?.SelectedDay !=null ? DateTimeService.GetWeekCountAtDate(dateTimeService.SelectedDay) : null) ?? ""; 
-    public string DateToText {
-		get {
-			if (dateTimeService == null | dateTimeService!.SelectedDay == null)
-				return "";
-            DateTime dayFrom = DateTimeService.FloorWeek(dateTimeService.SelectedDay);
-            DateTime dayTo = dayFrom.AddDays(5);
-            return $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
-            BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
-        }
-    }
-    
+	public string DateFromText => pdfData.DateFrom;
+	public string DateToText => pdfData.DateTo;
+	public string WeekCount => pdfData.Week;
 
     public ExportPageViewModel() : this(null, null) {
 	}
@@ -43,11 +34,13 @@ public partial class ExportPageViewModel : PageViewModelBase {
 		this.pdf = pdf;
 		pdfData = pdf?.GetExportData(dateTimeService?.SelectedDay ?? DateTime.Now) ?? new PdfDocumentData();
 		TableItems = [];
-		for (int i = 0; i < PdfDocumentData.WEEK_LINE_COUNT; i++) {
-			TableItems.Add(new DescriptionItem { RowIndex = i+1, Text = pdfData.Data[i][PdfDocumentData.TASK_DESCRIPTION_COLUMN] });
-			TableItems.Add(new HourItem { RowIndex = i+1, Text = pdfData.Data[i][PdfDocumentData.HOUR_COLUMN] });
-			TableItems.Add(new HourRangeItem { RowIndex = i+1, Text = pdfData.Data[i][PdfDocumentData.HOUR_RANGE_COLUMN] });
-		}
+		for(int day = 0; day < 5; day++)
+			for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
+				int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
+                TableItems.Add(new DescriptionItem { RowIndex = line, Text = pdfData.Data[line][PdfDocumentData.TASK_DESCRIPTION_COLUMN] });
+				TableItems.Add(new HourItem { RowIndex = line, Text = pdfData.Data[line][PdfDocumentData.HOUR_COLUMN] });
+				TableItems.Add(new HourRangeItem { RowIndex = line, Text = pdfData.Data[line][PdfDocumentData.HOUR_RANGE_COLUMN] });
+			}
 	}
 
 	[RelayCommand]
