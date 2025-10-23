@@ -12,6 +12,7 @@
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Arial" />
 		<Setter Property="CornerRadius" Value="0" />
 		<Style Selector="^:pointerover /template/ Border">
 			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />

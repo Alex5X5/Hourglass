@@ -306,8 +306,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
-			string time = "";
-			string hours = "";
+			string[] hours = ["", "", "", "", "", ""];
+			string[] hourRanges = ["", "", "", "", "", ""];
 			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
 			if (tasks_.Count == 0)
 				continue;
@@ -317,9 +317,9 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				string[] compiledTask = CompileTaskPreview(task);
 				try {
 					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+					hourRanges[offset] = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
+					hours[offset] = DateTimeService.ToHourMinuteString(task.finish - task.start);
 					offset += compiledTask.Length;
-					time = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
-					hours = DateTimeService.ToHourMinuteString(task.finish - task.start);
 				} catch (ArgumentOutOfRangeException) {
 					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
 					Console.WriteLine($"description of task was:'{task.description}'");
@@ -331,8 +331,11 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				}
 				totalWeekSeconds += task.finish - task.start;
 			}
-			for (int i = 0; i < 6; i++)
-				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][0] = lines[i]; 
+			for (int i = 0; i < 6; i++) {
+				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][PdfDocumentData.TASK_DESCRIPTION_COLUMN] = lines[i];
+				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][PdfDocumentData.HOUR_COLUMN] = hours[i];
+                data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][PdfDocumentData.HOUR_RANGE_COLUMN] = hourRanges[i]; 
+			}
 			dayCounter++;
 		}
 		data.TotalTime = DateTimeService.ToHourMinuteString(totalWeekSeconds);
@@ -404,7 +407,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		BufferAnnotationValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
 		BufferFieldValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
 		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
-		DateTime dayTo = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
+		DateTime dayTo = dayFrom.AddDays(5);
 		BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
 		BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
 		BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");

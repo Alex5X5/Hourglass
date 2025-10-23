@@ -75,16 +75,16 @@ public abstract class TextboxItem {
 }
 
 public class DescriptionItem : TextboxItem {
-	public override int ColumnIndex => PdfDocumentData.TASK_DESCRIPTION_COLUMN + 1;
+	public override int ColumnIndex => PdfDocumentData.TASK_DESCRIPTION_COLUMN;
 
 }
 
 public class HourItem : TextboxItem {
-	public override int ColumnIndex => PdfDocumentData.HOUR_COLUMN + 1;
+	public override int ColumnIndex => PdfDocumentData.HOUR_COLUMN;
 
 }
 
 public class HourRangeItem : TextboxItem {
-	public override int ColumnIndex => PdfDocumentData.HOUR_RANGE_COLUMN + 1;
+	public override int ColumnIndex => PdfDocumentData.HOUR_RANGE_COLUMN;
 
 }

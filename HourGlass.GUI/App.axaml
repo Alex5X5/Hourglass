@@ -13,6 +13,12 @@
 				<ResourceInclude Source="/Styles/GlobalColors.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
+		<FontFamily x:Key="SrhText">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_Rg.ttf#Srh</FontFamily>
+		<FontFamily x:Key="SrhTextItalic">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_It.ttf#Srh</FontFamily>
+		<FontFamily x:Key="SrhTextBold">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_Bd.ttf#Srh</FontFamily>
+		<FontFamily x:Key="SrhTextBoldItalic">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_BdIt.ttf#Srh</FontFamily>
+		<FontFamily x:Key="SrhTextLite">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_Lt.ttf#Srh</FontFamily>
+		<FontFamily x:Key="SrhTextLiteItalic">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_LtIt.ttf#Srh</FontFamily>
 	</Application.Resources>
 
 	<Application.Styles>

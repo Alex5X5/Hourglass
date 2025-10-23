@@ -259,8 +259,12 @@
 								   Canvas.Top="58"
 								   FontSize="10" />
 					</Canvas>
-					
-					<Grid RowDefinitions="117.3*, 672.3*, 287*" ColumnDefinitions="46.7*, 485.6*, 47.7*" Grid.Row="1" Grid.Column="1">
+					<!--
+						<Grid RowDefinitions="7.3*, 672.3*, 187*" ColumnDefinitions="*" Grid.Row="1" Grid.Column="1" Background="red" Opacity="0.9" >
+										<Setter Property="Margin" Value="3,3,3,3" />
+						</Grid>
+					-->
+					<Grid RowDefinitions="18.75*, 88.25*, 27.1*" ColumnDefinitions="60*, 471*, 47*" >
 						<ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TableItems}">
 							<ItemsControl.Styles>
 								<Style Selector="TextBox">
@@ -268,7 +272,6 @@
 									<Setter Property="MinWidth" Value="0" />
 									<Setter Property="Foreground" Value="Black" />
 									<Setter Property="FontSize" Value="7" />
-									<Setter Property="Padding" Value="3,0,0,0" />
 									<Setter Property="BorderThickness" Value="0" />
 									<Setter Property="HorizontalAlignment" Value="Stretch" />
 									<Setter Property="VerticalAlignment" Value="Stretch" />
@@ -278,7 +281,6 @@
 									<Setter Property="Grid.Column" Value="{Binding ColumnIndex}" />
 								</Style>
 								<Style x:DataType="vm:DescriptionItem" Selector="ItemsControl > ContentPresenter">
-									<Setter Property="Margin" Value="0,3,3,1" />
 								</Style>
 							</ItemsControl.Styles>
 							<ItemsControl.ItemsPanel>
@@ -317,7 +319,6 @@
 											<RowDefinition Height="8.4*" />
 										</Grid.RowDefinitions>
 										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="4*" />
 											<ColumnDefinition Width="66*" />
 											<ColumnDefinition Width="8*" />
 											<ColumnDefinition Width="25*" />
@@ -327,7 +328,13 @@
 							</ItemsControl.ItemsPanel>
 							<ItemsControl.ItemTemplate >
 								<DataTemplate>
-									<TextBox Classes="TaskContent" Text="{ Binding Text }" />
+									<TextBox Classes="TaskContent"
+											 FontFamily="Arial"
+											 Text="{ Binding Text }"
+											 Padding="2,2,0,0"
+											 Margin="3,3,3,3"
+											 MinHeight="0"
+											 MinWidth="0"/>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>
@@ -337,7 +344,7 @@
 		</ScrollViewer>
 		<Grid Grid.Row="3"
 			  Grid.Column="1"
-			  ColumnDefinitions="3*, 4*, 2*, 4*, 3*">
+			  ColumnDefinitions="3*, 3*, 2*, 4*, 3*">
 			<Button Grid.Column="1" Command="{ Binding ImportCommand }" >
 				<TextBlock Classes="ButtonContent" Text="Import" />
 			</Button>
