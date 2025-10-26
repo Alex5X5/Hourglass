@@ -309,8 +309,10 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			string[] hours = ["", "", "", "", "", ""];
 			string[] hourRanges = ["", "", "", "", "", ""];
 			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
-			if (tasks_.Count == 0)
+			if (tasks_.Count == 0) {
+				dayCounter++;
 				continue;
+			}
 			foreach (Database.Models.Task task in tasks_) {
 				if (task.running)
 					continue;

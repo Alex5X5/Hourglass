@@ -21,6 +21,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	public string DateFromText => pdfData.DateFrom;
 	public string DateToText => pdfData.DateTo;
 	public string WeekCount => pdfData.Week;
+	public string TotalTime => pdfData.TotalTime;
 
     public ExportPageViewModel() : this(null, null) {
 	}

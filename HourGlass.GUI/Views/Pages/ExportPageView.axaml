@@ -254,10 +254,14 @@
 								   Canvas.Left="333"
 								   Canvas.Top="58"
 								   FontSize="10" />
-						<TextBlock Text="{ Binding DateFromText }"
+						<TextBlock Text="{ Binding DateToText }"
 								   Canvas.Left="433"
 								   Canvas.Top="58"
 								   FontSize="10" />
+						<TextBlock Text="{ Binding TotalTime }"
+								   Canvas.Left="392"
+								   Canvas.Top="676"
+								   Classes="Description" />
 					</Canvas>
 					<!--
 						<Grid RowDefinitions="7.3*, 672.3*, 187*" ColumnDefinitions="*" Grid.Row="1" Grid.Column="1" Background="red" Opacity="0.9" >

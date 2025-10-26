@@ -23,12 +23,12 @@ public partial class TimerPageView : PageViewBase {
 	}
 
 	private void TextBox_GotFocus(object? sender, Avalonia.Input.GotFocusEventArgs e) {
-		Console.WriteLine("got focus!");
-		if (initialDescriptionTextboxClear) {
-			Console.WriteLine("initial focus!");
-			DescriptionTextbox.Clear();
-			initialDescriptionTextboxClear = false;
-		}
+		//Console.WriteLine("got focus!");
+		//if (initialDescriptionTextboxClear) {
+		//	Console.WriteLine("initial focus!");
+		//	DescriptionTextbox.Clear();
+		//	initialDescriptionTextboxClear = false;
+		//}
 	}
 
 	private void TextBox_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e) {
