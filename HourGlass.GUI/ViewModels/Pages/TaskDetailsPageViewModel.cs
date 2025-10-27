@@ -13,6 +13,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	private IHourglassDbService dbService;
     private CacheService cacheService;
+	private ColorService colorService;
 	private MainViewModel controller;
 
 	public override string Title => "Task Details";
@@ -70,11 +71,12 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
-	public TaskDetailsPageViewModel() : this(null, null, null) {
+	public TaskDetailsPageViewModel() : this(null, null, null, null) {
 	}
 
-	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService) : base() {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService, ColorService colorService) : base() {
 		this.dbService = dbService;
+		this.colorService = colorService;
 		this.cacheService = cacheService;
 		cacheService.OnSelectedTaksChanged +=
 			task => AllBindingPropertiesChanged();
@@ -191,32 +193,38 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	[RelayCommand]
 	public void Color1Button_Click() {
-		
+		if(cacheService.SelectedTask!=null)
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_ORANGE;
 	}
 
 	[RelayCommand]
 	public void Color2Button_Click() {
-		
+		if (cacheService.SelectedTask != null)
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_RED;
 	}
 
 	[RelayCommand]
 	public void Color3Button_Click() {
-		
+		if (cacheService.SelectedTask != null)
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_LIGHT_GREEN;
 	}
 
 	[RelayCommand]
 	public void Color4Button_Click() {
-		
+		if (cacheService.SelectedTask != null)
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_LIGTH_BLUE;
 	}
 
 	[RelayCommand]
 	public void Color5Button_Click() {
-		
+		if (cacheService.SelectedTask != null)
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_BLUE;
 	}
 
 	[RelayCommand]
 	public void Color6Button_Click() {
-		
+		if (cacheService.SelectedTask != null)
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_GREEN;
 	}
 
 	[RelayCommand]

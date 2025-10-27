@@ -79,8 +79,9 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	public TimerPageViewModel(IHourglassDbService dbService, CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
-		cacheService.OnRunningTaksChanged +=
-			task => AllBindingPropertiesChanged();
+		if(cacheService!=null)
+			cacheService.OnRunningTaksChanged +=
+				task => AllBindingPropertiesChanged();
 		AvailableProjects = [
 			new Project() { Name="test project" },
 			new Project() { Name = "failing project" },

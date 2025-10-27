@@ -29,7 +29,9 @@
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="5*" />
-					<ColumnDefinition Width="8*" />
+					<ColumnDefinition Width="5*" />
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="1*" />
 				</Grid.ColumnDefinitions>
 				<Grid Grid.Row="1"
 					  Grid.Column="1"
@@ -48,6 +50,17 @@
 								   LineHeight="17" />
 					</Viewbox>
 				</Grid>
+				<Viewbox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<Button Width="100"
+							Height="100"
+							BorderBrush="Transparent"
+							Background="Transparent"
+							CornerRadius="0"
+							Padding="0"
+							Margin="0">
+						<Image Source="avares://Hourglass.GUI/Assets/Images/test.png"  />
+					</Button>
+				</Viewbox>
 			</Grid>
 		</Panel>
 		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" />
@@ -69,6 +82,7 @@
 				</Grid.ColumnDefinitions>
 				<Button Grid.Row="1"
 						Grid.Column="1"
+						Classes="Default"
 						Command="{Binding GoToTimerCommand}"
 						Name="TimerModeButton">
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
@@ -83,6 +97,7 @@
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="3"
+						Classes="Default"
 						Command="{Binding GoToGraphsCommand}"
 						Name="GraphModeButton">
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
@@ -97,6 +112,7 @@
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="5"
+						Classes="Default"
 						Command="{Binding GoToExportCommand}"
 						Name="ExportModeButton">
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">

@@ -70,6 +70,7 @@
 			</ComboBox>
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
 				<Button Name="startButton"
+						Classes="Default"
 						IsEnabled="{ Binding IsStartButtonEnabled }"
 						Command="{ Binding StartTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
@@ -84,6 +85,7 @@
 				</Button>
 				<Button Name="stopButton"
 						Grid.Column="2"
+						Classes="Default"
 						IsEnabled="{ Binding IsStopButtonEnabled }"
 						Command="{ Binding StopTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
@@ -98,6 +100,7 @@
 				</Button>
 				<Button Name="restartButton"
 						Grid.Column="4"
+						Classes="Default"
 						IsEnabled="{ Binding IsRestartButtonEnabled }"
 						Command="{ Binding RestartTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">

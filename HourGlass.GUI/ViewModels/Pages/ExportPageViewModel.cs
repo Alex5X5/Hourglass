@@ -18,12 +18,17 @@ public partial class ExportPageViewModel : PageViewModelBase {
 	private PdfDocumentData pdfData;
 	public ObservableCollection<TextboxItem> TableItems { get; set; }
 
+	public string JobNameText => pdfData.JobName;
+	public string UseNameText => pdfData.UserName;
+
 	public string DateFromText => pdfData.DateFrom;
 	public string DateToText => pdfData.DateTo;
 	public string WeekCount => pdfData.Week;
+
 	public string TotalTime => pdfData.TotalTime;
 
     public ExportPageViewModel() : this(null, null) {
+		
 	}
 
 	public ExportPageViewModel(DateTimeService? dateTimeService, IHourglassDbService? dbService) : this(dateTimeService, dbService, null) {

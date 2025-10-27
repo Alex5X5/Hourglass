@@ -3,7 +3,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
+using Avalonia.Media;
 
 public class Task {
 
@@ -42,7 +42,7 @@ public class Task {
 			displayColorGreen = value.G;
 			displayColorBlue = value.B;
 		}
-		get => Color.FromArgb(displayColorRed, displayColorGreen, displayColorBlue);
+		get => new Color(255, displayColorRed, displayColorGreen, displayColorBlue);
 	}
 
 	public Task Clone() =>

@@ -97,6 +97,13 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		ChangePage<TaskDetailsPageViewModel>();
 	}
 
+	[RelayCommand]
+	public void GoToSettings() {
+		if (pageFactory == null)
+			return;
+		ChangePage<TaskDetailsPageViewModel>();
+	}
+
 	protected void OnPropertyChanged(string propertyName) {
 		TitleChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}

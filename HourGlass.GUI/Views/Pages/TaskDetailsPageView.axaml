@@ -4,7 +4,8 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
-             xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+			 xmlns:bc="using:Hourglass.GUI.ValueConverters"
+			 xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.TaskDetailsPageView"
 			 x:DataType="vm:TaskDetailsPageViewModel"
 			 x:CompileBindings="True"
@@ -75,55 +76,65 @@
 				  ColumnDefinitions="*, *, *"
 				  ShowGridLines="False" >
 				<Viewbox Grid.Row="0" Grid.Column="0" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }"
 							Command="{ Binding Color1Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="1" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
-							Command="{ Binding Color2Button_ClickCommand }" />
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }"
+							Command="{ Binding Color2Button_ClickCommand }" >
+					</Button>
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="2" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundLightGreen }"
 							Command="{ Binding Color3Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="0" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundLightBlue }"
 							Command="{ Binding Color4Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="1" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkBlue }"
 							Command="{ Binding Color5Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="2" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkGreen }"
 							Command="{ Binding Color6Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }"
 							Command="{ Binding Color7Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="1" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default"
+							Width="100"
 							Height="100"
 							Background="Beige"
 							Command="{ Binding Color8Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="2" Stretch="Uniform">
-					<Button Width="100"
+					<Button Classes="Default DynamicBackground"
+							Width="100"
 							Height="100"
 							Background="Beige"
 							Command="{ Binding Color9Button_ClickCommand }" />
@@ -131,26 +142,31 @@
 
 			</Grid>
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
-				<Button Name="startButton"
+				<Button Classes="Default"
+						Name="startButton"
 						Command="{ Binding ContiniueTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Continiue" />
 				</Button>
-				<Button Name="stopButton"
+				<Button Classes="Default"
+						Name="stopButton"
 						Grid.Column="2"
 						Command="{ Binding StopTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Stop" />
 				</Button>
-				<Button Name="restartButton"
+				<Button Classes="Default"
+						Name="restartButton"
 						Grid.Column="4"
 						Command="{ Binding RestartTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Start New" />
 				</Button>
-				<Button Name="applyButton"
+				<Button Classes="Default"
+						Name="applyButton"
 						Grid.Column="6"
 						Command="{ Binding ApplyChangesCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Save" />
 				</Button>
-				<Button Name="deleteButton"
+				<Button Classes="Default"
+						Name="deleteButton"
 						Grid.Column="8"
 						Command="{ Binding DeleteTaskCommand }" >
 					<TextBlock Classes="ButtonContent" Text="Delete" />
@@ -167,6 +183,7 @@
 
 			<Button Grid.Row="1"
 					Grid.Column="1"
+					Classes="Default"
 					Command="{ Binding CancelCommand }" >
 				<TextBlock Classes="ButtonContent" Text="Back" />
 			</Button>

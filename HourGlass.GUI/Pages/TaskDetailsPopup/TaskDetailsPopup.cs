@@ -50,7 +50,7 @@ public partial class TaskDetailsPopup : Form {
     }
 
     private void EscapeButtonClick(object sender, EventArgs e) {
-        _task.DisplayColor = previousColor;
+        //_task.DisplayColor = previousColor;
         _dbService.UpdateTaskAsync(_task);
         Close();
     }
@@ -63,7 +63,7 @@ public partial class TaskDetailsPopup : Form {
 
     private void TaskDetails_Load(object sender, EventArgs e) {
         if (_task != null) {
-            previousColor = _task.DisplayColor;
+            //previousColor = _task.DisplayColor;
             DescriptionTextbox.Text = _task.description;
             StartTextbox.Text = DateTimeService.ToDayAndTimeString(_task.StartDateTime);
             FinishTextbox.Text = DateTimeService.ToDayAndTimeString(_task.FinishDateTime);
@@ -71,32 +71,32 @@ public partial class TaskDetailsPopup : Form {
     }
 
     private void ColorOrangeButton_Click(object sender, EventArgs e) {
-        _task.DisplayColor = TASK_BACKGROUND_ORANGE;
+        //_task.DisplayColor = TASK_BACKGROUND_ORANGE;
         _dbService.UpdateTaskAsync(_task);
     }
 
     private void ColorLightBlueButton_Click(object sender, EventArgs e) {
-        _task.DisplayColor = TASK_BACKGROUND_LIGTH_BLUE;
+        //_task.DisplayColor = TASK_BACKGROUND_LIGTH_BLUE;
         _dbService.UpdateTaskAsync(_task);
     }
 
     private void ColorDarkBlueButton_Click(object sender, EventArgs e) {
-        _task.DisplayColor = TASK_BACKGROUND_DARK_BLUE;
+        //_task.DisplayColor = TASK_BACKGROUND_DARK_BLUE;
         _dbService.UpdateTaskAsync(_task);
     }
 
     private void ColorRedButton_Click(object sender, EventArgs e) {
-        _task.DisplayColor = TASK_BACKGROUND_RED;
+        //_task.DisplayColor = TASK_BACKGROUND_RED;
         _dbService.UpdateTaskAsync(_task);
     }
 
     private void ColorLightGreenButton_Click(object sender, EventArgs e) {
-        _task.DisplayColor = TASK_BACKGROUND_LIGHT_GREEN;
+        //_task.DisplayColor = TASK_BACKGROUND_LIGHT_GREEN;
         _dbService.UpdateTaskAsync(_task);
     }
 
     private void ColorDarkGreenButton_Click(object sender, EventArgs e) {
-        _task.DisplayColor = TASK_BACKGROUND_DARK_GREEN;
+        //_task.DisplayColor = TASK_BACKGROUND_DARK_GREEN;
         _dbService.UpdateTaskAsync(_task);
     }
 

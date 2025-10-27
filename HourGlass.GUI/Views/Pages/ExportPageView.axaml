@@ -254,6 +254,14 @@
 								   Canvas.Left="333"
 								   Canvas.Top="58"
 								   FontSize="10" />
+						<TextBlock Text="{ Binding UseNameText }"
+								   Canvas.Left="333"
+								   Canvas.Top="13"
+								   FontSize="10" />
+						<TextBlock Text="{ Binding JobNameText }"
+								   Canvas.Left="333"
+								   Canvas.Top="35"
+								   FontSize="10" />
 						<TextBlock Text="{ Binding DateToText }"
 								   Canvas.Left="433"
 								   Canvas.Top="58"
@@ -349,10 +357,14 @@
 		<Grid Grid.Row="3"
 			  Grid.Column="1"
 			  ColumnDefinitions="3*, 3*, 2*, 4*, 3*">
-			<Button Grid.Column="1" Command="{ Binding ImportCommand }" >
+			<Button Grid.Column="1"
+					Classes="Default"
+					Command="{ Binding ImportCommand }">
 				<TextBlock Classes="ButtonContent" Text="Import" />
 			</Button>
-			<Button Grid.Column="3" Command="{ Binding ExportCommand }" >
+			<Button Grid.Column="3"
+					Classes="Default"
+					Command="{ Binding ExportCommand }" >
 				<TextBlock Classes="ButtonContent" Text="Export" />
 			</Button>
 		</Grid>

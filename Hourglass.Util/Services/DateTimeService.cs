@@ -34,6 +34,13 @@ public class DateTimeService {
 	public static int DaysInCurrentMonth() =>
 		DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 
+	public static bool TodayIsDayOfWeek(DayOfWeek day) =>
+		day == DateTime.Now.DayOfWeek;
+
+	public static bool TodayIsDayOfWeek(int day) =>
+		day == (int)DateTime.Now.AddDays(-1).DayOfWeek;
+
+
 	private static DateTime GetStartDate() {
 		DateTime date;
 		try {
@@ -85,9 +92,8 @@ public class DateTimeService {
         return FloorWeek(DateTime.Now);
     }
 
-	public static DateTime GetMondayOfWeekAtDate(DateTime date) {
-		return FloorWeek(date);
-	}
+	public static DateTime GetMondayOfWeekAtDate(DateTime date) =>
+		FloorWeek(date);
 
 	public static DateTime GetFridayOfCurrentWeek() =>
 		GetMondayOfCurrentWeek().AddDays(4);

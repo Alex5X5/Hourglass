@@ -505,5 +505,10 @@ public class PdfDocumentData {
 	public PdfDocumentData() {
 		for (int i = 0; i < DOCUMENT_FIELD_COUNT; i++)
 			Data[i] = ["", "", "", ""];
+		JobName = "Example Job Name";
+		UserName = "Example User";
+		DateFrom = "1.10.1999";
+		DateTo = "5.10.1999";
+		Week = "11";
 	}
 }

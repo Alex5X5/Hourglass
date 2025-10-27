@@ -1,6 +1,5 @@
 namespace Hourglass.GUI.Views.Components.GraphModeButtons;
 
-using Avalonia;
 using Avalonia.Media;
 
 using Hourglass.Util;
@@ -21,7 +20,7 @@ public partial class MonthGraphModeButtonIcon : Avalonia.Controls.UserControl {
 			Color color = Color.FromArgb(255, 255, 255, 255);
 			if (i % 7 == 5 | i % 7 == 6)
 				color = Color.FromArgb(255, 174, 174, 174);
-			if (i == DateTime.Now.Day + 1)
+			if (DateTimeService.TodayIsDayOfWeek(i))
 				color = Color.FromArgb(255, 192, 0, 0);
 			Brush brush = new SolidColorBrush(color);
 			context.FillRectangle(brush, new(xPos, yPos, 2 * drawGridSize, 2 * drawGridSize));

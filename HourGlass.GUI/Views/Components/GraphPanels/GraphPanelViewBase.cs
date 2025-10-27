@@ -71,7 +71,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 		//Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
 		double r = Math.Min(GRAPH_CORNER_RADIUS, rect.Width / 2);
-        Brush brush = new SolidColorBrush(Color.FromArgb(255, task.displayColorRed, 0, task.displayColorBlue));
+        Brush brush = new SolidColorBrush(task.DisplayColor);
         RectangleGeometry rrect = new(rect) { RadiusX = r, RadiusY = r };
         context.DrawGeometry(brush, null, rrect);
 		DrawTaskDescriptionStub(context, task, rect);

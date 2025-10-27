@@ -31,10 +31,12 @@ public partial class App : Application {
 	public override void OnFrameworkInitializationCompleted() {
 		PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
+
 		PageInstanciator instanciator = new(this);
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>(new SettingsService());
 		DateTimeService dateTimeService = new();
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>(dateTimeService);
+		instanciator.AddCommonServiceSingleton<ColorService, ColorService>(new ColorService());
 
 		if (!Design.IsDesignMode) {
 			HourglassDbService dbService = new(dateTimeService);
@@ -70,6 +72,8 @@ public partial class App : Application {
 				DataContext = services.GetRequiredService<MainViewModel>()
 			};
 		}
+
+		// Or use TryGetResource for safer access
 
 		base.OnFrameworkInitializationCompleted();
 	}

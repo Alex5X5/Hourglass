@@ -1,0 +1,30 @@
+﻿namespace Hourglass.GUI.Services;
+
+using Avalonia.Media;
+
+public class ColorService {
+
+	public readonly Color TASK_BACKGROUND_ORANGE;
+	public readonly Color TASK_BACKGROUND_RED;
+	public readonly Color TASK_BACKGROUND_LIGTH_BLUE;
+	public readonly Color TASK_BACKGROUND_DARK_BLUE;
+	public readonly Color TASK_BACKGROUND_LIGHT_GREEN;
+	public readonly Color TASK_BACKGROUND_DARK_GREEN;
+
+	public ColorService() {
+		TASK_BACKGROUND_ORANGE = GetColorFromResources("TaskBackgroundOrange") ?? new Color(255, 255, 128, 0);
+		TASK_BACKGROUND_RED = GetColorFromResources("TaskBackgroundRed") ?? new Color(255, 32, 178, 171);
+		TASK_BACKGROUND_LIGTH_BLUE = GetColorFromResources("TaskBackgroundLightBlue") ?? new Color(255, 32, 178, 170);
+		TASK_BACKGROUND_DARK_BLUE = GetColorFromResources("TaskBackgroundDarkBlue") ?? new Color(255, 0, 60, 199);
+		TASK_BACKGROUND_LIGHT_GREEN = GetColorFromResources("TaskBackgroundLightGreen") ?? new Color(255, 50, 205, 50);
+		TASK_BACKGROUND_DARK_GREEN = GetColorFromResources("TaskBackgroundDarkGreen") ?? new Color(255, 0, 128, 0);
+	}
+
+	private static Color? GetColorFromResources(string resourceKey) {
+		if (Avalonia.Application.Current?.TryGetResource(resourceKey, null, out var resource) ?? false) {
+			if (Color.TryParse(resource?.ToString(), out Color color))
+				return color;
+		}
+		return null;
+	}
+}

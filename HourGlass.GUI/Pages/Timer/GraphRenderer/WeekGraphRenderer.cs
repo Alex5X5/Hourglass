@@ -81,9 +81,9 @@ public class WeekGraphRenderer : GraphRenderer {
         Rectangle rect = GetTaskRectanlge(task, TimeSpan.SecondsPerDay, thisWeekSeconds, 7, MAX_TASKS, 0, 0, GRAPH_MINIMAL_WIDTH, i, 1);
         Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
         Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-        using (GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS))
-        using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
-            g.FillPath(brush, path);
-        DrawTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
+        //using (GraphicsPath path = GetRoundedRectanglePath(rect, GRAPH_CORNER_RADIUS))
+        //using (Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidBrush(task.DisplayColor))
+        //    g.FillPath(brush, path);
+        //DrawTaskDescriptionStub(g, task, rect.X, rect.Y, rect.Width);
     }
 }
