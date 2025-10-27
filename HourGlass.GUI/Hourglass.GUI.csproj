@@ -70,6 +70,15 @@
 	<Compile Update="Views\Components\GraphPanels\DayGraphPanelView.axaml.cs">
 	  <DependentUpon>DayGraphPanelView.axaml</DependentUpon>
 	</Compile>
+	<Compile Update="Views\Pages\SettingsPages\UserDataSubSettingsPageView.axaml.cs">
+	  <DependentUpon>UserDataSubSettingsPageView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\SettingsPages\AboutSubSettingsPageView.axaml.cs">
+	  <DependentUpon>AboutSubSettingsPageView.axaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\Pages\SettingsPageView.axaml.cs">
+	  <DependentUpon>SettingsPageView.axaml</DependentUpon>
+	</Compile>
 	<Compile Update="Views\Pages\ExportPageView.axaml.cs">
 	  <DependentUpon>ExportPageView.axaml</DependentUpon>
 	</Compile>

@@ -1,0 +1,117 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages.SettingsPages"
+             xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.UserDataSubSettingsPageView"
+			 x:DataType="vm:UserDataSubSettingsPageViewModel"
+			 x:CompileBindings="True"
+			 Loaded="UserControl_Loaded">
+	<Design.DataContext>
+		<vm:AboutSubSettingsPageViewModel />
+	</Design.DataContext>
+	<Grid Background="White" >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="15*" />
+			<RowDefinition Height="2*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*" />
+			<ColumnDefinition Width="6*" />
+			<ColumnDefinition Width="3*" />
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Row="1" Grid.Column="1" >
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="12*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="2*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="Start" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
+			<TextBox Grid.Row="1" Grid.Column="0" Text="{ Binding StartTextboxText }" />
+			<TextBlock Text="Finish" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
+			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
+			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
+			<TextBox Name="DescriptionTextbox"
+					 Grid.Row="4"
+					 Grid.Column="0"
+					 Grid.ColumnSpan="3"
+					 Text="{ Binding DescriptionTextboxText }"/>
+			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
+			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
+			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
+			<ComboBox SelectedIndex="0"
+					  Grid.Row="7"
+					  Grid.Column="2"
+					  MaxDropDownHeight="300"
+					  ItemsSource="{Binding AvailableProjects}"
+					  SelectedValue="{Binding SelectedProject}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
+				<Button Name="startButton"
+						Classes="Default"
+						IsEnabled="{ Binding IsStartButtonEnabled }"
+						Command="{ Binding StartTaskCommand }" >
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Start" />
+						</Viewbox>
+					</Grid>
+				</Button>
+				<Button Name="stopButton"
+						Grid.Column="2"
+						Classes="Default"
+						IsEnabled="{ Binding IsStopButtonEnabled }"
+						Command="{ Binding StopTaskCommand }" >
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Stop" />
+						</Viewbox>
+					</Grid>
+				</Button>
+				<Button Name="restartButton"
+						Grid.Column="4"
+						Classes="Default"
+						IsEnabled="{ Binding IsRestartButtonEnabled }"
+						Command="{ Binding RestartTaskCommand }" >
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Restart" />
+						</Viewbox>
+					</Grid>
+				</Button>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>

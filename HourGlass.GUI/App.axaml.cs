@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.Views.Components;
 using Hourglass.GUI.ViewModels.Components;
+using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 public partial class App : Application {
 
@@ -60,7 +61,12 @@ public partial class App : Application {
 		instanciator.RegisterPageTransient<WeekGraphPanelViewModel>();
 		instanciator.RegisterPageTransient<MonthGraphPanelViewModel>();
 
-		var services = instanciator.BuildPages();
+		instanciator.AddContentBindingType<SubSettingsPageViewModelBase>();
+		instanciator.RegisterPageTransient<AboutSubSettingsPageViewModel>();
+
+        instanciator.RegisterPageTransient<SettingsPageViewModel>();
+
+        var services = instanciator.BuildPages();
 
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
 			desktop.MainWindow = new MainWindow() {
