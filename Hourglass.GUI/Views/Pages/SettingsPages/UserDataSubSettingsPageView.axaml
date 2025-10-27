@@ -12,10 +12,12 @@
 	<Design.DataContext>
 		<vm:UserDataSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Background="Yellow" >
+	<Grid Background="White" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
-			<RowDefinition Height="15*" />
+			<RowDefinition Height="12*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="1*" />
 			<RowDefinition Height="2*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
@@ -42,42 +44,39 @@
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="Username" Classes="FieldDescriptor" Grid.Row="2" Grid.Column="0" />
-			<TextBox Name="DescriptionTextbox"
-					 Grid.Row="3"
+			<TextBox Grid.Row="3"
 					 Grid.Column="0"
-					 Grid.ColumnSpan="1"
-					 Text="{ Binding DescriptionTextboxText }"/>
-			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
-			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
-			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
-			<ComboBox SelectedIndex="0"
-					  Grid.Row="7"
-					  Grid.Column="2"
-					  MaxDropDownHeight="300"
-					  ItemsSource="{Binding AvailableProjects}"
-					  SelectedValue="{Binding SelectedProject}">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding Name}" />
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
-			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
-				<Button Name="startButton"
-						Classes="Default"
-						IsEnabled="{ Binding IsStartButtonEnabled }"
-						Command="{ Binding StartTaskCommand }" >
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Start" />
-						</Viewbox>
-					</Grid>
-				</Button>
-			</Grid>
+					 Grid.ColumnSpan="3"
+					 Text="{ Binding UsernameTextboxText }"
+					 LostFocus="AnyInput_LostFocus"/>
+		</Grid>
+		<Grid Grid.Row="3" Grid.Column="1" Grid.ColumnDefinitions="*, 2*, *, 2*, *" >
+			<Button Grid.Column="1"
+					Classes="Default"
+					Command="{Binding SaveSettingsCommand}">
+				<Grid RowDefinitions="*, 5*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="Save" FontSize="13"/>
+					</Viewbox>
+				</Grid>
+			</Button>
+			<Button Grid.Column="3"
+					Classes="Default"
+					Command="{Binding SaveSettingsCommand}">
+				<Grid RowDefinitions="*, 5*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="Cancel" FontSize="13"/>
+					</Viewbox>
+				</Grid>
+			</Button>
 		</Grid>
 	</Grid>
 </UserControl>

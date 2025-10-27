@@ -12,4 +12,8 @@ public partial class UserDataSubSettingsPageView : SubSettingsPageViewBase {
     private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
         (DataContext as UserDataSubSettingsPageViewModel)?.OnLoad();
     }
+
+    private void AnyInput_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+        (DataContext as UserDataSubSettingsPageViewModel)?.AnyInput_LostFocus();
+    }
 }

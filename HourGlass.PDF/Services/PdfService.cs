@@ -14,13 +14,14 @@ using System.Threading;
 
 public unsafe partial class PdfService : IPdfService, IDisposable {
 
+	private readonly IHourglassDbService _dbService;
+	private SettingsService settingsService;
+
 	public const int MAX_LINE_LENGTH = 85;
 
 	private const string LAST_SECTION_INDEXER = "eof";
 
 	public static bool IndexersLoaded { private set; get; } = false;
-
-	private readonly IHourglassDbService _dbService;
 
 	private readonly Dictionary<string, ValueTuple<IntPtr, IntPtr>> Indexers;
 
@@ -29,7 +30,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	private readonly int charCount;
 	private readonly char* text;
 
-	public PdfService(IHourglassDbService dbService) {
+	public PdfService(IHourglassDbService dbService, SettingsService settingsService) {
+		this.settingsService = settingsService;
 		_dbService = dbService;
 		InsertOperations = [];
 		Indexers = [];
@@ -342,8 +344,8 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		}
 		data.TotalTime = DateTimeService.ToHourMinuteString(totalWeekSeconds);
 		data.Week = Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek));
-		data.UserName = SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
-		data.JobName = SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name";
+		data.UserName = settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
+		data.JobName = settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name";
         DateTime dayFrom = DateTimeService.FloorWeek(selectedWeek);
         DateTime dayTo = dayFrom.AddDays(5);
         data.DateFrom = $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
@@ -404,10 +406,10 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
     private void SetUtilityFields(DateTime selectedWeek) {
 		BufferAnnotationValueUnsafe("week", Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek)));
 		BufferFieldValueUnsafe("week", Convert.ToString(DateTimeService.GetWeekCountAtDate(selectedWeek)));
-		BufferAnnotationValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
-		BufferFieldValueUnsafe("name", SettingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
-		BufferAnnotationValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
-		BufferFieldValueUnsafe("job", SettingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
+		BufferAnnotationValueUnsafe("name", settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
+		BufferFieldValueUnsafe("name", settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username");
+		BufferAnnotationValueUnsafe("job", settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
+		BufferFieldValueUnsafe("job", settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name");
 		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
 		DateTime dayTo = dayFrom.AddDays(5);
 		BufferAnnotationValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");

@@ -17,9 +17,13 @@ public class SettingsService {
 
     private static bool loaded = false;
 
-    private static Dictionary<string, string> Settings = LoadSettings();
+    private Dictionary<string, string> Settings;
 
-    private static Dictionary<string, string> LoadSettings() {
+    public SettingsService() {
+        Settings = LoadSettings();
+    }
+
+    private Dictionary<string, string> LoadSettings() {
         loaded = true;
         Dictionary<string, string> res = [];
         using FileStream fileHandle = File.Open(PathService.FilesPath(FILE_NAME), FileMode.OpenOrCreate);
@@ -35,11 +39,7 @@ public class SettingsService {
         return res;
     }
 
-    public SettingsService() { 
-        
-    }
-
-    public static void SaveSettings() {
+    public void SaveSettings() {
         string[] lines = new string[Settings.Count];
         int i = 0;
         foreach (string key in Settings.Keys) {
@@ -55,21 +55,21 @@ public class SettingsService {
         streamWriter.Write(res);
     }
 
-    public static string GetSetting(string key) {
+    public string GetSetting(string key) {
         Settings.TryGetValue(key, out string? setting);
         return setting ?? "";
     }
 
-    public static string? TryGetSetting(string key) {
+    public string? TryGetSetting(string key) {
         Settings.TryGetValue(key, out string? setting);
         return setting;
     }
 
-    public static void SetSetting(string key, string newValue) {
+    public void SetSetting(string key, string newValue) {
         Settings[key] = newValue;
     }
 
-    public static void ReloadSettings() {
+    public void ReloadSettings() {
         SaveSettings();
         Settings = LoadSettings();
         foreach (Delegate act in OnSettingsReload.GetInvocationList())

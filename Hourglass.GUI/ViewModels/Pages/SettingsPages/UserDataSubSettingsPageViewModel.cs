@@ -2,70 +2,44 @@ namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Models;
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
+using Hourglass.Util.Services;
 using System.ComponentModel;
 
 public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
-    private IHourglassDbService dbService;
-    private CacheService cacheService;
-    private ViewModelFactory<MainViewModel> pageFactory;
-    private MainViewModel controller;
+    private string username = "";
+    public string UsernameTextboxText {
+        set {
+            username = value;
+            OnPropertyChanged(nameof(UsernameTextboxText));
+        }
+        get => username;
+    }
 
-    private string FallbackTaskDescription = "";
-
-    public string DescriptionTextboxText {
+    private string startDateString = "";
+    public string StartDateTextboxText {
         set {
-            if (cacheService?.RunningTask != null)
-                cacheService.RunningTask.description = value;
-            else
-                FallbackTaskDescription = value;
-            OnPropertyChanged(nameof(DescriptionTextboxText));
+            startDateString = value;
+            OnPropertyChanged(nameof(StartDateTextboxText));
+            DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? DateTime.MinValue;
         }
-        get => cacheService?.RunningTask?.description ?? FallbackTaskDescription;
+        get => startDateString;
     }
-    public string ProjectTextboxText {
-        set {
-            if (cacheService?.RunningTask != null)
-                cacheService.RunningTask.description = value;
-            OnPropertyChanged(nameof(ProjectTextboxText));
-        }
-        get => cacheService?.RunningTask?.project?.Name ?? "";
-    }
-    public string TicketTextboxText {
-        get => cacheService?.RunningTask?.ticket?.name ?? "";
-    }
-    public string StartTextboxText {
-        set {
-            if (cacheService?.RunningTask != null) {
-                DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.RunningTask.StartDateTime;
-                cacheService.RunningTask.start = DateTimeService.ToSeconds(start);
-            }
-            OnPropertyChanged(nameof(StartTextboxText));
-        }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
-    }
-    public string FinishTextboxText {
+    private string jobName;
+    public string JobNameTextboxText {
         set {
             if (cacheService?.SelectedTask != null) {
                 DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
                 cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
             }
-            OnPropertyChanged(nameof(FinishTextboxText));
+            OnPropertyChanged(nameof(JobNameTextboxText));
         }
         get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
     public override string Title => "User Data";
-
-    public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
-    public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
-    public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
-
-    public Project SelectedProject { get; set; }
-    public List<Project> AvailableProjects { get; set; }
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -73,67 +47,52 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
     }
 
-    public UserDataSubSettingsPageViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService) : base(dbService, dateTimeService, settingsController, pageController, cacheService) {
-        if (cacheService != null)
-            cacheService.OnRunningTaksChanged +=
-                task => AllBindingPropertiesChanged();
-        AvailableProjects = [
-            new Project() { Name="test project" },
-            new Project() { Name = "failing project" },
-            new Project() { Name = "sucessfull project" }
-        ];
-        SelectedProject = AvailableProjects[0];
+    public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService, SettingsService settingsService) : base(dateTimeService, settingsController, pageController, cacheService, settingsService) {
+        if (settingsService != null) {
+            JobNameTextboxText = settingsService.GetSetting(SettingsService.JOB_NAME_KEY);
+            UsernameTextboxText = settingsService.GetSetting(SettingsService.USER_NAME_KEY);
+            StartDateTextboxText = settingsService.GetSetting(SettingsService.START_DATE_KEY);
+        }
     }
 
     private void AllBindingPropertiesChanged() {
-        OnPropertyChanged(nameof(DescriptionTextboxText));
-        OnPropertyChanged(nameof(StartTextboxText));
-        OnPropertyChanged(nameof(FinishTextboxText));
-        OnPropertyChanged(nameof(TicketTextboxText));
-        OnPropertyChanged(nameof(ProjectTextboxText));
-        OnPropertyChanged(nameof(IsStartButtonEnabled));
-        OnPropertyChanged(nameof(IsStopButtonEnabled));
-        OnPropertyChanged(nameof(IsRestartButtonEnabled));
+        OnPropertyChanged(nameof(UsernameTextboxText));
+        OnPropertyChanged(nameof(JobNameTextboxText));
+        OnPropertyChanged(nameof(StartDateTextboxText));
     }
 
     protected virtual void OnPropertyChanged(string propertyName) {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    private void ParseEnteredValues() {
+        settingsService.SetSetting(SettingsService.JOB_NAME_KEY, jobName);
+        settingsService.SetSetting(SettingsService.USER_NAME_KEY, username);
+        settingsService.SetSetting(SettingsService.START_DATE_KEY, startDateString);
+    }
+
     [RelayCommand]
-    private async System.Threading.Tasks.Task StartTask() {
+    private async System.Threading.Tasks.Task SaveSettings() {
         Console.WriteLine("start task button click!");
         if (dbService != null)
             cacheService.RunningTask = await dbService.StartNewTaskAsnc(
-                DescriptionTextboxText,
+                UsernameTextboxText,
                 null,
                 new Worker { name = "new user" },
                 null
             );
-        AllBindingPropertiesChanged();
-    }
-
-    [RelayCommand]
-    private async System.Threading.Tasks.Task StopTask() {
-        Console.WriteLine("stop task button click!");
-        if (dbService != null)
-            cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
-                cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
-                DateTimeService.ToSeconds(DateTime.Now),
-                DescriptionTextboxText,
-                SelectedProject,
-                null
-            );
-    }
-
-    [RelayCommand]
-    private void RestartTask() {
-        Console.WriteLine("restart task button click! (not yet implemented)");
+        ParseEnteredValues();
+        settingsService.ReloadSettings();
         AllBindingPropertiesChanged();
     }
 
     public void OnLoad() {
-        Console.WriteLine("loading About Sub Settings Page!");
+        Console.WriteLine("loading User Data Sub Settings Page!");
         AllBindingPropertiesChanged();
+    }
+
+    public void AnyInput_LostFocus() {
+        Console.WriteLine("any input of user data settings lost focus!");
+
     }
 }

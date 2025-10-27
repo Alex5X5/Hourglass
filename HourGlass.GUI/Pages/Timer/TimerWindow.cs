@@ -53,7 +53,7 @@ public partial class TimerWindow : Form {
 
 	public TimerWindow(IHourglassDbService dbService) {
 		_dbService = dbService;
-		pdf = new PdfService(_dbService);
+		pdf = new PdfService(_dbService, null);
 		GraphRenderers = new(){
 			{ TimerWindowMode.Day , new DayGraphRenderer(_dbService, this)},
 			{ TimerWindowMode.Week , new WeekGraphRenderer(_dbService, this) },

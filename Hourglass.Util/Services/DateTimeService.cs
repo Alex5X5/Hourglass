@@ -44,7 +44,7 @@ public class DateTimeService {
 	private static DateTime GetStartDate() {
 		DateTime date;
 		try {
-			date = Convert.ToDateTime(SettingsService.GetSetting(SettingsService.START_DATE_KEY));
+			date = Convert.ToDateTime(new SettingsService().GetSetting(SettingsService.START_DATE_KEY));
 		} catch (FormatException) {
 			date = new DateTime(2024, 8, 5);
 		}

@@ -5,6 +5,7 @@ using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
+using Hourglass.Util.Services;
 using System.ComponentModel;
 
 public partial class AboutSubSettingsPageViewModel : SubSettingsPageViewModelBase {
@@ -73,7 +74,7 @@ public partial class AboutSubSettingsPageViewModel : SubSettingsPageViewModelBas
 
     }
 
-    public AboutSubSettingsPageViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService) : base(dbService, dateTimeService, settingsController, pageController, cacheService) {
+    public AboutSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService, SettingsService settingsService) : base(dateTimeService, settingsController, pageController, cacheService, settingsService) {
         if (cacheService != null)
             cacheService.OnRunningTaksChanged +=
                 task => AllBindingPropertiesChanged();
