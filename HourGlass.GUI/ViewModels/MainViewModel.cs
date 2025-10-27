@@ -33,7 +33,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	}
 
 	public string Title { get => _CurrentPage.Title; }
-	public new event PropertyChangedEventHandler? TitleChanged;
+	public event PropertyChangedEventHandler? TitleChanged;
 
 	public bool ShowNavigationBar {
 		set {
@@ -84,7 +84,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		Console.WriteLine("timer mode button click!");
 		ChangePage<SettingsPageViewModel>(
 			page => {
-				page.ChangePage<AboutSubSettingsPageViewModel>();
+				page?.ChangePage<UserDataSubSettingsPageViewModel>();
 			}
 		);
 	}
@@ -100,7 +100,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		Console.WriteLine("graph mode button click!");
 		ChangePage<GraphPageViewModel>(
 			IsFirstGraphPageChange ? page=> {
-				page.ChangeGraphPanel<DayGraphPanelViewModel>();
+				page?.ChangeGraphPanel<DayGraphPanelViewModel>();
 				IsFirstGraphPageChange = false;
 			} : null
 		);

@@ -2,10 +2,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="using:Hourglass.GUI.ViewModels"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 xmlns:pages="using:Hourglass.GUI.Views.Pages"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 x:Class="Hourglass.GUI.Views.SettingsPageView"
+			 x:Class="Hourglass.GUI.Views.Pages.SettingsPageView"
 			 x:DataType="vm:SettingsPageViewModel">
 	<Design.DataContext>
 		<vm:MainViewModel />
@@ -59,6 +59,20 @@
 			<Button Grid.Row="3"
 					Grid.Column="1"
 					Classes="Default"
+					Command="{ Binding GoToUserDataCommand }">
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="User Data" FontSize="13"/>
+					</Viewbox>
+				</Grid>
+			</Button>
+			<Button Grid.Row="5"
+					Grid.Column="1"
+					Classes="Default"
 					Command="{ Binding GoToAboutCommand }">
 				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 					<Viewbox Grid.Row="1"
@@ -70,7 +84,7 @@
 					</Viewbox>
 				</Grid>
 			</Button>
-			<Button Grid.Row="5"
+			<Button Grid.Row="7"
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding GoToVisualsCommand }">
@@ -81,20 +95,6 @@
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
 						<TextBlock Classes="ButtonContent" Text="Visuals" FontSize="13"/>
-					</Viewbox>
-				</Grid>
-			</Button>
-			<Button Grid.Row="7"
-					Grid.Column="1"
-					Classes="Default"
-					Command="{ Binding GoToUserDataCommand }">
-				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-					<Viewbox Grid.Row="1"
-							 Grid.Column="1"
-							 Stretch="Uniform"
-							 VerticalAlignment="Center"
-							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="User Data" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>

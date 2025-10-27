@@ -7,7 +7,7 @@ using Hourglass.GUI.Services;
 using Hourglass.Util;
 using System.ComponentModel;
 
-public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModelBase {
+public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
     private IHourglassDbService dbService;
     private CacheService cacheService;
@@ -58,7 +58,7 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
         get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
-    public override string Title => "User Data";
+    public override string Title => "Visuals";
 
     public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
@@ -69,11 +69,11 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public UserDataSubSettingsPageViewModel() : this(null, null, null, null, null) {
+    public VisualsSubSettingsPageViewModel() : this(null, null, null, null, null) {
 
     }
 
-    public UserDataSubSettingsPageViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService) : base(dbService, dateTimeService, settingsController, pageController, cacheService) {
+    public VisualsSubSettingsPageViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService) : base(dbService, dateTimeService, settingsController, pageController, cacheService) {
         if (cacheService != null)
             cacheService.OnRunningTaksChanged +=
                 task => AllBindingPropertiesChanged();
@@ -133,7 +133,7 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
     }
 
     public void OnLoad() {
-        Console.WriteLine("loading About Sub Settings Page!");
+        Console.WriteLine("loading Visuals Sub Settings Page!");
         AllBindingPropertiesChanged();
     }
 }

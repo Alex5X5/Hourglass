@@ -5,14 +5,14 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages.SettingsPages"
              xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
-			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.AboutSubSettingsPageView"
-			 x:DataType="vm:AboutSubSettingsPageViewModel"
+			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.VisualsSubSettingsPageView"
+			 x:DataType="vm:VisualsSubSettingsPageViewModel"
 			 x:CompileBindings="True"
 			 Loaded="UserControl_Loaded">
 	<Design.DataContext>
-		<vm:AboutSubSettingsPageViewModel />
+		<vm:VisualsSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Background="Green" >
+	<Grid Background="Blue" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="15*" />

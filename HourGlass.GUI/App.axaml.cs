@@ -19,7 +19,6 @@ using Hourglass.PDF.Services.Interfaces;
 
 using Microsoft.Extensions.DependencyInjection;
 using Hourglass.GUI.Services;
-using Hourglass.GUI.Views.Components;
 using Hourglass.GUI.ViewModels.Components;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
@@ -63,6 +62,8 @@ public partial class App : Application {
 
 		instanciator.AddContentBindingType<SubSettingsPageViewModelBase>();
 		instanciator.RegisterPageTransient<AboutSubSettingsPageViewModel>();
+		instanciator.RegisterPageTransient<VisualsSubSettingsPageViewModel>();
+		instanciator.RegisterPageTransient<UserDataSubSettingsPageViewModel>();
 
         instanciator.RegisterPageTransient<SettingsPageViewModel>();
 

@@ -1,4 +1,4 @@
-﻿namespace Hourglass.GUI.ViewModels;
+﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Models;
@@ -18,50 +18,6 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
     private CacheService cacheService;
     private ViewModelFactory<SubSettingsPageViewModelBase> pageFactory;
     MainViewModel controller;
-
-    private string FallbackTaskDescription = "";
-
-    public string DescriptionTextboxText {
-        set {
-            if (cacheService?.RunningTask != null)
-                cacheService.RunningTask.description = value;
-            else
-                FallbackTaskDescription = value;
-            OnPropertyChanged(nameof(DescriptionTextboxText));
-        }
-        get => cacheService?.RunningTask?.description ?? FallbackTaskDescription;
-    }
-    public string ProjectTextboxText {
-        set {
-            if (cacheService?.RunningTask != null)
-                cacheService.RunningTask.description = value;
-            OnPropertyChanged(nameof(ProjectTextboxText));
-        }
-        get => cacheService?.RunningTask?.project?.Name ?? "";
-    }
-    public string TicketTextboxText {
-        get => cacheService?.RunningTask?.ticket?.name ?? "";
-    }
-    public string StartTextboxText {
-        set {
-            if (cacheService?.RunningTask != null) {
-                DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.RunningTask.StartDateTime;
-                cacheService.RunningTask.start = DateTimeService.ToSeconds(start);
-            }
-            OnPropertyChanged(nameof(StartTextboxText));
-        }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
-    }
-    public string FinishTextboxText {
-        set {
-            if (cacheService?.SelectedTask != null) {
-                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
-            }
-            OnPropertyChanged(nameof(FinishTextboxText));
-        }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
-    }
 
     private SubSettingsPageViewModelBase _CurrentSubSettingsPage;
     public SubSettingsPageViewModelBase CurrentPage {
@@ -98,14 +54,11 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
     }
 
     private void AllBindingPropertiesChanged() {
-        OnPropertyChanged(nameof(DescriptionTextboxText));
-        OnPropertyChanged(nameof(StartTextboxText));
-        OnPropertyChanged(nameof(FinishTextboxText));
-        OnPropertyChanged(nameof(TicketTextboxText));
-        OnPropertyChanged(nameof(ProjectTextboxText));
         OnPropertyChanged(nameof(IsStartButtonEnabled));
         OnPropertyChanged(nameof(IsStopButtonEnabled));
         OnPropertyChanged(nameof(IsRestartButtonEnabled));
+        OnPropertyChanged(nameof(CurrentPage));
+        controller.RaisePropertyChanged(nameof(controller.Title));
     }
 
     protected virtual void OnPropertyChanged(string propertyName) {
@@ -125,10 +78,12 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     [RelayCommand]
     private void GoToVisuals() {
+        ChangePage<VisualsSubSettingsPageViewModel>();
     }
 
     [RelayCommand]
     private void GoToUserData() {
+        ChangePage<UserDataSubSettingsPageViewModel>();
     }
 
     public void OnLoad() {
@@ -140,6 +95,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
         if (pageFactory == null)
             return;
         CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation);
+        AllBindingPropertiesChanged();
         Console.WriteLine($"chaged type of sub settings page to:{_CurrentSubSettingsPage.GetType().Name}");
     }
 }

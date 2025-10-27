@@ -1,42 +1,12 @@
-﻿namespace Hourglass.GUI.Views;
+﻿namespace Hourglass.GUI.Views.Pages;
 
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 public partial class SettingsPageView : ViewBase {
 
-	public SettingsPageView() : this(null) {
-
-	}
-
-	public SettingsPageView(MainViewModel model) : base() {
+	public SettingsPageView() : base() {
 		InitializeComponent();
-		//DataContext = model;
-		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<TimerPageViewModel>();
-	}
-
-	private void TimerModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("timer mode button click!");
-		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<TimerPageViewModel>();
-	}
-
-	private void GraphModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("graph mode button click!");
-		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<GraphPageViewModel>();
-	}
-
-	private void ExportModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("export mode button click!");
-		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<ExportPageViewModel>();
-	}
-
-	private void ProjectModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("project mode button click!");
-		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<ProjectPageViewModel>();
 	}
 }

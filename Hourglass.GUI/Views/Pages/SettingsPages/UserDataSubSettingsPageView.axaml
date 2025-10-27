@@ -10,9 +10,9 @@
 			 x:CompileBindings="True"
 			 Loaded="UserControl_Loaded">
 	<Design.DataContext>
-		<vm:AboutSubSettingsPageViewModel />
+		<vm:UserDataSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Background="White" >
+	<Grid Background="Yellow" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="15*" />
@@ -29,9 +29,9 @@
 				<RowDefinition Height="3*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="2*" />
 				<RowDefinition Height="12*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="2*" />
 				<RowDefinition Height="3*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="3*" />
@@ -41,15 +41,11 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Start" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
-			<TextBox Grid.Row="1" Grid.Column="0" Text="{ Binding StartTextboxText }" />
-			<TextBlock Text="Finish" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
-			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
-			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
+			<TextBlock Text="Username" Classes="FieldDescriptor" Grid.Row="2" Grid.Column="0" />
 			<TextBox Name="DescriptionTextbox"
-					 Grid.Row="4"
+					 Grid.Row="3"
 					 Grid.Column="0"
-					 Grid.ColumnSpan="3"
+					 Grid.ColumnSpan="1"
 					 Text="{ Binding DescriptionTextboxText }"/>
 			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
 			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
@@ -78,36 +74,6 @@
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
 							<TextBlock Classes="ButtonContent" Text="Start" />
-						</Viewbox>
-					</Grid>
-				</Button>
-				<Button Name="stopButton"
-						Grid.Column="2"
-						Classes="Default"
-						IsEnabled="{ Binding IsStopButtonEnabled }"
-						Command="{ Binding StopTaskCommand }" >
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Stop" />
-						</Viewbox>
-					</Grid>
-				</Button>
-				<Button Name="restartButton"
-						Grid.Column="4"
-						Classes="Default"
-						IsEnabled="{ Binding IsRestartButtonEnabled }"
-						Command="{ Binding RestartTaskCommand }" >
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Restart" />
 						</Viewbox>
 					</Grid>
 				</Button>
