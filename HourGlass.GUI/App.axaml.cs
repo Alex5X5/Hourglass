@@ -63,6 +63,7 @@ public partial class App : Application {
 
 		instanciator.AddContentBindingType<SubSettingsPageViewModelBase>();
 		instanciator.RegisterPageTransient<AboutSubSettingsPageViewModel>();
+		instanciator.RegisterPageTransient<ExportSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<VisualsSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<UserDataSubSettingsPageViewModel>();
 

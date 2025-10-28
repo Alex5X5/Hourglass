@@ -6,7 +6,7 @@ using Avalonia.Media.Immutable;
 
 using System;
 
-public static class MyConverters {
+public static class ColorConverters {
 	/// <summary>
 	/// Gets a Converter that takes a number as input and converts it into a text representation
 	/// </summary>

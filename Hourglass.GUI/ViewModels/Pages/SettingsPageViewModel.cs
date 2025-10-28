@@ -86,6 +86,11 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
         ChangePage<UserDataSubSettingsPageViewModel>();
     }
 
+    [RelayCommand]
+    private void GoToExport() {
+        ChangePage<ExportSubSettingsPageViewModel>();
+    }
+
     public void OnLoad() {
         Console.WriteLine("loading Settings Page");
         AllBindingPropertiesChanged();

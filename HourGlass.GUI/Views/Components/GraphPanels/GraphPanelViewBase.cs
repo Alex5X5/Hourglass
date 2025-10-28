@@ -28,7 +28,9 @@ public abstract class GraphPanelViewBase : ViewBase {
 	public abstract int X_AXIS_SEGMENT_COUNT { get; }
 	public abstract int Y_AXIS_SEGMENT_COUNT { get; }
 
-	protected double PADDING_X => Bounds.Width / 30;
+	protected double Y_AXIS_SEGMENT_SIZE => (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5);
+
+    protected double PADDING_X => Bounds.Width / 30;
 	protected double PADDING_Y => Bounds.Height / 30;
 	protected static double TIMELINE_MARK_HEIGHT => 7;
 
@@ -80,15 +82,18 @@ public abstract class GraphPanelViewBase : ViewBase {
 	}
 
 	private void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, Rect taskRect) {
-        var formattedText = new FormattedText(
+        double fun(double x) =>
+			Math.Round(Math.Log(3*x+1)*3+x*0.3, 2);
+		var formattedText = new FormattedText(
             task.description.Length <= MAX_TASK_DESCRIPTION_CHARS ? task.description : task.description[..MAX_TASK_DESCRIPTION_CHARS] + "...",
             System.Globalization.CultureInfo.CurrentCulture,
             FlowDirection.LeftToRight,
             new Typeface("Arial"),
-            TASK_DESCRIPTION_FONT_SIZE, // Font size
+            Math.Max(2.0, fun(Y_AXIS_SEGMENT_SIZE)), // Font size
             new SolidColorBrush(Colors.Green)
         );
-		Point p = new Point(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
+		double d = Math.Max(2.0, Math.Round(Y_AXIS_SEGMENT_SIZE * 0.8, 2));
+        Point p = new Point(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
         context.DrawText(formattedText, p);
     }
 

@@ -78,10 +78,10 @@
 	</Style>
 	<Style Selector="Button.DynamicBackground">
 		<Style Selector="^:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{Binding $parent[Button].Background, Converter={x:Static bc:MyConverters.ColorConverterBrighten}}" />
+			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static bc:ColorConverters.ColorConverterBrighten} }" />
 		</Style>
 		<Style Selector="^:pressed /template/ ContentPresenter">
-			<Setter Property="Background" Value="{Binding $parent[Button].Background, Converter={x:Static bc:MyConverters.ColorConverterDarken}}" />
+			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static bc:ColorConverters.ColorConverterDarken} }" />
 		</Style>
 	</Style>
 </Styles>

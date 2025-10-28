@@ -11,7 +11,7 @@ public partial class MonthGraphModeButtonIcon : Avalonia.Controls.UserControl {
 
 	public override void Render(DrawingContext context) {
 		base.Render(context);
-		int startOffset = (int)DateTimeService.GetMondayOfCurrentWeek().DayOfWeek + 1;
+		int startOffset = (int)DateTimeService.GetMondayOfCurrentWeek().DayOfWeek + 0;
 		double sideLength = Math.Min(Bounds.Width, Bounds.Height);
 		double drawGridSize = sideLength / 22;
 		for (int i = startOffset; i < DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + startOffset; i++) {
