@@ -6,12 +6,12 @@ using System.Collections.ObjectModel;
 
 public class DocumentPreviewerViewModel : ViewModelBase {
 
-	private readonly ComponentModelFactory<DocumentPreviewerView> componentFactory;
+	//private readonly ComponentModelFactory<DocumentPreviewerView> componentFactory;
 
-	public DocumentPreviewerViewModel() : this(null) {
-	}
+	//public DocumentPreviewerViewModel() : this(null) {
+	//}
 
-	public DocumentPreviewerViewModel(ComponentModelFactory<DocumentPreviewerView> componentFactory):base() {
-		this.componentFactory = componentFactory;
-	}
+	//public DocumentPreviewerViewModel(ComponentModelFactory<DocumentPreviewerView> componentFactory):base() {
+	//	this.componentFactory = componentFactory;
+	//}
 }

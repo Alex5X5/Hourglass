@@ -1,12 +1,9 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
-using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
-using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util;
 
 using ReactiveUI;
 
@@ -15,12 +12,12 @@ using System.ComponentModel;
 public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
     private IHourglassDbService dbService;
-    private CacheService cacheService;
+    private SettingsCacheService cacheService;
     private ViewModelFactory<SubSettingsPageViewModelBase> pageFactory;
     MainViewModel controller;
 
-    private SubSettingsPageViewModelBase _CurrentSubSettingsPage;
-    public SubSettingsPageViewModelBase CurrentPage {
+    private SubSettingsPageViewModelBase? _CurrentSubSettingsPage;
+    public SubSettingsPageViewModelBase? CurrentPage {
         get { return _CurrentSubSettingsPage; }
         private set {
             Console.WriteLine($"settin current sub settings page to {value?.GetType()?.Name}");
@@ -29,34 +26,29 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
         }
     }
 
-    public override string Title => _CurrentSubSettingsPage.Title;
-
-    public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
-    public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
-    public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
+    public override string Title => _CurrentSubSettingsPage?.Title ?? "";
 
 
     public new event PropertyChangedEventHandler? PropertyChanged;
+
+    public event Action OnLoading = () => { };
+    public event Action OnSave = () => { };
 
     public SettingsPageViewModel() : this(null, null, null, null) {
 		
 	}
 
-	public SettingsPageViewModel(IHourglassDbService dbService, CacheService cacheService, ViewModelFactory<SubSettingsPageViewModelBase> pageFactory, MainViewModel controller) : base() {
+	public SettingsPageViewModel(IHourglassDbService dbService, SettingsCacheService cacheService, ViewModelFactory<SubSettingsPageViewModelBase> pageFactory, MainViewModel controller) : base() {
         this.dbService = dbService;
         this.cacheService = cacheService;
         this.controller = controller;
         this.pageFactory = pageFactory;
-        if (cacheService != null)
-            cacheService.OnRunningTaksChanged +=
-                task => AllBindingPropertiesChanged();
-        controller.ShowNavigationBar = false;
+        //if (cacheService != null)
+        //    cacheService.OnRunningTaksChanged +=
+        //        task => AllBindingPropertiesChanged();
     }
 
     private void AllBindingPropertiesChanged() {
-        OnPropertyChanged(nameof(IsStartButtonEnabled));
-        OnPropertyChanged(nameof(IsStopButtonEnabled));
-        OnPropertyChanged(nameof(IsRestartButtonEnabled));
         OnPropertyChanged(nameof(CurrentPage));
         controller.RaisePropertyChanged(nameof(controller.Title));
     }
@@ -66,9 +58,22 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
     }
 
     [RelayCommand]
-    private void Cancel() {
+    public void Cancel() {
         controller.ShowNavigationBar = true;
+        controller.ShowSettingsIcon = true;
         controller.GoBack();
+    }
+
+    [RelayCommand]
+    public void Save() {
+        foreach (Delegate act in OnSave.GetInvocationList())
+            try {
+                act.DynamicInvoke();
+            } catch (Exception ex) {
+                Console.WriteLine("an error occurred while invoking save settings subscribers: " + ex.Message);
+            }
+        
+        Cancel();
     }
 
     [RelayCommand]
@@ -94,6 +99,14 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
     public void OnLoad() {
         Console.WriteLine("loading Settings Page");
         AllBindingPropertiesChanged();
+        controller.ShowNavigationBar = false;
+        controller.ShowSettingsIcon = false;
+        foreach (Delegate act in OnLoading.GetInvocationList())
+            try {
+                act.DynamicInvoke();
+            } catch (Exception ex) {
+                Console.WriteLine("an error occurred while invoking OnLoading settings subscribers: " + ex.Message);
+            }
     }
 
     public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : SubSettingsPageViewModelBase {
@@ -101,7 +114,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
             return;
         CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation);
         AllBindingPropertiesChanged();
-        Console.WriteLine($"chaged type of sub settings page to:{_CurrentSubSettingsPage.GetType().Name}");
+        Console.WriteLine($"chaged type of sub settings page to:{_CurrentSubSettingsPage?.GetType()?.Name ?? ""}");
     }
 }
 

@@ -12,7 +12,7 @@ using System.ComponentModel;
 public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
     private IHourglassDbService dbService;
-	private CacheService cacheService;
+	private TimerCacheService cacheService;
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 
@@ -76,7 +76,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	
 	}
 
-	public TimerPageViewModel(IHourglassDbService dbService, CacheService cacheService) : base() {
+	public TimerPageViewModel(IHourglassDbService dbService, TimerCacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
 		if(cacheService!=null)

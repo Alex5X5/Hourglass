@@ -14,4 +14,12 @@ public static class TextSizeConverters {
 				return Math.Max(5.0, val);
 			}
 		);
+	
+	public static FuncValueConverter<Rect, double, double> TextSizeFromWidthAndHeightConverterParameters { get; } =
+		new FuncValueConverter<Rect, double, double>(
+			(rect, sizeMultiplier) => {
+				var val = Math.Round(rect.Height * sizeMultiplier, 1);
+				return Math.Max(5.0, val);
+			}
+		);
 }

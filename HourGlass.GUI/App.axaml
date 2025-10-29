@@ -23,6 +23,7 @@
 
 	<Application.Styles>
 		<StyleInclude Source="/Styles/Buttons.axaml" />
+		<StyleInclude Source="/Styles/TextContainers.axaml" />
 		<StyleInclude Source="/Styles/TextBlocks.axaml" />
 		<StyleInclude Source="/Styles/TextBoxes.axaml" />
 		<StyleInclude Source="/Styles/ComboBoxes.axaml" />

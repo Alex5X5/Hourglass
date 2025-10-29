@@ -9,35 +9,29 @@ using System.ComponentModel;
 
 public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
-    private string username = "";
     public string UsernameTextboxText {
-        set {
-            username = value;
-            OnPropertyChanged(nameof(UsernameTextboxText));
-        }
-        get => username;
+        set => cacheService.Username = value;
+        get => cacheService.Username;
     }
 
-    private string startDateString = "";
     public string StartDateTextboxText {
-        set {
-            startDateString = value;
-            OnPropertyChanged(nameof(StartDateTextboxText));
-            DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? DateTime.MinValue;
-        }
-        get => startDateString;
+        set => cacheService.StartDateString = value;
+        get => cacheService.StartDateString;
     }
-    private string jobName;
+
     public string JobNameTextboxText {
-        set {
-            if (cacheService?.SelectedTask != null) {
-                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
-            }
-            OnPropertyChanged(nameof(JobNameTextboxText));
-        }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
+        set => cacheService.JobName = value;
+        get => cacheService.JobName;
     }
+    //set {
+        //if (cacheService?.SelectedTask != null) {
+        //    DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
+        //    cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
+        //}
+        //OnPropertyChanged(nameof(JobNameTextboxText));
+    //}
+    //get => cacheService.JobName;
+    //get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
 
     public override string Title => "User Data";
 
@@ -47,11 +41,14 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
     }
 
-    public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService, SettingsService settingsService) : base(dateTimeService, settingsController, pageController, cacheService, settingsService) {
+    public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base(dateTimeService, pageController, cacheService, settingsService) {
+        cacheService.OnUsernameChanged += val=>OnPropertyChanged(nameof(UsernameTextboxText));
+        cacheService.OnStartDateStringChanged += val=>OnPropertyChanged(nameof(StartDateTextboxText));
         if (settingsService != null) {
             JobNameTextboxText = settingsService.GetSetting(SettingsService.JOB_NAME_KEY);
             UsernameTextboxText = settingsService.GetSetting(SettingsService.USER_NAME_KEY);
             StartDateTextboxText = settingsService.GetSetting(SettingsService.START_DATE_KEY);
+            settingsService.OnSettingsSave += () => SaveSettings();
         }
     }
 
@@ -66,21 +63,21 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
     }
 
     private void ParseEnteredValues() {
-        settingsService.SetSetting(SettingsService.JOB_NAME_KEY, jobName);
-        settingsService.SetSetting(SettingsService.USER_NAME_KEY, username);
-        settingsService.SetSetting(SettingsService.START_DATE_KEY, startDateString);
+        settingsService.SetSetting(SettingsService.JOB_NAME_KEY, cacheService.JobName);
+        settingsService.SetSetting(SettingsService.USER_NAME_KEY, cacheService.Username);
+        settingsService.SetSetting(SettingsService.START_DATE_KEY, cacheService.StartDateString);
     }
 
     [RelayCommand]
     private async System.Threading.Tasks.Task SaveSettings() {
         Console.WriteLine("start task button click!");
-        if (dbService != null)
-            cacheService.RunningTask = await dbService.StartNewTaskAsnc(
-                UsernameTextboxText,
-                null,
-                new Worker { name = "new user" },
-                null
-            );
+        //if (dbService != null)
+        //    cacheService.RunningTask = await dbService.StartNewTaskAsnc(
+        //        UsernameTextboxText,
+        //        null,
+        //        new Worker { name = "new user" },
+        //        null
+        //    );
         ParseEnteredValues();
         settingsService.ReloadSettings();
         AllBindingPropertiesChanged();

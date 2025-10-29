@@ -4,7 +4,7 @@ using Hourglass.Database.Services.Interfaces;
 
 using System;
 
-public class CacheService {
+public class TimerCacheService {
 
     private Database.Models.Task? runningTask;
     public Database.Models.Task? RunningTask {
@@ -26,7 +26,7 @@ public class CacheService {
     }
     public event Action<Database.Models.Task?>? OnSelectedTaksChanged;
 
-    public CacheService(IHourglassDbService dbService) {
+    public TimerCacheService(IHourglassDbService dbService) {
         RunningTask = dbService.QueryCurrentTaskAsync().Result;
     }
 }

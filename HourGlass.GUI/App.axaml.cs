@@ -33,20 +33,18 @@ public partial class App : Application {
 		PathService.ExtractFiles("Hourglass");
 
 		PageInstanciator instanciator = new(this);
-		SettingsService settingsService = new();
+		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
-		DateTimeService dateTimeService = new();
-		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>(dateTimeService);
-		instanciator.AddCommonServiceSingleton<ColorService, ColorService>(new ColorService());
+		instanciator.AddCommonServiceSingleton<SettingsCacheService, SettingsCacheService>();
+		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
 
 		if (!Design.IsDesignMode) {
-			HourglassDbService dbService = new(dateTimeService);
-			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
+			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>();
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
-			instanciator.AddCommonServiceSingleton<CacheService, CacheService>();
+			instanciator.AddCommonServiceSingleton<TimerCacheService, TimerCacheService>();
 		}
 
-		instanciator.RegisterComponentTransient<DocumentPreviewerViewModel>();
+		//instanciator.RegisterComponentTransient<DocumentPreviewerViewModel>();
 
 		instanciator.AddContentBindingType<PageViewModelBase>();
 		instanciator.RegisterPageTransient<TimerPageViewModel>();
@@ -62,12 +60,13 @@ public partial class App : Application {
 		instanciator.RegisterPageTransient<MonthGraphPanelViewModel>();
 
 		instanciator.AddContentBindingType<SubSettingsPageViewModelBase>();
+        instanciator.RegisterPageSingleton<SettingsPageViewModel>();
 		instanciator.RegisterPageTransient<AboutSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<ExportSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<VisualsSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<UserDataSubSettingsPageViewModel>();
 
-        instanciator.RegisterPageTransient<SettingsPageViewModel>();
+		//instanciator.AddScopeController<SettingsPageViewModel>();
 
         var services = instanciator.BuildPages();
 

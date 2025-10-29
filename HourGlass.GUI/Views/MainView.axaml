@@ -50,7 +50,7 @@
 								   LineHeight="17" />
 					</Viewbox>
 				</Grid>
-				<Grid Grid.Row="1" Grid.Column="3" RowDefinitions="*, 5*, *">
+				<Grid Grid.Row="1" Grid.Column="3" RowDefinitions="*, 5*, *" IsVisible="{ Binding ShowSettingsIcon }">
 					<Viewbox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 						<Button Command="{Binding GoToSettingsCommand}"
 								Width="80"

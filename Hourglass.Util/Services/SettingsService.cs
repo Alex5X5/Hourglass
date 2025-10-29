@@ -7,7 +7,8 @@ using System.Linq;
 
 public class SettingsService {
 
-    public static event Action OnSettingsReload = () => { };
+    public event Action OnSettingsReload = () => { };
+    public event Action OnSettingsSave = () => { };
 
     private const string FILE_NAME = "appsettings.yml";
     
@@ -21,6 +22,7 @@ public class SettingsService {
 
     public SettingsService() {
         Settings = LoadSettings();
+        
     }
 
     private Dictionary<string, string> LoadSettings() {
@@ -40,6 +42,12 @@ public class SettingsService {
     }
 
     public void SaveSettings() {
+        foreach (Delegate act in OnSettingsSave.GetInvocationList())
+            try {
+                act.DynamicInvoke();
+            } catch (Exception ex) {
+                Console.WriteLine("an error occurred while invoking settings save subscribers: " + ex.Message);
+            }
         string[] lines = new string[Settings.Count];
         int i = 0;
         foreach (string key in Settings.Keys) {

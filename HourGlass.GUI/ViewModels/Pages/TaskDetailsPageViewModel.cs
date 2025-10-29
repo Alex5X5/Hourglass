@@ -12,7 +12,7 @@ using System.ComponentModel;
 public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
 	private IHourglassDbService dbService;
-    private CacheService cacheService;
+    private TimerCacheService cacheService;
 	private ColorService colorService;
 	private MainViewModel controller;
 
@@ -74,7 +74,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	public TaskDetailsPageViewModel() : this(null, null, null, null) {
 	}
 
-	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService, ColorService colorService) : base() {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, TimerCacheService cacheService, ColorService colorService) : base() {
 		this.dbService = dbService;
 		this.colorService = colorService;
 		this.cacheService = cacheService;

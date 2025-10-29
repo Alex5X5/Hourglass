@@ -15,8 +15,8 @@ public class DateTimeService {
 	}
 
 	static DateTimeService() {
-		SettingsService.OnSettingsReload += 
-			() => START_DATE = GetStartDate();
+		//SettingsService.OnSettingsReload += 
+		//	() => START_DATE = GetStartDate();
 	}
 
 	public static long ToSeconds(DateTime date) =>
@@ -76,7 +76,27 @@ public class DateTimeService {
 		}
 	}
 
-	public static string ToTimeString(DateTime time) =>
+    public static DateTime? InterpretDayAndMonthAndYearString(string s) {
+        try {
+            int startIndex = 0;
+            int finishIndex = finishIndex = s.IndexOf('.', startIndex);
+            int day = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+            startIndex = finishIndex + 1;
+            finishIndex = finishIndex = s.IndexOf('.', startIndex);
+            int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+            startIndex = finishIndex + 2;
+            finishIndex = finishIndex = s.IndexOf(' ', s.Length);
+            int year = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+            DateTime time = new(year, month, day);
+            return time;
+        } catch (FormatException) {
+            return null;
+        } catch (ArgumentOutOfRangeException) {
+            return null;
+        }
+    }
+
+    public static string ToTimeString(DateTime time) =>
 		$"{time.Hour}:{time.Minute}:{time.Second}";
 
 	public static string ToHourMinuteString(long totalSeconds) {

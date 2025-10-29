@@ -13,6 +13,7 @@ using Hourglass.Util;
 using ReactiveUI;
 
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
@@ -35,6 +36,10 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	public string Title { get => _CurrentPage.Title; }
 	public event PropertyChangedEventHandler? TitleChanged;
 
+	private GridLength navigationBarHeight = new GridLength(1, GridUnitType.Star);
+	public GridLength NavigationBarHeight {
+		get => navigationBarHeight;
+	}
 	public bool ShowNavigationBar {
 		set {
 			this.RaiseAndSetIfChanged(ref navigationBarHeight, value ? new GridLength(2, GridUnitType.Star) : new GridLength(0, GridUnitType.Star));
@@ -42,10 +47,15 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		}
 	}
 
-	private GridLength navigationBarHeight = new GridLength(1, GridUnitType.Star);
-	public GridLength NavigationBarHeight {
-		get => navigationBarHeight;
+	private bool showSettingsIcon = false;
+	public bool ShowSettingsIcon {
+		set {
+			this.RaiseAndSetIfChanged(ref showSettingsIcon, value);
+			this.RaisePropertyChanged(nameof(ShowSettingsIcon));
+		}
+		get => showSettingsIcon;
 	}
+
 
 
 	private bool IsFirstGraphPageChange = true;
@@ -59,8 +69,9 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
 
+		ShowSettingsIcon = true;
 		ShowNavigationBar = true;
-		CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
+        CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
 	}
 
 	public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {

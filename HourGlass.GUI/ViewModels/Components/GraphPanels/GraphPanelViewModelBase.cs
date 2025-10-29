@@ -9,7 +9,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 
 	public IHourglassDbService dbService { set; get; }
 	public DateTimeService dateTimeService { set; get; }
-	public CacheService cacheService;
+	public TimerCacheService cacheService;
 
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
@@ -20,7 +20,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 		
 	}
 	
-	public GraphPanelViewModelBase(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService) : base() {
+	public GraphPanelViewModelBase(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, TimerCacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.panelController = panelController;

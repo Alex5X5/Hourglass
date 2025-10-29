@@ -13,7 +13,7 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public MonthGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
+	public MonthGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, TimerCacheService cacheService)
 		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
 
 	}

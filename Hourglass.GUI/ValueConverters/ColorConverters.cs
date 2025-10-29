@@ -20,12 +20,12 @@ public static class ColorConverters {
 			br => {
 				if (br is ImmutableSolidColorBrush immutableSolidBrush) {
 					return new SolidColorBrush(
-						TransformColor(immutableSolidBrush.Color, 3.0f, 1.5f, 1.4f)
+						TransformColor(immutableSolidBrush.Color, 2.0f, 1.25f, 1.2f)
 					);
 				}
 				if (br is SolidColorBrush solidBrush) {
 					return new SolidColorBrush(
-						TransformColor(solidBrush.Color, 3.0f, 1.5f, 1.4f)
+						TransformColor(solidBrush.Color, 2.0f, 1.25f, 1.2f)
 					);
 				}
 				return br ?? Brushes.Transparent;

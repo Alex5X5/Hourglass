@@ -11,7 +11,7 @@ using System.ComponentModel;
 public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
     private IHourglassDbService dbService;
-    private CacheService cacheService;
+    private TimerCacheService cacheService;
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 
@@ -70,14 +70,14 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public VisualsSubSettingsPageViewModel() : this(null, null, null, null, null) {
+    public VisualsSubSettingsPageViewModel() : this(null, null, null, null) {
 
     }
 
-    public VisualsSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService, SettingsService settingsService) : base(dateTimeService, settingsController, pageController, cacheService, settingsService) {
-        if (cacheService != null)
-            cacheService.OnRunningTaksChanged +=
-                task => AllBindingPropertiesChanged();
+    public VisualsSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base(dateTimeService, pageController, cacheService, settingsService) {
+        //if (cacheService != null)
+        //    cacheService.OnRunningTaksChanged +=
+        //        task => AllBindingPropertiesChanged();
         AvailableProjects = [
             new Project() { Name="test project" },
             new Project() { Name = "failing project" },

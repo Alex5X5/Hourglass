@@ -2,20 +2,20 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages.SettingsPages"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
-			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.ExportSubSettingsPageView"
 			 x:DataType="vm:ExportSubSettingsPageViewModel"
+			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.ExportSubSettingsPageView"
 			 x:CompileBindings="True"
 			 Loaded="UserControl_Loaded">
 	<Design.DataContext>
 		<vm:AboutSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Grid.Row="1" Grid.Column="1" >
+	<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="true" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
-			<RowDefinition Height="3*" />
+			<RowDefinition Height="2*" />
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="2*" />
@@ -27,25 +27,39 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="2*" />
 			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="2*" />
 		</Grid.ColumnDefinitions>
-		<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-			<Viewbox Grid.Row="1"
-					 Grid.Column="1"
-					 Stretch="Uniform"
-					 VerticalAlignment="Center"
-					 HorizontalAlignment="Center">
-				<TextBlock Classes="ButtonContent" Text="Stop" />
-			</Viewbox>
-			<StackPanel Grid.Row="1"
-						Grid.ColumnSpan="3">
-				<TextBlock Text="{ Binding #slider.Value }"
-							HorizontalAlignment="Center"/>
-				<Slider x:Name="slider"
-						IsSnapToTickEnabled="true"
-						TickFrequency="1.0"
-						Maximum="4" />
-			</StackPanel>
-		</Grid>
+		<TextBlock Grid.Row="0"
+				   Grid.Column ="1"
+				   Grid.ColumnSpan ="2"
+				   Classes="DynamictextHeight"
+				   HorizontalAlignment="Left"
+				   Text="Time Details" />
+		<Slider x:Name="slider"
+				Grid.Row="1"
+				Grid.Column ="1"
+				Grid.ColumnSpan ="3"
+				IsSnapToTickEnabled="true"
+				TickFrequency="1.0"
+				Maximum="2" />
+		<TextBlock Grid.Row="2"
+				   Grid.Column ="1"
+				   Classes="DynamictextHeight"
+				   HorizontalAlignment="Left"
+				   Text="Low" />
+		<TextBlock Grid.Row="2"
+				   Grid.Column ="2"
+				   Classes="DynamictextHeight"
+				   HorizontalAlignment="Center"
+				   Text="Medium" />
+		<TextBlock Grid.Row="2"
+				   Grid.Column ="3"
+				   Classes="DynamictextHeight"
+				   HorizontalAlignment="Right"
+				   Text="High" />
+		<TextBlock Text="{ Binding #slider.Value }"
+				   HorizontalAlignment="Center"/>
 	</Grid>
 </UserControl>

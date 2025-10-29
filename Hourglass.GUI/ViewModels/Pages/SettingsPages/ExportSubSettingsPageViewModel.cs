@@ -11,7 +11,7 @@ using System.ComponentModel;
 public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
     private IHourglassDbService dbService;
-    private CacheService cacheService;
+    private TimerCacheService cacheService;
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 
@@ -70,14 +70,14 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public ExportSubSettingsPageViewModel() : this(null, null, null, null, null) {
+    public ExportSubSettingsPageViewModel() : this(null, null, null, null) {
 
     }
 
-    public ExportSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService, SettingsService settingsService) : base(dateTimeService, settingsController, pageController, cacheService, settingsService) {
-        if (cacheService != null)
-            cacheService.OnRunningTaksChanged +=
-                task => AllBindingPropertiesChanged();
+    public ExportSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base(dateTimeService, pageController, cacheService, settingsService) {
+        //if (cacheService != null)
+        //    cacheService.OnRunningTaksChanged +=
+        //        task => AllBindingPropertiesChanged();
         AvailableProjects = [
             new Project() { Name="test project" },
             new Project() { Name = "failing project" },

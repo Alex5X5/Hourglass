@@ -9,21 +9,21 @@ public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 
 	protected IHourglassDbService dbService { set; get; }
     protected DateTimeService dateTimeService { set; get; }
-    protected CacheService cacheService;
+    protected SettingsCacheService cacheService;
 	protected SettingsService settingsService;
 
-	protected SettingsPageViewModel settingsController;
+
 	protected MainViewModel pageController;
 
 	public abstract string Title { get; }
 
-	public SubSettingsPageViewModelBase() : this(null, null, null, null, null) {
+	public SubSettingsPageViewModelBase() : this(null, null, null, null) {
 		
 	}
 	
-	public SubSettingsPageViewModelBase(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, CacheService cacheService, SettingsService settingsService) : base() {
+	public SubSettingsPageViewModelBase(DateTimeService dateTimeService, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base() {
         this.dateTimeService = dateTimeService;
-		this.settingsController = settingsController;
+		//this.settingsController = settingsController;
 		this.pageController = pageController;
 		this.cacheService = cacheService;
 		this.settingsService = settingsService;
