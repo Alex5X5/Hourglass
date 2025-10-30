@@ -34,7 +34,8 @@ public class HourglassDbService : IHourglassDbService {
 	public async Task<List<Models.Task>> QueryTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) =>
 		(await _accessor.QueryAllAsync<Models.Task>())
 			.Where(x => x.start >= intervallStartSeconds && x.finish <= intervallFinishSeconds)
-				.ToList();
+                .OrderBy(p => p.start)
+					.ToList();
 
 	public async Task<Models.Task?> QueryCurrentTaskAsync() {
 		List<Models.Task> tasks = await QueryTasksAsync();

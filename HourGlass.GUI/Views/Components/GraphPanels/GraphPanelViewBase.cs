@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.Util;
 
 public abstract class GraphPanelViewBase : ViewBase {
 
@@ -28,7 +29,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 	public abstract int X_AXIS_SEGMENT_COUNT { get; }
 	public abstract int Y_AXIS_SEGMENT_COUNT { get; }
 
-	protected double Y_AXIS_SEGMENT_SIZE => (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5);
+	protected double Y_AXIS_SEGMENT_SIZE => (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5) * TASK_GRAPH_COLUMN_COUNT;
 
     protected double PADDING_X => Bounds.Width / 30;
 	protected double PADDING_Y => Bounds.Height / 30;
@@ -52,28 +53,37 @@ public abstract class GraphPanelViewBase : ViewBase {
 
 	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
 		double xAxisSegmentSize = (Bounds.Width - 2.0 * PADDING_X) / X_AXIS_SEGMENT_COUNT;
-		double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5);
+		//double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5);
 		double proportion = xAxisSegmentSize / X_AXIS_SEGMENT_DURATION;
 		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
-		long duration = task.finish - task.start;
+		long duration = task.running ? DateTimeService.ToSeconds(DateTime.Now) - task.start : task.finish - task.start;
 		double graphLength = duration * proportion;
 		double width = (graphLength > GRAPH_MINIMAL_WIDTH ? graphLength : GRAPH_MINIMAL_WIDTH) + additionalWidth * 2;
 		Rect res = new(
 			graphPosX - additionalWidth,
-			yAxisSegmentSize * i * 1.5 - additionalHeight + PADDING_Y,
+			Y_AXIS_SEGMENT_SIZE * (i % (MAX_TASKS / TASK_GRAPH_COLUMN_COUNT)) * 1.5 - additionalHeight + PADDING_Y,
 			width,
-			yAxisSegmentSize + additionalHeight * 2
+			Y_AXIS_SEGMENT_SIZE + additionalHeight * 2
 		);
 		return res;
 	}
 
 	private void DrawTaskGraph(DrawingContext context, Database.Models.Task task, int i) {
 		Rect rect = GetTaskRectanlge(task, 0, 0, i);
-		//Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		//Color gradientFinishColor = Color.FromArgb(0, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
-		//Brush brush = task.running ? new LinearGradientBrush(rect, gradientStartColor, gradientFinishColor, 0.0) : new SolidColorBrush(task.DisplayColor);
+		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Color gradientFinishColor = Color.FromArgb(20, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		Brush brush = task.running
+			? new LinearGradientBrush() {
+				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
+				EndPoint= new RelativePoint(1.0, 0.5, RelativeUnit.Relative),
+				GradientStops = {
+					new GradientStop(gradientStartColor, 0.0),
+                    new GradientStop(gradientFinishColor, 1.0)
+				}
+			}
+			: new SolidColorBrush(task.DisplayColor);
 		double r = Math.Min(GRAPH_CORNER_RADIUS, rect.Width / 2);
-        Brush brush = new SolidColorBrush(task.DisplayColor);
+        //Brush brush = new SolidColorBrush(task.DisplayColor);
         RectangleGeometry rrect = new(rect) { RadiusX = r, RadiusY = r };
         context.DrawGeometry(brush, null, rrect);
 		DrawTaskDescriptionStub(context, task, rect);
@@ -82,15 +92,15 @@ public abstract class GraphPanelViewBase : ViewBase {
 	}
 
 	private void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, Rect taskRect) {
-        double fun(double x) =>
+        static double fun(double x) =>
 			Math.Round(Math.Log(3*x+1)*3+x*0.3, 2);
 		var formattedText = new FormattedText(
             task.description.Length <= MAX_TASK_DESCRIPTION_CHARS ? task.description : task.description[..MAX_TASK_DESCRIPTION_CHARS] + "...",
             System.Globalization.CultureInfo.CurrentCulture,
             FlowDirection.LeftToRight,
             new Typeface("Arial"),
-            Math.Max(2.0, fun(Y_AXIS_SEGMENT_SIZE)), // Font size
-            new SolidColorBrush(Colors.Green)
+            Math.Max(2.0, fun(Y_AXIS_SEGMENT_SIZE)),
+            new SolidColorBrush(Colors.Black)
         );
 		double d = Math.Max(2.0, Math.Round(Y_AXIS_SEGMENT_SIZE * 0.8, 2));
         Point p = new Point(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);

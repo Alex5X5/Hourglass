@@ -27,13 +27,15 @@ public static class PathService {
 			if (!resourceNames[i].StartsWith(resourceNamespacePrefix))
 				continue;
 			string resourceName = resourceNames[i];
+			resourceName = resourceName.Remove(0,resourceNamespacePrefix.Length + 1);
 			while (resourceName.Split('.').Length>2) {
 				resourceName = new StringBuilder(resourceName)
 					.Insert(resourceName.IndexOf('.')+1, '\\')
 						.Remove(resourceName.IndexOf('.'), 1)
 							.ToString();
 			}
-			resourceName=exeDirectory+resourceName;
+			//resourceName= exeDirectory + resourceName;
+			resourceName= FilesPath(resourceName);
 			if (File.Exists(resourceName))
 				continue;
             Directory.CreateDirectory(Path.GetDirectoryName(resourceName)!);
@@ -51,7 +53,7 @@ public static class PathService {
 	}
 
 	public static string FilesPath(string fileName) =>
-		Path.Combine(APP_FILES_DIRECTORY, fileName);
+		Path.Combine(APP_DATA_DIRECTORY, fileName);
 
     public static string AppDataFilesPath(string fileName) =>
 		Path.Combine(APP_DATA_DIRECTORY, fileName);

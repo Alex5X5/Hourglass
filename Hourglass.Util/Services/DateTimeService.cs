@@ -79,13 +79,13 @@ public class DateTimeService {
     public static DateTime? InterpretDayAndMonthAndYearString(string s) {
         try {
             int startIndex = 0;
-            int finishIndex = finishIndex = s.IndexOf('.', startIndex);
+            int finishIndex = s.IndexOf('.', startIndex);
             int day = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
             startIndex = finishIndex + 1;
-            finishIndex = finishIndex = s.IndexOf('.', startIndex);
+            finishIndex = s.IndexOf('.', startIndex);
             int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
             startIndex = finishIndex + 2;
-            finishIndex = finishIndex = s.IndexOf(' ', s.Length);
+			finishIndex = s.Length;
             int year = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
             DateTime time = new(year, month, day);
             return time;
@@ -106,7 +106,10 @@ public class DateTimeService {
 	}
 
 	public static string ToDayAndTimeString(DateTime time) =>
-		$"{time.Day}.{time.Month} {time.Hour}:{time.Minute}:{time.Second}";
+		$"{time.Day}.{time.Month}. {time.Hour}:{time.Minute}:{time.Second}";
+
+	public static string ToDayAndMonthAndYearString(DateTime time) =>
+		$"{time.Day}.{time.Month}. {time.Year}";
 
 	public static DateTime GetMondayOfCurrentWeek() {
         return FloorWeek(DateTime.Now);

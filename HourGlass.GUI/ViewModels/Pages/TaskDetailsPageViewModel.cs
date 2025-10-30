@@ -5,9 +5,11 @@ using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
+using Hourglass.PDF;
 using Hourglass.Util;
 
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
@@ -115,16 +117,6 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 			);
 		AllBindingPropertiesChanged();
         controller.GoBack();
-        //UpdateTextFields();
-        //await Task.Run(
-        //	() => {
-        //		Thread.Sleep(100);
-        //		if (RunningTask != null)
-        //			SetTextBoxTextSafely(StartTextbox, DateTimeService.ToDayAndTimeString(RunningTask.StartDateTime));
-        //	}
-        //);
-        //StopButton.Enable();
-        //StartButton.Disable();
     }
 
 	[RelayCommand]
@@ -144,11 +136,18 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
     }
 
 	[RelayCommand]
-	private void RestartTask() {
-		Console.WriteLine("restart task button click! (not yet implemented)");
-		if (cacheService.SelectedTask == null)
-			return;
-	}
+	private async System.Threading.Tasks.Task RestartTask() {
+		Console.WriteLine("start new button click! (not yet implemented)");
+        await StopTask();
+		await StartTask();
+		cacheService.RunningTask!.description = cacheService.SelectedTask!.description;
+		cacheService.RunningTask!.displayColorRed = cacheService.SelectedTask!.displayColorRed;
+		cacheService.RunningTask!.displayColorGreen= cacheService.SelectedTask!.displayColorGreen;
+		cacheService.RunningTask!.displayColorBlue= cacheService.SelectedTask!.displayColorBlue;
+        await dbService.UpdateTaskAsync(cacheService.RunningTask);
+		AllBindingPropertiesChanged();
+		controller.GoBack();
+    }
 
 
 	[RelayCommand]

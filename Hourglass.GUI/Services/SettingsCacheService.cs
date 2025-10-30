@@ -14,22 +14,20 @@ public class SettingsCacheService {
     }
     public event Action<string>? OnUsernameChanged;
 
-    private string startDateString = "";
+    private DateTime startDate = DateTime.MinValue;
+    public DateTime? StartDate => startDate;
+
+    private string startDateString = DateTimeService.ToDayAndMonthAndYearString(DateTime.MinValue);
     public string StartDateString {
         set {
+            startDate = DateTimeService.InterpretDayAndMonthAndYearString(startDateString) ?? startDate;
             startDateString = value;
             OnStartDateStringChanged?.Invoke(nameof(StartDateString));
         }
-        get => startDateString;
+        get => DateTimeService.ToDayAndMonthAndYearString(startDate);
     }
     public event Action<string>? OnStartDateStringChanged;
 
-    public DateTime? StartDate {
-        get {
-            DateTimeService.InterpretDayAndMonthAndYearString(StartDateString);
-            return new DateTime();
-        }
-    }
     
     private string jobName = "";
     public string JobName {

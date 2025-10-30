@@ -15,10 +15,11 @@ public static class TextSizeConverters {
 			}
 		);
 	
-	public static FuncValueConverter<Rect, double, double> TextSizeFromWidthAndHeightConverterParameters { get; } =
-		new FuncValueConverter<Rect, double, double>(
-			(rect, sizeMultiplier) => {
-				var val = Math.Round(rect.Height * sizeMultiplier, 1);
+	public static FuncValueConverter<Rect, int, double> TextSizeFromWidthAndHeightConverterMultiLine { get; } =
+		new FuncValueConverter<Rect, int, double>(
+			(rect, lineCount) => {
+				double val = Math.Round(rect.Height / lineCount, 1);
+				return 30;
 				return Math.Max(5.0, val);
 			}
 		);

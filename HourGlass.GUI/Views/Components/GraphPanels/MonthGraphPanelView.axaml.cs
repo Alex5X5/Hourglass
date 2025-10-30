@@ -14,7 +14,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 
 	public override int TASK_GRAPH_COLUMN_COUNT => 2;
 
-	public override int MAX_TASKS => 30;
+	public override int MAX_TASKS => 70;
 
 	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 6;
 

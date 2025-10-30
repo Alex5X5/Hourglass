@@ -4,7 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
-			 xmlns:bc="using:Hourglass.GUI.ValueConverters"
+			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
 			 xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.TaskDetailsPageView"
 			 x:DataType="vm:TaskDetailsPageViewModel"
@@ -48,13 +48,15 @@
 			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
 			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
 			<TextBox Name="DescriptionTextbox"
-					 Foreground="Green"
+					 Foreground="Orange"
 					 Grid.Row="4"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="1"
 					 Text="{ Binding DescriptionTextboxText }"
+					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightConverter}}"
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"/>
+			<!--
 			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
 			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
 			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
@@ -66,10 +68,11 @@
 					  SelectedValue="{Binding SelectedProject}">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding Name}" />
+						<TextBlock Text="{ Binding Name }" />
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
+			-->
 			<Grid Grid.Row="4"
 				  Grid.Column="2"
 				  RowDefinitions="2*, *, 2*, *, 2*"

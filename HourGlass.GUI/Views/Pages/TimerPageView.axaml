@@ -4,7 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
-             xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+			 xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.TimerPageView"
 			 x:DataType="vm:TimerPageViewModel"
 			 x:CompileBindings="True"
@@ -41,21 +41,46 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Start" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
-			<TextBox Grid.Row="1" Grid.Column="0" Text="{ Binding StartTextboxText }" />
-			<TextBlock Text="Finish" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
-			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
-			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
+			<TextBlock Text="Start"
+					   Classes="DynamictextHeight"
+					   Grid.Row="0"
+					   Grid.Column="0" />
+			<TextBox Grid.Row="1"
+					 Grid.Column="0"
+					 Classes="DynamictextHeight"
+					 Text="{ Binding StartTextboxText }" />
+			<TextBlock Text="Finish"
+					   Classes="DynamictextHeight"
+					   Grid.Row="0"
+					   Grid.Column="2" />
+			<TextBox Grid.Row="1"
+					 Grid.Column="2"
+					 Classes="DynamictextHeight"
+					 Text="{ Binding FinishTextboxText }" />
+			<TextBlock Text="Description"
+					   Classes="DynamictextHeight"
+					   Grid.Row="3"
+					   Grid.Column="0" />
 			<TextBox Name="DescriptionTextbox"
 					 Grid.Row="4"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 Text="{ Binding DescriptionTextboxText }"
 					 GotFocus="TextBox_GotFocus"
-					 KeyDown="TextBox_KeyDown"/>
-			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
-			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
-			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
+					 KeyDown="TextBox_KeyDown"
+					 TextWrapping="Wrap"/>
+			<!--
+			<TextBlock Text="Ticket"
+					   Classes="DynamictextHeight"
+					   Grid.Row="6"
+					   Grid.Column="0" />
+			<TextBox Grid.Row="7"
+					 Grid.Column="0"
+					 Text="{ Binding TicketTextboxText }" />
+			<TextBlock Text="Project"
+					   Classes="DynamictextHeight"
+					   Grid.Row="6"
+					   Grid.Column="2" />
 			<ComboBox SelectedIndex="0"
 					  Grid.Row="7"
 					  Grid.Column="2"
@@ -68,6 +93,7 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
+			-->
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
 				<Button Name="startButton"
 						Classes="Default"

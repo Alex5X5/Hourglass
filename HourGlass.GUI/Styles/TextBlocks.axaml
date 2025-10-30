@@ -8,22 +8,13 @@
 	</Design.PreviewWith>
 	<Style Selector="TextBlock">
 		<Style Selector="^.ButtonContent">
-			<Setter Property="Foreground" Value="Green" />
 			<Setter Property="HorizontalAlignment" Value="Center" />
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="FontSize" Value="13" />
-		</Style>
-		<Style Selector="^.FieldDescriptor">
-			<Setter Property="Foreground" Value="Blue" />
-			<Setter Property="Padding" Value="10,0,0,0" />
-		</Style>
-		<Style Selector="^.FieldDescriptor">
-			<Setter Property="Foreground" Value="Blue" />
-			<Setter Property="Padding" Value="10,0,0,0" />
+			<Setter Property="Padding" Value="0,0,0,0" />
 		</Style>
 		<Style Selector="^.DynamictextHeight">
 			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightConverter}}" />
-			<Setter Property="Padding" Value="10,0,0,0" />
 		</Style>
 		
 	</Style>

@@ -1,18 +1,17 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-
+using Hourglass.Util.Services;
 using ReactiveUI;
 
 using System.ComponentModel;
 
 public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
-    private IHourglassDbService dbService;
     private SettingsCacheService cacheService;
+    private SettingsService settingsService;
     private ViewModelFactory<SubSettingsPageViewModelBase> pageFactory;
     MainViewModel controller;
 
@@ -38,14 +37,11 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 		
 	}
 
-	public SettingsPageViewModel(IHourglassDbService dbService, SettingsCacheService cacheService, ViewModelFactory<SubSettingsPageViewModelBase> pageFactory, MainViewModel controller) : base() {
-        this.dbService = dbService;
+	public SettingsPageViewModel(SettingsCacheService cacheService, ViewModelFactory<SubSettingsPageViewModelBase> pageFactory, MainViewModel controller, SettingsService settingsService) : base() {
         this.cacheService = cacheService;
         this.controller = controller;
         this.pageFactory = pageFactory;
-        //if (cacheService != null)
-        //    cacheService.OnRunningTaksChanged +=
-        //        task => AllBindingPropertiesChanged();
+        this.settingsService = settingsService;
     }
 
     private void AllBindingPropertiesChanged() {
@@ -66,13 +62,8 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     [RelayCommand]
     public void Save() {
-        foreach (Delegate act in OnSave.GetInvocationList())
-            try {
-                act.DynamicInvoke();
-            } catch (Exception ex) {
-                Console.WriteLine("an error occurred while invoking save settings subscribers: " + ex.Message);
-            }
-        
+        settingsService.SetSetting(SettingsService.START_DATE_KEY, cacheService.StartDateString);
+        settingsService.SaveSettings();
         Cancel();
     }
 
