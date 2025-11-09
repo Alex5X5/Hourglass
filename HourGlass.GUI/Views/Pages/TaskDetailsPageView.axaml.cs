@@ -11,10 +11,10 @@ public partial class TaskDetailsPageView : PageViewBase {
 
 	public TaskDetailsPageView() : base() {
 		InitializeComponent();
-		startButton.GotFocus += (sender, args) => {
-			startButton.InvalidateVisual();
-			Console.WriteLine("start button got focus!");
-		};
+		//startButton.GotFocus += (sender, args) => {
+		//	startButton.InvalidateVisual();
+		//	Console.WriteLine("start button got focus!");
+		//};
 	}
 
 	private void TextBox_GotFocus(object? sender, GotFocusEventArgs e) {
@@ -34,8 +34,8 @@ public partial class TaskDetailsPageView : PageViewBase {
 		if (e.Key == Key.Escape)
 			TopLevel.GetTopLevel(this)?.Focus();
 		if (e.Key == Key.Enter) {
-			startButton.Focus();
-			Console.WriteLine($"button is focused {startButton.IsFocused}");
+			//startButton.Focus();
+			//Console.WriteLine($"button is focused {startButton.IsFocused}");
 		}
 		//Console.WriteLine((DataContext as TaskDetailsPageViewModel)?.SelectedTask.description);
 		//Console.WriteLine((DataContext as TaskDetailsPageViewModel)?.DescriptionTextboxText);

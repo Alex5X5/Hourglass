@@ -42,21 +42,18 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Start" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
 			<TextBox Text="{ Binding StartTextboxText }"
 					 Grid.Row="1"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 Classes="DynamictextHeight" />
-			<TextBlock Text="Finish" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
 			<TextBox Text="{ Binding FinishTextboxText }"
 					 Grid.Row="1"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 Classes="DynamictextHeight" />
-			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
 			<TextBox Name="DescriptionTextbox"
-					 Foreground="Orange"
+					 Foreground="{ StaticResource ResourceKey=DefaultForeground }"
 					 Grid.Row="4"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="1"
@@ -153,34 +150,74 @@
 
 			</Grid>
 			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
-				<Button Classes="Default"
-						Name="startButton"
+				<Button Name="startButton"
+						Classes="Default"
 						Command="{ Binding ContiniueTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Continiue" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Continiue" />
+						</Viewbox>
+					</Grid>
 				</Button>
 				<Button Classes="Default"
 						Name="stopButton"
 						Grid.Column="2"
 						Command="{ Binding StopTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Stop" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Stop" />
+						</Viewbox>
+					</Grid>
 				</Button>
 				<Button Classes="Default"
 						Name="restartButton"
 						Grid.Column="4"
 						Command="{ Binding RestartTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Start New" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Start New" />
+						</Viewbox>
+					</Grid>
 				</Button>
 				<Button Classes="Default"
 						Name="applyButton"
 						Grid.Column="6"
 						Command="{ Binding ApplyChangesCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Save" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Save" />
+						</Viewbox>
+					</Grid>
 				</Button>
 				<Button Classes="Default"
 						Name="deleteButton"
 						Grid.Column="8"
 						Command="{ Binding DeleteTaskCommand }" >
-					<TextBlock Classes="ButtonContent" Text="Delete" />
+					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+						<Viewbox Grid.Row="1"
+								 Grid.Column="1"
+								 Stretch="Uniform"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Center">
+							<TextBlock Classes="ButtonContent" Text="Delete" />
+						</Viewbox>
+					</Grid>
 				</Button>
 			</Grid>
 		</Grid>
@@ -196,7 +233,15 @@
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding CancelCommand }" >
-				<TextBlock Classes="ButtonContent" Text="Back" />
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="Back" />
+					</Viewbox>
+				</Grid>
 			</Button>
 		</Grid>
 	</Grid>

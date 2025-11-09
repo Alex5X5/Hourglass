@@ -359,13 +359,29 @@
 			  ColumnDefinitions="3*, 3*, 2*, 4*, 3*">
 			<Button Grid.Column="1"
 					Classes="Default"
-					Command="{ Binding ImportCommand }">
-				<TextBlock Classes="ButtonContent" Text="Import" />
+					Command="{ Binding ExportCommand }" >
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="Import" />
+					</Viewbox>
+				</Grid>
 			</Button>
 			<Button Grid.Column="3"
 					Classes="Default"
 					Command="{ Binding ExportCommand }" >
-				<TextBlock Classes="ButtonContent" Text="Export" />
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="Export" />
+					</Viewbox>
+				</Grid>
 			</Button>
 		</Grid>
 	</Grid>

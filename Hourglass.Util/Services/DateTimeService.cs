@@ -58,9 +58,9 @@ public class DateTimeService {
 			int finishIndex = finishIndex = s.IndexOf('.', startIndex);
 			int day = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
 			startIndex = finishIndex + 1;
-			finishIndex = finishIndex = s.IndexOf(' ', startIndex);
+			finishIndex = finishIndex = s.IndexOf('.', startIndex);
 			int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
+			startIndex = finishIndex + 2;
 			finishIndex = finishIndex = s.IndexOf(':', startIndex);
 			int hour = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
 			startIndex = finishIndex + 1;
