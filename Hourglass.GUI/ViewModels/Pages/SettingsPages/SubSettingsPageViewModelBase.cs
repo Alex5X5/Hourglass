@@ -3,13 +3,12 @@
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
-using Hourglass.Util.Services;
+using Hourglass.Util.Services.SettingsService;
 
 public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 
 	protected IHourglassDbService dbService { set; get; }
     protected DateTimeService dateTimeService { set; get; }
-    protected SettingsCacheService cacheService;
 	protected SettingsService settingsService;
 
 
@@ -17,15 +16,14 @@ public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 
 	public abstract string Title { get; }
 
-	public SubSettingsPageViewModelBase() : this(null, null, null, null) {
+	public SubSettingsPageViewModelBase() : this(null, null, null) {
 		
 	}
 	
-	public SubSettingsPageViewModelBase(DateTimeService dateTimeService, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base() {
+	public SubSettingsPageViewModelBase(DateTimeService dateTimeService, MainViewModel pageController, SettingsService settingsService) : base() {
         this.dateTimeService = dateTimeService;
 		//this.settingsController = settingsController;
 		this.pageController = pageController;
-		this.cacheService = cacheService;
 		this.settingsService = settingsService;
 	}
 }

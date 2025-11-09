@@ -53,6 +53,10 @@
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0">
 					<bi:DayGraphModeButtonIcon HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+					<ToolTip.Tip>
+						<TextBlock Text="go to day view" />
+					</ToolTip.Tip>
+					<ToolTip.ShowDelay>800</ToolTip.ShowDelay>
 				</Button>
 				<Button Grid.Row="3"
 						Grid.Column="1"
@@ -62,6 +66,10 @@
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0">
 					<bi:WeekGraphModeButtonIcon HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+					<ToolTip.Tip>
+						<TextBlock Text="go to week view" />
+					</ToolTip.Tip>
+					<ToolTip.ShowDelay>750</ToolTip.ShowDelay>
 				</Button>
 				<Button Grid.Row="5"
 						Grid.Column="1"
@@ -71,6 +79,10 @@
 						VerticalAlignment="Stretch"
 						Padding="0,0,0,0">
 					<bi:MonthGraphModeButtonIcon HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+					<ToolTip.Tip>
+						<TextBlock Text="go to month view" />
+					</ToolTip.Tip>
+					<ToolTip.ShowDelay>700</ToolTip.ShowDelay>
 				</Button>
 			</Grid>
 		</Panel>

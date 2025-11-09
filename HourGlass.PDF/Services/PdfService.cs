@@ -4,6 +4,7 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
 using Hourglass.Util.Services;
+using Hourglass.Util.Services.SettingsService;
 
 using System;
 using System.Collections.Generic;

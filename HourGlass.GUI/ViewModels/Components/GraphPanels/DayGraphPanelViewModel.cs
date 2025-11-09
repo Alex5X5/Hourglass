@@ -7,8 +7,6 @@ using Hourglass.Util;
 
 public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
-	public override string Title => "Day Tasks Overview";
-
 	public DayGraphPanelViewModel() : base() {
 
 	}
@@ -29,5 +27,20 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("day graph panel model double click");
+	}
+
+	protected override string GetTitle() {
+		if (dateTimeService?.SelectedDay == null)
+			return "no day selected";
+		string day = dateTimeService!.SelectedDay.DayOfWeek switch {
+			DayOfWeek.Monday => "Monday",
+			DayOfWeek.Tuesday => "Tuesday",
+			DayOfWeek.Wednesday => "Wednesday",
+			DayOfWeek.Thursday => "Thursday",
+			DayOfWeek.Friday => "Friday",
+			_ => "Weekend"
+		};
+		string date = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay);
+		return $"{day}  {date}";
 	}
 }

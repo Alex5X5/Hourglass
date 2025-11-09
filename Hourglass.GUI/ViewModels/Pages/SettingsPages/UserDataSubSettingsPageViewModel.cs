@@ -1,45 +1,46 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using CommunityToolkit.Mvvm.Input;
-using Hourglass.Database.Models;
-using Hourglass.GUI.Services;
+
 using Hourglass.Util;
-using Hourglass.Util.Services;
+using Hourglass.Util.Services.SettingsService;
+
 using System.ComponentModel;
 
 public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
     public string UsernameTextboxText {
-        set => cacheService.Username = value;
-        get => cacheService.Username;
+        set => settingsService.Username = value;
+        get => settingsService.Username;
     }
 
     public string StartDateTextboxText {
-        set => cacheService.StartDateString = value;
-        get => cacheService.StartDateString;
+        set => settingsService.StartDateString = value;
+        get => settingsService.StartDateString;
     }
 
     public string JobNameTextboxText {
-        set => cacheService.JobName = value;
-        get => cacheService.JobName;
+        set => settingsService.JobName = value;
+        get => settingsService.JobName;
     }
 
     public override string Title => "User Data";
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public UserDataSubSettingsPageViewModel() : this(null, null, null, null, null) {
+    public UserDataSubSettingsPageViewModel() : this(null, null, null, null) {
 
     }
 
-    public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base(dateTimeService, pageController, cacheService, settingsService) {
-        cacheService.OnUsernameChanged += val=> OnPropertyChanged(nameof(UsernameTextboxText));
-        cacheService.OnStartDateStringChanged += val=> OnPropertyChanged(nameof(StartDateTextboxText));
+    public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
+        settingsService.OnUsernameChanged += val=> OnPropertyChanged(nameof(UsernameTextboxText));
+        settingsService.OnStartDateStringChanged += val=> OnPropertyChanged(nameof(StartDateTextboxText));
         if (settingsService != null) {
             JobNameTextboxText = settingsService.GetSetting(SettingsService.JOB_NAME_KEY);
             UsernameTextboxText = settingsService.GetSetting(SettingsService.USER_NAME_KEY);
             StartDateTextboxText = settingsService.GetSetting(SettingsService.START_DATE_KEY);
         }
+        AllBindingPropertiesChanged();
     }
 
     private void AllBindingPropertiesChanged() {
@@ -53,9 +54,9 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
     }
 
     private void ParseEnteredValues() {
-        settingsService.SetSetting(SettingsService.JOB_NAME_KEY, cacheService.JobName);
-        settingsService.SetSetting(SettingsService.USER_NAME_KEY, cacheService.Username);
-        settingsService.SetSetting(SettingsService.START_DATE_KEY, cacheService.StartDateString);
+        settingsService.SetSetting(SettingsService.JOB_NAME_KEY, settingsService.JobName);
+        settingsService.SetSetting(SettingsService.USER_NAME_KEY, settingsService.Username);
+        settingsService.SetSetting(SettingsService.START_DATE_KEY, settingsService.StartDateString);
     }
 
     [RelayCommand]

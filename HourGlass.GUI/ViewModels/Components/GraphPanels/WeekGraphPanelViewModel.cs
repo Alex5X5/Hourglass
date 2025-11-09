@@ -8,8 +8,6 @@ using Hourglass.Util;
 
 public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
-	public override string Title => "Week Tasks Overview";
-
 	public WeekGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}
@@ -32,5 +30,14 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 		if(dateTimeService!=null)
 			dateTimeService.SelectedDay = DateTimeService.FloorDay(clickedTime);
 		panelController?.ChangeGraphPanel<DayGraphPanelViewModel>();
+	}
+
+	protected override string GetTitle() {
+		if (dateTimeService?.SelectedDay == null)
+			return "no day selected";
+		int week = DateTimeService.GetWeekCountAtDate(dateTimeService!.SelectedDay);
+		string startDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay);
+		string endDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay.AddDays(5));
+		return $"KW {week}  {startDate}-{endDate}";
 	}
 }

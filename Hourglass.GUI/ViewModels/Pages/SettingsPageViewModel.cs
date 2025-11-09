@@ -1,16 +1,17 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
+
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util.Services;
+using Hourglass.Util.Services.SettingsService;
+
 using ReactiveUI;
 
 using System.ComponentModel;
 
 public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
-    private SettingsCacheService cacheService;
     private SettingsService settingsService;
     private ViewModelFactory<SubSettingsPageViewModelBase> pageFactory;
     MainViewModel controller;
@@ -33,12 +34,11 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
     public event Action OnLoading = () => { };
     public event Action OnSave = () => { };
 
-    public SettingsPageViewModel() : this(null, null, null, null) {
+    public SettingsPageViewModel() : this(null, null, null) {
 		
 	}
 
-	public SettingsPageViewModel(SettingsCacheService cacheService, ViewModelFactory<SubSettingsPageViewModelBase> pageFactory, MainViewModel controller, SettingsService settingsService) : base() {
-        this.cacheService = cacheService;
+	public SettingsPageViewModel(ViewModelFactory<SubSettingsPageViewModelBase> pageFactory, MainViewModel controller, SettingsService settingsService) : base() {
         this.controller = controller;
         this.pageFactory = pageFactory;
         this.settingsService = settingsService;
@@ -62,7 +62,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     [RelayCommand]
     public void Save() {
-        settingsService.SetSetting(SettingsService.START_DATE_KEY, cacheService.StartDateString);
+        settingsService.SetSetting(SettingsService.START_DATE_KEY, settingsService.StartDateString);
         settingsService.SaveSettings();
         Cancel();
     }

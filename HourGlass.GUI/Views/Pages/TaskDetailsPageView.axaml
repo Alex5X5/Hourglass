@@ -43,9 +43,17 @@
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="Start" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="0" />
-			<TextBox Grid.Row="1" Grid.Column="0" Text="{ Binding StartTextboxText }" />
+			<TextBox Text="{ Binding StartTextboxText }"
+					 Grid.Row="1"
+					 Grid.Column="0"
+					 VerticalContentAlignment="Center"
+					 Classes="DynamictextHeight" />
 			<TextBlock Text="Finish" Classes="FieldDescriptor" Grid.Row="0" Grid.Column="2" />
-			<TextBox Grid.Row="1" Grid.Column="2" Text="{ Binding FinishTextboxText }" />
+			<TextBox Text="{ Binding FinishTextboxText }"
+					 Grid.Row="1"
+					 Grid.Column="2"
+					 VerticalContentAlignment="Center"
+					 Classes="DynamictextHeight" />
 			<TextBlock Text="Description" Classes="FieldDescriptor" Grid.Row="3" Grid.Column="0" />
 			<TextBox Name="DescriptionTextbox"
 					 Foreground="Orange"

@@ -1,11 +1,13 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using CommunityToolkit.Mvvm.Input;
+
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
-using Hourglass.Util.Services;
+using Hourglass.Util.Services.SettingsService;
+
 using System.ComponentModel;
 
 public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelBase {
@@ -70,11 +72,11 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public VisualsSubSettingsPageViewModel() : this(null, null, null, null) {
+    public VisualsSubSettingsPageViewModel() : this(null, null, null) {
 
     }
 
-    public VisualsSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsCacheService cacheService, SettingsService settingsService) : base(dateTimeService, pageController, cacheService, settingsService) {
+    public VisualsSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
         //if (cacheService != null)
         //    cacheService.OnRunningTaksChanged +=
         //        task => AllBindingPropertiesChanged();

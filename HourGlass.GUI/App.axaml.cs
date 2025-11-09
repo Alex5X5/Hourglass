@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Components;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
+using Hourglass.Util.Services.SettingsService;
 
 public partial class App : Application {
 
@@ -35,7 +36,6 @@ public partial class App : Application {
 		PageInstanciator instanciator = new(this);
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
-		instanciator.AddCommonServiceSingleton<SettingsCacheService, SettingsCacheService>();
 		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
 
 		if (!Design.IsDesignMode) {

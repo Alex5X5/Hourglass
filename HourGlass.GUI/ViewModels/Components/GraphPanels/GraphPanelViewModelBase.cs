@@ -14,7 +14,7 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
 
-	public abstract string Title { get; }
+	public string Title => GetTitle();
 
 	public GraphPanelViewModelBase() : this(null, null, null, null, null) {
 		
@@ -37,6 +37,8 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 
 	public abstract void OnDoubleClick(DateTime clickedTime);
 
+	protected abstract string GetTitle();
+
 	//public async void OnClickBase(Avalonia.Point mousePos, int xAxisSegmentCount, int xAxisSegmentDuration) {
 	//	Console.WriteLine("base graph panel model click");
 	//	List<Database.Models.Task>? tasks = await GetTasksAsync();
@@ -55,5 +57,6 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 	//		}
 	//	}
 	//}
+
 }
 	

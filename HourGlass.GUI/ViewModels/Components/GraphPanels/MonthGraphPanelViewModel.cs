@@ -6,9 +6,7 @@ using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 
 public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
-
-	public override string Title => "Month Tasks Overview";
-
+	
 	public MonthGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}
@@ -31,5 +29,26 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 		if (dateTimeService != null)
 			dateTimeService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
 		panelController?.ChangeGraphPanel<WeekGraphPanelViewModel>();
+	}
+
+	protected override string GetTitle() {
+		if (dateTimeService?.SelectedDay == null)
+			return "no day selected";
+		string month = dateTimeService!.SelectedDay.Month switch {
+			1 => "January",
+			2 => "February",
+			3 => "March",
+			4 => "April",
+			5 => "May",
+			6 => "June",
+			7 => "July",
+			8 => "August",
+			9 => "September",
+			10 => "October",
+			11 => "November",
+			12 => "December",
+			_ => "Weekend"
+		};
+		return $"{month}  {dateTimeService!.SelectedDay.Year}";
 	}
 }

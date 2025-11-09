@@ -1,11 +1,11 @@
-﻿namespace Hourglass.Util.Services;
+﻿namespace Hourglass.Util.Services.SettingsService;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public class SettingsService {
+public partial class SettingsService {
 
     public event Action OnSettingsReload = () => { };
     public event Action OnSettingsSave = () => { };

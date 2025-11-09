@@ -10,6 +10,9 @@
 	<Color x:Key="SrhGrayDark2">#A1A1A1</Color >
 	<Color x:Key="SrhOrange">#DF4807</Color >
 
+	<Color x:Key="DefaultForeground">#000000</Color >
+	<Color x:Key="DefaultForegroundLight">#101010</Color >
+
 	<Color x:Key="TaskBackgroundOrange">#FF8000</Color >
 	<Color x:Key="TaskBackgroundRed">#B22222</Color >
 	<Color x:Key="TaskBackgroundLightBlue">#20B2AA</Color >

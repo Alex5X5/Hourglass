@@ -1,6 +1,7 @@
 ﻿namespace Hourglass.Util;
 
-using Hourglass.Util.Services;
+using Hourglass.Util.Services.SettingsService;
+
 using System;
 
 public class DateTimeService {
@@ -110,6 +111,9 @@ public class DateTimeService {
 
 	public static string ToDayAndMonthAndYearString(DateTime time) =>
 		$"{time.Day}.{time.Month}. {time.Year}";
+
+	public static string ToDayAndMonthString(DateTime time) =>
+		$"{time.Day}.{time.Month}.";
 
 	public static DateTime GetMondayOfCurrentWeek() {
         return FloorWeek(DateTime.Now);
