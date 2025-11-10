@@ -6,6 +6,7 @@ using Avalonia.Media;
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
+using System.Drawing;
 
 public abstract class GraphPanelViewBase : ViewBase {
 
@@ -39,13 +40,17 @@ public abstract class GraphPanelViewBase : ViewBase {
     protected abstract double TASK_DESCRIPTION_FONT_SIZE { get; }
 
 	private static int MAX_TASK_DESCRIPTION_CHARS => 30;
+	
+    private bool RightMouseDown = false;
+    private bool LeftMouseDown = false;
 
+    private Rect MarkerDragRectangle;
+	private Point DragOrigin;
 
     #endregion fields
 
     public GraphPanelViewBase() : base() {
-		
-	}
+    }
 
 	protected abstract void DrawTimeline(DrawingContext context);
 	
@@ -124,6 +129,8 @@ public abstract class GraphPanelViewBase : ViewBase {
 				DrawTaskGraph(context, tasks[i], i);
 			}
 		}
+		if(RightMouseDown)
+			context.FillRectangle(Brushes.AliceBlue, MarkerDragRectangle);
 	}
 
 	public async void OnClick(object? sender, TappedEventArgs e) {
@@ -155,5 +162,51 @@ public abstract class GraphPanelViewBase : ViewBase {
 		double clickSeconds = timeIntervallStartSecond + timeIntervallSeconds * offset / (Bounds.Width - 2 * PADDING_X);
 		DateTime clickDate = new DateTime((long)clickSeconds * TimeSpan.TicksPerSecond);
 		(DataContext as GraphPanelViewModelBase)?.OnDoubleClick(clickDate);
-	}
+    }
+
+    protected void MouseMoved(object sender, PointerEventArgs args) {
+        Point point = args.GetCurrentPoint(this).Position;
+        Console.WriteLine($"mouse moved to {point.X} {point.Y}!");
+		if (RightMouseDown) {
+			MarkerDragRectangle = new Avalonia.Rect(
+				Math.Min(point.X, DragOrigin.X),
+				Math.Min(point.Y, DragOrigin.Y),
+				Math.Abs(point.X - DragOrigin.X),
+				Math.Abs(point.Y - DragOrigin.Y)
+			);
+			InvalidateVisual();
+		}
+        //if(MarkerDragRectangle = null) {
+        //}
+    }
+
+    protected void MousePressed(object sender, PointerPressedEventArgs args) {
+        PointerPoint mousePoint = args.GetCurrentPoint(sender as Avalonia.Controls.Control);
+		Avalonia.Point point = mousePoint.Position;
+        Console.WriteLine($"mouse pressed!");
+        if (mousePoint.Properties.IsRightButtonPressed) {
+            RightMouseDown = true;
+            MarkerDragRectangle = new Avalonia.Rect(
+                Math.Min(point.X, DragOrigin.X),
+                Math.Min(point.Y, DragOrigin.Y),
+                Math.Abs(point.X - DragOrigin.X),
+                Math.Abs(point.Y - DragOrigin.Y)
+            );
+            InvalidateVisual();
+        }
+        if (mousePoint.Properties.IsLeftButtonPressed)
+            LeftMouseDown = true;
+		DragOrigin = mousePoint.Position;
+        InvalidateVisual();
+
+    }
+
+    protected void MouseReleased(object sender, PointerReleasedEventArgs args) {
+        Console.WriteLine($"mouse released!");
+        if (!args.GetCurrentPoint(sender as Avalonia.Controls.Control).Properties.IsRightButtonPressed)
+            RightMouseDown = false;
+        if (!args.GetCurrentPoint(sender as Avalonia.Controls.Control).Properties.IsLeftButtonPressed)
+            LeftMouseDown = false;
+        InvalidateVisual();
+    }
 }

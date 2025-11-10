@@ -8,5 +8,8 @@
 			 x:DataType="vm:WeekGraphPanelViewModel"
 			 x:CompileBindings="True"
 			 Tapped="OnClick"
-			 DoubleTapped="OnDoubleClick">
+			 DoubleTapped="OnDoubleClick"
+			 PointerMoved="MouseMoved"
+			 PointerPressed="MousePressed"
+			 PointerReleased="MouseReleased">
 </UserControl>

@@ -35,7 +35,7 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 	protected override string GetTitle() {
 		if (dateTimeService?.SelectedDay == null)
 			return "no day selected";
-		int week = DateTimeService.GetWeekCountAtDate(dateTimeService!.SelectedDay);
+		int week = dateTimeService.GetWeekCountAtDate(dateTimeService!.SelectedDay);
 		string startDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay);
 		string endDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay.AddDays(5));
 		return $"KW {week}  {startDate}-{endDate}";

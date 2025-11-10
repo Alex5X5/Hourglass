@@ -1,8 +1,9 @@
 namespace Hourglass.GUI.Views.Components.GraphModeButtons;
 
 using Avalonia.Media;
-
+using Avalonia.Remote.Protocol.Input;
 using Hourglass.Util;
+using System.Windows.Forms;
 
 public partial class MonthGraphModeButtonIcon : Avalonia.Controls.UserControl {
 	public MonthGraphModeButtonIcon() : base() {
@@ -14,16 +15,18 @@ public partial class MonthGraphModeButtonIcon : Avalonia.Controls.UserControl {
 		int startOffset = (int)DateTimeService.GetMondayOfCurrentWeek().DayOfWeek + 0;
 		double sideLength = Math.Min(Bounds.Width, Bounds.Height);
 		double drawGridSize = sideLength / 22;
-		for (int i = startOffset; i < DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) + startOffset; i++) {
-			double xPos = i % 7 * drawGridSize * 3 + drawGridSize + Bounds.Width / 2 - 11 * drawGridSize;
-			double yPos = Math.Floor(i / 7.0) * drawGridSize * 3 + drawGridSize + Bounds.Height / 2 - 7 * drawGridSize;
-			Color color = Color.FromArgb(255, 255, 255, 255);
-			if (i % 7 == 5 | i % 7 == 6)
-				color = Color.FromArgb(255, 174, 174, 174);
-			if (DateTimeService.TodayIsDayOfWeek(i))
-				color = Color.FromArgb(255, 192, 0, 0);
-			Brush brush = new SolidColorBrush(color);
-			context.FillRectangle(brush, new(xPos, yPos, 2 * drawGridSize, 2 * drawGridSize));
-		}
+        int daysInCurrentMonth = DateTimeService.DaysInCurrentMonth();
+        int weekDayCounter = (int)DateTimeService.GetFirstDayOfCurrentMonth().DayOfWeek - 1;
+        for (int i = 0; i < daysInCurrentMonth; i++) {
+            double xPos = weekDayCounter % 7 * drawGridSize * 3 + drawGridSize + Bounds.Width / 2 - 11 * drawGridSize;
+            double yPos = Math.Floor(weekDayCounter / 7.0) * drawGridSize * 3 + drawGridSize + Bounds.Height / 2 - 7 * drawGridSize;
+            Color color = Color.FromArgb(255, 255, 255, 255);
+            if (weekDayCounter % 7 == 5 | weekDayCounter % 7 == 6)
+                color = Color.FromArgb(255, 174, 174, 174);
+            if (weekDayCounter == DateTime.Today.Day - 1)
+                color = Color.FromArgb(255, 192, 0, 0);
+            Brush brush = new SolidColorBrush(color);
+            context.FillRectangle(brush, new(xPos, yPos, 2 * drawGridSize, 2 * drawGridSize)); weekDayCounter++;
+        }
 	}
 }

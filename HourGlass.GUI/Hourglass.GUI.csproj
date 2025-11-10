@@ -6,9 +6,6 @@
 	<Nullable>enable</Nullable>
 	<SelfContained>true</SelfContained>
 	<PublishSingleFile>true</PublishSingleFile>
-	<UseWindowsForms>true</UseWindowsForms>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<UseWindowsForms>true</UseWindowsForms>
 	<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
 	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
@@ -32,18 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
-	<Compile Update="GuiComponents\ButtonDropdown.cs">
-	  <SubType>Component</SubType>
-	</Compile>
+	<Compile Update="GuiComponents\ButtonDropdown.cs" />
 	<Compile Update="Pages\Timer\GraphRenderer\DayGraphRenderer.cs">
 	  <SubType>Component</SubType>
 	</Compile>
-	<Compile Update="Pages\Timer\GraphRenderer\WeekGraphRenderer.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Update="Pages\Timer\GraphRenderer\MonthGraphRenderer.cs">
-	  <SubType>Component</SubType>
-	</Compile>
+	<Compile Update="Pages\Timer\GraphRenderer\WeekGraphRenderer.cs" />
+	<Compile Update="Pages\Timer\GraphRenderer\MonthGraphRenderer.cs" />
 	<Compile Update="Properties\Resources.Designer.cs">
 	  <DesignTime>True</DesignTime>
 	  <AutoGen>True</AutoGen>

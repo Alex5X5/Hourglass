@@ -15,27 +15,34 @@ public partial class SettingsService {
 	public event Action<string>? OnUsernameChanged;
 
 	private DateTime startDate = DateTime.MinValue;
-	public DateTime? StartDate => startDate;
-
 	private string startDateString = DateTimeService.ToDayAndMonthAndYearString(DateTime.MinValue);
-	public string StartDateString {
+	
+	public DateTime StartDate {
 		set {
-			startDateString = value;
-			startDate = DateTimeService.InterpretDayAndMonthAndYearString(startDateString) ?? startDate;
-			OnStartDateStringChanged?.Invoke(nameof(StartDateString));
-		}
-		get => DateTimeService.ToDayAndMonthAndYearString(startDate);
+			SetSetting(START_DATE_KEY, DateTimeService.ToDayAndMonthAndYearString(value));
+            OnStartDateChanged?.Invoke(nameof(StartDate));
+        }
+		get => DateTimeService.InterpretDayAndMonthAndYearString(GetSetting(START_DATE_KEY)) ?? DateTime.MinValue;
 	}
-	public event Action<string>? OnStartDateStringChanged;
 
+	public string StartDateString {
+        set {
+			SetSetting(START_DATE_KEY, value);
+            OnStartDateChanged?.Invoke(nameof(StartDate));
+        }
+        get => GetSetting(START_DATE_KEY);
 
-	private string jobName = "";
+    }
+
+	public event Action<string>? OnStartDateChanged;
+
 	public string JobName {
 		set {
-			jobName = value;
+			SetSetting(JOB_NAME_KEY, value);
 			OnJobNameChanged?.Invoke(nameof(JobName));
 		}
-		get => jobName;
+		get => GetSetting(JOB_NAME_KEY);
 	}
+
 	public event Action<string>? OnJobNameChanged;
 }

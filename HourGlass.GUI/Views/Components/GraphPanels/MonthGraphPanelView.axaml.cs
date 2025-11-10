@@ -1,10 +1,8 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
-using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
 
-using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
 
@@ -50,7 +48,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
             double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
             if (weekDayCounter % 7 == 6 | weekDayCounter % 7 == 0)
                 context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
-            if (weekDayCounter == DateTime.Today.Day + 2)
+            if (i == DateTime.Today.Day - 1)
                 context.FillRectangle(todayBackgroundColor, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
             weekDayCounter++;
             var formattedText = new FormattedText(

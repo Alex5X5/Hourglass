@@ -9,20 +9,11 @@ using System.ComponentModel;
 
 public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
-    public string UsernameTextboxText {
-        set => settingsService.Username = value;
-        get => settingsService.Username;
-    }
+    public string UsernameTextboxText { set; get; }
 
-    public string StartDateTextboxText {
-        set => settingsService.StartDateString = value;
-        get => settingsService.StartDateString;
-    }
+    public string StartDateTextboxText { set; get; }
 
-    public string JobNameTextboxText {
-        set => settingsService.JobName = value;
-        get => settingsService.JobName;
-    }
+    public string JobNameTextboxText { set; get; }
 
     public override string Title => "User Data";
 
@@ -34,7 +25,12 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
     public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
         settingsService.OnUsernameChanged += val=> OnPropertyChanged(nameof(UsernameTextboxText));
-        settingsService.OnStartDateStringChanged += val=> OnPropertyChanged(nameof(StartDateTextboxText));
+        settingsService.OnStartDateChanged += val=> OnPropertyChanged(nameof(StartDateTextboxText));
+        settingsService.OnPreSettingsSave += () => {
+            settingsService.StartDateString = StartDateTextboxText;
+            settingsService.Username = UsernameTextboxText;
+            settingsService.JobName = JobNameTextboxText;
+        };
         if (settingsService != null) {
             JobNameTextboxText = settingsService.GetSetting(SettingsService.JOB_NAME_KEY);
             UsernameTextboxText = settingsService.GetSetting(SettingsService.USER_NAME_KEY);
@@ -53,17 +49,13 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private void ParseEnteredValues() {
-        settingsService.SetSetting(SettingsService.JOB_NAME_KEY, settingsService.JobName);
-        settingsService.SetSetting(SettingsService.USER_NAME_KEY, settingsService.Username);
-        settingsService.SetSetting(SettingsService.START_DATE_KEY, settingsService.StartDateString);
-    }
 
     [RelayCommand]
     private void SaveSettings() {
         Console.WriteLine("start task button click!");
-        ParseEnteredValues();
-        settingsService.ReloadSettings();
+        settingsService.StartDateString = StartDateTextboxText;
+        settingsService.Username = UsernameTextboxText;
+        settingsService.JobName = JobNameTextboxText;
         AllBindingPropertiesChanged();
     }
 

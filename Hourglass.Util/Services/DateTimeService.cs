@@ -6,16 +6,18 @@ using System;
 
 public class DateTimeService {
 
-	public static DateTime START_DATE = GetStartDate();
+	//public static DateTime START_DATE = GetStartDate();
 
-	private long SelectedDayStartSeconds = ToSeconds(DateTime.Today);
+	private SettingsService settingsService;
+    private long SelectedDayStartSeconds = ToSeconds(DateTime.Today);
 
 	public DateTime SelectedDay {
 		set => SelectedDayStartSeconds = ToSeconds(value);
 		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
 	}
 
-	static DateTimeService() {
+	public DateTimeService(SettingsService settingsService) {
+		this.settingsService = settingsService;
 		//SettingsService.OnSettingsReload += 
 		//	() => START_DATE = GetStartDate();
 	}
@@ -42,15 +44,15 @@ public class DateTimeService {
 		day == (int)DateTime.Now.AddDays(-1).DayOfWeek;
 
 
-	private static DateTime GetStartDate() {
-		DateTime date;
-		try {
-			date = Convert.ToDateTime(new SettingsService().GetSetting(SettingsService.START_DATE_KEY));
-		} catch (FormatException) {
-			date = new DateTime(2024, 8, 5);
-		}
-		return date;
-	}
+	//private static DateTime GetStartDate() {
+	//	DateTime date;
+	//	try {
+	//		date = Convert.ToDateTime(new SettingsService().GetSetting(SettingsService.START_DATE_KEY));
+	//	} catch (FormatException) {
+	//		date = new DateTime(2024, 8, 5);
+	//	}
+	//	return date;
+	//}
 
 	public static DateTime? InterpretDayAndTimeString(string s) {
 		try {
@@ -85,7 +87,7 @@ public class DateTimeService {
             startIndex = finishIndex + 1;
             finishIndex = s.IndexOf('.', startIndex);
             int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-            startIndex = finishIndex + 2;
+            startIndex = finishIndex + 1;
 			finishIndex = s.Length;
             int year = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
             DateTime time = new(year, month, day);
@@ -110,7 +112,7 @@ public class DateTimeService {
 		$"{time.Day}.{time.Month}. {time.Hour}:{time.Minute}:{time.Second}";
 
 	public static string ToDayAndMonthAndYearString(DateTime time) =>
-		$"{time.Day}.{time.Month}. {time.Year}";
+		$"{time.Day}.{time.Month}.{time.Year}";
 
 	public static string ToDayAndMonthString(DateTime time) =>
 		$"{time.Day}.{time.Month}.";
@@ -134,9 +136,9 @@ public class DateTimeService {
 	public static DateTime GetFirstDayOfMonthAtDate(DateTime date) =>
 		new(date.Year, date.Month, 1);
 
-	public static int GetCurrentWeekCount() =>
+	public int GetCurrentWeekCount() =>
 		GetWeekCountAtDate(DateTime.Now);
 
-	public static int GetWeekCountAtDate(DateTime date) =>
-		(int) Math.Floor((FloorWeek(date) - START_DATE).Days / 7.0) + 1;
+	public int GetWeekCountAtDate(DateTime date) =>
+		(int) Math.Floor(FloorWeek(date).Subtract(settingsService.StartDate).Days / 7.0) + 1;
 }

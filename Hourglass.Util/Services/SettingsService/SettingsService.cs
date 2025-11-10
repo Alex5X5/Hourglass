@@ -8,7 +8,8 @@ using System.Linq;
 public partial class SettingsService {
 
     public event Action OnSettingsReload = () => { };
-    public event Action OnSettingsSave = () => { };
+    public event Action OnPreSettingsSave = () => { };
+    public event Action OnAfterSettingsSave = () => { };
 
     private const string FILE_NAME = "appsettings.yml";
     
@@ -19,11 +20,6 @@ public partial class SettingsService {
     private static bool loaded = false;
 
     private Dictionary<string, string> Settings;
-
-    public SettingsService() {
-        Settings = LoadSettings();
-        
-    }
 
     private Dictionary<string, string> LoadSettings() {
         loaded = true;
@@ -41,13 +37,19 @@ public partial class SettingsService {
         return res;
     }
 
+    public SettingsService() {
+        Settings = LoadSettings();
+
+    }
+
     public void SaveSettings() {
-        foreach (Delegate act in OnSettingsSave.GetInvocationList())
-            try {
-                act.DynamicInvoke();
-            } catch (Exception ex) {
-                Console.WriteLine("an error occurred while invoking settings save subscribers: " + ex.Message);
-            }
+        OnPreSettingsSave.Invoke();
+        //foreach (Delegate act in OnPreSettingsSave.GetInvocationList())
+        //    try {
+        //        act.DynamicInvoke();
+        //    } catch (Exception ex) {
+        //        Console.WriteLine("an error occurred while invoking settings save subscribers: " + ex.Message);
+        //    }
         string[] lines = new string[Settings.Count];
         int i = 0;
         foreach (string key in Settings.Keys) {
