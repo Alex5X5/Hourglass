@@ -5,7 +5,6 @@ using Hourglass.GUI.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
-using System;
 using Hourglass.GUI.Views;
 
 public class ViewLocator : IDataTemplate {

@@ -4,6 +4,9 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 	

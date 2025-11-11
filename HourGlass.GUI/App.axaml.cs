@@ -21,7 +21,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Components;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util.Services.SettingsService;
 
 public partial class App : Application {
 

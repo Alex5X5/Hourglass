@@ -1,9 +1,7 @@
 namespace Hourglass.GUI.Views.Components.GraphModeButtons;
 
 using Avalonia.Media;
-using Avalonia.Remote.Protocol.Input;
 using Hourglass.Util;
-using System.Windows.Forms;
 
 public partial class MonthGraphModeButtonIcon : Avalonia.Controls.UserControl {
 	public MonthGraphModeButtonIcon() : base() {

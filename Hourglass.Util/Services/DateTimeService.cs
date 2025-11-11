@@ -1,7 +1,6 @@
 ﻿namespace Hourglass.Util;
 
-using Hourglass.Util.Services.SettingsService;
-
+using Hourglass.Util.Services;
 using System;
 
 public class DateTimeService {

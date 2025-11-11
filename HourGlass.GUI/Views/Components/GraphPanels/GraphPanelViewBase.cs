@@ -6,7 +6,6 @@ using Avalonia.Media;
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
-using System.Drawing;
 
 public abstract class GraphPanelViewBase : ViewBase {
 

@@ -5,6 +5,9 @@ using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.Views;
 using Hourglass.Util;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 

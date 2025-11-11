@@ -3,7 +3,6 @@
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
-using Hourglass.Util.Services.SettingsService;
 
 public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 

@@ -6,8 +6,6 @@ using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.Util;
-using Hourglass.Util.Services.SettingsService;
-
 using System.ComponentModel;
 
 public partial class AboutSubSettingsPageViewModel : SubSettingsPageViewModelBase {

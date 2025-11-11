@@ -2,12 +2,11 @@
 
 using CommunityToolkit.Mvvm.Input;
 
-using Hourglass.Database.Services.Interfaces;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
-using Hourglass.Util;
 
 using System.Collections.ObjectModel;
+using System.Threading;
 
 public partial class ExportPageViewModel : PageViewModelBase {
 

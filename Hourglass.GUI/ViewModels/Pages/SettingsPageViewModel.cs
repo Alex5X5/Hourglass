@@ -1,14 +1,10 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
-
-using Hourglass.GUI.Services;
-using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util.Services.SettingsService;
-
 using ReactiveUI;
-
 using System.ComponentModel;
+
+using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 

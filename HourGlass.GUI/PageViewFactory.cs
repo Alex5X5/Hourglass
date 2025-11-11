@@ -1,6 +1,7 @@
 ﻿using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
+using System;
 
 namespace Hourglass.GUI;
 

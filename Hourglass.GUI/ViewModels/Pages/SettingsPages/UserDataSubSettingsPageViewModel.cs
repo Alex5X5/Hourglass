@@ -3,7 +3,6 @@ namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Util;
-using Hourglass.Util.Services.SettingsService;
 
 using System.ComponentModel;
 
