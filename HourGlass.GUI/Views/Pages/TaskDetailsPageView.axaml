@@ -13,7 +13,7 @@
 	<Design.DataContext>
 		<vm:TimerPageViewModel />
 	</Design.DataContext>
-	<Grid Background="White" >
+	<Grid Background="white">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="15*" />
@@ -24,18 +24,17 @@
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="False">
+		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="true">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="12*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="6*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="24*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="6*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="2*" />
@@ -43,17 +42,30 @@
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="Start"
-					   Grid.Row="1"
+					   Grid.Row="0"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
+			<TextBox Text="{ Binding StartTextboxText }"
+					 Grid.Row="2"
+					 Grid.Column="0"
+					 VerticalContentAlignment="Center"
+					 Classes="Default DynamicTextHeight" />
+			<TextBlock Text="Finish"
+					   Classes="DynamicTextHeight"
+					   Grid.Row="0"
+					   Grid.Column="2">
+			</TextBlock>
 			<TextBox Text="{ Binding FinishTextboxText }"
-					 Grid.Row="1"
+					 Grid.Row="2"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
-					 Classes="Default" />
+					 Classes="Default DynamicTextHeight" />
+			<TextBlock Text="Description"
+					   Grid.Row="4"
+					   Grid.Column="0"
+					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding DescriptionTextboxText }"
-					 Name="DescriptionTextbox"
-					 Grid.Row="4"
+					 Grid.Row="6"
 					 Grid.Column="0"
 					 Classes="Default"
 					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.26 }"
@@ -61,24 +73,7 @@
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"
 					 TextWrapping="Wrap"/>
-			<!--
-			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
-			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
-			<TextBlock Text="Project" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="2" />
-			<ComboBox SelectedIndex="0"
-					  Grid.Row="7"
-					  Grid.Column="2"
-					  MaxDropDownHeight="300"
-					  ItemsSource="{Binding AvailableProjects}"
-					  SelectedValue="{Binding SelectedProject}">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{ Binding Name }" />
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
-			-->
-			<Grid Grid.Row="4"
+			<Grid Grid.Row="6"
 				  Grid.Column="2"
 				  RowDefinitions="2*, *, 2*, *, 2*"
 				  ColumnDefinitions="*, *, *"
@@ -147,9 +142,8 @@
 							Background="Beige"
 							Command="{ Binding Color9Button_ClickCommand }" />
 				</Viewbox>
-
 			</Grid>
-			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
+			<Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
 				<Button Name="startButton"
 						Classes="Default"
 						Command="{ Binding ContiniueTaskCommand }" >
@@ -220,28 +214,6 @@
 					</Grid>
 				</Button>
 			</Grid>
-		</Grid>
-		<Grid Grid.Row="1"
-			  ColumnDefinitions="5*,2*,2*">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
-				<RowDefinition Height="28*" />
-			</Grid.RowDefinitions>
-			<Button Grid.Row="1"
-					Grid.Column="1"
-					Classes="Default"
-					Command="{ Binding CancelCommand }" >
-				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
-					<Viewbox Grid.Row="1"
-							 Grid.Column="1"
-							 Stretch="Uniform"
-							 VerticalAlignment="Center"
-							 HorizontalAlignment="Center">
-						<TextBlock Text="Back" />
-					</Viewbox>
-				</Grid>
-			</Button>
 		</Grid>
 	</Grid>
 </UserControl>

@@ -23,7 +23,7 @@
 			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.9}" />
 		</Style>
 	</UserControl.Styles>
-	<Grid Grid.Row="1" ShowGridLines="true">
+	<Grid Grid.Row="1" ShowGridLines="false">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="4*" />
 			<RowDefinition Height="1*" />

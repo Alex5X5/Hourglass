@@ -26,16 +26,18 @@
 		</Grid.ColumnDefinitions>
 		<Grid Grid.Row="1" Grid.Column="1">
 			<Grid.RowDefinitions>
+				<RowDefinition Height="4*" />
 				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
+				<RowDefinition Height="6*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="4*" />
 				<RowDefinition Height="2*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="12*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="3*" />
+				<RowDefinition Height="24*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="6*" />
+				<RowDefinition Height="4*" />
+				<RowDefinition Height="6*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="2*" />
@@ -47,7 +49,7 @@
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding StartTextboxText }"
-					 Grid.Row="1"
+					 Grid.Row="2"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
@@ -57,16 +59,16 @@
 					   Grid.Column="2">
 			</TextBlock>
 			<TextBox Text="{ Binding FinishTextboxText }"
-					 Grid.Row="1"
+					 Grid.Row="2"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
 			<TextBlock Text="Description"
-					   Grid.Row="3"
+					   Grid.Row="4"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding DescriptionTextboxText }"
-					 Grid.Row="4"
+					 Grid.Row="6"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 Name="DescriptionTextbox"
@@ -101,7 +103,7 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 			-->
-			<Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
+			<Grid Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
 				<Button Name="startButton"
 						Classes="Default"
 						IsEnabled="{ Binding IsStartButtonEnabled }"

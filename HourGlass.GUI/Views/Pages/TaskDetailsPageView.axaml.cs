@@ -20,7 +20,7 @@ public partial class TaskDetailsPageView : PageViewBase {
 	private void TextBox_GotFocus(object? sender, GotFocusEventArgs e) {
 		Console.WriteLine("got focus!");
 		//Console.WriteLine((DataContext as TaskDetailsPageViewModel)?.SelectedTask?.description);
-		Console.WriteLine(DescriptionTextbox.Text);
+		//Console.WriteLine(DescriptionTextbox.Text);
 		
 		//if (initialDescriptionTextboxClear) {
 		//	Console.WriteLine("initial focus!");
