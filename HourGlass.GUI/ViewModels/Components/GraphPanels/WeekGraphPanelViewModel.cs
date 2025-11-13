@@ -3,7 +3,6 @@ namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.GUI.Views;
 using Hourglass.Util;
 using System;
 using System.Collections.Generic;

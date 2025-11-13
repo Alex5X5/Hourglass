@@ -77,6 +77,8 @@ public abstract class TextboxItem {
 	public abstract int ColumnIndex { get; }
 
 	public string Text { get; set; } = "";
+
+	public Database.Models.Task? Task { get; set; }
 }
 
 public class DescriptionItem : TextboxItem {
@@ -91,5 +93,4 @@ public class HourItem : TextboxItem {
 
 public class HourRangeItem : TextboxItem {
 	public override int ColumnIndex => PdfDocumentData.HOUR_RANGE_COLUMN;
-
 }

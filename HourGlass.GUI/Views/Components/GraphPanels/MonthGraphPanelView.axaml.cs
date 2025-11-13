@@ -45,7 +45,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / daysInCurrentMonth;
         int weekDayCounter = (int)DateTimeService.GetFirstDayOfCurrentMonth().DayOfWeek;
         for (int i = 0; i < daysInCurrentMonth; i++) {
-            double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
+            double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
             if (weekDayCounter % 7 == 6 | weekDayCounter % 7 == 0)
                 context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
             if (i == DateTime.Today.Day - 1)
@@ -67,7 +67,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
         }
         context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
 		for (int i = 0; i < daysInCurrentMonth + 1; i++) {
-			double xPos = (Bounds.Width - 2 * PADDING_X) * i / daysInCurrentMonth + PADDING_X;
+			double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
 		}

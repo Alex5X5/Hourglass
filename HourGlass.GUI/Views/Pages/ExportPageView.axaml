@@ -4,7 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="1200"
 			 xmlns:local="using:Hourglass.GUI.Views.Components"
-			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 x:Class="Hourglass.GUI.Views.Pages.ExportPageView"
 			 x:DataType="vm:ExportPageViewModel"
 			 x:CompileBindings="True">
@@ -279,15 +279,6 @@
 					<Grid RowDefinitions="18.75*, 88.25*, 27.1*" ColumnDefinitions="60*, 471*, 47*" >
 						<ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TableItems}">
 							<ItemsControl.Styles>
-								<Style Selector="TextBox">
-									<Setter Property="MinHeight" Value="0" />
-									<Setter Property="MinWidth" Value="0" />
-									<Setter Property="Foreground" Value="Black" />
-									<Setter Property="FontSize" Value="7" />
-									<Setter Property="BorderThickness" Value="0" />
-									<Setter Property="HorizontalAlignment" Value="Stretch" />
-									<Setter Property="VerticalAlignment" Value="Stretch" />
-								</Style>
 								<Style x:DataType="vm:TextboxItem" Selector="ItemsControl > ContentPresenter">
 									<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
 									<Setter Property="Grid.Column" Value="{Binding ColumnIndex}" />
@@ -340,13 +331,16 @@
 							</ItemsControl.ItemsPanel>
 							<ItemsControl.ItemTemplate >
 								<DataTemplate>
-									<TextBox Classes="TaskContent"
-											 FontFamily="Arial"
+									<TextBox Classes="Default"
+											 BorderThickness="0"
+											 FontSize="7"
 											 Text="{ Binding Text }"
 											 Padding="2,2,0,0"
 											 Margin="3,3,3,3"
 											 MinHeight="0"
-											 MinWidth="0"/>
+											 MinWidth="0"
+											 HorizontalAlignment="Stretch"
+											 VerticalAlignment="Stretch"/>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>

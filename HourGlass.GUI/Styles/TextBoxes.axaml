@@ -6,13 +6,13 @@
 		</StackPanel>		
 	</Design.PreviewWith>
 	
-	<Style Selector="TextBox">
 		<!--
+	<Style Selector="TextBox">
 		<Style Selector="^:pointerover /template/ Border">
 			<Setter Property="BorderBrush" Value="Orange" />
 			<Setter Property="BorderThickness" Value="2" />
 			<Setter Property="Background" Value="#E9E9E9" />		
 		</Style>
-		-->
 	</Style>
+		-->
 </Styles>

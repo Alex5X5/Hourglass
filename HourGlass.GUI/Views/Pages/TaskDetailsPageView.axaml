@@ -42,25 +42,25 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBox Text="{ Binding StartTextboxText }"
-					 Grid.Row="1"
-					 Grid.Column="0"
-					 VerticalContentAlignment="Center"
-					 Classes="DynamictextHeight" />
+			<TextBlock Text="Start"
+					   Grid.Row="1"
+					   Grid.Column="0"
+					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding FinishTextboxText }"
 					 Grid.Row="1"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
-					 Classes="DynamictextHeight" />
-			<TextBox Name="DescriptionTextbox"
-					 Foreground="{ StaticResource ResourceKey=DefaultForeground }"
+					 Classes="Default" />
+			<TextBox Text="{ Binding DescriptionTextboxText }"
+					 Name="DescriptionTextbox"
 					 Grid.Row="4"
 					 Grid.Column="0"
-					 Grid.ColumnSpan="1"
-					 Text="{ Binding DescriptionTextboxText }"
-					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightConverter}}"
+					 Classes="Default"
+					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.26 }"
+					 VerticalContentAlignment="Top"
 					 GotFocus="TextBox_GotFocus"
-					 KeyDown="TextBox_KeyDown"/>
+					 KeyDown="TextBox_KeyDown"
+					 TextWrapping="Wrap"/>
 			<!--
 			<TextBlock Text="Ticket" Classes="FieldDescriptor" Grid.Row="6" Grid.Column="0" />
 			<TextBox Grid.Row="7" Grid.Column="0" Text="{ Binding TicketTextboxText }" />
@@ -228,7 +228,6 @@
 				<RowDefinition Height="3*" />
 				<RowDefinition Height="28*" />
 			</Grid.RowDefinitions>
-
 			<Button Grid.Row="1"
 					Grid.Column="1"
 					Classes="Default"
@@ -239,7 +238,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Back" />
+						<TextBlock Text="Back" />
 					</Viewbox>
 				</Grid>
 			</Button>

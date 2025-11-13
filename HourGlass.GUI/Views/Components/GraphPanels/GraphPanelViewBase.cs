@@ -2,10 +2,12 @@
 
 using Avalonia;
 using Avalonia.Input;
+using Avalonia.Controls;
 using Avalonia.Media;
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
+
 
 public abstract class GraphPanelViewBase : ViewBase {
 
@@ -29,7 +31,8 @@ public abstract class GraphPanelViewBase : ViewBase {
 	public abstract int X_AXIS_SEGMENT_COUNT { get; }
 	public abstract int Y_AXIS_SEGMENT_COUNT { get; }
 
-	protected double Y_AXIS_SEGMENT_SIZE => (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5) * TASK_GRAPH_COLUMN_COUNT;
+    protected double X_AXIS_SEGMENT_SIZE => (Bounds.Width - 2 * PADDING_X) / X_AXIS_SEGMENT_COUNT;
+    protected double Y_AXIS_SEGMENT_SIZE => (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5) * TASK_GRAPH_COLUMN_COUNT;
 
     protected double PADDING_X => Bounds.Width / 30;
 	protected double PADDING_Y => Bounds.Height / 30;
@@ -55,9 +58,11 @@ public abstract class GraphPanelViewBase : ViewBase {
 	
 	public abstract void OnDoubleClick(object? sender, TappedEventArgs e);
 
-	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
+	protected static double ArialHeightToPt(double height, double x=1) =>
+        Math.Round(Math.Log(3 * height + 1) * 3 * x+ height * 0.3 * x, 2);
+
+    public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
 		double xAxisSegmentSize = (Bounds.Width - 2.0 * PADDING_X) / X_AXIS_SEGMENT_COUNT;
-		//double yAxisSegmentSize = (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5);
 		double proportion = xAxisSegmentSize / X_AXIS_SEGMENT_DURATION;
 		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
 		long duration = task.running ? DateTimeService.ToSeconds(DateTime.Now) - task.start : task.finish - task.start;
@@ -87,27 +92,21 @@ public abstract class GraphPanelViewBase : ViewBase {
 			}
 			: new SolidColorBrush(task.DisplayColor);
 		double r = Math.Min(GRAPH_CORNER_RADIUS, rect.Width / 2);
-        //Brush brush = new SolidColorBrush(task.DisplayColor);
         RectangleGeometry rrect = new(rect) { RadiusX = r, RadiusY = r };
         context.DrawGeometry(brush, null, rrect);
 		DrawTaskDescriptionStub(context, task, rect);
-        //context.FillRectangle(brush, rect);
-		//DrawTaskDescriptionStub(context, task, rect.X, rect.Y, rect.Width);
 	}
 
 	private void DrawTaskDescriptionStub(DrawingContext context, Database.Models.Task task, Rect taskRect) {
-        static double fun(double x) =>
-			Math.Round(Math.Log(3*x+1)*3+x*0.3, 2);
 		var formattedText = new FormattedText(
             task.description.Length <= MAX_TASK_DESCRIPTION_CHARS ? task.description : task.description[..MAX_TASK_DESCRIPTION_CHARS] + "...",
             System.Globalization.CultureInfo.CurrentCulture,
             FlowDirection.LeftToRight,
             new Typeface("Arial"),
-            Math.Max(2.0, fun(Y_AXIS_SEGMENT_SIZE)),
+            Math.Max(2.0, ArialHeightToPt(Y_AXIS_SEGMENT_SIZE)),
             new SolidColorBrush(Colors.Black)
         );
-		double d = Math.Max(2.0, Math.Round(Y_AXIS_SEGMENT_SIZE * 0.8, 2));
-        Point p = new Point(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
+        Point p = new(taskRect.X - formattedText.Width - TASK_DESCRIPTION_GRAPH_SPAGE, taskRect.Y + taskRect.Height / 2 - formattedText.Height / 2);
         context.DrawText(formattedText, p);
     }
 
@@ -167,7 +166,7 @@ public abstract class GraphPanelViewBase : ViewBase {
         Point point = args.GetCurrentPoint(this).Position;
         Console.WriteLine($"mouse moved to {point.X} {point.Y}!");
 		if (RightMouseDown) {
-			MarkerDragRectangle = new Avalonia.Rect(
+			MarkerDragRectangle = new Rect(
 				Math.Min(point.X, DragOrigin.X),
 				Math.Min(point.Y, DragOrigin.Y),
 				Math.Abs(point.X - DragOrigin.X),
@@ -180,12 +179,14 @@ public abstract class GraphPanelViewBase : ViewBase {
     }
 
     protected void MousePressed(object sender, PointerPressedEventArgs args) {
-        PointerPoint mousePoint = args.GetCurrentPoint(sender as Avalonia.Controls.Control);
-		Avalonia.Point point = mousePoint.Position;
-        Console.WriteLine($"mouse pressed!");
+        PointerPoint mousePoint = args.GetCurrentPoint(sender as Control);
+		Point point = mousePoint.Position;
+		Console.WriteLine($"mouse pressed!");
         if (mousePoint.Properties.IsRightButtonPressed) {
+			if(!RightMouseDown)
+				DragOrigin = point;
             RightMouseDown = true;
-            MarkerDragRectangle = new Avalonia.Rect(
+            MarkerDragRectangle = new Rect(
                 Math.Min(point.X, DragOrigin.X),
                 Math.Min(point.Y, DragOrigin.Y),
                 Math.Abs(point.X - DragOrigin.X),
@@ -202,9 +203,9 @@ public abstract class GraphPanelViewBase : ViewBase {
 
     protected void MouseReleased(object sender, PointerReleasedEventArgs args) {
         Console.WriteLine($"mouse released!");
-        if (!args.GetCurrentPoint(sender as Avalonia.Controls.Control).Properties.IsRightButtonPressed)
+        if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed)
             RightMouseDown = false;
-        if (!args.GetCurrentPoint(sender as Avalonia.Controls.Control).Properties.IsLeftButtonPressed)
+        if (!args.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
             LeftMouseDown = false;
         InvalidateVisual();
     }

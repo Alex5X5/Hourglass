@@ -5,7 +5,7 @@
 			<TextBox Text="test" />
 		</StackPanel>
 	</Design.PreviewWith>
-	<Style Selector="TextBox, ComboBox">
+	<Style Selector="ComboBox">
 		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
 		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
 		<Setter Property="BorderThickness" Value="3" />
@@ -19,13 +19,13 @@
 			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
-		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-		</Style>
 		<Style Selector="^:focus /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
 			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+		</Style>
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
 		</Style>
 		<Style Selector="^:focus">
 			<Setter Property="Foreground" Value="Black" />

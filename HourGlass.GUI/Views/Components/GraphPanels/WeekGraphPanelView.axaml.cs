@@ -43,20 +43,19 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
-		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / 7;
 		string[] days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 		for (int i = 0; i < 7; i++) {
-			double xPos = xAxisSegmentSize * i + PADDING_X;
+			double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
 			if (i % 7 == 5 | i % 7 == 6)
-				context.FillRectangle(weekedDayBackground, new(xPos+1, PADDING_Y, xAxisSegmentSize-2, Bounds.Height - (2 * PADDING_Y)));
+				context.FillRectangle(weekedDayBackground, new(xPos+1, PADDING_Y, X_AXIS_SEGMENT_SIZE-2, Bounds.Height - (2 * PADDING_Y)));
 			if (i + 1 == (int)DateTime.Today.DayOfWeek)
 				if(DateTimeService.FloorWeek((DataContext as WeekGraphPanelViewModel)!.dateTimeService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
-				context.FillRectangle(todayBackgroundColor, new(xPos+1, PADDING_Y, xAxisSegmentSize-2, Bounds.Height - (2 * PADDING_Y)));
+				context.FillRectangle(todayBackgroundColor, new(xPos+1, PADDING_Y, X_AXIS_SEGMENT_SIZE-2, Bounds.Height - (2 * PADDING_Y)));
 		}
 		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
 		for (int i = 0; i < 8; i++) {
-			double xPos = (Bounds.Width - 2 * PADDING_X) * i / 7 + PADDING_X;
-			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
+            double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
+            context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
 			if (i < 7) {
 				var formattedText = new FormattedText(
@@ -67,7 +66,7 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 					13,
 					textBrush
 				);
-				Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
+				Point textPos = new(xPos + X_AXIS_SEGMENT_SIZE / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
 				context.DrawText(
 					formattedText,
 					textPos

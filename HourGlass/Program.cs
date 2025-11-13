@@ -5,6 +5,7 @@ using Avalonia.ReactiveUI;
 
 using Hourglass.GUI;
 using Hourglass.Util.Services;
+using System.Globalization;
 
 public class Program {
 	/// <summary>
@@ -13,7 +14,7 @@ public class Program {
 	[STAThread]
 	public static void Main(string[] args) {
 
-		PathService.PrintDetailedInfo();
+        PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
 
 		BuildAvaloniaApp()

@@ -2,9 +2,10 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages.SettingsPages"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages.SettingsPages"
+			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+             xmlns:reactive="using:System.Reactive;assembly=System.Reactive"
 			 x:DataType="vm:UserDataSubSettingsPageViewModel"
 			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.UserDataSubSettingsPageView"
 			 x:CompileBindings="True"
@@ -12,17 +13,30 @@
 	<Design.DataContext>
 		<vm:UserDataSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Grid.Row="1">
+	<UserControl.Styles>
+		<Style Selector="TextBox">
+			<Setter Property="Padding" Value="0,0,0,0"/>
+			<Setter Property="MinHeight" Value="0"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="VerticalAlignment" Value="Stretch" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.9}" />
+		</Style>
+	</UserControl.Styles>
+	<Grid Grid.Row="1" ShowGridLines="true">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="12*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="4*" />
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="6*" />
+			<RowDefinition Height="18*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*" />
@@ -30,50 +44,34 @@
 			<ColumnDefinition Width="2*" />
 			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
-		<TextBlock Grid.Row="0"
+		<TextBlock Text="Username"
+				   Grid.Row="0"
 				   Grid.Column="1"
-				   Classes="DynamictextHeight"
-				   MinHeight="0"
-				   VerticalAlignment="Stretch"
-				   HorizontalAlignment="Stretch"
-				   Text="Username"/>
-		<TextBox Grid.Row="1"
+				   Classes="Default DynamicTextHeight" />
+		<TextBox Text="{ Binding UsernameTextboxText }"
+				 Grid.Row="2"
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
-				 Classes="DynamictextHeight"
-				 VerticalAlignment="Stretch"
-				 HorizontalAlignment="Stretch"
-				 VerticalContentAlignment="Center"
-				 Text="{ Binding UsernameTextboxText }"/>
-		<TextBlock Grid.Row="3"
+				 Classes="DefaultBackground DefaultBorder" />
+		<TextBlock Text="Job Name"
+				   Grid.Row="4"
 				   Grid.Column="1"
-				   Classes="DynamictextHeight"
 				   MinHeight="0"
-				   VerticalAlignment="Stretch"
-				   HorizontalAlignment="Stretch"
-				   Text="Job Name"/>
-		<TextBox Grid.Row="4"
+				   Classes="Default DynamicTextHeight" />
+		<TextBox Text="{ Binding JobNameTextboxText }"
+				 Grid.Row="6"
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
-				 Classes="DynamictextHeight"
-				 VerticalAlignment="Stretch"
-				 HorizontalAlignment="Stretch"
-				 VerticalContentAlignment="Center"
-				 Text="{ Binding JobNameTextboxText }"/>
-		<TextBlock Grid.Row="6"
+				 Classes="DefaultBackground DefaultBorder" />
+		<TextBlock Text="Start Date"
+				   Grid.Row="8"
 				   Grid.Column="1"
-				   Classes="DynamictextHeight"
 				   MinHeight="0"
-				   VerticalAlignment="Stretch"
-				   HorizontalAlignment="Stretch"
-				   Text="Start Date"/>
-		<TextBox Grid.Row="7"
+				   Classes="Default DynamicTextHeight" />
+		<TextBox Text="{ Binding StartDateTextboxText }"
+				 Grid.Row="10"
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
-				 Classes="DynamictextHeight"
-				 VerticalAlignment="Stretch"
-				 HorizontalAlignment="Stretch"
-				 VerticalContentAlignment="Center"
-				 Text="{ Binding StartDateTextboxText }"/>
-</Grid>
+				 Classes="DefaultBackground DefaultBorder" />
+	</Grid>
 </UserControl>

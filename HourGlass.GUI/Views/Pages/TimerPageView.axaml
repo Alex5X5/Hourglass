@@ -3,8 +3,9 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
-			 xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
+			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
+			 xmlns:reactive="using:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.TimerPageView"
 			 x:DataType="vm:TimerPageViewModel"
 			 x:CompileBindings="True"
@@ -23,7 +24,7 @@
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Row="1" Grid.Column="1" >
+		<Grid Grid.Row="1" Grid.Column="1">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="3*" />
@@ -42,33 +43,36 @@
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="Start"
-					   Classes="DynamictextHeight"
 					   Grid.Row="0"
-					   Grid.Column="0" />
+					   Grid.Column="0"
+					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding StartTextboxText }"
 					 Grid.Row="1"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
-					 Classes="DynamictextHeight" />
+					 Classes="Default DynamicTextHeight" />
 			<TextBlock Text="Finish"
+					   Classes="DynamicTextHeight"
 					   Grid.Row="0"
-					   Grid.Column="2"
-					   Classes="Default"/>
+					   Grid.Column="2">
+			</TextBlock>
 			<TextBox Text="{ Binding FinishTextboxText }"
 					 Grid.Row="1"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
-					 Classes="DynamictextHeight" />
+					 Classes="Default DynamicTextHeight" />
 			<TextBlock Text="Description"
 					   Grid.Row="3"
-					   Grid.Column="0" 
-					   Classes="DynamictextHeight" />
+					   Grid.Column="0"
+					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding DescriptionTextboxText }"
-					 Name="DescriptionTextbox"
 					 Grid.Row="4"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
-					 VerticalContentAlignment="Center"
+					 Name="DescriptionTextbox"
+					 Classes="Default"
+					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.26 }"
+					 VerticalContentAlignment="Top"
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"
 					 TextWrapping="Wrap"/>

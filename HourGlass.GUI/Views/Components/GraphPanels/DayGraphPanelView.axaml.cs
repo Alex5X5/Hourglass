@@ -1,10 +1,10 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
-using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
 
@@ -41,18 +41,17 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
-		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / 24;
 		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
 		for (int i = 0; i < 25; i++) {
-			double xPos = (Bounds.Width - 2 * PADDING_X) * i / 24 + PADDING_X;
-			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
+            double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
+            context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
 			var formattedText = new FormattedText(
 				Convert.ToString(i) + ":00",
 				System.Globalization.CultureInfo.CurrentCulture,
 				FlowDirection.LeftToRight,
 				new Typeface("Arial"),
-				11,
+				ArialHeightToPt(PADDING_Y),
 				textBrush
 			);
 			Point textPos = new(xPos - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
