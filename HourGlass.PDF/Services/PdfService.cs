@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.PDF;
 
+using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.PDF.Services.Interfaces;
 using Hourglass.Util;
@@ -310,20 +311,25 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
+			Task[] lineTaks = new Task[lines.Length];
 			string[] hours = ["", "", "", "", "", ""];
 			string[] hourRanges = ["", "", "", "", "", ""];
-			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			List<Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
 			if (tasks_.Count == 0) {
 				dayCounter++;
 				continue;
 			}
-			foreach (Database.Models.Task task in tasks_) {
+			foreach (Task task in tasks_) {
 				if (task.running)
 					continue;
 				string[] compiledTask = CompileTaskPreview(task);
 				try {
 					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-					hourRanges[offset] = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
+					for (int i = 0; i < compiledTask.Length; i++)
+						lineTaks[offset + i] = task;
+					for (int i = 0; i < compiledTask.Length; i++)
+						lineTaks[offset + i] = task;
+                    hourRanges[offset] = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
 					hours[offset] = DateTimeService.ToHourMinuteString(task.finish - task.start);
 					offset += compiledTask.Length;
 				} catch (ArgumentOutOfRangeException) {
@@ -338,10 +344,11 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				totalWeekSeconds += task.finish - task.start;
 			}
 			for (int i = 0; i < 6; i++) {
-				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][PdfDocumentData.TASK_DESCRIPTION_COLUMN] = lines[i];
-				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][PdfDocumentData.HOUR_COLUMN] = hours[i];
-                data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i][PdfDocumentData.HOUR_RANGE_COLUMN] = hourRanges[i]; 
-			}
+				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i].Item1 = lines[i];
+				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i].Item2 = hours[i];
+                data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i].Item3 = hourRanges[i];
+                data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i].Item4 = lineTaks[i];
+            }
 			dayCounter++;
 		}
 		data.TotalTime = DateTimeService.ToHourMinuteString(totalWeekSeconds);
@@ -382,7 +389,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		return res.ToArray();
 	}
 
-    public static string[] CompileTaskPreview(Database.Models.Task task) {
+    public static string[] CompileTaskPreview(Task task) {
         string source = "";
         List<string> res = [];
         if (task.project != null)
@@ -445,71 +452,49 @@ public class PdfDocumentData {
 	public const int TOTAL_MISSING_DAYS_INDEX = WEEK_LINE_COUNT + 7;
 	public const int TOTAL_TIME_INDEX = WEEK_LINE_COUNT + 8;
 
-	public const int TASK_DESCRIPTION_COLUMN = 0;
-	public const int HOUR_COLUMN = 1;
-	public const int HOUR_RANGE_COLUMN = 2;
-	public const int UTILITY_DATA_COLUMN = 0;
-
-
-	public string[][] Data = new string[DOCUMENT_FIELD_COUNT][];
-
-	public Tuple<string, string, string>[] TaskData {
-		get {
-			List<Tuple<string, string, string>> l = [];
-			for (int i = 0; i < Data.GetLength(0); i++) {
-				l.Add(
-					new Tuple<string, string, string>(
-						Data[i][TASK_DESCRIPTION_COLUMN],
-						Data[i][HOUR_COLUMN],
-						Data[i][HOUR_RANGE_COLUMN]
-					)
-				);
-			}
-			return l.ToArray();
-		}
-	}
+	public ValueTuple<string, string, string, Task>[] Data = new ValueTuple<string, string, string, Task>[DOCUMENT_FIELD_COUNT];
 
 	public string UserName {
-		set => Data[USER_NAME_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[USER_NAME_INDEX][UTILITY_DATA_COLUMN];
-	}
+		set => Data[USER_NAME_INDEX].Item1 = value;
+        get => Data[USER_NAME_INDEX].Item1;
+    }
 	public string JobName {
-		set => Data[JOB_NAME_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[JOB_NAME_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[JOB_NAME_INDEX].Item1 = value;
+        get => Data[JOB_NAME_INDEX].Item1;
+    }
 	public string Week {
-		set => Data[WEEK_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[WEEK_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[WEEK_INDEX].Item1 = value;
+        get => Data[WEEK_INDEX].Item1;
+    }
 	public string DateFrom {
-		set => Data[DATE_FOM_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[DATE_FOM_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[DATE_FOM_INDEX].Item1 = value;
+        get => Data[DATE_FOM_INDEX].Item1;
+    }
 	public string DateTo {
-		set => Data[DATE_TO_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[DATE_TO_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[DATE_TO_INDEX].Item1 = value;
+        get => Data[DATE_TO_INDEX].Item1;
+    }
 	public string SickDays {
-		set => Data[SICK_DAYS_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[SICK_DAYS_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[SICK_DAYS_INDEX].Item1 = value;
+        get => Data[SICK_DAYS_INDEX].Item1;
+    }
 	public string MmissingDays {
-		set => Data[MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[MISSING_DAYS_INDEX].Item1 = value;
+        get => Data[MISSING_DAYS_INDEX].Item1;
+    }
 	public string TotalMissingDays {
-		set => Data[TOTAL_MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[TOTAL_MISSING_DAYS_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[TOTAL_MISSING_DAYS_INDEX].Item1 = value;
+        get => Data[TOTAL_MISSING_DAYS_INDEX].Item1;
+    }
 	public string TotalTime {
-		set => Data[TOTAL_TIME_INDEX][UTILITY_DATA_COLUMN] = value;
-		get => Data[TOTAL_TIME_INDEX][UTILITY_DATA_COLUMN];
-	}
+        set => Data[TOTAL_TIME_INDEX].Item1 = value;
+        get => Data[TOTAL_TIME_INDEX].Item1;
+    }
 
 	public PdfDocumentData() {
-		for (int i = 0; i < DOCUMENT_FIELD_COUNT; i++)
-			Data[i] = ["", "", "", ""];
-		JobName = "Example Job Name";
+        for (int i = 0; i < DOCUMENT_FIELD_COUNT; i++)
+            Data[i] = new ValueTuple<string, string, string, Task>();
+        JobName = "Example Job Name";
 		UserName = "Example User";
 		DateFrom = "1.10.1999";
 		DateTo = "5.10.1999";

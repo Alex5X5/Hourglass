@@ -1,7 +1,7 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using CommunityToolkit.Mvvm.Input;
-
+using Hourglass.GUI.Services;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 
@@ -11,8 +11,11 @@ using System.Threading;
 public partial class ExportPageViewModel : PageViewModelBase {
 
 	private readonly DateTimeService? dateTimeService;
+	TimerCacheService cacheService;
 	private readonly IPdfService? pdf;
-	public override string Title => "Export";
+	private readonly MainViewModel pageController;
+
+    public override string Title => "Export";
 
 	private PdfDocumentData pdfData;
 	public ObservableCollection<TextboxItem> TableItems { get; set; }
@@ -26,25 +29,34 @@ public partial class ExportPageViewModel : PageViewModelBase {
 
 	public string TotalTime => pdfData.TotalTime;
 
-    public ExportPageViewModel() : this(null, null) {
+	private Action<Database.Models.Task> OnTextBockClick;
+
+    public ExportPageViewModel() : this(null) {
 		
 	}
 
-	public ExportPageViewModel(DateTimeService? dateTimeService, IHourglassDbService? dbService) : this(dateTimeService, dbService, null) {
+	public ExportPageViewModel(DateTimeService? dateTimeService) : this(dateTimeService, null, null, null) {
 		this.dateTimeService = dateTimeService;
 	}
 
-	public ExportPageViewModel(DateTimeService? dateTimeService, IHourglassDbService? dbService, IPdfService? pdf) : base() {
+	public ExportPageViewModel(DateTimeService? dateTimeService, IPdfService? pdf, MainViewModel pageController, TimerCacheService cacheService) : base() {
 		this.dateTimeService = dateTimeService;
 		this.pdf = pdf;
+		this.pageController = pageController;
+		this.cacheService = cacheService;
+		OnTextBockClick =
+			t => {
+				cacheService.SelectedTask = t;
+				pageController.GoToTaskdetails(t);
+			};
 		pdfData = pdf?.GetExportData(dateTimeService?.SelectedDay ?? DateTime.Now) ?? new PdfDocumentData();
 		TableItems = [];
 		for(int day = 0; day < 5; day++)
 			for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
 				int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
-                TableItems.Add(new DescriptionItem { RowIndex = line, Text = pdfData.Data[line][PdfDocumentData.TASK_DESCRIPTION_COLUMN] });
-				TableItems.Add(new HourItem { RowIndex = line, Text = pdfData.Data[line][PdfDocumentData.HOUR_COLUMN] });
-				TableItems.Add(new HourRangeItem { RowIndex = line, Text = pdfData.Data[line][PdfDocumentData.HOUR_RANGE_COLUMN] });
+                TableItems.Add(new DescriptionItem { RowIndex = line, Text = pdfData.Data[line].Item1, Task = pdfData.Data[line].Item4 });
+				TableItems.Add(new HourItem { RowIndex = line, Text = pdfData.Data[line].Item2, Task = pdfData.Data[line].Item4 });
+				TableItems.Add(new HourRangeItem { RowIndex = line, Text = pdfData.Data[line].Item3, Task = pdfData.Data[line].Item4 });
 			}
 	}
 
@@ -69,28 +81,37 @@ public partial class ExportPageViewModel : PageViewModelBase {
 			}
 		).Start();
 	}
+
+	public void OnTaskRedirect(Database.Models.Task task) {
+		cacheService.SelectedTask = task;
+		pageController.ChangePage<TaskDetailsPageViewModel>();
+		Console.WriteLine($"redirect event for task {task}");
+	}
 }
 
-public abstract class TextboxItem {
+public abstract partial class TextboxItem {
 	public int RowIndex { get; set; } = 0;
 
 	public abstract int ColumnIndex { get; }
 
 	public string Text { get; set; } = "";
 
-	public Database.Models.Task? Task { get; set; }
+	public Database.Models.Task Task {
+		set;
+		get;
+	}
 }
 
 public class DescriptionItem : TextboxItem {
-	public override int ColumnIndex => PdfDocumentData.TASK_DESCRIPTION_COLUMN;
+	public override int ColumnIndex => 0;
 
 }
 
 public class HourItem : TextboxItem {
-	public override int ColumnIndex => PdfDocumentData.HOUR_COLUMN;
+	public override int ColumnIndex => 1;
 
 }
 
 public class HourRangeItem : TextboxItem {
-	public override int ColumnIndex => PdfDocumentData.HOUR_RANGE_COLUMN;
+	public override int ColumnIndex => 2;
 }

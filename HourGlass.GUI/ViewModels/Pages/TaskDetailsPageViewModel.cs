@@ -112,7 +112,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		if(dbService!=null)
 			 cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
-                new Color(255, 79, 79, 79),
+                cacheService.RunningTask?.DisplayColor ?? new Color(255, 79, 79, 79),
 				null,
 				new Worker { name = "new user" },
 				null

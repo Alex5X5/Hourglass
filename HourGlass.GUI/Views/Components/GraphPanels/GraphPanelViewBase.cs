@@ -164,7 +164,7 @@ public abstract class GraphPanelViewBase : ViewBase {
 
     protected void MouseMoved(object sender, PointerEventArgs args) {
         Point point = args.GetCurrentPoint(this).Position;
-        Console.WriteLine($"mouse moved to {point.X} {point.Y}!");
+		//Console.WriteLine($"mouse moved to {point.X} {point.Y}!");
 		if (RightMouseDown) {
 			MarkerDragRectangle = new Rect(
 				Math.Min(point.X, DragOrigin.X),

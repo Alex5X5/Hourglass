@@ -280,8 +280,8 @@
 						<ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TableItems}">
 							<ItemsControl.Styles>
 								<Style x:DataType="vm:TextboxItem" Selector="ItemsControl > ContentPresenter">
-									<Setter Property="Grid.Row" Value="{Binding RowIndex}" />
-									<Setter Property="Grid.Column" Value="{Binding ColumnIndex}" />
+									<Setter Property="Grid.Row" Value="{ Binding RowIndex }" />
+									<Setter Property="Grid.Column" Value="{ Binding ColumnIndex }" />
 								</Style>
 								<Style x:DataType="vm:DescriptionItem" Selector="ItemsControl > ContentPresenter">
 								</Style>
@@ -335,6 +335,8 @@
 											 BorderThickness="0"
 											 FontSize="7"
 											 Text="{ Binding Text }"
+											 GotFocus="TextBox_Focused"
+											 IsReadOnly="true"
 											 Padding="2,2,0,0"
 											 Margin="3,3,3,3"
 											 MinHeight="0"
