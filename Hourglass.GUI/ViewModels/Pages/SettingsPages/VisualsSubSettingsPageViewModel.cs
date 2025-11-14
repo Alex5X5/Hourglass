@@ -1,5 +1,6 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
@@ -108,6 +109,7 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
         if (dbService != null)
             cacheService.RunningTask = await dbService.StartNewTaskAsnc(
                 DescriptionTextboxText,
+                new Color(255, 79, 79, 79),
                 null,
                 new Worker { name = "new user" },
                 null
@@ -136,6 +138,11 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
 
     public void OnLoad() {
         Console.WriteLine("loading Visuals Sub Settings Page!");
+        AllBindingPropertiesChanged();
+    }
+
+    public override void SaveSettings() {
+        Console.WriteLine("save button click!");
         AllBindingPropertiesChanged();
     }
 }

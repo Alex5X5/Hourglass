@@ -51,7 +51,14 @@ public static class ColorConverters {
 
 	private static Color TransformColor(Color color, float transformLowest, float transfomrMid, float transformHighest) {
 		byte a = color.R, b = color.G, c = color.B;
-		if (a >= b && a >= c) {
+		if (a==b && b==c)
+            return new Color(
+                color.A,
+                (byte)Math.Min(color.R * transformHighest, 255),
+                (byte)Math.Min(color.G * transformHighest, 255),
+                (byte)Math.Min(color.B * transformHighest, 255)
+            );
+        if (a >= b && a >= c) {
 			if (b >= c) {
 				return new Color(
 					color.A,

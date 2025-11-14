@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
@@ -111,6 +112,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		if(dbService!=null)
 			 cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
+                new Color(255, 79, 79, 79),
 				null,
 				new Worker { name = "new user" },
 				null
@@ -193,19 +195,19 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	[RelayCommand]
 	public void Color1Button_Click() {
 		if(cacheService.SelectedTask!=null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_ORANGE;
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_YELLOW;
 	}
 
 	[RelayCommand]
 	public void Color2Button_Click() {
 		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_RED;
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_ORANGE;
 	}
 
 	[RelayCommand]
 	public void Color3Button_Click() {
 		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_LIGHT_GREEN;
+			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_RED;
 	}
 
 	[RelayCommand]

@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.Database.Services.Interfaces;
 
+using Avalonia.Media;
 using Hourglass.Database.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ public interface IHourglassDbService {
 
 	public Task<Models.Task?> QueryCurrentTaskAsync();
 
-	public Task<Models.Task> StartNewTaskAsnc(string description, Project? project, Worker worker, Ticket? ticket);
+	public Task<Models.Task> StartNewTaskAsnc(string description, Color color, Project? project, Worker worker, Ticket? ticket);
 
     public Task<bool> UpdateTaskAsync(Models.Task updatedTask);
 

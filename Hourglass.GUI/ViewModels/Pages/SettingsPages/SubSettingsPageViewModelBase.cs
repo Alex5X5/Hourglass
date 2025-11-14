@@ -25,5 +25,7 @@ public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 		this.pageController = pageController;
 		this.settingsService = settingsService;
 	}
+
+    public abstract void SaveSettings();
 }
 	

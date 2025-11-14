@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
@@ -111,6 +112,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 		if(dbService!=null)
 			cacheService.RunningTask = await dbService.StartNewTaskAsnc(
 				DescriptionTextboxText,
+                new Color(255, 79, 79, 79),
 				null,
 				new Worker { name = "new user" },
 				null

@@ -19,6 +19,9 @@
 	<Color x:Key="TaskBackgroundDarkBlue">#003CC7</Color >
 	<Color x:Key="TaskBackgroundLightGreen">#32CD32</Color >
 	<Color x:Key="TaskBackgroundDarkGreen">#008000</Color >
+	<Color x:Key="TaskBackgroundYellow">#ebc634</Color >
+	<Color x:Key="TaskBackgroundLightGray">#909090</Color >
+	<Color x:Key="TaskBackgroundDarkGray">#4f4f4f</Color >
 
 
 

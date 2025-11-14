@@ -17,12 +17,11 @@ public partial class SettingsService {
     public const string JOB_NAME_KEY = "job";
     public const string START_DATE_KEY = "date";
 
-    private static bool loaded = false;
-
     private Dictionary<string, string> Settings;
 
+    public bool HasUnsavedChanges { get; private set; } = false;
+
     private Dictionary<string, string> LoadSettings() {
-        loaded = true;
         Dictionary<string, string> res = [];
         using FileStream fileHandle = File.Open(PathService.FilesPath(FILE_NAME), FileMode.OpenOrCreate);
         using StreamReader streamReader = new(fileHandle);
@@ -39,10 +38,11 @@ public partial class SettingsService {
 
     public SettingsService() {
         Settings = LoadSettings();
-
     }
 
     public void SaveSettings() {
+        if (!HasUnsavedChanges)
+            return;
         OnPreSettingsSave.Invoke();
         //foreach (Delegate act in OnPreSettingsSave.GetInvocationList())
         //    try {
@@ -63,6 +63,7 @@ public partial class SettingsService {
         using FileStream fileHandle = File.Open(path, FileMode.Truncate);
         using StreamWriter streamWriter = new(fileHandle);
         streamWriter.Write(res);
+        HasUnsavedChanges = false;
     }
 
     public string GetSetting(string key) {
@@ -77,9 +78,10 @@ public partial class SettingsService {
 
     public void SetSetting(string key, string newValue) {
         Settings[key] = newValue;
+        HasUnsavedChanges = true;
     }
 
-    public void ReloadSettings() {
+    public void UpdateSettings() {
         SaveSettings();
         Settings = LoadSettings();
         foreach (Delegate act in OnSettingsReload.GetInvocationList())

@@ -4,14 +4,13 @@ using System;
 
 public partial class SettingsService {
 
-	private string username = "";
 	public string Username {
-		set {
-			username = value;
-			OnUsernameChanged?.Invoke(nameof(Username));
-		}
-		get => username;
-	}
+        set {
+            SetSetting(USER_NAME_KEY, value);
+            OnUsernameChanged?.Invoke(nameof(JobName));
+        }
+        get => GetSetting(JOB_NAME_KEY);
+    }
 	public event Action<string>? OnUsernameChanged;
 
 	private DateTime startDate = DateTime.MinValue;

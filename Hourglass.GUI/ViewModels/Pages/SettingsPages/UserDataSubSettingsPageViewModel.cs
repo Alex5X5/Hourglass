@@ -1,7 +1,5 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
-using CommunityToolkit.Mvvm.Input;
-
 using Hourglass.Util;
 
 using System.ComponentModel;
@@ -48,10 +46,7 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-
-    [RelayCommand]
-    private void SaveSettings() {
-        Console.WriteLine("start task button click!");
+    public override void SaveSettings() {
         settingsService.StartDateString = StartDateTextboxText;
         settingsService.Username = UsernameTextboxText;
         settingsService.JobName = JobNameTextboxText;

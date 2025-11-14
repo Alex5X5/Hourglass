@@ -126,6 +126,7 @@
 			<Button Grid.Row="3"
 					Grid.Column="1"
 					Classes="Default"
+					IsEnabled="{ Binding IsSaveButtonEnabled }"
 					Command="{ Binding SaveCommand }">
 				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 					<Viewbox Grid.Row="1"

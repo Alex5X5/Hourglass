@@ -24,11 +24,9 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     public override string Title => _CurrentSubSettingsPage?.Title ?? "";
 
+    public bool IsSaveButtonEnabled => !settingsService.HasUnsavedChanges;
 
     public new event PropertyChangedEventHandler? PropertyChanged;
-
-    public event Action OnLoading = () => { };
-    public event Action OnSave = () => { };
 
     public SettingsPageViewModel() : this(null, null, null) {
 		
@@ -42,6 +40,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     private void AllBindingPropertiesChanged() {
         OnPropertyChanged(nameof(CurrentPage));
+        OnPropertyChanged(nameof(IsSaveButtonEnabled));
         controller.RaisePropertyChanged(nameof(controller.Title));
     }
 
@@ -58,7 +57,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     [RelayCommand]
     public void Save() {
-        settingsService.SetSetting(SettingsService.START_DATE_KEY, settingsService.StartDateString);
+        CurrentPage.SaveSettings();
         settingsService.SaveSettings();
         Cancel();
     }
@@ -88,12 +87,6 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
         AllBindingPropertiesChanged();
         controller.ShowNavigationBar = false;
         controller.ShowSettingsIcon = false;
-        foreach (Delegate act in OnLoading.GetInvocationList())
-            try {
-                act.DynamicInvoke();
-            } catch (Exception ex) {
-                Console.WriteLine("an error occurred while invoking OnLoading settings subscribers: " + ex.Message);
-            }
     }
 
     public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : SubSettingsPageViewModelBase {

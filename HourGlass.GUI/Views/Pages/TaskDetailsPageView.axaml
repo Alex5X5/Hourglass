@@ -24,17 +24,17 @@
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="3*" />
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="true">
+		<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="false">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="4*" />
+				<RowDefinition Height="3*" />
 				<RowDefinition Height="1*" />
-				<RowDefinition Height="6*" />
+				<RowDefinition Height="5*" />
 				<RowDefinition Height="4*" />
-				<RowDefinition Height="4*" />
+				<RowDefinition Height="3*" />
 				<RowDefinition Height="1*" />
 				<RowDefinition Height="24*" />
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="6*" />
+				<RowDefinition Height="8*" />
+				<RowDefinition Height="5*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="2*" />
@@ -68,7 +68,7 @@
 					 Grid.Row="6"
 					 Grid.Column="0"
 					 Classes="Default"
-					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.26 }"
+					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.21 }"
 					 VerticalContentAlignment="Top"
 					 GotFocus="TextBox_GotFocus"
 					 KeyDown="TextBox_KeyDown"
@@ -82,14 +82,14 @@
 					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }"
+							Background="{ StaticResource ResourceKey=TaskBackgroundYellow }"
 							Command="{ Binding Color1Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="0" Grid.Column="1" Stretch="Uniform">
 					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundRed }"
+							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }"
 							Command="{ Binding Color2Button_ClickCommand }" >
 					</Button>
 				</Viewbox>
@@ -97,7 +97,7 @@
 					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundLightGreen }"
+							Background="{ StaticResource ResourceKey=TaskBackgroundRed }"
 							Command="{ Binding Color3Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="2" Grid.Column="0" Stretch="Uniform">
@@ -118,28 +118,28 @@
 					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundDarkGreen }"
+							Background="{ StaticResource ResourceKey=TaskBackgroundLightGreen }"
 							Command="{ Binding Color6Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="0" Stretch="Uniform">
 					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="{ StaticResource ResourceKey=TaskBackgroundOrange }"
+							Background="{ StaticResource ResourceKey=TaskBackgroundLightGray }"
 							Command="{ Binding Color7Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="1" Stretch="Uniform">
-					<Button Classes="Default"
+					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkGray }"
 							Command="{ Binding Color8Button_ClickCommand }" />
 				</Viewbox>
 				<Viewbox Grid.Row="4" Grid.Column="2" Stretch="Uniform">
 					<Button Classes="Default DynamicBackground"
 							Width="100"
 							Height="100"
-							Background="Beige"
+							Background="{ StaticResource ResourceKey=TaskBackgroundDarkGreen }"
 							Command="{ Binding Color9Button_ClickCommand }" />
 				</Viewbox>
 			</Grid>

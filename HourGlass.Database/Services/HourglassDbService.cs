@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.Database.Services;
 
+using Avalonia.Media;
 using DatabaseUtil;
 
 using Hourglass.Database.Models;
@@ -13,14 +14,8 @@ using System.Threading.Tasks;
 
 public class HourglassDbService : IHourglassDbService {
 
-	private readonly DateTimeService dateTimeService;
-
 	DatabaseAccessor<HourglassDbContext> _accessor = 
 		new(PathService.FilesPath("database"), DatabasePathFormat.FileName, null);
-
-	public HourglassDbService(DateTimeService dateTimeService) {
-		this.dateTimeService = dateTimeService;
-	}
 
 	public async Task<List<Ticket>> QueryTicketsAsync()=>
 		await _accessor.QueryAllAsync<Ticket>();
@@ -89,9 +84,10 @@ public class HourglassDbService : IHourglassDbService {
 		await QueryTasksOfMonthAtDateAsync(DateTime.Now);
 
 
-	public async Task<Models.Task> StartNewTaskAsnc(string description, Project? project, Worker worker, Ticket? ticket) {
+	public async Task<Models.Task> StartNewTaskAsnc(string description, Color color, Project? project, Worker worker, Ticket? ticket) {
 		long now = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		Models.Task task = new() {
+			DisplayColor = color,
 			description = description,
 			owner = worker,
 			project = project,
