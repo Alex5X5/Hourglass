@@ -12,7 +12,7 @@
 	<Design.DataContext>
 		<vm:AboutSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="true" >
+	<Grid Grid.Row="1" Grid.Column="1" ShowGridLines="false" >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="2*" />
 			<RowDefinition Height="2*" />
