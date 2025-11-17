@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
 	private IHourglassDbService dbService;
-    private TimerCacheService cacheService;
+    private CacheService cacheService;
 	private ColorService colorService;
 	private MainViewModel controller;
 
@@ -49,7 +49,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
             }
             OnPropertyChanged(nameof(StartTextboxText));
         }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.StartDateTime) : "";
+        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.SelectedTask.StartDateTime) : "";
     }
     public string FinishTextboxText {
         set {
@@ -59,7 +59,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.FinishDateTime) : "";
+        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.SelectedTask.FinishDateTime) : "";
     }
 
     public bool IsContiniueButtonEnabled { get => cacheService?.SelectedTask != null; }
@@ -77,7 +77,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	public TaskDetailsPageViewModel() : this(null, null, null, null) {
 	}
 
-	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, TimerCacheService cacheService, ColorService colorService) : base() {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService, ColorService colorService) : base() {
 		this.dbService = dbService;
 		this.colorService = colorService;
 		this.cacheService = cacheService;
@@ -125,13 +125,14 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	private async System.Threading.Tasks.Task StopTask() {
 		Console.WriteLine("stop task button click!");
 		if(dbService!=null)
-            cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
-                cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
-				DateTimeService.ToSeconds(DateTime.Now),
-				DescriptionTextboxText,
-				SelectedProject,
-				null
-			);
+			if(cacheService.SelectedTask?.running ?? false)
+				cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
+					cacheService.SelectedTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
+					DateTimeService.ToSeconds(DateTime.Now),
+					DescriptionTextboxText,
+					SelectedProject,
+					null
+				);
 		AllBindingPropertiesChanged();
         controller.GoBack();
         //UpdateTextFields();

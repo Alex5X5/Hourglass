@@ -11,7 +11,7 @@ using System.Threading;
 public partial class ExportPageViewModel : PageViewModelBase {
 
 	private readonly DateTimeService? dateTimeService;
-	TimerCacheService cacheService;
+	CacheService cacheService;
 	private readonly IPdfService? pdf;
 	private readonly MainViewModel pageController;
 
@@ -39,7 +39,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 		this.dateTimeService = dateTimeService;
 	}
 
-	public ExportPageViewModel(DateTimeService? dateTimeService, IPdfService? pdf, MainViewModel pageController, TimerCacheService cacheService) : base() {
+	public ExportPageViewModel(DateTimeService? dateTimeService, IPdfService? pdf, MainViewModel pageController, CacheService cacheService) : base() {
 		this.dateTimeService = dateTimeService;
 		this.pdf = pdf;
 		this.pageController = pageController;
@@ -49,7 +49,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 				cacheService.SelectedTask = t;
 				pageController.GoToTaskdetails(t);
 			};
-		pdfData = pdf?.GetExportData(dateTimeService?.SelectedDay ?? DateTime.Now) ?? new PdfDocumentData();
+		pdfData = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
 		TableItems = [];
 		for(int day = 0; day < 5; day++)
 			for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
@@ -77,7 +77,7 @@ public partial class ExportPageViewModel : PageViewModelBase {
 		Console.WriteLine("export button click!");
 		new Thread(
 			() => {
-				pdf?.Export(dateTimeService?.SelectedDay ?? DateTime.Now);
+				pdf?.Export(cacheService.SelectedDay);
 			}
 		).Start();
 	}

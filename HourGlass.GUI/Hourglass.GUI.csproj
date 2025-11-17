@@ -52,6 +52,9 @@
 	<Compile Update="Views\Components\GraphPanels\MonthGraphPanelView.axaml.cs">
 	  <DependentUpon>MonthGraphPanelView.axaml</DependentUpon>
 	</Compile>
+	<Compile Update="Views\Components\GraphPanels\GraphPanelViewBase.axaml.cs">
+	  <DependentUpon>GraphPanelViewBase.axaml</DependentUpon>
+	</Compile>
 	<Compile Update="Views\Components\GraphPanels\WeekGraphPanelView.axaml.cs">
 	  <DependentUpon>WeekGraphPanelView.axaml</DependentUpon>
 	</Compile>

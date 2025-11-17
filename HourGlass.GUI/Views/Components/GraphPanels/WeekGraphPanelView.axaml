@@ -6,10 +6,5 @@
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Components.GraphPanels"
 			 x:Class="Hourglass.GUI.Views.Components.GraphPanels.WeekGraphPanelView"
 			 x:DataType="vm:WeekGraphPanelViewModel"
-			 x:CompileBindings="True"
-			 Tapped="OnClick"
-			 DoubleTapped="OnDoubleClick"
-			 PointerMoved="MouseMoved"
-			 PointerPressed="MousePressed"
-			 PointerReleased="MouseReleased">
+			 x:CompileBindings="True">
 </UserControl>

@@ -22,7 +22,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 
 	public override int GRAPH_CORNER_RADIUS => 4;
 
-	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorMonth((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now));
+	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorMonth((DataContext as GraphPanelViewModelBase)?.cacheService?.SelectedDay ?? DateTime.Now));
 	public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * DateTimeService.DaysInCurrentMonth() - 1;
 
 	public override int X_AXIS_SEGMENT_COUNT => DateTimeService.DaysInCurrentMonth();
@@ -70,14 +70,6 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 			double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
 			context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
-		}
-	}
-
-	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
-		if (DataContext is GraphPanelViewModelBase model) {
-			DateTime startDate = DateTimeService.FloorMonth(model.dateTimeService?.SelectedDay ?? DateTime.Now);
-			DateTime finishDate = startDate.AddMonths(1).AddSeconds(-1);
-			OnDoubleClickBase(e, DateTimeService.ToSeconds(startDate), DateTimeService.ToSeconds(finishDate));
 		}
 	}
 }

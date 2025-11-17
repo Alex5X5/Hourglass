@@ -38,10 +38,13 @@ public partial class App : Application {
 		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
 
 		if (!Design.IsDesignMode) {
-			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>();
+			HourglassDbService dbService = new();
+			instanciator.AddCommonServiceSingleton<IHourglassDbService, HourglassDbService>(dbService);
+			Services.CacheService cacheService = new(dbService);
+			instanciator.AddCommonServiceSingleton<Services.CacheService, Services.CacheService>(cacheService);
+			instanciator.AddCommonServiceSingleton<Util.Services.CacheService, Services.CacheService>(cacheService);
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
-			instanciator.AddCommonServiceSingleton<TimerCacheService, TimerCacheService>();
-		}
+        }
 
 		//instanciator.RegisterComponentTransient<DocumentPreviewerViewModel>();
 

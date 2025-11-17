@@ -24,7 +24,7 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 
 	public override int GRAPH_CORNER_RADIUS => 5;
 
-	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorWeek((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now));
+	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorWeek((DataContext as GraphPanelViewModelBase)?.cacheService.SelectedDay ?? DateTime.Now));
 	public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * 7 - 1;
 
 	public override int X_AXIS_SEGMENT_COUNT => 7;
@@ -49,7 +49,7 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 			if (i % 7 == 5 | i % 7 == 6)
 				context.FillRectangle(weekedDayBackground, new(xPos+1, PADDING_Y, X_AXIS_SEGMENT_SIZE-2, Bounds.Height - (2 * PADDING_Y)));
 			if (i + 1 == (int)DateTime.Today.DayOfWeek)
-				if(DateTimeService.FloorWeek((DataContext as WeekGraphPanelViewModel)!.dateTimeService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
+				if(DateTimeService.FloorWeek((DataContext as WeekGraphPanelViewModel)!.cacheService.SelectedDay) == DateTimeService.FloorWeek(DateTime.Now))
 				context.FillRectangle(todayBackgroundColor, new(xPos+1, PADDING_Y, X_AXIS_SEGMENT_SIZE-2, Bounds.Height - (2 * PADDING_Y)));
 		}
 		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
@@ -73,13 +73,5 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 				);
 			}
 		}
-	}
-
-	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
-		if (DataContext is GraphPanelViewModelBase model) {
-			DateTime startDate = DateTimeService.FloorWeek(model.dateTimeService?.SelectedDay ?? DateTime.Now);
-			DateTime finishDate = startDate.AddDays(7).AddSeconds(-1);
-			OnDoubleClickBase(e, DateTimeService.ToSeconds(startDate), DateTimeService.ToSeconds(finishDate));
-		}
-	}
+    }
 }

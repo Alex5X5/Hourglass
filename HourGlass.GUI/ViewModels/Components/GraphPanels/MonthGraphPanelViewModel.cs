@@ -14,13 +14,13 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public MonthGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, TimerCacheService cacheService)
+	public MonthGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
 		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
 
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
+		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(cacheService.SelectedDay) : [];
 
 	//public override void OnClick(Database.Models.Task task) {
 	//	pageController.ChangePage<TaskDetailsPageViewModel>();
@@ -30,14 +30,14 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("month graph panel model double click");
 		if (dateTimeService != null)
-			dateTimeService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
+			cacheService.SelectedDay = DateTimeService.FloorWeek(clickedTime);
 		panelController?.ChangeGraphPanel<WeekGraphPanelViewModel>();
 	}
 
 	protected override string GetTitle() {
-		if (dateTimeService?.SelectedDay == null)
+		if (cacheService.SelectedDay == null)
 			return "no day selected";
-		string month = dateTimeService!.SelectedDay.Month switch {
+		string month = cacheService.SelectedDay.Month switch {
 			1 => "January",
 			2 => "February",
 			3 => "March",
@@ -52,6 +52,6 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 			12 => "December",
 			_ => "Weekend"
 		};
-		return $"{month}  {dateTimeService!.SelectedDay.Year}";
+		return $"{month}  {cacheService.SelectedDay.Year}";
 	}
 }

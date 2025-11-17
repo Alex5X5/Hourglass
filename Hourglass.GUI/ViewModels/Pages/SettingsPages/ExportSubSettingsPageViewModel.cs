@@ -13,7 +13,7 @@ using System.ComponentModel;
 public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
     private IHourglassDbService dbService;
-    private TimerCacheService cacheService;
+    private CacheService cacheService;
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 
@@ -48,7 +48,7 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
             }
             OnPropertyChanged(nameof(StartTextboxText));
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
+        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime) : "";
     }
     public string FinishTextboxText {
         set {
@@ -58,7 +58,7 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
+        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
     public override string Title => "Export Settings";

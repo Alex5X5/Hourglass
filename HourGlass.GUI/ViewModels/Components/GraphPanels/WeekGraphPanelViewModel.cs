@@ -14,13 +14,13 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public WeekGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, TimerCacheService cacheService)
+	public WeekGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
 		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
 
 	}
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
+		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(cacheService.SelectedDay) : [];
 
 	//public override void OnClick(Database.Models.Task task) {
 	//	pageController.ChangePage<TaskDetailsPageViewModel>();
@@ -30,16 +30,14 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("week graph panel model double click");
 		if(dateTimeService!=null)
-			dateTimeService.SelectedDay = DateTimeService.FloorDay(clickedTime);
+			cacheService.SelectedDay = DateTimeService.FloorDay(clickedTime);
 		panelController?.ChangeGraphPanel<DayGraphPanelViewModel>();
 	}
 
 	protected override string GetTitle() {
-		if (dateTimeService?.SelectedDay == null)
-			return "no day selected";
-		int week = dateTimeService.GetWeekCountAtDate(dateTimeService!.SelectedDay);
-		string startDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay);
-		string endDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay.AddDays(5));
+		int week = dateTimeService.GetWeekCountAtDate(cacheService.SelectedDay);
+		string startDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
+		string endDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay.AddDays(5));
 		return $"KW {week}  {startDate}-{endDate}";
 	}
 }

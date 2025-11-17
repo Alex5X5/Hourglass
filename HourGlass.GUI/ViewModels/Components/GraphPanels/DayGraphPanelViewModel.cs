@@ -14,14 +14,14 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, TimerCacheService cacheService)
+	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, CacheService cacheService)
 		: base(dbService, dateTimeService, null, pageController, cacheService) { }
 
-	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, TimerCacheService cacheService)
+	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
 		: base(dbService, dateTimeService, panelController, pageController, cacheService) { }
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
-		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(dateTimeService?.SelectedDay ?? DateTime.Now) : [];
+		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(cacheService.SelectedDay) : [];
 
 	//public override void OnClick(Database.Models.Task task) {
 	//	pageController.ChangePage<TaskDetailsPageViewModel>();
@@ -33,9 +33,7 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	protected override string GetTitle() {
-		if (dateTimeService?.SelectedDay == null)
-			return "no day selected";
-		string day = dateTimeService!.SelectedDay.DayOfWeek switch {
+		string day = cacheService.SelectedDay.DayOfWeek switch {
 			DayOfWeek.Monday => "Monday",
 			DayOfWeek.Tuesday => "Tuesday",
 			DayOfWeek.Wednesday => "Wednesday",
@@ -43,7 +41,7 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 			DayOfWeek.Friday => "Friday",
 			_ => "Weekend"
 		};
-		string date = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay);
+		string date = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
 		return $"{day}  {date}";
 	}
 }
