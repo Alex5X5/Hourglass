@@ -57,7 +57,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         set {
             if (cacheService?.SelectedTask != null) {
                 DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
+                cacheService.SelectedTask.finish = DateTimeService.ToSeconds(finish);
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
@@ -98,8 +98,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
                 StartTextboxText = $"Error: {ex.Message}";
             }
         };
-        if (cacheService.RunningTask?.running ?? false)
-            _timer.Start();
     }
 
 	private void AllBindingPropertiesChanged() {
@@ -155,6 +153,13 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	public void OnLoad() {
 		Console.WriteLine("loading Timer Page");
 		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
-		AllBindingPropertiesChanged();
+        if (cacheService.RunningTask?.running ?? false)
+            _timer.Start();
+        AllBindingPropertiesChanged();
 	}
+
+    public void OnUnload() {
+        Console.WriteLine("unloading Timer Page");
+        _timer.Stop();
+    }
 }

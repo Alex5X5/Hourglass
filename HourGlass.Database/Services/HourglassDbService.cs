@@ -8,6 +8,7 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 using Hourglass.Util.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,13 +43,11 @@ public class HourglassDbService : IHourglassDbService {
 	}
 	
 	public async Task<List<Models.Task>> QueryTasksOfHourAtDateAsync(DateTime date) {
-		long seconds = date.Ticks / TimeSpan.TicksPerSecond;
-		seconds -= TimeSpan.SecondsPerHour;
-		IEnumerable<Models.Task> all= await QueryTasksAsync();
-		return all
-			.Where(x => (x.finish >= seconds|x.finish==0))
-				.ToList();
-	}
+        return await QueryTasksInIntervallAsync(
+			DateTimeService.ToSeconds(DateTimeService.FloorHour(date)),
+			DateTimeService.ToSeconds(DateTimeService.FloorHour(date).AddHours(1))
+		);
+    }
 	
 	public async Task<List<Models.Task>> QueryTasksOfCurrentHourAsync() =>
 		await QueryTasksOfHourAtDateAsync(DateTime.Now);

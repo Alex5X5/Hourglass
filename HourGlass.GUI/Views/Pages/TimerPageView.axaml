@@ -9,7 +9,8 @@
 			 x:Class="Hourglass.GUI.Views.Pages.TimerPageView"
 			 x:DataType="vm:TimerPageViewModel"
 			 x:CompileBindings="True"
-			 Loaded="UserControl_Loaded">
+			 Loaded="UserControl_Loaded"
+			 Unloaded="UserControl_Unloaded">
 	<Design.DataContext>
 		<vm:TimerPageViewModel />
 	</Design.DataContext>
