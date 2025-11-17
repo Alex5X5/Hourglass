@@ -40,6 +40,6 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 		int week = dateTimeService.GetWeekCountAtDate(dateTimeService!.SelectedDay);
 		string startDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay);
 		string endDate = DateTimeService.ToDayAndMonthString(dateTimeService!.SelectedDay.AddDays(5));
-		return $"KW {week}  {startDate}-{endDate}";
+		return $"Week {week}  {startDate}-{endDate}";
 	}
 }

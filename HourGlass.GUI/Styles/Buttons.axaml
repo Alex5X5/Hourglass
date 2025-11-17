@@ -44,7 +44,7 @@
 		<Style Selector="^:disabled /template/ ContentPresenter">
 			<Setter Property="Background" Value="{ StaticResource SrhGrayLight2 }" />
 			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-			<Setter Property="Foreground" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Foreground" Value="{ StaticResource SrhGrayDark2 }" />
 		</Style>
 	</Style>
 	<Style Selector="Button.DefaultBorder">
