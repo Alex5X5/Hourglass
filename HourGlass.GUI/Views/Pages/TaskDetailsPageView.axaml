@@ -144,8 +144,8 @@
 				</Viewbox>
 			</Grid>
 			<Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="5*, *, 5*, *, 5*, *, 5*, *, 5*" >
-				<Button Name="startButton"
-						Classes="Default"
+				<Button Classes="Default"
+						IsEnabled="{ Binding IsContiniueButtonEnabled }"
 						Command="{ Binding ContiniueTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
@@ -160,6 +160,7 @@
 				<Button Classes="Default"
 						Name="stopButton"
 						Grid.Column="2"
+						IsEnabled="{ Binding IsStopButtonEnabled }"
 						Command="{ Binding StopTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
@@ -174,6 +175,7 @@
 				<Button Classes="Default"
 						Name="restartButton"
 						Grid.Column="4"
+						IsEnabled="{ Binding IsStartNewButtonEnabled }"
 						Command="{ Binding RestartTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
@@ -188,6 +190,7 @@
 				<Button Classes="Default"
 						Name="applyButton"
 						Grid.Column="6"
+						IsEnabled="{ Binding IsSaveButtonEnabled }"
 						Command="{ Binding ApplyChangesCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
@@ -202,6 +205,7 @@
 				<Button Classes="Default"
 						Name="deleteButton"
 						Grid.Column="8"
+						IsEnabled="{ Binding IsDeleteButtonEnabled }"
 						Command="{ Binding DeleteTaskCommand }" >
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"

@@ -61,11 +61,11 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
         get => DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.FinishDateTime);
     }
 
-    public bool IsContiniueButtonEnabled { get => temporaryTask != null; }
-	public bool IsStartNewButtonEnabled { get => temporaryTask == null; }
+    public bool IsContiniueButtonEnabled { get => cacheService.RunningTask == null; }
+	public bool IsStartNewButtonEnabled { get => cacheService.RunningTask == null; }
 	private bool didChange;
 	public bool IsSaveButtonEnabled { get => didChange; }
-	public bool IsStopButtonEnabled { get => temporaryTask.running == true; }
+	public bool IsStopButtonEnabled { get => cacheService.RunningTask != null; }
     public bool IsDeleteButtonEnabled { get => true; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
@@ -75,8 +75,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService, ColorService colorService) : base() {
 		this.dbService = dbService;
-		this.colorService = colorService;
+		this.controller = pageController;
 		this.cacheService = cacheService;
+		this.colorService = colorService;
         temporaryTask = cacheService.RunningTask?.Clone() ?? new Task();
     }
 

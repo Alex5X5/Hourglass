@@ -5,6 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Components.GraphPanels"
 			 x:Class="Hourglass.GUI.Views.Components.GraphPanels.GraphPanelViewBase"
+			 x:DataType="vm:GraphPanelViewModelBase"
 			 Tapped="OnClickBase"
 			 DoubleTapped="OnDoubleClickBase"
 			 PointerMoved="OnMouseMovedBase"
@@ -13,15 +14,24 @@
 			 x:CompileBindings="True">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="1*" />
-			<RowDefinition Height="15*" />
-			<RowDefinition Height="1*" />
+			<RowDefinition Height="5*" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="5*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="25*" />
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width="PADDING_X_WEIGHT_STYLED_PROPERTY" />
+			<ColumnDefinition Width="GRAPH_AREA_Y_WEIGHT_STYLED_PROPERTY" />
+			<ColumnDefinition Width="PADDING_X_WEIGHT_STYLED_PROPERTY" />
 		</Grid.ColumnDefinitions>
+		<Button Grid.Row="1"
+				Grid.Column="0"
+				Classes="Default"
+				Command="{ Binding PreviusIntervallClickCommand }" >
+		</Button>
+		<Button Grid.Row="1"
+				Grid.Column="2"
+				Classes="Default"
+				Command="{ Binding FollowingIntervallClickCommand }" >
+		</Button>
 	</Grid>
 </UserControl>

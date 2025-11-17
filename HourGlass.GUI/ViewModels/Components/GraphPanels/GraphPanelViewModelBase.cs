@@ -1,14 +1,16 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
+using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public abstract class GraphPanelViewModelBase : ViewModelBase {
+public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 	public IHourglassDbService dbService { set; get; }
 	public DateTimeService dateTimeService { set; get; }
@@ -38,9 +40,15 @@ public abstract class GraphPanelViewModelBase : ViewModelBase {
 		pageController.GoToTaskdetails(task);
 	}
 
-	public abstract void OnDoubleClick(DateTime clickedTime);
+    public abstract void OnDoubleClick(DateTime clickedTime);
 
-	protected abstract string GetTitle();
+    protected abstract string GetTitle();
+
+    [RelayCommand]
+	protected abstract void PreviusIntervallClick();
+
+	[RelayCommand]
+	protected abstract void FollowingIntervallClick();
 
 	//public async void OnClickBase(Avalonia.Point mousePos, int xAxisSegmentCount, int xAxisSegmentDuration) {
 	//	Console.WriteLine("base graph panel model click");

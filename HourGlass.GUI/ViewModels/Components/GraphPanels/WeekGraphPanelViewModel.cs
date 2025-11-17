@@ -39,5 +39,13 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 		string startDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
 		string endDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay.AddDays(5));
 		return $"KW {week}  {startDate}-{endDate}";
-	}
+    }
+
+    protected override void PreviusIntervallClick() {
+        throw new NotImplementedException();
+    }
+
+    protected override void FollowingIntervallClick() {
+        throw new NotImplementedException();
+    }
 }
