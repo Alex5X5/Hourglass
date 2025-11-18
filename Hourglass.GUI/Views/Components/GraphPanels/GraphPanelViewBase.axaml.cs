@@ -31,26 +31,13 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	protected double X_AXIS_SEGMENT_SIZE => (Bounds.Width - 2 * PADDING_X) / X_AXIS_SEGMENT_COUNT;
 	protected double Y_AXIS_SEGMENT_SIZE => (Bounds.Height - 2.0 * PADDING_Y) / (Y_AXIS_SEGMENT_COUNT * 1.5) * TASK_GRAPH_COLUMN_COUNT;
 
-	protected double GRAPH_AREA_X_WEIGHT { get; } = 28;
-	protected double GRAPH_AREA_Y_WEIGHT { get; } = 28;
-	protected double PADDING_X_WEIGHT = 1;
-	protected double PADDING_Y_WEIGHT = 1;
-
-    public static readonly StyledProperty<GridLength> GRAPH_AREA_X_WEIGHT_STYLED_PROPERTY =
-        AvaloniaProperty.Register<GraphPanelViewBase, GridLength>(nameof(GRAPH_AREA_X_WEIGHT));
-    public static readonly StyledProperty<GridLength> GRAPH_AREA_Y_WEIGHT_STYLED_PROPERTY =
-		AvaloniaProperty.Register<GraphPanelViewBase, GridLength>(nameof(GRAPH_AREA_X_WEIGHT));
-    public static readonly StyledProperty<GridLength> PADDING_X_WEIGHT_STYLED_PROPERTY =
-		AvaloniaProperty.Register<GraphPanelViewBase, GridLength>(nameof(GRAPH_AREA_X_WEIGHT));
-    public static readonly StyledProperty<GridLength> PADDING_Y_WEIGHT_STYLED_PROPERTY =
-		AvaloniaProperty.Register<GraphPanelViewBase, GridLength>(nameof(GRAPH_AREA_X_WEIGHT));
 
     public GridLength GraphAreaXWeight => new GridLength(1, GridUnitType.Star);
     public GridLength PaddingXWeight => new GridLength(1, GridUnitType.Star);
 
-	protected double PADDING_X => Bounds.Width * PADDING_X_WEIGHT / (GRAPH_AREA_X_WEIGHT + 2 * PADDING_X_WEIGHT);
-	protected double PADDING_Y => Bounds.Height * PADDING_Y_WEIGHT / (GRAPH_AREA_Y_WEIGHT + 2 * PADDING_Y_WEIGHT);
-	protected static double TIMELINE_MARK_HEIGHT => 7;
+	protected double PADDING_X => Bounds.Width * GraphPanelViewModelBase.PADDING_X_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_X_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_X_WEIGHT);
+	protected double PADDING_Y => Bounds.Height * GraphPanelViewModelBase.PADDING_Y_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_Y_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_Y_WEIGHT);
+    protected static double TIMELINE_MARK_HEIGHT => 7;
 
 	protected abstract double TASK_DESCRIPTION_GRAPH_SPAGE { get; }
 	protected abstract double TASK_DESCRIPTION_FONT_SIZE { get; }

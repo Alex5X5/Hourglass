@@ -54,10 +54,8 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
     }
 
     protected override void PreviusIntervallClick() {
-        throw new NotImplementedException();
     }
 
     protected override void FollowingIntervallClick() {
-        throw new NotImplementedException();
     }
 }

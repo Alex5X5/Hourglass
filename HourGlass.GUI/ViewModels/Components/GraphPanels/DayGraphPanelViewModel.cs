@@ -6,7 +6,6 @@ using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 public class DayGraphPanelViewModel : GraphPanelViewModelBase {
@@ -47,10 +46,8 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 	}
 
     protected override void PreviusIntervallClick() {
-        throw new NotImplementedException();
     }
 
     protected override void FollowingIntervallClick() {
-        throw new NotImplementedException();
     }
 }

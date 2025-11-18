@@ -90,7 +90,7 @@
 				Grid.Column="1"
 				BorderBrush="Black"
 				BorderThickness="2">
-			<ContentControl Content="{Binding CurrentGraphPanel}" />
+			<ContentControl Content="{ Binding CurrentGraphPanel }" />
 		</Border>
 	</Grid>
 </UserControl>
