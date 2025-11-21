@@ -40,40 +40,52 @@ public class DateTimeService {
 	public static bool TodayIsDayOfWeek(int day) =>
 		day == (int)DateTime.Now.AddDays(-1).DayOfWeek;
 
-
-	//private static DateTime GetStartDate() {
-	//	DateTime date;
-	//	try {
-	//		date = Convert.ToDateTime(new SettingsService().GetSetting(SettingsService.START_DATE_KEY));
-	//	} catch (FormatException) {
-	//		date = new DateTime(2024, 8, 5);
-	//	}
-	//	return date;
-	//}
-
-	public static DateTime? InterpretDayAndTimeString(string s) {
+	public static DateTime? InterpretDayAndTimeString(string s, int day = 1, int month = 1, int hour = 0, int minute = 0, int second = 0) {
+		int startIndex = 0;
+		int finishIndex = 0;
+		int getSelectionValue(char? nextSeperator, int nextOffset, int defaultValue) {
+			int result = defaultValue;
+			try {
+				if (nextSeperator != null)
+					finishIndex = s.IndexOf(nextSeperator ?? ' ', startIndex);
+				else
+					finishIndex = s.Length;
+				if (finishIndex == -1)
+					return result;
+				result = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
+                startIndex = finishIndex + nextOffset;
+            } catch (FormatException) {
+                return result;
+            }
+            return result;
+        }
+		DateTime res = new(DateTime.Now.Year, month, day, hour, minute, second);
+        try {
+            res = new DateTime(res.Year, res.Month, getSelectionValue('.', 1, day));
+        } catch (ArgumentOutOfRangeException) {
+            return res;
+        }
 		try {
-			int startIndex = 0;
-			int finishIndex = finishIndex = s.IndexOf('.', startIndex);
-			int day = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			finishIndex = finishIndex = s.IndexOf('.', startIndex);
-			int month = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 2;
-			finishIndex = finishIndex = s.IndexOf(':', startIndex);
-			int hour = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			finishIndex = finishIndex = s.IndexOf(':', startIndex);
-			int minute = Convert.ToInt32(s.Substring(startIndex, finishIndex - startIndex));
-			startIndex = finishIndex + 1;
-			int second = Convert.ToInt32(s.Substring(startIndex, s.Length - startIndex));
-			DateTime time = new(DateTime.Now.Year, month, day, hour, minute, second);
-			return time;
-		} catch (FormatException) {
-			return null;
+            res = new DateTime(res.Year, getSelectionValue('.', 2, month), res.Day);
 		} catch (ArgumentOutOfRangeException) {
-			return null;
+			return res;
 		}
+        try {
+            res = new DateTime(res.Year, res.Month, res.Day, getSelectionValue(':', 1, hour), 0, 0);
+        } catch (ArgumentOutOfRangeException) {
+            return res;
+        }
+        try {
+            res = new DateTime(res.Year, res.Month, res.Day, res.Hour, getSelectionValue(':', 1, minute), 0);
+        } catch (ArgumentOutOfRangeException) {
+            return res;
+        }
+        try {
+            res = new DateTime(res.Year, res.Month, res.Day, res.Hour, res.Minute, getSelectionValue(null, 0, second));
+        } catch (ArgumentOutOfRangeException) {
+            return res;
+        }
+        return res;
 	}
 
     public static DateTime? InterpretDayAndMonthAndYearString(string s) {
@@ -137,5 +149,5 @@ public class DateTimeService {
 		GetWeekCountAtDate(DateTime.Now);
 
 	public int GetWeekCountAtDate(DateTime date) =>
-		(int) Math.Floor(FloorWeek(date).Subtract(settingsService.StartDate).Days / 7.0) + 1;
+		(int)Math.Floor(FloorWeek(date).Subtract(settingsService.StartDate).Days / 7.0) + 1;
 }
