@@ -43,25 +43,36 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
     public string TicketTextboxText {
         get => cacheService?.RunningTask?.ticket?.name ?? "";
     }
-	public string StartTextboxText {
+
+
+    private string startTextboxText = "";
+    public string StartTextboxText {
         set {
-			if (cacheService?.RunningTask != null) {
-				DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.RunningTask.StartDateTime;
-                cacheService.RunningTask.start = DateTimeService.ToSeconds(start);
-            }
-            OnPropertyChanged(nameof(StartTextboxText));
+            startTextboxText = value;
+            OnPropertyChanged(nameof(FinishTextboxText));
+            DateTime? start = DateTimeService.InterpretDayAndTimeString(value);
+            if (start == null)
+                return;
+            if (cacheService?.RunningTask == null)
+                return;
+            cacheService.RunningTask.StartDateTime = start ?? cacheService.RunningTask.StartDateTime;
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime) : "";
+        get => startTextboxText;
     }
+
+    private string finishTextboxText = "";
     public string FinishTextboxText {
         set {
-            if (cacheService?.SelectedTask != null) {
-                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.finish = DateTimeService.ToSeconds(finish);
-            }
+            finishTextboxText = value;
             OnPropertyChanged(nameof(FinishTextboxText));
+            DateTime? finish = DateTimeService.InterpretDayAndTimeString(value);
+            if (finish == null)
+                return;
+            if (cacheService?.RunningTask == null)
+                return;
+            cacheService.RunningTask.FinishDateTime = finish ?? cacheService.RunningTask.FinishDateTime;
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
+        get => finishTextboxText;
     }
 
 	public override string Title => "Timer";
@@ -153,8 +164,11 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	public void OnLoad() {
 		Console.WriteLine("loading Timer Page");
 		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
-        if (cacheService.RunningTask?.running ?? false)
+        if (cacheService.RunningTask?.running ?? false) {
             _timer.Start();
+            StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime);
+            FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
+        }
         AllBindingPropertiesChanged();
 	}
 

@@ -35,8 +35,6 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 	}
 
 	protected override string GetTitle() {
-		if (cacheService.SelectedDay == null)
-			return "no day selected";
 		string month = cacheService.SelectedDay.Month switch {
 			1 => "January",
 			2 => "February",
@@ -53,5 +51,11 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 			_ => "Weekend"
 		};
 		return $"{month}  {cacheService.SelectedDay.Year}";
-	}
+    }
+
+    protected override void PreviusIntervallClick() {
+    }
+
+    protected override void FollowingIntervallClick() {
+    }
 }

@@ -15,7 +15,7 @@ public class ColorService {
     public readonly Color TASK_BACKGROUND_LIGHT_GRAY;
 
     public ColorService() {
-		TASK_BACKGROUND_ORANGE = GetColorFromResources("TaskBackgroundYellow") ?? new Color(255, 255, 128, 0);
+		TASK_BACKGROUND_YELLOW= GetColorFromResources("TaskBackgroundYellow") ?? new Color(255, 235, 198, 52);
 		TASK_BACKGROUND_ORANGE = GetColorFromResources("TaskBackgroundOrange") ?? new Color(255, 255, 128, 0);
 		TASK_BACKGROUND_RED = GetColorFromResources("TaskBackgroundRed") ?? new Color(255, 32, 178, 171);
 		TASK_BACKGROUND_LIGTH_BLUE = GetColorFromResources("TaskBackgroundLightBlue") ?? new Color(255, 32, 178, 170);

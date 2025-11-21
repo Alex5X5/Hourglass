@@ -23,49 +23,56 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	public string DescriptionTextboxText {
         set {
-            if (cacheService?.SelectedTask != null)
-                temporaryTask.description = value;
+            temporaryTask.description = value;
+			DidChange = true;
             OnPropertyChanged(nameof(DescriptionTextboxText));
         }
-        get => cacheService?.SelectedTask?.description ?? "";
-    }
-    public string ProjectTextboxText {
-        set {
-            if (cacheService?.SelectedTask != null)
-                temporaryTask.description = value;
-            OnPropertyChanged(nameof(ProjectTextboxText));
-        }
-        get => cacheService?.SelectedTask?.project?.Name ?? "";
-    }
-    public string TicketTextboxText {
-        get => cacheService?.SelectedTask?.ticket?.name ?? "";
-    }
-    public string StartTextboxText {
-        set {
-            if (cacheService?.SelectedTask != null) {
-                DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? temporaryTask.StartDateTime;
-                temporaryTask.start = DateTimeService.ToSeconds(start);
-            }
-            OnPropertyChanged(nameof(StartTextboxText));
-        }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.StartDateTime) : "";
-    }
-    public string FinishTextboxText {
-        set {
-            if (cacheService?.SelectedTask != null) {
-                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? temporaryTask.FinishDateTime;
-                temporaryTask.finish = DateTimeService.ToSeconds(finish);
-            }
-            OnPropertyChanged(nameof(FinishTextboxText));
-        }
-        get => DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.FinishDateTime);
+        get => temporaryTask.description ?? "";
     }
 
-    public bool IsContiniueButtonEnabled { get => temporaryTask != null; }
-	public bool IsStartNewButtonEnabled { get => temporaryTask == null; }
-	private bool didChange;
-	public bool IsSaveButtonEnabled { get => didChange; }
-	public bool IsStopButtonEnabled { get => temporaryTask.running == true; }
+	private string startTextboxText = "";
+    public string StartTextboxText {
+        set {
+			startTextboxText = value;
+            OnPropertyChanged(nameof(StartTextboxText));
+			DateTime? start = DateTimeService.InterpretDayAndTimeString(value);
+			if (start == null)
+				return;
+			temporaryTask.StartDateTime = start ?? temporaryTask.StartDateTime;
+            DidChange = true;
+        }
+		get => startTextboxText;
+    }
+
+    private string finishTextboxText = "";
+    public string FinishTextboxText {
+        set {
+            finishTextboxText = value;
+            OnPropertyChanged(nameof(FinishTextboxText));
+            DateTime? start = DateTimeService.InterpretDayAndTimeString(value);
+            if (start == null)
+                return;
+            temporaryTask.FinishDateTime = start ?? temporaryTask.FinishDateTime;
+            DidChange = true;
+        }
+        get => finishTextboxText;
+    }
+
+	private bool didChange = false;
+	private bool DidChange { 
+		set {
+			if (value != didChange) {
+				didChange = value;
+				AllBindingPropertiesChanged();
+			}			
+		}
+		get => didChange;
+	}
+
+    public bool IsContiniueButtonEnabled { get => cacheService.RunningTask == null; }
+	public bool IsStartNewButtonEnabled { get => cacheService.RunningTask == null; }
+	public bool IsSaveButtonEnabled { get => DidChange; }
+	public bool IsStopButtonEnabled { get => cacheService.RunningTask != null; }
     public bool IsDeleteButtonEnabled { get => true; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
@@ -75,22 +82,23 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService, ColorService colorService) : base() {
 		this.dbService = dbService;
-		this.colorService = colorService;
+		this.controller = pageController;
 		this.cacheService = cacheService;
-        temporaryTask = cacheService.RunningTask?.Clone() ?? new Task();
+		this.colorService = colorService;
+        temporaryTask = cacheService.SelectedTask?.Clone() ?? new Task();
     }
 
     private void AllBindingPropertiesChanged() {
         OnPropertyChanged(nameof(DescriptionTextboxText));
         OnPropertyChanged(nameof(StartTextboxText));
         OnPropertyChanged(nameof(FinishTextboxText));
-        OnPropertyChanged(nameof(TicketTextboxText));
-        OnPropertyChanged(nameof(ProjectTextboxText));
+		OnPropertyChanged(nameof(IsContiniueButtonEnabled));
+		OnPropertyChanged(nameof(IsSaveButtonEnabled));
+        OnPropertyChanged(nameof(IsStartNewButtonEnabled));
+		OnPropertyChanged(nameof(IsStopButtonEnabled));
     }
 
-
     protected virtual void OnPropertyChanged(string propertyName) {
-		didChange = true;
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
@@ -137,7 +145,6 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		controller.GoBack();
     }
 
-
 	[RelayCommand]
 	private void DeleteTask() {
 		Console.WriteLine("delete task button click!");
@@ -146,7 +153,6 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		dbService.DeleteTaskAsync(temporaryTask);
 		controller.GoBack();
 	}
-
 
 	[RelayCommand]
 	private async System.Threading.Tasks.Task ContiniueTask() {
@@ -175,57 +181,65 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	public void OnLoad() {
 		Console.WriteLine("loading Task Details Page Model");
+        StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.StartDateTime);
+		FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.FinishDateTime);
+		didChange = false;
 		AllBindingPropertiesChanged();
     }
 
 	[RelayCommand]
 	public void Color1Button_Click() {
-		if(temporaryTask!=null)
-			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_YELLOW;
+		AnyColorButtonClick(colorService.TASK_BACKGROUND_YELLOW);
 	}
 
 	[RelayCommand]
 	public void Color2Button_Click() {
-		if (temporaryTask != null)
-			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_ORANGE;
-	}
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_ORANGE);
+    }
 
 	[RelayCommand]
 	public void Color3Button_Click() {
-		if (temporaryTask != null)
-			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_RED;
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_RED);
 	}
 
 	[RelayCommand]
 	public void Color4Button_Click() {
-		if (temporaryTask != null)
-			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_LIGTH_BLUE;
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_LIGTH_BLUE);
 	}
 
 	[RelayCommand]
 	public void Color5Button_Click() {
-		if (temporaryTask != null)
-			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_BLUE;
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_DARK_BLUE);
 	}
 
 	[RelayCommand]
 	public void Color6Button_Click() {
-		if (temporaryTask != null)
-			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_GREEN;
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_LIGHT_GREEN);
 	}
 
 	[RelayCommand]
 	public void Color7Button_Click() {
-		
-	}
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_LIGHT_GRAY);
+
+    }
 
 	[RelayCommand]
 	public void Color8Button_Click() {
-		
-	}
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_DARK_GRAY);
+
+    }
 
 	[RelayCommand]
 	public void Color9Button_Click() {
-		
-	}
+        AnyColorButtonClick(colorService.TASK_BACKGROUND_DARK_GREEN);
+
+    }
+
+	private void AnyColorButtonClick(Color color) {
+        if (temporaryTask != null) {
+			temporaryTask.DisplayColor = color;
+			DidChange = true;
+			OnPropertyChanged(nameof(IsSaveButtonEnabled));
+		}
+    }
 }

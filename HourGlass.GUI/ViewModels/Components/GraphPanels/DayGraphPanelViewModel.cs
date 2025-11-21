@@ -44,4 +44,10 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 		string date = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
 		return $"{day}  {date}";
 	}
+
+    protected override void PreviusIntervallClick() {
+    }
+
+    protected override void FollowingIntervallClick() {
+    }
 }

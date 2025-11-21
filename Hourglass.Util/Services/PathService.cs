@@ -8,13 +8,26 @@ using System.Text;
 
 public static class PathService {
 
+	public const string ASSETS_VERSION = "0";
 	public const string APP_NAME = "Hourglass\\";
 
 	public static readonly string APP_FILES_DIRECTORY = Path.Combine(GetMainEntryPointDirectory(), APP_NAME);
 
 	public static readonly string APP_DATA_DIRECTORY = Path.Combine(GetAppDataDirectory(), APP_NAME);
 
+
+	private static bool RequireExtractAssets() {
+		string fileName = AssetsPath("assets_version");
+        if (!File.Exists(fileName)) {
+			File.WriteAllText(fileName, ASSETS_VERSION);
+			return true;
+		}
+		return File.ReadAllText(fileName) != ASSETS_VERSION;
+	}
+
     public static void ExtractFiles(string resourceNamespacePrefix) {
+		if(!RequireExtractAssets())
+			return;
 		// Get executing assembly
 		var assembly = Assembly.GetCallingAssembly();
 		var resourceNames = assembly.GetManifestResourceNames();
