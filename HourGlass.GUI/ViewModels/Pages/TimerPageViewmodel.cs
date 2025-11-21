@@ -1,6 +1,7 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
@@ -13,11 +14,13 @@ using System.ComponentModel;
 public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
     private IHourglassDbService dbService;
-	private TimerCacheService cacheService;
+	private CacheService cacheService;
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
+	
+    private DispatcherTimer _timer;
 
-	private string FallbackTaskDescription = "";
+    private string FallbackTaskDescription = "";
 
     public string DescriptionTextboxText {
 		set {
@@ -48,17 +51,17 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
             }
             OnPropertyChanged(nameof(StartTextboxText));
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.StartDateTime) : "";
+        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.StartDateTime) : "";
     }
     public string FinishTextboxText {
         set {
             if (cacheService?.SelectedTask != null) {
                 DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.start = DateTimeService.ToSeconds(finish);
+                cacheService.SelectedTask.finish = DateTimeService.ToSeconds(finish);
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
-        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
+        get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
 	public override string Title => "Timer";
@@ -73,23 +76,29 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
 
-	public TimerPageViewModel() : this(null, null) { 
-	
-	}
+	public TimerPageViewModel() : this(null, null) {
+    }
 
-	public TimerPageViewModel(IHourglassDbService dbService, TimerCacheService cacheService) : base() {
+	public TimerPageViewModel(IHourglassDbService dbService, CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.cacheService = cacheService;
 		if(cacheService!=null)
 			cacheService.OnRunningTaksChanged +=
 				task => AllBindingPropertiesChanged();
-		AvailableProjects = [
-			new Project() { Name="test project" },
-			new Project() { Name = "failing project" },
-			new Project() { Name = "sucessfull project" }
-		];
-		SelectedProject = AvailableProjects[0];
-	}
+        //cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
+        _timer = new DispatcherTimer {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        _timer.Tick += async (s, e) => {
+            try {
+                cacheService!.RunningTask!.FinishDateTime = DateTime.Now;
+                await dbService.UpdateTaskAsync(cacheService.RunningTask);
+                FinishTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime);
+            } catch (Exception ex) {
+                StartTextboxText = $"Error: {ex.Message}";
+            }
+        };
+    }
 
 	private void AllBindingPropertiesChanged() {
         OnPropertyChanged(nameof(DescriptionTextboxText));
@@ -118,6 +127,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				null
 			);
 		AllBindingPropertiesChanged();
+		_timer.Start();
 	}
 
 	[RelayCommand]
@@ -131,7 +141,8 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				SelectedProject,
 				null
 			);
-	}
+        _timer.Stop();
+    }
 
 	[RelayCommand]
 	private void RestartTask() {
@@ -142,6 +153,13 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	public void OnLoad() {
 		Console.WriteLine("loading Timer Page");
 		cacheService.RunningTask = dbService.QueryCurrentTaskAsync().Result;
-		AllBindingPropertiesChanged();
+        if (cacheService.RunningTask?.running ?? false)
+            _timer.Start();
+        AllBindingPropertiesChanged();
 	}
+
+    public void OnUnload() {
+        Console.WriteLine("unloading Timer Page");
+        _timer.Stop();
+    }
 }

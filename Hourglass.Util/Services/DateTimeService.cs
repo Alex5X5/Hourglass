@@ -2,29 +2,27 @@
 
 using Hourglass.Util.Services;
 using System;
+using System.Runtime.InteropServices;
 
 public class DateTimeService {
 
 	//public static DateTime START_DATE = GetStartDate();
 
 	private SettingsService settingsService;
-    private long SelectedDayStartSeconds = ToSeconds(DateTime.Today);
+	private CacheService cacheService;
 
-	public DateTime SelectedDay {
-		set => SelectedDayStartSeconds = ToSeconds(value);
-		get => new(SelectedDayStartSeconds * TimeSpan.TicksPerSecond);
-	}
-
-	public DateTimeService(SettingsService settingsService) {
+	public DateTimeService(SettingsService settingsService, CacheService cacheService) {
+		this.cacheService = cacheService;
 		this.settingsService = settingsService;
-		//SettingsService.OnSettingsReload += 
-		//	() => START_DATE = GetStartDate();
 	}
 
 	public static long ToSeconds(DateTime date) =>
 		date.Ticks / TimeSpan.TicksPerSecond;
 
-	public static DateTime FloorDay(DateTime date) =>
+    public static DateTime FloorHour(DateTime date) =>
+        new(date.Year, date.Month, date.Day, date.Hour, 0, 0);
+
+    public static DateTime FloorDay(DateTime date) =>
 		new(date.Year, date.Month, date.Day);
 
 	public static DateTime FloorWeek(DateTime date) =>
@@ -107,7 +105,7 @@ public class DateTimeService {
 		return (hours < 10 ? "0" + Convert.ToString(hours) : Convert.ToString(hours)) + ":" + (minutes < 10 ? "0" + Convert.ToString(minutes) : Convert.ToString(minutes));
 	}
 
-	public static string ToDayAndTimeString(DateTime time) =>
+	public static string ToDayAndMonthAndTimeString(DateTime time) =>
 		$"{time.Day}.{time.Month}. {time.Hour}:{time.Minute}:{time.Second}";
 
 	public static string ToDayAndMonthAndYearString(DateTime time) =>

@@ -8,6 +8,7 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 using Hourglass.Util.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,30 +29,25 @@ public class HourglassDbService : IHourglassDbService {
 
 	public async Task<List<Models.Task>> QueryTasksInIntervallAsync(long intervallStartSeconds, long intervallFinishSeconds) =>
 		(await _accessor.QueryAllAsync<Models.Task>())
-			.Where(x => x.start >= intervallStartSeconds && x.finish <= intervallFinishSeconds)
-                .OrderBy(p => p.start)
-					.ToList();
+			.Where(x => x.start >= intervallStartSeconds && x.start <= intervallFinishSeconds)
+                .Where(x => x.finish >= intervallStartSeconds && x.finish <= intervallFinishSeconds)
+					.OrderBy(p => p.start)
+						.ToList();
 
 	public async Task<Models.Task?> QueryCurrentTaskAsync() {
 		List<Models.Task> tasks = await QueryTasksAsync();
 		Models.Task? task = (await QueryTasksAsync())
-			.Where(t=>t.finish==0)
+			.Where(t=>t.running)
 				.MaxBy(x => x.start);
-		if (task == null)
-			return null;
-		if (task.finish > 0)
-			return null;
 		return task;
 	}
 	
 	public async Task<List<Models.Task>> QueryTasksOfHourAtDateAsync(DateTime date) {
-		long seconds = date.Ticks / TimeSpan.TicksPerSecond;
-		seconds -= TimeSpan.SecondsPerHour;
-		IEnumerable<Models.Task> all= await QueryTasksAsync();
-		return all
-			.Where(x => (x.finish >= seconds|x.finish==0))
-				.ToList();
-	}
+        return await QueryTasksInIntervallAsync(
+			DateTimeService.ToSeconds(DateTimeService.FloorHour(date)),
+			DateTimeService.ToSeconds(DateTimeService.FloorHour(date).AddHours(1))
+		);
+    }
 	
 	public async Task<List<Models.Task>> QueryTasksOfCurrentHourAsync() =>
 		await QueryTasksOfHourAtDateAsync(DateTime.Now);

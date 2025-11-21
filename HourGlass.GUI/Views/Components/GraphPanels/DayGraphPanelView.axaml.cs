@@ -1,7 +1,5 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 
@@ -24,7 +22,7 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 
 	public override int GRAPH_CORNER_RADIUS => 12;
 
-	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorDay((DataContext as GraphPanelViewModelBase)?.dateTimeService?.SelectedDay ?? DateTime.Now));
+	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorDay((DataContext as GraphPanelViewModelBase)?.cacheService.SelectedDay ?? DateTime.Now));
 	public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay -1;
 
 	public override int X_AXIS_SEGMENT_COUNT => 24;
@@ -59,14 +57,6 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 				formattedText,
 				textPos
 			);
-		}
-	}
-	
-	public override void OnDoubleClick(object? sender, TappedEventArgs e) {
-		if (DataContext is GraphPanelViewModelBase model) {
-			DateTime startDate = DateTimeService.FloorDay(model.dateTimeService?.SelectedDay ?? DateTime.Now);
-			DateTime finishDate = startDate.AddDays(1).AddSeconds(-1);
-			OnDoubleClickBase(e, DateTimeService.ToSeconds(startDate), DateTimeService.ToSeconds(finishDate));
 		}
 	}
 }

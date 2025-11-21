@@ -42,16 +42,12 @@ public partial class TimerPageView : PageViewBase {
 	}
 
 	private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("Timer Page loaded!");
 		(DataContext as TimerPageViewModel)?.OnLoad();
-	}
+		Console.WriteLine("Timer Page loaded!");
+    }
 
-	//private void TextBox_KeyDown(object? sender, Avalonia. e) {
-	//	Console.WriteLine("got focus!");
-	//	if (initialDescriptionTextboxClear) {
-	//		Console.WriteLine("initial focus!");
-	//		DescriptionTextbox.Clear();
-	//		initialDescriptionTextboxClear = false;
-	//	}
-	//}
+    private void UserControl_Unloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+        (DataContext as TimerPageViewModel)?.OnUnload();
+        Console.WriteLine("Timer Page unloaded!");
+    }
 }

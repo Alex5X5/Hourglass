@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels.Components.GraphPanels"
+			 x:Class="Hourglass.GUI.Views.Components.GraphPanels.GraphPanelViewBase"
+			 Tapped="OnClickBase"
+			 DoubleTapped="OnDoubleClickBase"
+			 PointerMoved="OnMouseMovedBase"
+			 PointerPressed="OnMousePressedBase"
+			 PointerReleased="OnMouseReleasedBase"
+			 x:CompileBindings="True">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="1*" />
+			<RowDefinition Height="15*" />
+			<RowDefinition Height="1*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="25*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="2*" />
+		</Grid.ColumnDefinitions>
+	</Grid>
+</UserControl>

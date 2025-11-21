@@ -6,26 +6,25 @@ using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
-using Hourglass.PDF;
 using Hourglass.Util;
 
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
 	private IHourglassDbService dbService;
-    private TimerCacheService cacheService;
+    private CacheService cacheService;
 	private ColorService colorService;
 	private MainViewModel controller;
 
 	public override string Title => "Task Details";
 
+	private readonly Task temporaryTask;
 
 	public string DescriptionTextboxText {
         set {
             if (cacheService?.SelectedTask != null)
-                cacheService.SelectedTask.description = value;
+                temporaryTask.description = value;
             OnPropertyChanged(nameof(DescriptionTextboxText));
         }
         get => cacheService?.SelectedTask?.description ?? "";
@@ -33,7 +32,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
     public string ProjectTextboxText {
         set {
             if (cacheService?.SelectedTask != null)
-                cacheService.SelectedTask.description = value;
+                temporaryTask.description = value;
             OnPropertyChanged(nameof(ProjectTextboxText));
         }
         get => cacheService?.SelectedTask?.project?.Name ?? "";
@@ -44,53 +43,42 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
     public string StartTextboxText {
         set {
             if (cacheService?.SelectedTask != null) {
-                DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.StartDateTime;
-                cacheService.SelectedTask.start = DateTimeService.ToSeconds(start);
+                DateTime start = DateTimeService.InterpretDayAndTimeString(value) ?? temporaryTask.StartDateTime;
+                temporaryTask.start = DateTimeService.ToSeconds(start);
             }
             OnPropertyChanged(nameof(StartTextboxText));
         }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.StartDateTime) : "";
+        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.StartDateTime) : "";
     }
     public string FinishTextboxText {
         set {
             if (cacheService?.SelectedTask != null) {
-                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? cacheService.SelectedTask.FinishDateTime;
-                cacheService.SelectedTask.finish = DateTimeService.ToSeconds(finish);
+                DateTime finish = DateTimeService.InterpretDayAndTimeString(value) ?? temporaryTask.FinishDateTime;
+                temporaryTask.finish = DateTimeService.ToSeconds(finish);
             }
             OnPropertyChanged(nameof(FinishTextboxText));
         }
-        get => cacheService?.SelectedTask != null ? DateTimeService.ToDayAndTimeString(cacheService.SelectedTask.FinishDateTime) : "";
+        get => DateTimeService.ToDayAndMonthAndTimeString(temporaryTask.FinishDateTime);
     }
 
-    public bool IsContiniueButtonEnabled { get => cacheService?.SelectedTask != null; }
-	public bool IsStartNewButtonEnabled { get => cacheService?.SelectedTask == null; }
+    public bool IsContiniueButtonEnabled { get => temporaryTask != null; }
+	public bool IsStartNewButtonEnabled { get => temporaryTask == null; }
 	private bool didChange;
 	public bool IsSaveButtonEnabled { get => didChange; }
-	public bool IsStopButtonEnabled { get => cacheService?.SelectedTask?.running == true; }
+	public bool IsStopButtonEnabled { get => temporaryTask.running == true; }
     public bool IsDeleteButtonEnabled { get => true; }
-
-	public Project SelectedProject { get; set; }
-    public List<Project> AvailableProjects { get; set; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
 	public TaskDetailsPageViewModel() : this(null, null, null, null) {
 	}
 
-	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, TimerCacheService cacheService, ColorService colorService) : base() {
+	public TaskDetailsPageViewModel(IHourglassDbService dbService, MainViewModel pageController, CacheService cacheService, ColorService colorService) : base() {
 		this.dbService = dbService;
 		this.colorService = colorService;
 		this.cacheService = cacheService;
-		cacheService.OnSelectedTaksChanged +=
-			task => AllBindingPropertiesChanged();
-		controller = pageController;
-		AvailableProjects = [
-			new Project() { Name = "test project" },
-			new Project() { Name = "failing project" },
-			new Project() { Name = "sucessfull project" }
-		];
-		SelectedProject = AvailableProjects[0];
-	}
+        temporaryTask = cacheService.RunningTask?.Clone() ?? new Task();
+    }
 
     private void AllBindingPropertiesChanged() {
         OnPropertyChanged(nameof(DescriptionTextboxText));
@@ -125,16 +113,15 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	private async System.Threading.Tasks.Task StopTask() {
 		Console.WriteLine("stop task button click!");
 		if(dbService!=null)
-            cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
-                cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
-				DateTimeService.ToSeconds(DateTime.Now),
-				DescriptionTextboxText,
-				SelectedProject,
-				null
-			);
-		AllBindingPropertiesChanged();
+			if(temporaryTask?.running ?? false)
+				cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
+                    temporaryTask.start,
+					DateTimeService.ToSeconds(DateTime.Now),
+					DescriptionTextboxText,
+					null,
+					null
+				);
         controller.GoBack();
-        //UpdateTextFields();
     }
 
 	[RelayCommand]
@@ -142,12 +129,11 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		Console.WriteLine("start new button click! (not yet implemented)");
         await StopTask();
 		await StartTask();
-		cacheService.RunningTask!.description = cacheService.SelectedTask!.description;
-		cacheService.RunningTask!.displayColorRed = cacheService.SelectedTask!.displayColorRed;
-		cacheService.RunningTask!.displayColorGreen= cacheService.SelectedTask!.displayColorGreen;
-		cacheService.RunningTask!.displayColorBlue= cacheService.SelectedTask!.displayColorBlue;
+		cacheService.RunningTask!.description = temporaryTask!.description;
+		cacheService.RunningTask!.displayColorRed = temporaryTask!.displayColorRed;
+		cacheService.RunningTask!.displayColorGreen= temporaryTask!.displayColorGreen;
+		cacheService.RunningTask!.displayColorBlue= temporaryTask!.displayColorBlue;
         await dbService.UpdateTaskAsync(cacheService.RunningTask);
-		AllBindingPropertiesChanged();
 		controller.GoBack();
     }
 
@@ -155,9 +141,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	[RelayCommand]
 	private void DeleteTask() {
 		Console.WriteLine("delete task button click!");
-		if (cacheService.SelectedTask == null)
+		if (temporaryTask == null)
 			return;
-		dbService.DeleteTaskAsync(cacheService.SelectedTask);
+		dbService.DeleteTaskAsync(temporaryTask);
 		controller.GoBack();
 	}
 
@@ -165,20 +151,20 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	[RelayCommand]
 	private async System.Threading.Tasks.Task ContiniueTask() {
 		Console.WriteLine("continiue task button click!");
-		if (cacheService.SelectedTask == null)
+		if (temporaryTask == null)
 			return;
 		if(cacheService.RunningTask != null)
 			return;
-		cacheService.RunningTask = await dbService.ContiniueTaskAsync(cacheService.SelectedTask);
+		cacheService.RunningTask = await dbService.ContiniueTaskAsync(temporaryTask);
 		controller.GoBack();
 	}
 
 
 	[RelayCommand]
 	private void ApplyChanges() {
-		if (cacheService.SelectedTask == null)
+		if (temporaryTask == null)
 			return;
-		dbService.UpdateTaskAsync(cacheService.SelectedTask);
+		dbService.UpdateTaskAsync(temporaryTask);
         controller.GoBack();
     }
 
@@ -194,38 +180,38 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 
 	[RelayCommand]
 	public void Color1Button_Click() {
-		if(cacheService.SelectedTask!=null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_YELLOW;
+		if(temporaryTask!=null)
+			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_YELLOW;
 	}
 
 	[RelayCommand]
 	public void Color2Button_Click() {
-		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_ORANGE;
+		if (temporaryTask != null)
+			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_ORANGE;
 	}
 
 	[RelayCommand]
 	public void Color3Button_Click() {
-		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_RED;
+		if (temporaryTask != null)
+			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_RED;
 	}
 
 	[RelayCommand]
 	public void Color4Button_Click() {
-		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_LIGTH_BLUE;
+		if (temporaryTask != null)
+			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_LIGTH_BLUE;
 	}
 
 	[RelayCommand]
 	public void Color5Button_Click() {
-		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_BLUE;
+		if (temporaryTask != null)
+			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_BLUE;
 	}
 
 	[RelayCommand]
 	public void Color6Button_Click() {
-		if (cacheService.SelectedTask != null)
-			cacheService.SelectedTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_GREEN;
+		if (temporaryTask != null)
+			temporaryTask.DisplayColor = colorService.TASK_BACKGROUND_DARK_GREEN;
 	}
 
 	[RelayCommand]
