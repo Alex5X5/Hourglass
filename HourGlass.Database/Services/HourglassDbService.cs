@@ -88,7 +88,8 @@ public class HourglassDbService : IHourglassDbService {
 			owner = worker,
 			project = project,
 			running = true,
-			start = now
+			start = now,
+			finish = now
 		};
 		await _accessor.AddAsync(task, false);
 		return task;
@@ -104,7 +105,6 @@ public class HourglassDbService : IHourglassDbService {
 				runningTask.project,
 				runningTask.ticket
 			);
-		taskToContiniue.finish = 0;
 		taskToContiniue.running = true;
 		await _accessor.UpdateAsync(taskToContiniue, false);
 		return taskToContiniue;

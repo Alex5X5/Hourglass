@@ -23,15 +23,26 @@
 			<ColumnDefinition Width="{ Binding GraphAreaYWeight }" />
 			<ColumnDefinition Width="{ Binding PaddingYWeight }" />
 		</Grid.ColumnDefinitions>
-		<Button Grid.Row="1"
-				Grid.Column="0"
-				Classes="Default"
-				Command="{ Binding PreviusIntervallClickCommand }" >
-		</Button>
-		<Button Grid.Row="1"
-				Grid.Column="2"
-				Classes="Default"
-				Command="{ Binding FollowingIntervallClickCommand }" >
-		</Button>
+		<Grid Grid.Row ="1"
+			  Grid.Column="0"
+			  RowDefinitions="*, 5*, *"
+			  ColumnDefinitions="*, 7*, *" >
+			<Button Grid.Row ="1"
+					Grid.Column="1"
+					Classes="Default"
+					Click="PreviusIntervallClick" >
+			</Button>
+		</Grid>
+		<Grid Grid.Row ="1"
+			  Grid.Column="2"
+			  RowDefinitions="*, 5*, *"
+			  ColumnDefinitions="*, 7*, *" >
+			<Button Grid.Row ="1"
+					Grid.Column="1"
+					Classes="Default"
+					Click="FollowingIntervallClick" >
+			</Button>
+		</Grid>
+		
 	</Grid>
 </UserControl>

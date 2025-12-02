@@ -7,19 +7,18 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.GUI.Views.Pages.SettingsPages;
 using Hourglass.Util;
 
 using ReactiveUI;
 
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
 	private DateTimeService dateTimeService;
+	private Hourglass.GUI.Services.CacheService cacheService;
 
 	private PageViewModelBase? lastPage;
 
@@ -34,9 +33,8 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	}
 
 	public string Title { get => _CurrentPage.Title; }
-	public event PropertyChangedEventHandler? TitleChanged;
 
-	private GridLength navigationBarHeight = new GridLength(1, GridUnitType.Star);
+    private GridLength navigationBarHeight = new GridLength(1, GridUnitType.Star);
 	public GridLength NavigationBarHeight {
 		get => navigationBarHeight;
 	}
@@ -56,25 +54,30 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		get => showSettingsIcon;
 	}
 
-
-
 	private bool IsFirstGraphPageChange = true;
 	
-	public MainViewModel() : this(null, null, null) {
+	public MainViewModel() : this(null, null, null, null) {
 		
 	}
 
-	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory) : base() {
+	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory, Hourglass.GUI.Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
+		this.cacheService = cacheService;
 
 		ShowSettingsIcon = true;
 		ShowNavigationBar = true;
-        CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
-	}
+        
+		CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
+		cacheService.OnSelectedDayChanged+= date=>this.RaisePropertyChanged(nameof(Title));
+    }
 
-	public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {
+	//protected void OnPropertyChanged(string propertyName) {
+ //       TitleChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+ //   }
+
+    public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {
 		if (pageFactory == null)
 			return;
 		lastPage = CurrentPage;
@@ -133,10 +136,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		if(pageFactory==null)
 			return;
 		ChangePage<TaskDetailsPageViewModel>();
-	}
-
-	protected void OnPropertyChanged(string propertyName) {
-		TitleChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }
 

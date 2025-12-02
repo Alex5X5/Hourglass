@@ -1,7 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Avalonia.Controls;
-using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
@@ -54,30 +53,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
     protected abstract string GetTitle();
 
-    [RelayCommand]
-	protected abstract void PreviusIntervallClick();
+    public abstract void PreviusIntervallClick();
 
-	[RelayCommand]
-	protected abstract void FollowingIntervallClick();
-
-	//public async void OnClickBase(Avalonia.Point mousePos, int xAxisSegmentCount, int xAxisSegmentDuration) {
-	//	Console.WriteLine("base graph panel model click");
-	//	List<Database.Models.Task>? tasks = await GetTasksAsync();
-	//	if (controller is GraphPanelViewBase view) {
-	//		bool taskClicked = false;
-	//		int i = 0;
-	//		foreach (Database.Models.Task task in tasks) {
-	//			view.GetTaskRectanlge(task, view.GRAPH_CLICK_ADDITIONAL_WIDTH, view.GRAPH_CLICK_ADDITIONAL_HEIGHT, i).Contains(mousePos);
-	//			if (taskClicked) {
-	//				//TaskDetails.TaskDetailsPopup taskDetailsWindow = new(task, _dbService, _parent);
-	//				//taskDetailsWindow.ShowDialog();
-	//				Console.WriteLine("detected task!");
-	//				break;
-	//			}
-	//			i++;
-	//		}
-	//	}
-	//}
-
+    public abstract void FollowingIntervallClick();
 }
 	

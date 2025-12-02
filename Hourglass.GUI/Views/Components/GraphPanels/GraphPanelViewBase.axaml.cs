@@ -125,14 +125,33 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 				DrawTaskGraph(context, tasks[i], i);
 			}
 		}
-		if (RightMouseDown)
-			context.FillRectangle(Brushes.AliceBlue, MarkerDragRectangle);
+		if (RightMouseDown) {
+			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200,100,100,100));
+			Brush areaBrush = new SolidColorBrush(Color.FromArgb(200, 88, 182, 245));
+			Pen pen = new Pen(borderBrush, 2);
+			context.FillRectangle(areaBrush, MarkerDragRectangle);
+			context.DrawRectangle(pen, MarkerDragRectangle);
+		}
 	}
+
+	private bool IsOutsideGraphArea(Point p) {
+        if (p.X < PADDING_X)
+            return true;
+        if (p.X > Bounds.Width - PADDING_X)
+            return true;
+        if (p.Y < PADDING_Y)
+            return true;
+        if (p.Y > Bounds.Height - PADDING_Y)
+            return true;
+		return false;
+    }
 
 	public async void OnClickBase(object? sender, TappedEventArgs e) {
 		Console.WriteLine("base graph panel click");
 		Point mousePos = e.GetPosition(this);
-		if (DataContext is GraphPanelViewModelBase model) {
+		if (IsOutsideGraphArea(mousePos))
+			return;
+        if (DataContext is GraphPanelViewModelBase model) {
 			int i = 0;
 			Database.Models.Task? clickedTask = null;
 			foreach (var task in await model.GetTasksAsync()) {
@@ -154,7 +173,9 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	protected void OnDoubleClickBase(object? sender, TappedEventArgs args) {
 		Console.WriteLine("base graph panel double click");
 		Point mousePos = args.GetPosition(this);
-		double offset = mousePos.X - PADDING_X;
+        if (IsOutsideGraphArea(mousePos))
+            return;
+        double offset = mousePos.X - PADDING_X;
 		double clickSeconds = TIME_INTERVALL_START_SECONDS + TIME_INTERVALL_DURATION * offset / (Bounds.Width - 2 * PADDING_X);
 		DateTime clickDate = new DateTime((long)clickSeconds * TimeSpan.TicksPerSecond);
 		(DataContext as GraphPanelViewModelBase)?.OnDoubleClick(clickDate);
@@ -216,4 +237,14 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	public virtual void OnMousePressed(object sender, PointerPressedEventArgs args) { }
 
 	public virtual void OnMouseReleased(object sender, PointerReleasedEventArgs args) { }
+
+	private void PreviusIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+		(DataContext as GraphPanelViewModelBase)?.PreviusIntervallClick();
+        InvalidateVisual();
+	}
+
+    private void FollowingIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+        (DataContext as GraphPanelViewModelBase)?.FollowingIntervallClick();
+        InvalidateVisual();
+    }
 }

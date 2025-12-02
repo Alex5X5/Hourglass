@@ -6,6 +6,7 @@ using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading;
 
 public partial class ExportPageViewModel : PageViewModelBase {
@@ -80,9 +81,15 @@ public partial class ExportPageViewModel : PageViewModelBase {
 				pdf?.Export(cacheService.SelectedDay);
 			}
 		).Start();
-	}
+    }
 
-	public void OnTaskRedirect(Database.Models.Task task) {
+    [RelayCommand]
+    private void OpenExplorer() {
+        Console.WriteLine("export button click!");
+		Process.Start("explorer.exe", PathService.FilesPath(@"Nachweise\"));
+    }
+
+    public void OnTaskRedirect(Database.Models.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.ChangePage<TaskDetailsPageViewModel>();
 		Console.WriteLine($"redirect event for task {task}");
