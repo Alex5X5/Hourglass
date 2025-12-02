@@ -45,20 +45,19 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Start"
+			<TextBlock Text="Started"
 					   Grid.Row="0"
-					   Grid.Column="0"
-					   Classes="Default DynamicTextHeight" />
+				   Grid.Column="0"
+				   Classes="Default DynamicTextHeight" />
+			<TextBlock Text="Finished"
+					   Grid.Row="0"
+				   Grid.Column="2"
+			   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding StartTextboxText }"
 					 Grid.Row="2"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Finish"
-					   Classes="DynamicTextHeight"
-					   Grid.Row="0"
-					   Grid.Column="2">
-			</TextBlock>
 			<TextBox Text="{ Binding FinishTextboxText }"
 					 Grid.Row="2"
 					 Grid.Column="2"
