@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
@@ -258,10 +259,11 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	private void ShowReasonContextMenu() {
         _contextMenu = new ContextMenu();
 		_contextMenu.ItemsSource = new List<MenuItem>() {
-			new() { Header = "Sick" },
-			new() { Header = "School" },
-			new() { Header = "Appointment" },
-			new() { Header = "No Excuse" }
+			new() { Header = "Sick", Command = new RelayCommand(MissingContextMenuSickClick) },
+        	new() { Header = "School", Command = new RelayCommand(MissingContextMenuSchoolClick) },
+            new() { Header = "Vacant", Command = new RelayCommand(MissingContextMenuVacantClick) },
+            new() { Header = "No Excuse", Command = new RelayCommand(MissingContextMenuNoExcuseClick) },
+            new() { Header = "Present", Command = new RelayCommand(MissingContextMenuPresentClick) }
         };
 		_contextMenu?.Open(this);
     }
@@ -277,7 +279,32 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	public virtual void OnMousePressed(object sender, PointerPressedEventArgs args) { }
 
 	public virtual void OnMouseReleased(object sender, PointerReleasedEventArgs args) { }
-	
+
+    private void MissingContextMenuSickClick() {
+        (DataContext as GraphPanelViewModelBase)?.OnMissingContextMenuSickClicked();
+        InvalidateVisual();
+    }
+
+    private void MissingContextMenuSchoolClick() {
+        (DataContext as GraphPanelViewModelBase)?.OnMissingContextMenuSchoolClicked();
+        InvalidateVisual();
+    }
+
+    private void MissingContextMenuVacantClick() {
+        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuVacantClicked();
+        InvalidateVisual();
+    }
+
+    private void MissingContextMenuNoExcuseClick() {
+        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuNoExcuseClicked();
+        InvalidateVisual();
+    }
+
+    private void MissingContextMenuPresentClick() {
+        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuPresentClicked();
+        InvalidateVisual();
+    }
+
     private void PreviusIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
 		(DataContext as GraphPanelViewModelBase)?.PreviusIntervallClick();
         InvalidateVisual();

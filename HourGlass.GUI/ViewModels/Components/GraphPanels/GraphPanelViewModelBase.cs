@@ -1,6 +1,7 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Avalonia.Controls;
+using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
@@ -67,10 +68,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 
 		ContextMenuItems = new List<MenuItem>() {
-			new MenuItem { Header = "Sick" },
-			new MenuItem { Header = "School" },
-			new MenuItem { Header = "Appointment" },
-			new MenuItem { Header = "No Excuse" }
+			new MenuItem { Header = "Sick", Command = new RelayCommand(OnMissingContextMenuSickClicked) },
+			new MenuItem { Header = "School", Command = new RelayCommand(OnMissingContextMenuSchoolClicked) },
+			new MenuItem { Header = "Appointment", Command = new RelayCommand(MissingContextMenuVacantClicked) },
+			new MenuItem { Header = "No Excuse", Command = new RelayCommand(MissingContextMenuNoExcuseClicked) },
+			new MenuItem { Header = "Present", Command = new RelayCommand(MissingContextMenuPresentClicked) }
 		};
 
 		MarkedColumns = new bool[35];
@@ -105,7 +107,30 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		pageController.GoToTaskdetails(task);
 	}
 
-	public abstract void OnDoubleClick(DateTime clickedTime);
+    public virtual void OnMissingContextMenuSickClicked() {
+		SetTimeIntervallBlocked("Krank");
+    }
+
+    public virtual void OnMissingContextMenuSchoolClicked() {
+		SetTimeIntervallBlocked("Berufsschule");
+    }
+
+    public virtual void MissingContextMenuVacantClicked() {
+        SetTimeIntervallBlocked("Urlaub");
+    }
+
+    public virtual void MissingContextMenuNoExcuseClicked() {
+        SetTimeIntervallBlocked("Unentschuldigt");
+    }
+
+    public virtual void MissingContextMenuPresentClicked() {
+        SetTimeIntervallUnblocked();
+    }
+
+	public abstract void SetTimeIntervallBlocked(string reason);
+	public abstract void SetTimeIntervallUnblocked();
+
+    public abstract void OnDoubleClick(DateTime clickedTime);
 
 	protected abstract string GetTitle();
 

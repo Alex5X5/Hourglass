@@ -73,4 +73,12 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
     public override void FollowingIntervallClick() {
         cacheService.SelectedDay = cacheService.SelectedDay.AddDays(1);
     }
+
+    public override void SetTimeIntervallBlocked(string reason) {
+
+	}
+
+    public override void SetTimeIntervallUnblocked() {
+
+	}
 }
