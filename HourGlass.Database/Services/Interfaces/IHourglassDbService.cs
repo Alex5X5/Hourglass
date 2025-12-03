@@ -37,6 +37,12 @@ public interface IHourglassDbService {
 
     public Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync();
 
+	public Task<string?> GetHourBlockedMessageAsync(DateTime date);
+
+    public Task<string?> GetDayBlockedMessageAsync(DateTime date);
+
+    public Task<string?> GetWeekBlockedMessageAsync(DateTime date);
+    
     public Task<Models.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Project? project, Ticket? ticket);
 
 	public Task<List<Models.Ticket>> QueryTicketsAsync();

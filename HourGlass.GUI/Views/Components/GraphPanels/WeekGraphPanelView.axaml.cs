@@ -1,37 +1,11 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
-using Avalonia;
-using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia;
 
-using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.Util;
-
-using Point = Avalonia.Point;
 
 public partial class WeekGraphPanelView : GraphPanelViewBase {
-
-	public override int TASK_GRAPH_COLUMN_COUNT => 1;
-
-	public override int MAX_TASKS => 20;
-
-	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 8;
-
-	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 5;
-
-	public override int GRAPH_MINIMAL_WIDTH => 5;
-
-	public override int GRAPH_CORNER_RADIUS => 5;
-
-	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorWeek((DataContext as GraphPanelViewModelBase)?.cacheService.SelectedDay ?? DateTime.Now));
-	public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * 7 - 1;
-
-	public override int X_AXIS_SEGMENT_COUNT => 7;
-	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
-
-    protected override double TASK_DESCRIPTION_GRAPH_SPAGE => 5;
-    protected override double TASK_DESCRIPTION_FONT_SIZE => 10;
 
     public WeekGraphPanelView() : base() {
 		InitializeComponent();

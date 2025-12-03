@@ -187,10 +187,14 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 		}
 		return items;
 	}
-
+	
 	public async Task<List<T>> QueryAllAsync<T>() where T : class {
 		var res = _context != null ? await _context.Set<T>().ToListAsync() : [];
 		return res;
+	}
+
+	public IEnumerable<T> QueryAllEnumerable<T>() where T : class {
+		return _context?.Set<T>().AsEnumerable() ?? [];
 	}
 
 	public List<T> QueryAllBlocking<T>() where T : class =>

@@ -10,7 +10,29 @@ using System.Threading.Tasks;
 
 public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
-	public WeekGraphPanelViewModel() : this(null, null, null, null, null) {
+    public override int TASK_GRAPH_COLUMN_COUNT => 1;
+
+    public override int MAX_TASKS => 20;
+
+    public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 8;
+
+    public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 5;
+
+    public override int GRAPH_MINIMAL_WIDTH => 5;
+
+    public override int GRAPH_CORNER_RADIUS => 5;
+
+    public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
+    public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * 7 - 1;
+
+    public override int X_AXIS_SEGMENT_COUNT => 7;
+    public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
+
+    public override double TASK_DESCRIPTION_GRAPH_SPACE => 5;
+    public override double TASK_DESCRIPTION_FONT_SIZE => 10;
+
+
+    public WeekGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}
 

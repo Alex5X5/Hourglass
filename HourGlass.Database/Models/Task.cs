@@ -23,7 +23,7 @@ public class Task {
 	public byte displayColorGreen { set; get; } = 255;
 	public byte displayColorBlue { set; get; } = 255;
 	
-	public char blocksTime { set; get; } = BlocksTimeItervall.NONE;
+	public char blocksTime { set; get; } = BlockedTimeIntervallType.NONE;
 
 	
     [NotMapped]
@@ -52,7 +52,7 @@ public class Task {
 		(Task)MemberwiseClone();
 }
 
-public static class BlocksTimeItervall {
+public static class BlockedTimeIntervallType {
 
 	public const char NONE = 'n';
 	public const char HOUR = 'h';

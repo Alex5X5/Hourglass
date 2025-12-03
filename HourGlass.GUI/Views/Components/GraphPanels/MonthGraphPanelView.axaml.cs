@@ -1,39 +1,11 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
-using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia;
 
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.Util;
-
-using Point = Avalonia.Point;
 
 public partial class MonthGraphPanelView : GraphPanelViewBase {
-
-	public override int TASK_GRAPH_COLUMN_COUNT => 2;
-
-	public override int MAX_TASKS => 70;
-
-	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 6;
-
-	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 4;
-
-	public override int GRAPH_MINIMAL_WIDTH => 2;
-
-	public override int GRAPH_CORNER_RADIUS => 4;
-
-	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorMonth((DataContext as GraphPanelViewModelBase)?.cacheService?.SelectedDay ?? DateTime.Now));
-	public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * DateTimeService.DaysInCurrentMonth() - 1;
-
-	public override int X_AXIS_SEGMENT_COUNT => 
-		DateTime.DaysInMonth(
-			(DataContext as GraphPanelViewModelBase)!.cacheService.SelectedDay.Year,
-			(DataContext as GraphPanelViewModelBase)!.cacheService.SelectedDay.Month
-		);
-	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
-
-	protected override double TASK_DESCRIPTION_GRAPH_SPAGE => 5;
-	protected override double TASK_DESCRIPTION_FONT_SIZE => 10;
 
 	public MonthGraphPanelView() : base() {
 		InitializeComponent();

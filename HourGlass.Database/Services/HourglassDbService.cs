@@ -8,7 +8,6 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
 using Hourglass.Util.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -133,4 +132,28 @@ public class HourglassDbService : IHourglassDbService {
 
 	public async System.Threading.Tasks.Task DeleteTaskAsync(Models.Task task) =>
 		await _accessor.DeleteAsync(task);
+
+    public async Task<string?> GetHourBlockedMessageAsync(DateTime date) {
+        date = DateTimeService.FloorHour(date);
+        return (await QueryIntervallBlockingTasksAsync(BlockedTimeIntervallType.HOUR))
+            .FirstOrDefault(x => x.start == DateTimeService.ToSeconds(DateTimeService.FloorHour(date)))?.description;
+
+    }
+
+    public async Task<string?> GetDayBlockedMessageAsync(DateTime date) {
+		date = DateTimeService.FloorDay(date);
+		return (await QueryIntervallBlockingTasksAsync(BlockedTimeIntervallType.DAY))
+			.FirstOrDefault(x=>x.start==DateTimeService.ToSeconds(DateTimeService.FloorDay(date)))?.description;
+
+    }
+
+    public async Task<string?> GetWeekBlockedMessageAsync(DateTime date) {
+        date = DateTimeService.FloorDay(date);
+        return (await QueryIntervallBlockingTasksAsync(BlockedTimeIntervallType.DAY))
+            .FirstOrDefault(x => x.start == DateTimeService.ToSeconds(DateTimeService.FloorDay(date)))?.description;
+    }
+
+    private async Task<IEnumerable<Models.Task>> QueryIntervallBlockingTasksAsync(char IntervallType) =>
+		(await QueryTasksAsync())
+			.Where(x => x.blocksTime != BlockedTimeIntervallType.NONE);
 }
