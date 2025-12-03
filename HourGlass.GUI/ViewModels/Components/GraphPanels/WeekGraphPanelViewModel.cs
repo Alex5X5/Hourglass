@@ -41,9 +41,11 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 		return $"KW {week}  {startDate}-{endDate}";
     }
 
-    protected override void PreviusIntervallClick() {
+    public override void PreviusIntervallClick() {
+        cacheService.SelectedDay = cacheService.SelectedDay.AddDays(-7);
     }
 
-    protected override void FollowingIntervallClick() {
+    public override void FollowingIntervallClick() {
+        cacheService.SelectedDay = cacheService.SelectedDay.AddDays(7);
     }
 }

@@ -88,7 +88,8 @@ public class HourglassDbService : IHourglassDbService {
 			owner = worker,
 			project = project,
 			running = true,
-			start = now
+			start = now,
+			finish = now
 		};
 		await _accessor.AddAsync(task, false);
 		return task;

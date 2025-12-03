@@ -53,9 +53,15 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 		return $"{month}  {cacheService.SelectedDay.Year}";
     }
 
-    protected override void PreviusIntervallClick() {
+    public override void PreviusIntervallClick() {
+		DateTime previousMonth = DateTimeService.FloorMonth(cacheService.SelectedDay).AddDays(-1);
+        previousMonth = DateTimeService.FloorMonth(previousMonth);
+		cacheService.SelectedDay = previousMonth;
     }
 
-    protected override void FollowingIntervallClick() {
+    public override void FollowingIntervallClick() {
+        DateTime nextMonth = DateTimeService.FloorMonth(cacheService.SelectedDay);
+        nextMonth = DateTimeService.FloorMonth(nextMonth.AddDays(DateTime.DaysInMonth(nextMonth.Year, nextMonth.Month) + 1));
+        cacheService.SelectedDay = nextMonth;
     }
 }

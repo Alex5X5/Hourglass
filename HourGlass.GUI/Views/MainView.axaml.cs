@@ -2,6 +2,7 @@
 
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
+using ReactiveUI;
 
 public partial class MainView : ViewBase {
 
@@ -11,9 +12,11 @@ public partial class MainView : ViewBase {
 
 	public MainView(MainViewModel model) : base() {
 		InitializeComponent();
+
 		//DataContext = model;
-		if (DataContext is MainViewModel viewModel)
+		if (DataContext is MainViewModel viewModel) {
 			viewModel.ChangePage<TimerPageViewModel>();
+		}
 	}
 
 	private void TimerModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {

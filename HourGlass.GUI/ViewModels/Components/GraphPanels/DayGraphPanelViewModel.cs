@@ -45,9 +45,11 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 		return $"{day}  {date}";
 	}
 
-    protected override void PreviusIntervallClick() {
+    public override void PreviusIntervallClick() {
+        cacheService.SelectedDay = cacheService.SelectedDay.AddDays(-1);
     }
 
-    protected override void FollowingIntervallClick() {
+    public override void FollowingIntervallClick() {
+        cacheService.SelectedDay = cacheService.SelectedDay.AddDays(1);
     }
 }
