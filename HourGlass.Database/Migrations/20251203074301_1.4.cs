@@ -15,7 +15,7 @@ namespace Hourglass.Database.Migrations
                 table: "Tasks",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: '\0');
+                defaultValue: 'n');
         }
 
         /// <inheritdoc />

@@ -29,7 +29,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
 
-    public IList<MenuItemViewModel>? Items { get; set; }
+    public IList<MenuItem>? ContextMenuItems { get; set; }
 
     public string Title => GetTitle();
 
@@ -43,6 +43,13 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.panelController = panelController;
 		this.pageController = pageController;
 		this.cacheService = cacheService;
+
+		ContextMenuItems = new List<MenuItem>() {
+			new MenuItem { Header = "Sick" },
+			new MenuItem { Header = "School" },
+			new MenuItem { Header = "Appointment" },
+			new MenuItem { Header = "No Excuse" }
+        };
 	}
 
 	public abstract Task<List<Database.Models.Task>> GetTasksAsync();

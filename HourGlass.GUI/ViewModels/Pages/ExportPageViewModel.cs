@@ -1,15 +1,17 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages;
 
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.GUI.Services;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
-public partial class ExportPageViewModel : PageViewModelBase {
+public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyChanged {
 
 	private readonly DateTimeService? dateTimeService;
 	CacheService cacheService;
@@ -18,19 +20,34 @@ public partial class ExportPageViewModel : PageViewModelBase {
 
     public override string Title => "Export";
 
-	private PdfDocumentData pdfData;
-	public ObservableCollection<TextboxItem> TableItems { get; set; }
+	private PdfDocumentData? pdfData;
 
-	public string JobNameText => pdfData.JobName;
-	public string UseNameText => pdfData.UserName;
+    public PdfDocumentData? PdfData {
+        set {
+            pdfData = value;
+            OnPropertyChanged(nameof(JobNameText));
+            OnPropertyChanged(nameof(UseNameText));
+            OnPropertyChanged(nameof(DateFromText));
+            OnPropertyChanged(nameof(DateToText));
+            OnPropertyChanged(nameof(WeekCount));
+            OnPropertyChanged(nameof(TotalTime));
+        }
+        get => pdfData;
+    }
+    public ObservableCollection<TextboxItem> TableItems { get; set; }
 
-	public string DateFromText => pdfData.DateFrom;
-	public string DateToText => pdfData.DateTo;
-	public string WeekCount => pdfData.Week;
+	public string JobNameText => pdfData?.JobName ?? "";
+	public string UseNameText => pdfData?.UserName ?? "";
 
-	public string TotalTime => pdfData.TotalTime;
+	public string DateFromText => pdfData?.DateFrom ?? "";
+	public string DateToText => pdfData?.DateTo ?? "";
+	public string WeekCount => pdfData?.Week ?? "";
+
+	public string TotalTime => pdfData?.TotalTime ?? "";
 
 	private Action<Database.Models.Task> OnTextBockClick;
+
+    public new event PropertyChangedEventHandler? PropertyChanged;
 
     public ExportPageViewModel() : this(null) {
 		
@@ -50,18 +67,26 @@ public partial class ExportPageViewModel : PageViewModelBase {
 				cacheService.SelectedTask = t;
 				pageController.GoToTaskdetails(t);
 			};
-		pdfData = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
 		TableItems = [];
-		for(int day = 0; day < 5; day++)
-			for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
-				int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
-                TableItems.Add(new DescriptionItem { RowIndex = line, Text = pdfData.Data[line].Item1, Task = pdfData.Data[line].Item4 });
-				TableItems.Add(new HourItem { RowIndex = line, Text = pdfData.Data[line].Item2, Task = pdfData.Data[line].Item4 });
-				TableItems.Add(new HourRangeItem { RowIndex = line, Text = pdfData.Data[line].Item3, Task = pdfData.Data[line].Item4 });
-			}
-	}
+        Dispatcher.UIThread.InvokeAsync(
+            () => {
+                PdfData = pdf?.GetExportData(cacheService.SelectedDay) ?? new PdfDocumentData();
+                for (int day = 0; day < 5; day++)
+                    for (int i = 0; i < PdfDocumentData.DAY_LINE_COUNT; i++) {
+                        int line = day * PdfDocumentData.DAY_LINE_COUNT + i;
+                        TableItems.Add(new DescriptionItem { RowIndex = line, Text = PdfData.Data[line].Item1, Task = PdfData.Data[line].Item4 });
+                        TableItems.Add(new HourItem { RowIndex = line, Text = PdfData.Data[line].Item2, Task = PdfData.Data[line].Item4 });
+                        TableItems.Add(new HourRangeItem { RowIndex = line, Text = PdfData.Data[line].Item3, Task = PdfData.Data[line].Item4 });
+                    }
+            }
+        );
+    }
 
-	[RelayCommand]
+    protected void OnPropertyChanged(string propertyName) {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    [RelayCommand]
 	private async void Import() {
 		//var topLevel = TopLevel.GetTopLevel();
 

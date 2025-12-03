@@ -254,10 +254,10 @@ public class DatabaseAccessor<DbContextType> where DbContextType : DbContext {
 			if (valueObjectProperty == null)
 				continue;
 			object? filterValue = filterObjectProperty.GetValue(filter);
-			filteredItems = filteredItems.Where(x => (
-				filterValue!=null && valueObjectProperty != null) ?
-				filterValue.Equals(valueObjectProperty.GetValue(x)) :
-				false
+			filteredItems = filteredItems.Where(x => 
+				filterValue!=null &&
+				valueObjectProperty != null &&
+				filterValue.Equals(valueObjectProperty.GetValue(x))
 			);
 		}
 		List<T> _list = [.. filteredItems];

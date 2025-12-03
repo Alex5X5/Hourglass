@@ -14,13 +14,6 @@
 			 PointerReleased="OnMouseReleasedBase"
 			 x:CompileBindings="True">
 	<Panel>
-		<Panel.ContextMenu>
-			<ContextMenu>
-				<MenuItem Header="Option 1" />
-				<MenuItem Header="Option 2" />
-				<MenuItem Header="Option 3" />
-			</ContextMenu>
-		</Panel.ContextMenu>
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="4*" />

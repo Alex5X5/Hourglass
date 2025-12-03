@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util;
 
@@ -56,15 +57,14 @@ public abstract partial class GraphPanelViewBase : ViewBase {
     #endregion fields
     public GraphPanelViewBase() : base() {
 		InitializeComponent();
-        _contextMenu = new ContextMenu();
-
-        var item1 = new MenuItem { Header = "Option 1" };
-        var item2 = new MenuItem { Header = "Option 2" };
-        var item3 = new MenuItem { Header = "Option 3" };
-
-        _contextMenu.Items.Add(item1);
-        _contextMenu.Items.Add(item2);
-        _contextMenu.Items.Add(item3);
+        _contextMenu = new ContextMenu() { };
+        Dispatcher.UIThread.InvokeAsync(
+			() => {
+				while (DataContext == null)
+					Task.Delay(100);
+				_contextMenu.ItemsSource = (DataContext as GraphPanelViewModelBase)!.ContextMenuItems;
+			}
+		);
     }
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>
