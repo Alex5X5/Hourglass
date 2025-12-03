@@ -22,7 +22,10 @@ public class Task {
 	public byte displayColorRed { set; get; } = 255;
 	public byte displayColorGreen { set; get; } = 255;
 	public byte displayColorBlue { set; get; } = 255;
+	
+	public char blocksTime { set; get; } = BlocksTimeItervall.NONE;
 
+	
     [NotMapped]
 	public DateTime StartDateTime {
 		set => start = value.Ticks / TimeSpan.TicksPerSecond;
@@ -47,4 +50,12 @@ public class Task {
 
 	public Task Clone() =>
 		(Task)MemberwiseClone();
+}
+
+public static class BlocksTimeItervall {
+
+	public const char NONE = 'n';
+	public const char HOUR = 'h';
+	public const char DAY = 'd';
+	public const char WEEK = 'd';
 }
