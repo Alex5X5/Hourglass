@@ -49,11 +49,23 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	private Rect MarkerDragRectangle;
 	private Point DragOrigin;
+	private Point MousePos = new(0.0,0.0);
 
-	#endregion fields
-	public GraphPanelViewBase() : base() {
+    private ContextMenu? _contextMenu;
+
+    #endregion fields
+    public GraphPanelViewBase() : base() {
 		InitializeComponent();
-	}
+        _contextMenu = new ContextMenu();
+
+        var item1 = new MenuItem { Header = "Option 1" };
+        var item2 = new MenuItem { Header = "Option 2" };
+        var item3 = new MenuItem { Header = "Option 3" };
+
+        _contextMenu.Items.Add(item1);
+        _contextMenu.Items.Add(item2);
+        _contextMenu.Items.Add(item3);
+    }
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
@@ -127,7 +139,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		}
 		if (RightMouseDown) {
 			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200,100,100,100));
-			Brush areaBrush = new SolidColorBrush(Color.FromArgb(200, 88, 182, 245));
+			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
 			Pen pen = new Pen(borderBrush, 2);
 			context.FillRectangle(areaBrush, MarkerDragRectangle);
 			context.DrawRectangle(pen, MarkerDragRectangle);
@@ -182,13 +194,13 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	}
 
 	private void OnMouseMovedBase(object sender, PointerEventArgs args) {
-		Point point = args.GetCurrentPoint(this).Position;
+		MousePos = args.GetCurrentPoint(this).Position;
 		if (RightMouseDown) {
 			MarkerDragRectangle = new Rect(
-				Math.Min(point.X, DragOrigin.X),
-				Math.Min(point.Y, DragOrigin.Y),
-				Math.Abs(point.X - DragOrigin.X),
-				Math.Abs(point.Y - DragOrigin.Y)
+				Math.Min(MousePos.X, DragOrigin.X),
+				Math.Min(MousePos.Y, DragOrigin.Y),
+				Math.Abs(MousePos.X - DragOrigin.X),
+				Math.Abs(MousePos.Y - DragOrigin.Y)
 			);
 			InvalidateVisual();
 		}
@@ -197,17 +209,17 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	private void OnMousePressedBase(object sender, PointerPressedEventArgs args) {
 		PointerPoint mousePoint = args.GetCurrentPoint(sender as Control);
-		Point point = mousePoint.Position;
+        MousePos = mousePoint.Position;
 		Console.WriteLine($"mouse pressed!");
 		if (mousePoint.Properties.IsRightButtonPressed) {
 			if (!RightMouseDown)
-				DragOrigin = point;
+				DragOrigin = MousePos;
 			RightMouseDown = true;
 			MarkerDragRectangle = new Rect(
-				Math.Min(point.X, DragOrigin.X),
-				Math.Min(point.Y, DragOrigin.Y),
-				Math.Abs(point.X - DragOrigin.X),
-				Math.Abs(point.Y - DragOrigin.Y)
+				Math.Min(MousePos.X, DragOrigin.X),
+				Math.Min(MousePos.Y, DragOrigin.Y),
+				Math.Abs(MousePos.X - DragOrigin.X),
+				Math.Abs(MousePos.Y - DragOrigin.Y)
 			);
 			InvalidateVisual();
 		}
@@ -220,10 +232,15 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	private void OnMouseReleasedBase(object sender, PointerReleasedEventArgs args) {
 		Console.WriteLine($"mouse released!");
-		if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed)
+		if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed) {
+            if (!IsOutsideGraphArea(MousePos))
+                if (RightMouseDown) {
+                    _contextMenu?.Open(this);
+                }
 			RightMouseDown = false;
+		}
 		if (!args.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
-			LeftMouseDown = false;
+            LeftMouseDown = false;
 		OnMouseMoved(sender, args);
 		InvalidateVisual();
 	}

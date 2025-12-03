@@ -5,6 +5,7 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,7 +29,9 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
 
-	public string Title => GetTitle();
+    public IList<MenuItemViewModel>? Items { get; set; }
+
+    public string Title => GetTitle();
 
 	public GraphPanelViewModelBase() : this(null, null, null, null, null) {
 
@@ -57,4 +60,3 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
     public abstract void FollowingIntervallClick();
 }
-	
