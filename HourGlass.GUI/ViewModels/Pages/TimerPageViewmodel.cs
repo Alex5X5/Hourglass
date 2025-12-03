@@ -137,6 +137,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				new Worker { name = "new user" },
 				null
 			);
+        StartTextboxText = DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask!.StartDateTime);
 		AllBindingPropertiesChanged();
 		_timer.Start();
 	}
@@ -152,7 +153,11 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 				SelectedProject,
 				null
 			);
-        _timer.Stop();
+        DescriptionTextboxText = "";
+        StartTextboxText = "";
+        FinishTextboxText = "";
+        AllBindingPropertiesChanged();
+		_timer.Stop();
     }
 
 	[RelayCommand]

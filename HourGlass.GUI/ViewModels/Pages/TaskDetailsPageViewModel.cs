@@ -157,11 +157,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	[RelayCommand]
 	private async System.Threading.Tasks.Task ContiniueTask() {
 		Console.WriteLine("continiue task button click!");
-		if (temporaryTask == null)
+		if(cacheService.SelectedTask == null)
 			return;
-		if(cacheService.RunningTask != null)
-			return;
-		cacheService.RunningTask = await dbService.ContiniueTaskAsync(temporaryTask);
+		cacheService.RunningTask = await dbService.ContiniueTaskAsync(cacheService.SelectedTask);
 		controller.GoBack();
 	}
 

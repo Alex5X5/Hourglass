@@ -104,7 +104,7 @@ public class HourglassDbService : IHourglassDbService {
 				runningTask.project,
 				runningTask.ticket
 			);
-		taskToContiniue.finish = 0;
+		taskToContiniue.finish = DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
 		taskToContiniue.running = true;
 		await _accessor.UpdateAsync(taskToContiniue, false);
 		return taskToContiniue;
