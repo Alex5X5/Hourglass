@@ -1,5 +1,7 @@
 ﻿namespace Hourglass.Database.Services;
 
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using DatabaseUtil;
 
@@ -92,9 +94,44 @@ public class HourglassDbService : IHourglassDbService {
 		};
 		await _accessor.AddAsync(task, false);
 		return task;
+    }
+
+    public async Task<Models.Task> CreateIntervallBlockingTaskAsync(char type, string reason, DateTime date) {
+        Models.Task task = new() {
+            DisplayColor = new Color(0,0,0,0),
+            description = reason,
+			blocksTime = type,
+            owner = null,
+            project = null,
+            running = false,
+            StartDateTime = date,
+            FinishDateTime = date
+        };
+        await _accessor.AddAsync(task, false);
+        return task;
+    }
+
+    public async Task<List<Models.Task>> QueryIntervallBlockingTaskAsync(DateTime date) {
+		List<Models.Task> tasks = (await QueryTasksAsync())
+			.Where(x => x.blocksTime != BlockedTimeIntervallType.NONE)
+				.ToList();
+		return tasks
+			.Where(x => x.StartDateTime != DateTimeService.FloorDay(date))
+				.Concat(tasks.Where(x => true))
+					.Concat(tasks.Where(x => true))
+						.ToList();
+  //      date = type switch {
+		//	BlockedTimeIntervallType.DAY => DateTimeService.FloorDay(date),
+		//	BlockedTimeIntervallType.WEEK => DateTimeService.FloorWeek(date),
+		//	_ => date
+		//};
+  //      long start = DateTimeService.ToSeconds(date);
+  //      return (await QueryTasksAsync()).Where(x => x.blocksTime == type)
+		//	.Where(x=>x.start==start)
+		//		.ToList();
 	}
 
-	public async Task<Models.Task> ContiniueTaskAsync(Models.Task taskToContiniue) { 
+    public async Task<Models.Task> ContiniueTaskAsync(Models.Task taskToContiniue) { 
 		Models.Task? runningTask = await QueryCurrentTaskAsync();
 		if (runningTask != null)
 			await FinishCurrentTaskAsync(
@@ -135,25 +172,23 @@ public class HourglassDbService : IHourglassDbService {
 
     public async Task<string?> GetHourBlockedMessageAsync(DateTime date) {
         date = DateTimeService.FloorHour(date);
-        return (await QueryIntervallBlockingTasksAsync(BlockedTimeIntervallType.HOUR))
+        return (await QueryAllIntervallBlockingTasksAsync(BlockedTimeIntervallType.HOUR))
             .FirstOrDefault(x => x.start == DateTimeService.ToSeconds(DateTimeService.FloorHour(date)))?.description;
-
     }
 
     public async Task<string?> GetDayBlockedMessageAsync(DateTime date) {
 		date = DateTimeService.FloorDay(date);
-		return (await QueryIntervallBlockingTasksAsync(BlockedTimeIntervallType.DAY))
+		return (await QueryAllIntervallBlockingTasksAsync(BlockedTimeIntervallType.DAY))
 			.FirstOrDefault(x=>x.start==DateTimeService.ToSeconds(DateTimeService.FloorDay(date)))?.description;
-
     }
 
     public async Task<string?> GetWeekBlockedMessageAsync(DateTime date) {
         date = DateTimeService.FloorDay(date);
-        return (await QueryIntervallBlockingTasksAsync(BlockedTimeIntervallType.DAY))
+        return (await QueryAllIntervallBlockingTasksAsync(BlockedTimeIntervallType.DAY))
             .FirstOrDefault(x => x.start == DateTimeService.ToSeconds(DateTimeService.FloorDay(date)))?.description;
     }
 
-    private async Task<IEnumerable<Models.Task>> QueryIntervallBlockingTasksAsync(char IntervallType) =>
+    private async Task<IEnumerable<Models.Task>> QueryAllIntervallBlockingTasksAsync(char IntervallType) =>
 		(await QueryTasksAsync())
 			.Where(x => x.blocksTime != BlockedTimeIntervallType.NONE);
 }

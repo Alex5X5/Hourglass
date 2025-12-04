@@ -13,6 +13,10 @@ public interface IHourglassDbService {
 
 	public Task<Models.Task> StartNewTaskAsnc(string description, Color color, Project? project, Worker worker, Ticket? ticket);
 
+	public Task<Models.Task> CreateIntervallBlockingTaskAsync(char type, string reason, DateTime date);
+
+    public Task<List<Models.Task>> QueryIntervallBlockingTaskAsync(DateTime date);
+
     public Task<bool> UpdateTaskAsync(Models.Task updatedTask);
 
 	public System.Threading.Tasks.Task DeleteTaskAsync(Models.Task updatedTask);

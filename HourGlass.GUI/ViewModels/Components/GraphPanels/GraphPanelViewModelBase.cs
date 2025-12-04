@@ -52,8 +52,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
 
-	public IList<MenuItem>? ContextMenuItems { get; set; }
-
 	public string Title => GetTitle();
 
 	public GraphPanelViewModelBase() : this(null, null, null, null, null) {
@@ -67,15 +65,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.pageController = pageController;
 		this.cacheService = cacheService;
 
-		ContextMenuItems = new List<MenuItem>() {
-			new MenuItem { Header = "Sick", Command = new RelayCommand(OnMissingContextMenuSickClicked) },
-			new MenuItem { Header = "School", Command = new RelayCommand(OnMissingContextMenuSchoolClicked) },
-			new MenuItem { Header = "Appointment", Command = new RelayCommand(MissingContextMenuVacantClicked) },
-			new MenuItem { Header = "No Excuse", Command = new RelayCommand(MissingContextMenuNoExcuseClicked) },
-			new MenuItem { Header = "Present", Command = new RelayCommand(MissingContextMenuPresentClicked) }
-		};
-
-		MarkedColumns = new bool[35];
+		MarkedColumns = new bool[32];
 		for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++)
 			MarkedColumns[i] = false;
 	}

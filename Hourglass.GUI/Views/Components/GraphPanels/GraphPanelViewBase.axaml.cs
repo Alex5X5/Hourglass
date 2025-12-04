@@ -5,7 +5,6 @@ using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 
 public abstract partial class GraphPanelViewBase : ViewBase {
@@ -65,7 +64,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
 	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
-		double proportion = X_AXIS_SEGMENT_SIZE / X_AXIS_SEGMENT_DURATION;
+		double proportion = GRAPH_AREA_WIDTH/TIME_INTERVALL_DURATION;
 		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
 		long duration = task.running ? DateTimeService.ToSeconds(DateTime.Now) - task.start : task.finish - task.start;
 		double graphLength = duration * proportion;
@@ -211,11 +210,11 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 				Math.Abs(MousePos.Y - DragOrigin.Y)
 			);
 			(DataContext as GraphPanelViewModelBase)?.OnMouseDragging(MarkerDragRectangle, GRAPH_AREA_WIDTH, PADDING_X);
-			InvalidateVisual();
 		} else {
 			(DataContext as GraphPanelViewModelBase)?.OnMouseMoved();
 		}
         OnMouseMoved(sender, args);
+		InvalidateVisual();
 	}
 
 	private void OnMousePressedBase(object sender, PointerPressedEventArgs args) {
@@ -269,7 +268,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
     }
 
 	public virtual void OnClick(object? sender, TappedEventArgs e) {
-		Console.WriteLine("closed context menu!");
+		//Console.WriteLine("closed context menu!");
 	}
 
     public virtual void OnDoubleClick(object? sender, TappedEventArgs e) { }

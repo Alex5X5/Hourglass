@@ -1,5 +1,6 @@
 namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
+using Hourglass.Database;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
@@ -72,10 +73,16 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
     }
 
     public override void SetTimeIntervallBlocked(string reason) {
-
+        for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
+            if(MarkedColumns[i])
+                dbService.CreateIntervallBlockingTaskAsync(BlockedTimeIntervallType.DAY, reason, new DateTime(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond));
+        }
     }
 
     public override void SetTimeIntervallUnblocked() {
-
+        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+            if (MarkedColumns[i])
+                dbService.QueryIntervallBlockingTaskAsync(new DateTime(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond));
+        }
     }
 }
