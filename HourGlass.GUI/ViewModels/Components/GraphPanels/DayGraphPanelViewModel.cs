@@ -23,7 +23,7 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
     public override int GRAPH_CORNER_RADIUS => 12;
 
     public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorDay(cacheService.SelectedDay));
-    public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay - 1;
+    public override long X_AXIS_SEGMENT_DURATION => TimeSpan.SecondsPerHour;
 
     public override int X_AXIS_SEGMENT_COUNT => 24;
     public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
@@ -66,19 +66,19 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 		return $"{day}  {date}";
 	}
 
-    public override void PreviusIntervallClick() {
+    protected override void PreviusIntervallClick() {
         cacheService.SelectedDay = cacheService.SelectedDay.AddDays(-1);
     }
 
-    public override void FollowingIntervallClick() {
+    protected override void FollowingIntervallClick() {
         cacheService.SelectedDay = cacheService.SelectedDay.AddDays(1);
     }
 
-    public override void SetTimeIntervallBlocked(string reason) {
+ //   public override void SetTimeIntervallBlocked(string reason) {
 
-	}
+	//}
 
-    public override void SetTimeIntervallUnblocked() {
+ //   public override void SetTimeIntervallUnblocked() {
 
-	}
+	//}
 }

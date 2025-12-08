@@ -21,7 +21,7 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
     public override int GRAPH_CORNER_RADIUS => 4;
 
     public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorMonth(cacheService?.SelectedDay ?? DateTime.Now));
-    public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * DateTimeService.DaysInCurrentMonth() - 1;
+    public override long X_AXIS_SEGMENT_DURATION => TimeSpan.SecondsPerDay;
 
     public override int X_AXIS_SEGMENT_COUNT =>
         DateTime.DaysInMonth(
@@ -76,23 +76,23 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 		return $"{month}  {cacheService.SelectedDay.Year}";
     }
 
-    public override void PreviusIntervallClick() {
+    protected override void PreviusIntervallClick() {
 		DateTime previousMonth = DateTimeService.FloorMonth(cacheService.SelectedDay).AddDays(-1);
         previousMonth = DateTimeService.FloorMonth(previousMonth);
 		cacheService.SelectedDay = previousMonth;
     }
 
-    public override void FollowingIntervallClick() {
+    protected override void FollowingIntervallClick() {
         DateTime nextMonth = DateTimeService.FloorMonth(cacheService.SelectedDay);
         nextMonth = DateTimeService.FloorMonth(nextMonth.AddDays(DateTime.DaysInMonth(nextMonth.Year, nextMonth.Month) + 1));
         cacheService.SelectedDay = nextMonth;
     }
 
-    public override void SetTimeIntervallBlocked(string reason) {
+    //public override void SetTimeIntervallBlocked(string reason) {
 
-    }
+    //}
 
-    public override void SetTimeIntervallUnblocked() {
+    //public override void SetTimeIntervallUnblocked() {
 
-    }
+    //}
 }

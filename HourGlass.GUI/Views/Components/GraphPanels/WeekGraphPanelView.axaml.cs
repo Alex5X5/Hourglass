@@ -12,8 +12,8 @@ public partial class WeekGraphPanelView : GraphPanelViewBase {
 	}
 
 	protected override void DrawTimeline(DrawingContext context) {
-		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 166, 166, 166));
-		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
+        Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+        Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);

@@ -12,6 +12,7 @@
 			 PointerMoved="OnMouseMovedBase"
 			 PointerPressed="OnMousePressedBase"
 			 PointerReleased="OnMouseReleasedBase"
+			 Loaded="OnLoaded"
 			 x:CompileBindings="True">
 	<Panel>
 		<Grid>

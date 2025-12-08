@@ -1,6 +1,5 @@
 namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
-using Hourglass.Database;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
@@ -11,29 +10,29 @@ using System.Threading.Tasks;
 
 public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
-    public override int TASK_GRAPH_COLUMN_COUNT => 1;
+	public override int TASK_GRAPH_COLUMN_COUNT => 1;
 
-    public override int MAX_TASKS => 20;
+	public override int MAX_TASKS => 20;
 
-    public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 8;
+	public override int GRAPH_CLICK_ADDITIONAL_WIDTH => 8;
 
-    public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 5;
+	public override int GRAPH_CLICK_ADDITIONAL_HEIGHT => 5;
 
-    public override int GRAPH_MINIMAL_WIDTH => 5;
+	public override int GRAPH_MINIMAL_WIDTH => 5;
 
-    public override int GRAPH_CORNER_RADIUS => 5;
+	public override int GRAPH_CORNER_RADIUS => 5;
 
-    public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
-    public override long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TimeSpan.SecondsPerDay * 7 - 1;
+	public override long TIME_INTERVALL_START_SECONDS => DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService?.SelectedDay ?? DateTime.Now));
+	public override long X_AXIS_SEGMENT_DURATION => TimeSpan.SecondsPerDay;
 
-    public override int X_AXIS_SEGMENT_COUNT => 7;
-    public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
+	public override int X_AXIS_SEGMENT_COUNT => 7;
+	public override int Y_AXIS_SEGMENT_COUNT => MAX_TASKS;
 
-    public override double TASK_DESCRIPTION_GRAPH_SPACE => 5;
-    public override double TASK_DESCRIPTION_FONT_SIZE => 10;
+	public override double TASK_DESCRIPTION_GRAPH_SPACE => 5;
+	public override double TASK_DESCRIPTION_FONT_SIZE => 10;
 
 
-    public WeekGraphPanelViewModel() : this(null, null, null, null, null) {
+	public WeekGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}
 
@@ -62,27 +61,27 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 		string startDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
 		string endDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay.AddDays(5));
 		return $"KW {week}  {startDate}-{endDate}";
-    }
+	}
 
-    public override void PreviusIntervallClick() {
-        cacheService.SelectedDay = cacheService.SelectedDay.AddDays(-7);
-    }
+    protected override void PreviusIntervallClick() {
+		cacheService.SelectedDay = cacheService.SelectedDay.AddDays(-7);
+	}
 
-    public override void FollowingIntervallClick() {
-        cacheService.SelectedDay = cacheService.SelectedDay.AddDays(7);
-    }
+    protected override void FollowingIntervallClick() {
+		cacheService.SelectedDay = cacheService.SelectedDay.AddDays(7);
+	}
 
-    public override void SetTimeIntervallUnblocked() {
-        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
-            if (MarkedColumns[i])
-                dbService.QueryIntervallBlockingTaskAsync(null);
-        }
-    }
+	//public async override void SetTimeIntervallUnblocked() {
+	//}
 
-    public override void SetTimeIntervallBlocked(string reason) {
-            for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
-            if (MarkedColumns[i])
-                dbService.CreateDayBlockingTaskAsync(BlockedTimeIntervallType.Sick, new DateTime(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond));
-        }
-    }
+	//public void SetTimeIntervallBlocked(string reason) {
+	//	DateTime blockedIntervallStartDate = DateTimeService.FloorWeek(cacheService.SelectedDay);
+	//	for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
+	//		if (MarkedColumns[i]) {
+	//			dbService.CreateIntervallBlockingTaskAsync(BlockedTimeIntervallType.Sick, blockedIntervallStartDate, TimeSpan.SecondsPerDay);
+	//			BlockedColumns[i] = true;
+	//		}
+ //           blockedIntervallStartDate = blockedIntervallStartDate.AddDays(1);
+	//	}
+	//}
 }

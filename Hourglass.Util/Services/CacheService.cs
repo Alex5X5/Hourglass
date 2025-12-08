@@ -7,6 +7,7 @@ public class CacheService {
     private long SelectedDayStartSeconds = DateTimeService.ToSeconds(DateTimeService.FloorDay(DateTime.Today));
     public DateTime SelectedDay {
         set {
+            Console.WriteLine($"settin selected day to {value}");
             SelectedDayStartSeconds = DateTimeService.ToSeconds(value);
             OnSelectedDayChanged?.Invoke(SelectedDay);
         }

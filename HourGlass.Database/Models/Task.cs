@@ -25,7 +25,9 @@ public class Task {
 	
 	public BlockedTimeIntervallType blocksTime { set; get; } = BlockedTimeIntervallType.None;
 
-	
+    [NotMapped]
+    public long Duration => finish - start;
+
     [NotMapped]
 	public DateTime StartDateTime {
 		set => start = value.Ticks / TimeSpan.TicksPerSecond;

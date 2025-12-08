@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 using Hourglass.Util;
 
 public abstract partial class GraphPanelViewBase : ViewBase {
@@ -81,15 +82,18 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	protected abstract void DrawTimeline(DrawingContext context);
 
 	private void DrawColumnMarkers(DrawingContext context) {
-		Brush brush = new SolidColorBrush(Color.FromArgb(100, 100, 100, 100));
+		Brush markedBrush = new SolidColorBrush(Color.FromArgb(100, 100, 100, 200));
+		Brush blockedBrush = new SolidColorBrush(Color.FromArgb(100, 80, 80, 80));
 		double x = PADDING_X + 2;
 		double y = PADDING_Y + 2;
 		double width = X_AXIS_SEGMENT_SIZE - 4;
 		double height = GRAPH_AREA_HEIGTH - 5;
 		for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			if (Model.MarkedColumns[i])
-				context.FillRectangle(brush, new Rect(x, y, width, height));
-			x += X_AXIS_SEGMENT_SIZE;
+				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
+            if (Model.BlockedColumns[i])
+                context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
+            x += X_AXIS_SEGMENT_SIZE;
 		}
 	}
 
@@ -140,8 +144,13 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 			tasks = await model.GetTasksAsync();
 		if (tasks != null && tasks.Count > 0) {
 			double graphPosY = PADDING_Y;
+			int blockingTaskCount = 0;
 			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-				DrawTaskGraph(context, tasks[i], i);
+				if (!(tasks[i].blocksTime != Database.BlockedTimeIntervallType.None)) {
+					DrawTaskGraph(context, tasks[i], i-blockingTaskCount);
+				} else {
+					blockingTaskCount++;
+				}
 			}
 		}
 		if (RightMouseDown) {
@@ -220,6 +229,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	private void OnMousePressedBase(object sender, PointerPressedEventArgs args) {
 		PointerPoint mousePoint = args.GetCurrentPoint(sender as Control);
         MousePos = mousePoint.Position;
+		DragOrigin = mousePoint.Position;
 		Console.WriteLine($"mouse pressed!");
 		if (mousePoint.Properties.IsRightButtonPressed) {
 			if (!RightMouseDown)
@@ -235,9 +245,8 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		}
 		if (mousePoint.Properties.IsLeftButtonPressed)
 			LeftMouseDown = true;
-		DragOrigin = mousePoint.Position;
-        OnMouseMoved(sender, args);
-		InvalidateVisual();
+		Model.OnMousePressed(mousePoint.Properties.IsLeftButtonPressed, mousePoint.Properties.IsRightButtonPressed);
+        InvalidateVisual();
 	}
 
 	private void OnMouseReleasedBase(object sender, PointerReleasedEventArgs args) {
@@ -251,9 +260,8 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		}
 		if (!args.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
             LeftMouseDown = false;
-		OnMouseMoved(sender, args);
 		InvalidateVisual();
-	}
+    }
 
 	private void ShowReasonContextMenu() {
         _contextMenu = new ContextMenu();
@@ -268,7 +276,11 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		_contextMenu?.Open(this);
     }
 
-	public virtual void OnClick(object? sender, TappedEventArgs e) {
+    private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
+        (DataContext as GraphPanelViewModelBase)?.OnLoad();
+    }
+
+    public virtual void OnClick(object? sender, TappedEventArgs e) {
 		//Console.WriteLine("closed context menu!");
 	}
 
@@ -311,12 +323,12 @@ public abstract partial class GraphPanelViewBase : ViewBase {
     }
 
     private void PreviusIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		(DataContext as GraphPanelViewModelBase)?.PreviusIntervallClick();
+		(DataContext as GraphPanelViewModelBase)?.PreviusIntervallClickBase();
         InvalidateVisual();
 	}
 
     private void FollowingIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-        (DataContext as GraphPanelViewModelBase)?.FollowingIntervallClick();
+        (DataContext as GraphPanelViewModelBase)?.FollowingIntervallClickBase();
         InvalidateVisual();
     }
 }

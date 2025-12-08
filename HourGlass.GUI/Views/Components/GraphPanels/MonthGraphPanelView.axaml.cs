@@ -14,7 +14,7 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 	protected override void DrawTimeline(DrawingContext context) {
 		DateTime selectedMonth = DateTimeService.FloorMonth((DataContext as GraphPanelViewModelBase)!.cacheService.SelectedDay);
 		bool selectedIsThisMonth = selectedMonth == DateTimeService.FloorMonth(DateTime.Now);
-		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 166, 166, 166));
+		Brush weekedDayBackground = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
 		Brush todayBackgroundColor = new SolidColorBrush(Color.FromArgb(255, 237, 166, 166));
 		Pen timeLine = new(new SolidColorBrush(Colors.Black));
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));

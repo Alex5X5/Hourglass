@@ -1,11 +1,13 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Avalonia.Controls;
+using Hourglass.Database;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,9 +24,9 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public abstract int GRAPH_CORNER_RADIUS { get; }
 
 	public abstract long TIME_INTERVALL_START_SECONDS { get; }
-	public abstract long TIME_INTERVALL_FINISH_SECONDS { get; }
-	public long TIME_INTERVALL_DURATION => TIME_INTERVALL_FINISH_SECONDS - TIME_INTERVALL_START_SECONDS;
-	public long X_AXIS_SEGMENT_DURATION => TIME_INTERVALL_DURATION / X_AXIS_SEGMENT_COUNT;
+	public long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TIME_INTERVALL_DURATION;
+    public long TIME_INTERVALL_DURATION => X_AXIS_SEGMENT_DURATION * X_AXIS_SEGMENT_COUNT;
+	public abstract long X_AXIS_SEGMENT_DURATION { get; }
 
 	public abstract int X_AXIS_SEGMENT_COUNT { get; }
 	public abstract int Y_AXIS_SEGMENT_COUNT { get; }
@@ -43,6 +45,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public GridLength PaddingYWeight { get; } = new GridLength(PADDING_Y_WEIGHT, GridUnitType.Star);
 
 	public bool[] MarkedColumns;
+    public bool[] BlockedColumns;
+
 
 	public IHourglassDbService dbService { set; get; }
 	public DateTimeService dateTimeService { set; get; }
@@ -65,9 +69,15 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 
 		MarkedColumns = new bool[32];
-		for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++)
+		BlockedColumns = new bool[32];
+        for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
+		}
 	}
+
+	public void OnLoad() {
+        UpdateColumnMarkers();
+    }
 
 	public void OnMouseDragging(Avalonia.Rect dragRect, double width, double paddingX) {
 		double leftRectBound = dragRect.X - paddingX;
@@ -85,8 +95,16 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	}
 	
 	public void OnMouseMoved() {
-		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++)
-			MarkedColumns[i] = false;
+    }
+
+	public void UpdateColumnMarkers() {
+        DateTime start = new(TIME_INTERVALL_START_SECONDS*TimeSpan.TicksPerSecond);
+        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+            List<Database.Models.Task> tasks = dbService.QueryIntervallBlockingTaskAsync(start).Result;
+			Console.WriteLine($"there are {tasks.Count} that block the intervall");
+            BlockedColumns[i] = tasks.Count != 0;
+            start = start.AddSeconds(X_AXIS_SEGMENT_DURATION);
+        }
     }
 
     public abstract Task<List<Database.Models.Task>> GetTasksAsync();
@@ -94,40 +112,84 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public virtual void OnTaskClicked(Database.Models.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.GoToTaskdetails(task);
+    }
+
+	public void OnMousePressed(bool isLeftDown, bool isRightdown) {
+		if (!isRightdown)
+			for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++)
+				MarkedColumns[i] = false;
 	}
 
-    public virtual void OnMissingContextMenuSickClicked() {
-		SetTimeIntervallBlocked("Krank");
+    public async Task OnMissingContextMenuSickClicked() {
+        await SetTimeIntervallBlocked(BlockedTimeIntervallType.Sick);
+        UpdateColumnMarkers();
     }
 
-    public virtual void MissingContextMenuHolidayClicked() {
-		SetTimeIntervallBlocked("Krank");
+    public async Task MissingContextMenuHolidayClicked() {
+        await SetTimeIntervallBlocked(BlockedTimeIntervallType.Holiday);
+        UpdateColumnMarkers();
     }
 
-    public virtual void MissingContextMenuHomeWorkedClick() {
-		SetTimeIntervallBlocked("Heimarbeitstag");
+    public async Task MissingContextMenuHomeWorkedClick() {
+        await SetTimeIntervallBlocked(BlockedTimeIntervallType.HomeWork);
+        UpdateColumnMarkers();
     }
 
-    public virtual void MissingContextMenuVacantClicked() {
-        SetTimeIntervallBlocked("Urlaub");
+    public async Task MissingContextMenuVacantClicked() {
+        await SetTimeIntervallBlocked(BlockedTimeIntervallType.Vacant);
+        UpdateColumnMarkers();
     }
 
-    public virtual void MissingContextMenuNoExcuseClicked() {
-        SetTimeIntervallBlocked("Unentschuldigt");
+    public async Task MissingContextMenuNoExcuseClicked() {
+        await SetTimeIntervallBlocked(BlockedTimeIntervallType.NoExcuse);
+        UpdateColumnMarkers();
     }
 
-    public virtual void MissingContextMenuPresentClicked() {
-        SetTimeIntervallUnblocked();
+    public async Task MissingContextMenuPresentClicked() {
+        await SetTimeIntervallUnblocked();
+        UpdateColumnMarkers();
     }
 
-	public abstract void SetTimeIntervallBlocked(string reason);
-	public abstract void SetTimeIntervallUnblocked();
+	public async Task SetTimeIntervallBlocked(BlockedTimeIntervallType reason) {
+		DateTime start = new(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond);
+        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+			if (MarkedColumns[i]) {
+				List<Database.Models.Task> tasks = await dbService.QueryIntervallBlockingTaskAsync(start);
+				Console.WriteLine($"segment with start date {start} is {tasks.Count==0} blocked");
+				if (tasks.Count == 0) {
+					await dbService.CreateIntervallBlockingTaskAsync(reason,start, X_AXIS_SEGMENT_DURATION);
+				}                
+			}
+			start = start.AddSeconds(X_AXIS_SEGMENT_DURATION);
+        }
+    }
+
+	public async Task SetTimeIntervallUnblocked() {
+        DateTime start = new(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond);
+        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+            if (MarkedColumns[i]) {
+                List<Database.Models.Task> tasks = await dbService.QueryIntervallBlockingTaskAsync(start);
+                foreach (var task in tasks)
+                    await dbService.DeleteTaskAsync(task);
+            }
+            start = start.AddSeconds(X_AXIS_SEGMENT_DURATION);
+        }
+    }
 
     public abstract void OnDoubleClick(DateTime clickedTime);
 
 	protected abstract string GetTitle();
 
-	public abstract void PreviusIntervallClick();
+	public void PreviusIntervallClickBase() {
+		PreviusIntervallClick();
+		UpdateColumnMarkers();
+    }
 
-	public abstract void FollowingIntervallClick();
+	public void FollowingIntervallClickBase() {
+        FollowingIntervallClick();
+		UpdateColumnMarkers();
+    }
+
+	protected abstract void PreviusIntervallClick();
+    protected abstract void FollowingIntervallClick();
 }
