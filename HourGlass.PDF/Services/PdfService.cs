@@ -237,7 +237,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		foreach (string dayName in days.Keys) {
 			int offset = 0;
 			string[] lines = ["", "", "", "", "", ""];
-			List<Database.Models.Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
+			List<Database.Models.Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
 			if (tasks_.Count == 0)
 				continue;
 			foreach (Database.Models.Task task in tasks_) {
@@ -302,7 +302,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		Dictionary<string, DayOfWeek> days = new Dictionary<string, DayOfWeek> {
 			{ "monday", DayOfWeek.Monday },
 			{ "tuesday", DayOfWeek.Tuesday },
-			{ "wendsday", DayOfWeek.Wednesday },
+			{ "wednsday", DayOfWeek.Wednesday },
 			{ "thursday", DayOfWeek.Thursday },
 			{ "friday", DayOfWeek.Friday }
 		};
@@ -314,34 +314,40 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			Task[] lineTaks = new Task[lines.Length];
 			string[] hours = ["", "", "", "", "", ""];
 			string[] hourRanges = ["", "", "", "", "", ""];
-			List<Task> tasks_ = tasks.Where(x => x.FinishDateTime.DayOfWeek == days[dayName]).ToList();
-			if (tasks_.Count == 0) {
+			List<Task> tasks_ = tasks.Where(x => x.StartDateTime.DayOfWeek == days[dayName]).ToList();
+            if (tasks_.Count == 0) {
 				dayCounter++;
 				continue;
 			}
-			foreach (Task task in tasks_) {
-				if (task.running)
-					continue;
-				string[] compiledTask = CompileTaskPreview(task);
-				try {
-					Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
-					for (int i = 0; i < compiledTask.Length; i++)
-						lineTaks[offset + i] = task;
-					for (int i = 0; i < compiledTask.Length; i++)
-						lineTaks[offset + i] = task;
-                    hourRanges[offset] = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
-					hours[offset] = DateTimeService.ToHourMinuteString(task.finish - task.start);
-					offset += compiledTask.Length;
-				} catch (ArgumentOutOfRangeException) {
-					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
-					Console.WriteLine($"description of task was:'{task.description}'");
-					break;
-				} catch (ArgumentException) {
-					Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
-					Console.WriteLine($"description of task was:'{task.description}'");
-					break;
+			DateTime date_ = DateTimeService.FloorDay(DateTimeService.FloorWeek(selectedWeek).AddDays(dayCounter));
+            Task? blockedBy = _dbService.QueryIntervallBlockingTaskAsync(date_).Result.FirstOrDefault();
+			if (blockedBy != null) {
+				lines[0] = blockedBy.description;
+			} else {
+				foreach (Task task in tasks_) {
+					if (task.running)
+						continue;
+					string[] compiledTask = CompileTaskPreview(task);
+					try {
+						Array.ConstrainedCopy(compiledTask, 0, lines, offset, compiledTask.Length);
+						for (int i = 0; i < compiledTask.Length; i++)
+							lineTaks[offset + i] = task;
+						for (int i = 0; i < compiledTask.Length; i++)
+							lineTaks[offset + i] = task;
+						hourRanges[offset] = DateTimeService.ToHourMinuteString(task.start) + " - " + DateTimeService.ToHourMinuteString(task.finish);
+						hours[offset] = DateTimeService.ToHourMinuteString(task.finish - task.start);
+						offset += compiledTask.Length;
+					} catch (ArgumentOutOfRangeException) {
+						Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+						Console.WriteLine($"description of task was:'{task.description}'");
+						break;
+					} catch (ArgumentException) {
+						Console.WriteLine($"ran out of empty lines while inserting {compiledTask.Length} lines for day {dayName}");
+						Console.WriteLine($"description of task was:'{task.description}'");
+						break;
+					}
+					totalWeekSeconds += task.finish - task.start;
 				}
-				totalWeekSeconds += task.finish - task.start;
 			}
 			for (int i = 0; i < 6; i++) {
 				data.Data[dayCounter * PdfDocumentData.DAY_LINE_COUNT + i].Item1 = lines[i];
