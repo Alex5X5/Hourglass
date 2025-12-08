@@ -1,7 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Avalonia.Controls;
-using CommunityToolkit.Mvvm.Input;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
@@ -101,8 +100,12 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		SetTimeIntervallBlocked("Krank");
     }
 
-    public virtual void OnMissingContextMenuSchoolClicked() {
-		SetTimeIntervallBlocked("Berufsschule");
+    public virtual void MissingContextMenuHolidayClicked() {
+		SetTimeIntervallBlocked("Krank");
+    }
+
+    public virtual void MissingContextMenuHomeWorkedClick() {
+		SetTimeIntervallBlocked("Heimarbeitstag");
     }
 
     public virtual void MissingContextMenuVacantClicked() {

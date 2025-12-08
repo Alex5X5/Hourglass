@@ -12,11 +12,7 @@ public interface IHourglassDbService {
 	public Task<Models.Task?> QueryCurrentTaskAsync();
 
 	public Task<Models.Task> StartNewTaskAsnc(string description, Color color, Project? project, Worker worker, Ticket? ticket);
-
-	public Task<Models.Task> CreateIntervallBlockingTaskAsync(char type, string reason, DateTime date);
-
-    public Task<List<Models.Task>> QueryIntervallBlockingTaskAsync(DateTime date);
-
+	
     public Task<bool> UpdateTaskAsync(Models.Task updatedTask);
 
 	public System.Threading.Tasks.Task DeleteTaskAsync(Models.Task updatedTask);
@@ -41,12 +37,19 @@ public interface IHourglassDbService {
 
     public Task<List<Models.Task>> QueryTasksOfCurrentMonthAsync();
 
+
 	public Task<string?> GetHourBlockedMessageAsync(DateTime date);
 
     public Task<string?> GetDayBlockedMessageAsync(DateTime date);
 
     public Task<string?> GetWeekBlockedMessageAsync(DateTime date);
-    
+
+    public Task<Models.Task> CreateHourBlockingTaskAsync(BlockedTimeIntervallType type, DateTime date);
+
+    public Task<Models.Task> CreateDayBlockingTaskAsync(BlockedTimeIntervallType type, DateTime date);
+
+    public Task<Models.Task?> QueryIntervallBlockingTaskAsync(Models.Task task);
+
     public Task<Models.Task?> FinishCurrentTaskAsync(long? start, long? finish, string description, Project? project, Ticket? ticket);
 
 	public Task<List<Models.Ticket>> QueryTicketsAsync();

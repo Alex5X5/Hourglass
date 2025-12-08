@@ -258,11 +258,12 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	private void ShowReasonContextMenu() {
         _contextMenu = new ContextMenu();
 		_contextMenu.ItemsSource = new List<MenuItem>() {
-			new() { Header = "Sick", Command = new RelayCommand(MissingContextMenuSickClick) },
-        	new() { Header = "School", Command = new RelayCommand(MissingContextMenuSchoolClick) },
-            new() { Header = "Vacant", Command = new RelayCommand(MissingContextMenuVacantClick) },
-            new() { Header = "No Excuse", Command = new RelayCommand(MissingContextMenuNoExcuseClick) },
-            new() { Header = "Present", Command = new RelayCommand(MissingContextMenuPresentClick) }
+			new() { Header = "Krank", Command = new RelayCommand(MissingContextMenuSickClick) },
+        	new() { Header = "Feiertag", Command = new RelayCommand(MissingContextMenuHolidayClick) },
+            new() { Header = "Urlaub", Command = new RelayCommand(MissingContextMenuVacantClick) },
+            new() { Header = "Heimarbeitstag", Command = new RelayCommand(MissingContextMenuHomeWorkClick) },
+            new() { Header = "Unentschuldigt", Command = new RelayCommand(MissingContextMenuNoExcuseClick) },
+            new() { Header = "Anwesend", Command = new RelayCommand(MissingContextMenuPresentClick) }
         };
 		_contextMenu?.Open(this);
     }
@@ -284,8 +285,8 @@ public abstract partial class GraphPanelViewBase : ViewBase {
         InvalidateVisual();
     }
 
-    private void MissingContextMenuSchoolClick() {
-        (DataContext as GraphPanelViewModelBase)?.OnMissingContextMenuSchoolClicked();
+    private void MissingContextMenuHolidayClick() {
+        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuHolidayClicked();
         InvalidateVisual();
     }
 
@@ -295,6 +296,11 @@ public abstract partial class GraphPanelViewBase : ViewBase {
     }
 
     private void MissingContextMenuNoExcuseClick() {
+        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuNoExcuseClicked();
+        InvalidateVisual();
+    }
+
+    private void MissingContextMenuHomeWorkClick() {
         (DataContext as GraphPanelViewModelBase)?.MissingContextMenuNoExcuseClicked();
         InvalidateVisual();
     }

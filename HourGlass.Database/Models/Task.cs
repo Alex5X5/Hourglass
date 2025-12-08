@@ -23,7 +23,7 @@ public class Task {
 	public byte displayColorGreen { set; get; } = 255;
 	public byte displayColorBlue { set; get; } = 255;
 	
-	public char blocksTime { set; get; } = BlockedTimeIntervallType.NONE;
+	public BlockedTimeIntervallType blocksTime { set; get; } = BlockedTimeIntervallType.None;
 
 	
     [NotMapped]

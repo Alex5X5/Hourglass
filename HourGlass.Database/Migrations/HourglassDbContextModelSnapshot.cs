@@ -24,7 +24,7 @@ namespace Hourglass.Database.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("Hourglass.Database.Models.Task", b =>
@@ -75,7 +75,7 @@ namespace Hourglass.Database.Migrations
 
                     b.HasIndex("ticketid");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("Hourglass.Database.Models.Ticket", b =>
@@ -104,7 +104,7 @@ namespace Hourglass.Database.Migrations
 
                     b.HasIndex("projectName");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("Hourglass.Database.Models.Worker", b =>
@@ -119,7 +119,7 @@ namespace Hourglass.Database.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Worker");
+                    b.ToTable("Worker", (string)null);
                 });
 
             modelBuilder.Entity("Hourglass.Database.Models.Task", b =>
