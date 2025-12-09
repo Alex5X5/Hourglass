@@ -12,12 +12,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public unsafe partial class PdfService : IPdfService, IDisposable {
 
 	private readonly IHourglassDbService _dbService;
 	private SettingsService settingsService;
 	DateTimeService dateTimeService;
+	CacheService cacheService;
 
 	public const int MAX_LINE_LENGTH = 85;
 
@@ -32,9 +34,10 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 	private readonly int charCount;
 	private readonly char* text;
 
-	public PdfService(IHourglassDbService dbService, SettingsService settingsService, DateTimeService dateTimeService) {
+	public PdfService(IHourglassDbService dbService, SettingsService settingsService, DateTimeService dateTimeService, CacheService cacheService) {
 		this.dateTimeService = dateTimeService;
 		this.settingsService = settingsService;
+		this.cacheService = cacheService;
 		_dbService = dbService;
 		InsertOperations = [];
 		Indexers = [];
@@ -358,14 +361,40 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 			dayCounter++;
 		}
 		data.TotalTime = DateTimeService.ToHourMinuteString(totalWeekSeconds);
-		data.Week = Convert.ToString(dateTimeService.GetWeekCountAtDate(selectedWeek));
+		int week = dateTimeService.GetWeekCountAtDate(selectedWeek);
+        data.Week = Convert.ToString(week);
 		data.UserName = settingsService.TryGetSetting(SettingsService.USER_NAME_KEY) ?? "username";
 		data.JobName = settingsService.TryGetSetting(SettingsService.JOB_NAME_KEY) ?? "job name";
+		bool[] missingDays = new bool[5000];
+		long startDateSeconds = DateTimeService.ToSeconds(settingsService.StartDate);
+		long maxDateSeconds = DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay));
+		List<Task> blockingTasks = _dbService.QueryBlockingTasksInIntervallAsync(startDateSeconds, maxDateSeconds).Result;
+        foreach (Task t in blockingTasks) {
+			long taskStartOffsetSeconds = t.start - startDateSeconds;
+			int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
+			if(t.blocksTime==Database.BlockedTimeIntervallType.Sick | t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+				missingDays[taskStartOffsetDays] = true;
+        }
+		data.TotalMissingDays=Convert.ToString(missingDays.Count(c => c ==true));
+        startDateSeconds = DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
+        bool[] newMissingDays = new bool[7];
+        bool[] newSickDays = new bool[7];
+        foreach (Task t in blockingTasks.Where(x=>x.start>startDateSeconds).ToList()) {
+            long taskStartOffsetSeconds = t.start - startDateSeconds;
+            int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
+            if (t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+                newMissingDays[taskStartOffsetDays] = true;
+            if (t.blocksTime == Database.BlockedTimeIntervallType.Sick)
+                newSickDays[taskStartOffsetDays] = true;
+        }
+        data.TotalMissingDays = Convert.ToString(missingDays.Count(c => c == true));
+        data.MissingDays = Convert.ToString(newMissingDays.Count(c => c == true));
+        data.SickDays = Convert.ToString(newSickDays.Count(c => c == true));
         DateTime dayFrom = DateTimeService.FloorWeek(selectedWeek);
         DateTime dayTo = dayFrom.AddDays(5);
-        data.DateFrom = $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}";
-		data.DateTo = $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}";
-		return data;
+		data.DateFrom = DateTimeService.ToDayAndMonthAndYearString(dayFrom);
+		data.DateTo = DateTimeService.ToDayAndMonthAndYearString(dayTo);
+        return data;
 	}
 
 	public void Import() {
@@ -431,7 +460,38 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 		BufferFieldValueUnsafe("date_from", $"{dayFrom.Day}.{dayFrom.Month}. {dayFrom.Year}");
 		BufferAnnotationValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
 		BufferFieldValueUnsafe("date_to", $"{dayTo.Day}.{dayTo.Month}. {dayTo.Year}");
-	}
+
+        bool[] missingDays = new bool[5000];
+        long startDateSeconds = DateTimeService.ToSeconds(settingsService.StartDate);
+        long maxDateSeconds = DateTimeService.ToSeconds(DateTimeService.CeilWeek(cacheService.SelectedDay));
+        List<Task> blockingTasks = _dbService.QueryBlockingTasksInIntervallAsync(startDateSeconds, maxDateSeconds).Result;
+        foreach (Task t in blockingTasks) {
+            long taskStartOffsetSeconds = t.start - startDateSeconds;
+            int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
+            if (t.blocksTime == Database.BlockedTimeIntervallType.Sick | t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+                missingDays[taskStartOffsetDays] = true;
+        }
+        startDateSeconds = DateTimeService.ToSeconds(DateTimeService.FloorWeek(cacheService.SelectedDay));
+        bool[] newMissingDays = new bool[7];
+        bool[] newSickDays = new bool[7];
+        foreach (Task t in blockingTasks.Where(x => x.start > startDateSeconds).ToList()) {
+            long taskStartOffsetSeconds = t.start - startDateSeconds;
+            int taskStartOffsetDays = (int)Math.Floor((double)taskStartOffsetSeconds / TimeSpan.SecondsPerDay);
+            if (t.blocksTime == Database.BlockedTimeIntervallType.NoExcuse)
+                newMissingDays[taskStartOffsetDays] = true;
+            if (t.blocksTime == Database.BlockedTimeIntervallType.Sick)
+                newSickDays[taskStartOffsetDays] = true;
+        }
+		int totalMissingDaysCount = missingDays.Count(c => c == true);
+		int missingDaysCount = newMissingDays.Count(c => c == true);
+		int sickDaysCount = newSickDays.Count(c => c == true);
+        BufferAnnotationValueUnsafe("total_sick_days", Convert.ToString(totalMissingDaysCount));
+        BufferFieldValueUnsafe("total_sick_days", Convert.ToString(totalMissingDaysCount));
+        BufferAnnotationValueUnsafe("new_missing_days", Convert.ToString(missingDaysCount));
+        BufferFieldValueUnsafe("new_missing_days", Convert.ToString(missingDaysCount));
+        BufferAnnotationValueUnsafe("new_sick_days", Convert.ToString(sickDaysCount));
+        BufferFieldValueUnsafe("new_sick_days", Convert.ToString(sickDaysCount));
+    }
 
 	private string GetNewFileName(DateTime selectedWeek) {
 		DateTime dayFrom = DateTimeService.GetMondayOfWeekAtDate(selectedWeek);
@@ -484,7 +544,7 @@ public class PdfDocumentData {
         set => Data[SICK_DAYS_INDEX].Item1 = value;
         get => Data[SICK_DAYS_INDEX].Item1;
     }
-	public string MmissingDays {
+	public string MissingDays {
         set => Data[MISSING_DAYS_INDEX].Item1 = value;
         get => Data[MISSING_DAYS_INDEX].Item1;
     }

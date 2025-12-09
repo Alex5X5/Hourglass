@@ -31,6 +31,9 @@ public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyCha
             OnPropertyChanged(nameof(DateToText));
             OnPropertyChanged(nameof(WeekCount));
             OnPropertyChanged(nameof(TotalTime));
+            OnPropertyChanged(nameof(MissingDays));
+            OnPropertyChanged(nameof(SickDays));
+            OnPropertyChanged(nameof(TotalMissingDays));
         }
         get => pdfData;
     }
@@ -45,7 +48,12 @@ public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyCha
 
 	public string TotalTime => pdfData?.TotalTime ?? "";
 
-	private Action<Database.Models.Task> OnTextBockClick;
+
+	public string MissingDays => pdfData?.MissingDays ?? "";
+    public string SickDays => pdfData?.SickDays ?? "";
+	public string TotalMissingDays => pdfData?.TotalMissingDays ?? "";
+
+    private Action<Database.Models.Task> OnTextBockClick;
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 

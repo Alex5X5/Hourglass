@@ -2,7 +2,6 @@
 
 using Hourglass.Util.Services;
 using System;
-using System.Runtime.InteropServices;
 
 public class DateTimeService {
 
@@ -16,8 +15,10 @@ public class DateTimeService {
 		this.settingsService = settingsService;
 	}
 
+
 	public static long ToSeconds(DateTime date) =>
 		date.Ticks / TimeSpan.TicksPerSecond;
+
 
     public static DateTime FloorHour(DateTime date) =>
         new(date.Year, date.Month, date.Day, date.Hour, 0, 0);
@@ -31,7 +32,21 @@ public class DateTimeService {
 	public static DateTime FloorMonth(DateTime date) =>
 			new(date.Year, date.Month, 1);
 
-	public static int DaysInCurrentMonth() =>
+
+	public static DateTime CeilHour(DateTime date) =>
+		FloorHour(date).AddSeconds(3599);
+
+	public static DateTime CeilDay(DateTime date) =>
+		FloorDay(date).AddSeconds(86399);
+
+	public static DateTime CeilWeek(DateTime date) =>
+		FloorWeek(date).AddSeconds(604799);
+
+	public static DateTime CeilMonth(DateTime date) =>
+		FloorMonth(date).AddMonths(1).AddSeconds(-1);
+
+
+    public static int DaysInCurrentMonth() =>
 		DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 
 	public static bool TodayIsDayOfWeek(DayOfWeek day) =>
@@ -39,6 +54,7 @@ public class DateTimeService {
 
 	public static bool TodayIsDayOfWeek(int day) =>
 		day == (int)DateTime.Now.AddDays(-1).DayOfWeek;
+
 
 	public static DateTime? InterpretDayAndTimeString(string s, int day = 1, int month = 1, int hour = 0, int minute = 0, int second = 0) {
 		int startIndex = 0;
@@ -108,6 +124,7 @@ public class DateTimeService {
         }
     }
 
+
     public static string ToTimeString(DateTime time) =>
 		$"{time.Hour}:{time.Minute}:{time.Second}";
 
@@ -125,6 +142,7 @@ public class DateTimeService {
 
 	public static string ToDayAndMonthString(DateTime time) =>
 		$"{time.Day}.{time.Month}.";
+
 
 	public static DateTime GetMondayOfCurrentWeek() {
         return FloorWeek(DateTime.Now);
@@ -144,6 +162,7 @@ public class DateTimeService {
 
 	public static DateTime GetFirstDayOfMonthAtDate(DateTime date) =>
 		new(date.Year, date.Month, 1);
+
 
 	public int GetCurrentWeekCount() =>
 		GetWeekCountAtDate(DateTime.Now);

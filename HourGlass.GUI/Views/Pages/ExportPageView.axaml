@@ -270,6 +270,21 @@
 								   Canvas.Left="392"
 								   Canvas.Top="676"
 								   Classes="Description" />
+						<TextBlock Text="{ Binding SickDays }"
+								   Canvas.Left="214"
+								   Canvas.Top="715"
+								   FontSize="14"
+								   Classes="Description" />
+						<TextBlock Text="{ Binding MissingDays }"
+								   Canvas.Left="305"
+								   Canvas.Top="715"
+								   FontSize="14"
+								   Classes="Description" />
+						<TextBlock Text="{ Binding TotalMissingDays }"
+								   Canvas.Left="516"
+								   Canvas.Top="715"
+								   FontSize="14"
+								   Classes="Description" />
 					</Canvas>
 					<!--
 						<Grid RowDefinitions="7.3*, 672.3*, 187*" ColumnDefinitions="*" Grid.Row="1" Grid.Column="1" Background="red" Opacity="0.9" >
