@@ -61,7 +61,7 @@ public partial class VisualsSubSettingsPageViewModel : SubSettingsPageViewModelB
         get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
-    public override string Title => "Visual Settings";
+    public override string Title => "Grafik Einstellungen";
 
     public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }

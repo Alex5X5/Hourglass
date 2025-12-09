@@ -18,7 +18,7 @@ public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyCha
 	private readonly IPdfService? pdf;
 	private readonly MainViewModel pageController;
 
-    public override string Title => "Export";
+    public override string Title => "Exportieren";
 
 	private PdfDocumentData? pdfData;
 

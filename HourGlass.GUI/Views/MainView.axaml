@@ -86,7 +86,7 @@
 				<Button Grid.Row="1"
 						Grid.Column="1"
 						Classes="Default"
-						Command="{Binding GoToTimerCommand}"
+						Command="{ Binding GoToTimerCommand }"
 						Name="TimerModeButton">
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
@@ -94,14 +94,14 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Timer" FontSize="13" />
+							<TextBlock Classes="ButtonContent" Text="Zeitmessung" FontSize="13" />
 						</Viewbox>
 					</Grid>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="3"
 						Classes="Default"
-						Command="{Binding GoToGraphsCommand}"
+						Command="{ Binding GoToGraphsCommand }"
 						Name="GraphModeButton">
 					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
@@ -109,7 +109,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Graph" FontSize="13"/>
+							<TextBlock Classes="ButtonContent" Text="Übersicht" FontSize="13"/>
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -124,7 +124,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Export" FontSize="13"/>
+							<TextBlock Classes="ButtonContent" Text="Exportieren" FontSize="13"/>
 						</Viewbox>
 					</Grid>
 				</Button>

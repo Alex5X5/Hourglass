@@ -352,9 +352,10 @@
 		</ScrollViewer>
 		<Grid Grid.Row="3"
 			  Grid.Column="1"
-			  ColumnDefinitions="3*, 3*, 2*, 3*, 2*, 3*, 3*">
+			  ColumnDefinitions="1*, 3*, 2*, 3*, 2*, 3*, 1*">
 			<Button Grid.Column="1"
 					Classes="Default"
+					IsEnabled="false"
 					Command="{ Binding ExportCommand }" >
 				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
 					<Viewbox Grid.Row="1"
@@ -362,7 +363,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Import" />
+						<TextBlock Classes="ButtonContent" Text="Importieren" />
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -375,7 +376,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Export" />
+						<TextBlock Classes="ButtonContent" Text="Exportieren" />
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -388,7 +389,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Open Folder" />
+						<TextBlock Classes="ButtonContent" Text="Ordner Öffnen" />
 					</Viewbox>
 				</Grid>
 			</Button>

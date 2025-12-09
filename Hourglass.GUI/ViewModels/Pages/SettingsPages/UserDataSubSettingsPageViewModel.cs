@@ -12,7 +12,7 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
     public string JobNameTextboxText { set; get; }
 
-    public override string Title => "User Data";
+    public override string Title => "Nutzerdaten";
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 

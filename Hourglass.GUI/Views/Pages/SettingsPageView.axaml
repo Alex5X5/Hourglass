@@ -55,7 +55,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Back" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Zurück" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -69,7 +69,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="User Data" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Nutzerdaten" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -83,7 +83,7 @@
 								Stretch="Uniform"
 								VerticalAlignment="Center"
 								HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="About" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Über Uns" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -97,7 +97,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Visuals" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Grafik" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -111,7 +111,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Export" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Exportieren" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -134,7 +134,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Save Settings" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Speichern" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -148,7 +148,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Cancel" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="Abbrechen" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>

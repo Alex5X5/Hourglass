@@ -75,7 +75,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         get => finishTextboxText;
     }
 
-	public override string Title => "Timer";
+	public override string Title => "Zeitmessung";
 	
 	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }

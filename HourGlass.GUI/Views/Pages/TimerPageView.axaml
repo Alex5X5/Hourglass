@@ -34,25 +34,23 @@
 				<RowDefinition Height="4*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="24*" />
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="4*" />
 				<RowDefinition Height="6*" />
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="6*" />
+				<RowDefinition Height="7*" />
+				<RowDefinition Height="7*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="2*" />
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Started"
+			<TextBlock Text="Anfang"
 					   Grid.Row="0"
-				   Grid.Column="0"
-				   Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Finished"
+					   Grid.Column="0"
+					   Classes="Default DynamicTextHeight" />
+			<TextBlock Text="Ende"
 					   Grid.Row="0"
-				   Grid.Column="2"
-			   Classes="Default DynamicTextHeight" />
+					   Grid.Column="2"
+					   Classes="Default DynamicTextHeight" />
 			<TextBox Text="{ Binding StartTextboxText }"
 					 Grid.Row="2"
 					 Grid.Column="0"
@@ -63,7 +61,7 @@
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Description"
+			<TextBlock Text="Beschreibung"
 					   Grid.Row="4"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
@@ -103,8 +101,9 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 			-->
-			<Grid Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="3*, 2*, 3*, 2*, 3*" >
+			<Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" ColumnDefinitions="2*, 3*, 3*, 3*, 2*" >
 				<Button Name="startButton"
+						Grid.Column="1"
 						Classes="Default"
 						IsEnabled="{ Binding IsStartButtonEnabled }"
 						Command="{ Binding StartTaskCommand }" >
@@ -119,7 +118,7 @@
 					</Grid>
 				</Button>
 				<Button Name="stopButton"
-						Grid.Column="2"
+						Grid.Column="3"
 						Classes="Default"
 						IsEnabled="{ Binding IsStopButtonEnabled }"
 						Command="{ Binding StopTaskCommand }" >
@@ -133,6 +132,7 @@
 						</Viewbox>
 					</Grid>
 				</Button>
+				<!--
 				<Button Name="restartButton"
 						Grid.Column="4"
 						Classes="Default"
@@ -148,6 +148,7 @@
 						</Viewbox>
 					</Grid>
 				</Button>
+				-->
 			</Grid>
 		</Grid>
 	</Grid>

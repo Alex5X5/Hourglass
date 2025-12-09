@@ -61,7 +61,7 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
         get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
-    public override string Title => "Export Settings";
+    public override string Title => "Export Einstellungen";
 
     public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }

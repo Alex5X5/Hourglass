@@ -60,7 +60,7 @@ public partial class AboutSubSettingsPageViewModel : SubSettingsPageViewModelBas
         get => cacheService?.RunningTask != null ? DateTimeService.ToDayAndMonthAndTimeString(cacheService.RunningTask.FinishDateTime) : "";
     }
 
-    public override string Title => "About";
+    public override string Title => "Über Uns";
 
     public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }

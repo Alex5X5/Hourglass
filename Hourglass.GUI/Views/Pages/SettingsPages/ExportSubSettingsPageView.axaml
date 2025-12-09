@@ -31,6 +31,7 @@
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="2*" />
 		</Grid.ColumnDefinitions>
+		<!--
 		<TextBlock Grid.Row="0"
 				   Grid.Column ="1"
 				   Grid.ColumnSpan ="2"
@@ -61,5 +62,6 @@
 				   Text="High" />
 		<TextBlock Text="{ Binding #slider.Value }"
 				   HorizontalAlignment="Center"/>
+		-->
 	</Grid>
 </UserControl>

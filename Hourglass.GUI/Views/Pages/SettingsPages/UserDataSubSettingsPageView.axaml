@@ -40,11 +40,11 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*" />
-			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="2*" />
 			<ColumnDefinition Width="1*" />
+			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
-		<TextBlock Text="Username"
+		<TextBlock Text="Nutzername"
 				   Grid.Row="0"
 				   Grid.Column="1"
 				   Classes="Default DynamicTextHeight" />
@@ -53,7 +53,7 @@
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
 				 Classes="DefaultBackground DefaultBorder" />
-		<TextBlock Text="Job Name"
+		<TextBlock Text="Ausbildungsrichtung"
 				   Grid.Row="4"
 				   Grid.Column="1"
 				   MinHeight="0"
@@ -63,7 +63,7 @@
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
 				 Classes="DefaultBackground DefaultBorder" />
-		<TextBlock Text="Start Date"
+		<TextBlock Text="Start Datum"
 				   Grid.Row="8"
 				   Grid.Column="1"
 				   MinHeight="0"
