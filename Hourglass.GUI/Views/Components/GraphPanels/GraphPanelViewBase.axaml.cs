@@ -278,6 +278,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
     private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
         (DataContext as GraphPanelViewModelBase)?.OnLoad();
+		InvalidateVisual();
     }
 
     public virtual void OnClick(object? sender, TappedEventArgs e) {

@@ -320,7 +320,7 @@ public unsafe partial class PdfService : IPdfService, IDisposable {
 				continue;
 			}
 			DateTime date_ = DateTimeService.FloorDay(DateTimeService.FloorWeek(selectedWeek).AddDays(dayCounter));
-            Task? blockedBy = _dbService.QueryIntervallBlockingTaskAsync(date_).Result.FirstOrDefault();
+            Task? blockedBy = _dbService.QueryBlockingTasksAtDateAsync(date_).Result.FirstOrDefault();
 			if (blockedBy != null) {
 				lines[0] = blockedBy.description;
 			} else {

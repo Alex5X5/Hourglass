@@ -25,7 +25,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 	public abstract long TIME_INTERVALL_START_SECONDS { get; }
 	public long TIME_INTERVALL_FINISH_SECONDS => TIME_INTERVALL_START_SECONDS + TIME_INTERVALL_DURATION;
-    public long TIME_INTERVALL_DURATION => X_AXIS_SEGMENT_DURATION * X_AXIS_SEGMENT_COUNT;
+	public long TIME_INTERVALL_DURATION => X_AXIS_SEGMENT_DURATION * X_AXIS_SEGMENT_COUNT;
 	public abstract long X_AXIS_SEGMENT_DURATION { get; }
 
 	public abstract int X_AXIS_SEGMENT_COUNT { get; }
@@ -45,7 +45,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public GridLength PaddingYWeight { get; } = new GridLength(PADDING_Y_WEIGHT, GridUnitType.Star);
 
 	public bool[] MarkedColumns;
-    public bool[] BlockedColumns;
+	public bool[] BlockedColumns;
 
 
 	public IHourglassDbService dbService { set; get; }
@@ -70,14 +70,14 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 		MarkedColumns = new bool[32];
 		BlockedColumns = new bool[32];
-        for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
+		for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
 		}
 	}
 
 	public void OnLoad() {
-        UpdateColumnMarkers();
-    }
+		UpdateColumnMarkers();
+	}
 
 	public void OnMouseDragging(Avalonia.Rect dragRect, double width, double paddingX) {
 		double leftRectBound = dragRect.X - paddingX;
@@ -90,29 +90,33 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 				continue;
 			if(leftRectBound > rightSegmentBound)
 				continue;
-            MarkedColumns[i] = true;
-        }
+			MarkedColumns[i] = true;
+		}
 	}
 	
 	public void OnMouseMoved() {
-    }
+	}
 
 	public void UpdateColumnMarkers() {
-        DateTime start = new(TIME_INTERVALL_START_SECONDS*TimeSpan.TicksPerSecond);
-        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
-            List<Database.Models.Task> tasks = dbService.QueryIntervallBlockingTaskAsync(start).Result;
-			Console.WriteLine($"there are {tasks.Count} that block the intervall");
-            BlockedColumns[i] = tasks.Count != 0;
-            start = start.AddSeconds(X_AXIS_SEGMENT_DURATION);
-        }
-    }
+		long start = TIME_INTERVALL_START_SECONDS;
+		long finish = start + X_AXIS_SEGMENT_DURATION;
+		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
+		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+			BlockedColumns[i] = tasks
+				.Where(x => x.start >= start && x.start <= finish)
+					.Where(x => x.finish >= start && x.finish <= finish)
+						.FirstOrDefault() != null;
+			start += X_AXIS_SEGMENT_DURATION;
+			finish += X_AXIS_SEGMENT_DURATION;
+		}
+	}
 
-    public abstract Task<List<Database.Models.Task>> GetTasksAsync();
+	public abstract Task<List<Database.Models.Task>> GetTasksAsync();
 
 	public virtual void OnTaskClicked(Database.Models.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.GoToTaskdetails(task);
-    }
+	}
 
 	public void OnMousePressed(bool isLeftDown, bool isRightdown) {
 		if (!isRightdown)
@@ -120,76 +124,85 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 				MarkedColumns[i] = false;
 	}
 
-    public async Task OnMissingContextMenuSickClicked() {
-        await SetTimeIntervallBlocked(BlockedTimeIntervallType.Sick);
-        UpdateColumnMarkers();
-    }
+	public async Task OnMissingContextMenuSickClicked() {
+		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Sick);
+		UpdateColumnMarkers();
+	}
 
-    public async Task MissingContextMenuHolidayClicked() {
-        await SetTimeIntervallBlocked(BlockedTimeIntervallType.Holiday);
-        UpdateColumnMarkers();
-    }
+	public async Task MissingContextMenuHolidayClicked() {
+		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Holiday);
+		UpdateColumnMarkers();
+	}
 
-    public async Task MissingContextMenuHomeWorkedClick() {
-        await SetTimeIntervallBlocked(BlockedTimeIntervallType.HomeWork);
-        UpdateColumnMarkers();
-    }
+	public async Task MissingContextMenuHomeWorkedClick() {
+		await SetTimeIntervallBlocked(BlockedTimeIntervallType.HomeWork);
+		UpdateColumnMarkers();
+	}
 
-    public async Task MissingContextMenuVacantClicked() {
-        await SetTimeIntervallBlocked(BlockedTimeIntervallType.Vacant);
-        UpdateColumnMarkers();
-    }
+	public async Task MissingContextMenuVacantClicked() {
+		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Vacant);
+		UpdateColumnMarkers();
+	}
 
-    public async Task MissingContextMenuNoExcuseClicked() {
-        await SetTimeIntervallBlocked(BlockedTimeIntervallType.NoExcuse);
-        UpdateColumnMarkers();
-    }
+	public async Task MissingContextMenuNoExcuseClicked() {
+		await SetTimeIntervallBlocked(BlockedTimeIntervallType.NoExcuse);
+		UpdateColumnMarkers();
+	}
 
-    public async Task MissingContextMenuPresentClicked() {
-        await SetTimeIntervallUnblocked();
-        UpdateColumnMarkers();
-    }
+	public async Task MissingContextMenuPresentClicked() {
+		await SetTimeIntervallUnblocked();
+		UpdateColumnMarkers();
+	}
 
 	public async Task SetTimeIntervallBlocked(BlockedTimeIntervallType reason) {
-		DateTime start = new(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond);
-        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+		long start = TIME_INTERVALL_START_SECONDS;
+		long finish = start + X_AXIS_SEGMENT_DURATION;
+		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
+		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
 			if (MarkedColumns[i]) {
-				List<Database.Models.Task> tasks = await dbService.QueryIntervallBlockingTaskAsync(start);
-				Console.WriteLine($"segment with start date {start} is {tasks.Count==0} blocked");
-				if (tasks.Count == 0) {
-					await dbService.CreateIntervallBlockingTaskAsync(reason,start, X_AXIS_SEGMENT_DURATION);
-				}                
+				IEnumerable<Database.Models.Task> tasks_ = tasks
+					.Where(x => x.start >= start && x.start <= finish)
+						.Where(x => x.finish >= start && x.finish <= finish);
+				if (!tasks_.Any()) {
+                    await dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start*TimeSpan.TicksPerSecond), X_AXIS_SEGMENT_DURATION);
+                }
 			}
-			start = start.AddSeconds(X_AXIS_SEGMENT_DURATION);
-        }
-    }
+			start += X_AXIS_SEGMENT_DURATION;
+			finish += X_AXIS_SEGMENT_DURATION;
+		}
+	}
 
 	public async Task SetTimeIntervallUnblocked() {
-        DateTime start = new(TIME_INTERVALL_START_SECONDS * TimeSpan.TicksPerSecond);
-        for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
-            if (MarkedColumns[i]) {
-                List<Database.Models.Task> tasks = await dbService.QueryIntervallBlockingTaskAsync(start);
-                foreach (var task in tasks)
-                    await dbService.DeleteTaskAsync(task);
-            }
-            start = start.AddSeconds(X_AXIS_SEGMENT_DURATION);
-        }
-    }
+		long start = TIME_INTERVALL_START_SECONDS;
+		long finish = start + X_AXIS_SEGMENT_DURATION;
+		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
+		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+			if (MarkedColumns[i]) {
+				IEnumerable<Database.Models.Task> tasks_ = tasks
+					.Where(x => x.start >= start && x.start <= finish)
+						.Where(x => x.finish >= start && x.finish <= finish);
+				foreach (var task in tasks_)
+					await dbService.DeleteTaskAsync(task);
+			}
+			start += X_AXIS_SEGMENT_DURATION;
+			finish += X_AXIS_SEGMENT_DURATION;
+		}
+	}
 
-    public abstract void OnDoubleClick(DateTime clickedTime);
+	public abstract void OnDoubleClick(DateTime clickedTime);
 
 	protected abstract string GetTitle();
 
 	public void PreviusIntervallClickBase() {
 		PreviusIntervallClick();
 		UpdateColumnMarkers();
-    }
+	}
 
 	public void FollowingIntervallClickBase() {
-        FollowingIntervallClick();
+		FollowingIntervallClick();
 		UpdateColumnMarkers();
-    }
+	}
 
 	protected abstract void PreviusIntervallClick();
-    protected abstract void FollowingIntervallClick();
+	protected abstract void FollowingIntervallClick();
 }

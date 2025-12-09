@@ -30,7 +30,6 @@ public static class TextSizeConverters {
 			(rect, lineCount) => {
 				double val = Math.Round(rect.Height / lineCount, 1);
 				return 30;
-				return Math.Max(5.0, val);
 			}
 		);
 
