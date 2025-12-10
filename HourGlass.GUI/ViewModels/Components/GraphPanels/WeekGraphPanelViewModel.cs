@@ -58,8 +58,8 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
 	protected override string GetTitle() {
 		int week = dateTimeService.GetWeekCountAtDate(cacheService.SelectedDay);
-		string startDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
-		string endDate = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay.AddDays(5));
+		string startDate = DateTimeService.ToDayAndMonthString(DateTimeService.FloorWeek(cacheService.SelectedDay));
+		string endDate = DateTimeService.ToDayAndMonthString(DateTimeService.FloorWeek(cacheService.SelectedDay).AddDays(5));
 		return $"W {week}  {startDate}-{endDate}";
 	}
 

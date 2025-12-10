@@ -22,7 +22,8 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 		int daysInCurrentMonth = DateTime.DaysInMonth(selectedMonth.Year, selectedMonth.Month);
 		double xAxisSegmentSize = (Bounds.Width - 2 * PADDING_X) / daysInCurrentMonth;
 		int weekDayCounter = (int)selectedMonth.DayOfWeek;
-		for (int i = 0; i < daysInCurrentMonth; i++) {
+        double textSize = Math.Round(PADDING_Y * 0.7, 1);
+        for (int i = 0; i < daysInCurrentMonth; i++) {
 			double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
 			if (weekDayCounter % 7 == 6 | weekDayCounter % 7 == 0)
 				context.FillRectangle(weekedDayBackground, new(xPos + 1, PADDING_Y, xAxisSegmentSize - 2, Bounds.Height - (2 * PADDING_Y)));
@@ -35,10 +36,10 @@ public partial class MonthGraphPanelView : GraphPanelViewBase {
 				System.Globalization.CultureInfo.CurrentCulture,
 				FlowDirection.LeftToRight,
 				new Typeface("Arial"),
-				13,
+				textSize,
 				textBrush
 			);
-			Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
+			Point textPos = new(xPos + xAxisSegmentSize / 2.0 - formattedText.Width / 2.0, Bounds.Height - (PADDING_Y * 0.85));
 			context.DrawText(
 				formattedText,
 				textPos

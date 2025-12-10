@@ -14,7 +14,8 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 		Pen hintLine = new(new SolidColorBrush(Color.FromArgb(255, 170, 170, 170)));
 		Brush textBrush = new SolidColorBrush(Colors.Gray);
 		context.DrawLine(timeLine, new(PADDING_X, Bounds.Height - PADDING_Y), new(Bounds.Width - PADDING_X, Bounds.Height - PADDING_Y));
-		for (int i = 0; i < 25; i++) {
+        double textSize = Math.Round(PADDING_Y * 0.7, 1);
+        for (int i = 0; i < 25; i++) {
             double xPos = X_AXIS_SEGMENT_SIZE * i + PADDING_X;
             context.DrawLine(hintLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, PADDING_Y));
 			context.DrawLine(timeLine, new Point(xPos, Bounds.Height - PADDING_Y), new Point(xPos, Bounds.Height - PADDING_Y - TIMELINE_MARK_HEIGHT));
@@ -23,11 +24,11 @@ public partial class DayGraphPanelView : GraphPanelViewBase {
 				System.Globalization.CultureInfo.CurrentCulture,
 				FlowDirection.LeftToRight,
 				new Typeface("Arial"),
-				ArialHeightToPt(PADDING_Y),
+				textSize,
 				textBrush
 			);
-			Point textPos = new(xPos - formattedText.Width / 2.0, Bounds.Height - PADDING_Y + 5);
-			context.DrawText(
+            Point textPos = new(xPos - formattedText.Width / 2.0, Bounds.Height - (PADDING_Y * 0.85));
+            context.DrawText(
 				formattedText,
 				textPos
 			);

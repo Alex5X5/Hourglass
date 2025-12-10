@@ -60,7 +60,9 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 			DayOfWeek.Wednesday => "Mittwoch",
 			DayOfWeek.Thursday => "Donnerstag",
 			DayOfWeek.Friday => "Freitag",
-			_ => "Wochenende"
+			DayOfWeek.Saturday => "Samstag",
+			DayOfWeek.Sunday => "Sonntag",
+            _ => "Unknown day Option"
 		};
 		string date = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
 		return $"{day}  {date}";
