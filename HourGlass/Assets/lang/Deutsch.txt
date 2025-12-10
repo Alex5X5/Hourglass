@@ -1,0 +1,8 @@
+MainView.Buttons.Timer:Zeitmessung
+MainView.Buttons.Graphs:Übersicht
+MainView.Buttons.Export:Exportieren
+TimerView.Buttons.Start:Start
+TimerView.Buttons.Stop:Stop
+TimerView.Labels.Start:Anfang
+TimerView.Labels.Stop:Ende
+TimerView.Labels.Description:Beschreibung

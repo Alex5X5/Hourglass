@@ -17,6 +17,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
+	private TranslatorService translatorService;
 	private DateTimeService dateTimeService;
 	private Hourglass.GUI.Services.CacheService cacheService;
 
@@ -56,15 +57,16 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private bool IsFirstGraphPageChange = true;
 	
-	public MainViewModel() : this(null, null, null, null) {
+	public MainViewModel() : this(null, null, null, null, null) {
 		
 	}
 
-	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory, Hourglass.GUI.Services.CacheService cacheService) : base() {
+	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory, Services.CacheService cacheService, TranslatorService translatorService) : base() {
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
 		this.cacheService = cacheService;
+		this.translatorService = translatorService;
 
 		ShowSettingsIcon = true;
 		ShowNavigationBar = true;

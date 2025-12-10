@@ -8,17 +8,21 @@ using System.Text;
 
 public static class PathService {
 
-	public const string ASSETS_VERSION = "0";
-	public const string APP_NAME = "Hourglass\\";
+	public const string ASSETS_VERSION = "1";
+	public const string APP_NAME = "Hourglass";
 
 	public static readonly string APP_FILES_DIRECTORY = Path.Combine(GetMainEntryPointDirectory(), APP_NAME);
 
 	public static readonly string APP_DATA_DIRECTORY = Path.Combine(GetAppDataDirectory(), APP_NAME);
 
+	public static readonly string LANGUAGES_DIRECTORY = LanguagesPath("");
+
 
 	private static bool RequireExtractAssets() {
 		string fileName = AssetsPath("assets_version");
-        if (!File.Exists(fileName)) {
+		if (!Directory.Exists(AssetsPath("")))
+			Directory.CreateDirectory(AssetsPath(""));
+		if (!File.Exists(fileName)) {
 			File.WriteAllText(fileName, ASSETS_VERSION);
 			return true;
 		}
@@ -74,7 +78,10 @@ public static class PathService {
     public static string AssetsPath(string fileName) =>
 		FilesPath(@"Assets\" + fileName);
 
-	public static string DesktopPath(string fileName) =>
+    public static string LanguagesPath(string fileName) =>
+        AssetsPath(@"lang\" + fileName);
+
+    public static string DesktopPath(string fileName) =>
 		Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), fileName);
 
     public static string GetMainEntryPointPath() {

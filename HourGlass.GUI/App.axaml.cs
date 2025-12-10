@@ -33,6 +33,7 @@ public partial class App : Application {
 		PathService.ExtractFiles("Hourglass");
 
 		PageInstanciator instanciator = new(this);
+		instanciator.AddCommonServiceSingleton<TranslatorService, TranslatorService>();
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
 		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
