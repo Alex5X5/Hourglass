@@ -6,7 +6,7 @@ public abstract class PageViewBase : ViewBase {
 
 	
 
-	public PageViewBase() {
+	public PageViewBase() : this(null) {
 
 	}
 

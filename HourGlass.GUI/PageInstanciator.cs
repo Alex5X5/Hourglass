@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class PageInstanciator {
 
 	private readonly IServiceCollection serviceCollection = new ServiceCollection();
-	private readonly Dictionary<Type, IScopeController> runningScopes;
+	//private readonly Dictionary<Type, IScopeController> runningScopes;
 
 	public PageInstanciator(Avalonia.Application application) : this() {
 		serviceCollection.AddSingleton<Func<TopLevel?>>(

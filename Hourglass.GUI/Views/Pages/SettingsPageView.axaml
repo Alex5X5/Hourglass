@@ -3,6 +3,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
+			 xmlns:cls="using:Hourglass.GUI.Views.Pages"
 			 xmlns:pages="using:Hourglass.GUI.Views.Pages"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="Hourglass.GUI.Views.Pages.SettingsPageView"
@@ -57,11 +58,11 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Zurück" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].BackButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
-			<Button Grid.Row="9"
+			<Button Grid.Row="3"
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding GoToGeneralCommand }">
@@ -71,11 +72,11 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Exportieren" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].GeneralButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
-			<Button Grid.Row="3"
+			<Button Grid.Row="5"
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding GoToUserDataCommand }">
@@ -85,11 +86,11 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Nutzerdaten" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].UserDataButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
-			<Button Grid.Row="5"
+			<Button Grid.Row="7"
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding GoToAboutCommand }">
@@ -99,11 +100,11 @@
 								Stretch="Uniform"
 								VerticalAlignment="Center"
 								HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Über Uns" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].AboutButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
-			<Button Grid.Row="7"
+			<Button Grid.Row="9"
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding GoToVisualsCommand }">
@@ -113,11 +114,11 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Grafik" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].VisualButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
-			<Button Grid.Row="9"
+			<Button Grid.Row="11"
 					Grid.Column="1"
 					Classes="Default"
 					Command="{ Binding GoToExportCommand }">
@@ -127,7 +128,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Exportieren" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].ExportButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -150,7 +151,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Speichern" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].SaveButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -164,7 +165,7 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Abbrechen" FontSize="13"/>
+						<TextBlock Classes="ButtonContent" Text="{ Binding $parent[5].CancelButtonText }" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>

@@ -17,14 +17,13 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
-	private TranslatorService translatorService;
 	private DateTimeService dateTimeService;
-	private Hourglass.GUI.Services.CacheService cacheService;
+	private Services.CacheService cacheService;
 
 	private PageViewModelBase? lastPage;
 
-	private PageViewModelBase _CurrentPage;
-	public PageViewModelBase CurrentPage {
+	private PageViewModelBase? _CurrentPage;
+	public PageViewModelBase? CurrentPage {
 		get { return _CurrentPage; }
 		private set {
 			Console.WriteLine($"settin current page to {value?.GetType()?.Name}");
@@ -33,7 +32,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		}
 	}
 
-	public string Title { get => _CurrentPage.Title; }
+	public string Title { get => _CurrentPage?.Title ?? ""; }
 
     private GridLength navigationBarHeight = new GridLength(1, GridUnitType.Star);
 	public GridLength NavigationBarHeight {
@@ -66,7 +65,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
 		this.cacheService = cacheService;
-		this.translatorService = translatorService;
 
 		ShowSettingsIcon = true;
 		ShowNavigationBar = true;
@@ -84,8 +82,8 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 			return;
 		lastPage = CurrentPage;
 		CurrentPage = pageFactory.GetPageViewModel<PageT>(afterCreation);
-		Console.WriteLine($"chaged type of page to:{_CurrentPage.GetType().Name}");
-		Console.WriteLine($"new page is {_CurrentPage.GetType().IsVisible} visible");
+		Console.WriteLine($"chaged type of page to:{_CurrentPage?.GetType()?.Name ?? "NullType"}");
+		Console.WriteLine($"new page is {_CurrentPage?.GetType()?.IsVisible ?? false} visible");
 	}
 
 	public void GoBack() {
