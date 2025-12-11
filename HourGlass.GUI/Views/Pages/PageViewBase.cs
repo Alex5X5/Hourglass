@@ -10,7 +10,7 @@ public abstract class PageViewBase : ViewBase {
 
 	}
 
-	public PageViewBase(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public PageViewBase(ViewModelBase? model) : base(model) {
 	}
 
 }

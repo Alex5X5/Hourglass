@@ -1,12 +1,11 @@
 ﻿namespace Hourglass.Util.Services;
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 internal unsafe class YmlReader {
 
-	public string this[string index] => GetValue(index);
+	public string? this[string index] => GetValue(index);
 	private Dictionary<string, string> bufferedKeyValuePairs = [];
 
 	public unsafe void ReadFromFile(string filePath) {
@@ -55,8 +54,8 @@ internal unsafe class YmlReader {
 		NativeMemory.Free(text);
 	}
 
-	private string GetValue(string index) {
+	private string? GetValue(string index) {
 		bufferedKeyValuePairs.TryGetValue(index, out string? bufferedRes);
-		return bufferedRes ?? "";
+		return bufferedRes;
 	}
 }

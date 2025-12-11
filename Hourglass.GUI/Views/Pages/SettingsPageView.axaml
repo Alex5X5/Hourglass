@@ -43,7 +43,9 @@
 				<RowDefinition Height="3*" />
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="3*" />
-				<RowDefinition Height="17*" />
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="12*" />
 			</Grid.RowDefinitions>
 			<Button Grid.Row="1"
 					Grid.Column="1"
@@ -56,6 +58,20 @@
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
 						<TextBlock Classes="ButtonContent" Text="Zurück" FontSize="13"/>
+					</Viewbox>
+				</Grid>
+			</Button>
+			<Button Grid.Row="9"
+					Grid.Column="1"
+					Classes="Default"
+					Command="{ Binding GoToGeneralCommand }">
+				<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Classes="ButtonContent" Text="Exportieren" FontSize="13"/>
 					</Viewbox>
 				</Grid>
 			</Button>

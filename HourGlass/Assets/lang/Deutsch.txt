@@ -6,3 +6,9 @@ TimerView.Buttons.Stop:Stop
 TimerView.Labels.Start:Anfang
 TimerView.Labels.Stop:Ende
 TimerView.Labels.Description:Beschreibung
+UserDataSubSettingsPageView.Buttons.Start:Start
+Views.Pages.Setting.UserData.Labels.Username:Nutzername
+Views.Pages.Setting.UserData.Labels.Job:Nutzername
+Views.Pages.Setting.UserData.Labels.Username:Nutzername
+Views.Pages.Setting.UserData.Labels.Username:Nutzername
+Views.Pages.Setting.UserData.Labels.Username:Nutzername

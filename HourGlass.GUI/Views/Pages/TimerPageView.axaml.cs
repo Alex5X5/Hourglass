@@ -10,11 +10,11 @@ public partial class TimerPageView : PageViewBase {
 
 	private bool initialDescriptionTextboxClear = true;
 	
-	public TimerPageView() : this(null, null) {
+	public TimerPageView() : this(null) {
 		
 	}
 
-	public TimerPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public TimerPageView(ViewModelBase? model) : base(model) {
 		InitializeComponent();
 		startButton.GotFocus += (sender, args) => {
 			startButton.InvalidateVisual();

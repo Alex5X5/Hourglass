@@ -57,11 +57,11 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private bool IsFirstGraphPageChange = true;
 	
-	public MainViewModel() : this(null, null, null, null, null) {
+	public MainViewModel() : this(null, null, null, null) {
 		
 	}
 
-	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory, Services.CacheService cacheService, TranslatorService translatorService) : base() {
+	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory, Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;

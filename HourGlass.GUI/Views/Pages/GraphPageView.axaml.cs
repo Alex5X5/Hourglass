@@ -10,7 +10,7 @@ public partial class GraphPageView : PageViewBase {
 
 	}
 
-	public GraphPageView(GraphPageViewModel model) : base(model, null) {
+	public GraphPageView(GraphPageViewModel? model) : base(model) {
 		InitializeComponent();
 	}
 

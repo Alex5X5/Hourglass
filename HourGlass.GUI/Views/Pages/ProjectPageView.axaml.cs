@@ -4,11 +4,13 @@ using Hourglass.GUI.ViewModels;
 
 public partial class ProjectPageView : PageViewBase {
 
-	public ProjectPageView() : this(null, null) {
+
+
+	public ProjectPageView() : this(null) {
 
 	}
 
-	public ProjectPageView(ViewModelBase? model, IServiceProvider? services) : base(model, services) {
+	public ProjectPageView(ViewModelBase? model) : base(model) {
 		InitializeComponent();
 	}
 

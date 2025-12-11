@@ -33,7 +33,6 @@ public partial class App : Application {
 		PathService.ExtractFiles("Hourglass");
 
 		PageInstanciator instanciator = new(this);
-		instanciator.AddCommonServiceSingleton<TranslatorService, TranslatorService>();
 		instanciator.AddCommonServiceSingleton<DateTimeService, DateTimeService>();
 		instanciator.AddCommonServiceSingleton<SettingsService, SettingsService>();
 		instanciator.AddCommonServiceSingleton<ColorService, ColorService>();
@@ -64,6 +63,7 @@ public partial class App : Application {
 
 		instanciator.AddContentBindingType<SubSettingsPageViewModelBase>();
         instanciator.RegisterPageSingleton<SettingsPageViewModel>();
+		instanciator.RegisterPageTransient<GeneralSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<AboutSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<ExportSubSettingsPageViewModel>();
 		instanciator.RegisterPageTransient<VisualsSubSettingsPageViewModel>();

@@ -4,6 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages.SettingsPages"
 			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
+			 xmlns:cls="using:Hourglass.GUI.Views.Pages.SettingsPages"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:reactive="using:System.Reactive;assembly=System.Reactive"
 			 x:DataType="vm:UserDataSubSettingsPageViewModel"
@@ -44,7 +45,7 @@
 			<ColumnDefinition Width="1*" />
 			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
-		<TextBlock Text="Nutzername"
+		<TextBlock Text="{ Binding $parent[cls:UserDataSubSettingsPageView].UsernameLabelText }"
 				   Grid.Row="0"
 				   Grid.Column="1"
 				   Classes="Default DynamicTextHeight" />
@@ -53,7 +54,7 @@
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
 				 Classes="DefaultBackground DefaultBorder" />
-		<TextBlock Text="Ausbildungsrichtung"
+		<TextBlock Text="{ Binding $parent[cls:UserDataSubSettingsPageView].JobNameLabelText }"
 				   Grid.Row="4"
 				   Grid.Column="1"
 				   MinHeight="0"
@@ -63,7 +64,7 @@
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
 				 Classes="DefaultBackground DefaultBorder" />
-		<TextBlock Text="Start Datum"
+		<TextBlock Text="{ Binding $parent[cls:UserDataSubSettingsPageView].StartDateLabelText }"
 				   Grid.Row="8"
 				   Grid.Column="1"
 				   MinHeight="0"

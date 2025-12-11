@@ -63,6 +63,11 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
     }
 
     [RelayCommand]
+    private void GoToGeneral() {
+        ChangePage<GeneralSubSettingsPageViewModel>();
+    }
+
+    [RelayCommand]
     private void GoToAbout() {
         ChangePage<AboutSubSettingsPageViewModel>();
     }

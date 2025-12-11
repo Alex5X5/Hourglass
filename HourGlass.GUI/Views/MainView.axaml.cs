@@ -2,7 +2,6 @@
 
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
-using ReactiveUI;
 
 public partial class MainView : ViewBase {
 
