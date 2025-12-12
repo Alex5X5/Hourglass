@@ -16,7 +16,7 @@ public partial class TimerPageView : PageViewBase {
     [TranslateMember("Views.Pages.Timer.Labels.Start", "Start")]
     public string StartLabelText { get; set; }
 
-    [TranslateMember("Views.Pages.Timer.Labels.Stop", "Stop")]
+    [TranslateMember("Views.Pages.Timer.Labels.Stop", "Finish")]
     public string FinishLabelText { get; set; }
 
 

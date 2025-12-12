@@ -22,7 +22,7 @@ public class ColorService {
 		TASK_BACKGROUND_DARK_BLUE = GetColorFromResources("TaskBackgroundDarkBlue") ?? new Color(255, 0, 60, 199);
 		TASK_BACKGROUND_LIGHT_GREEN = GetColorFromResources("TaskBackgroundLightGreen") ?? new Color(255, 50, 205, 50);
 		TASK_BACKGROUND_DARK_GREEN = GetColorFromResources("TaskBackgroundDarkGreen") ?? new Color(255, 0, 128, 0);
-        TASK_BACKGROUND_LIGTH_BLUE = GetColorFromResources("TaskBackgroundLightGray") ?? new Color(255, 129, 128, 128);
+        TASK_BACKGROUND_LIGHT_GRAY = GetColorFromResources("TaskBackgroundLightGray") ?? new Color(255, 129, 128, 128);
         TASK_BACKGROUND_DARK_GRAY = GetColorFromResources("TaskBackgroundDarkGray") ?? new Color(255, 79, 79, 79);
     }
 

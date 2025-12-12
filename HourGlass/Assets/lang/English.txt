@@ -1,0 +1,40 @@
+MainView.Buttons.Timer:Timer
+MainView.Buttons.Graphs:Graphs
+MainView.Buttons.Export:Export
+
+TimerView.Buttons.Start:Start
+TimerView.Buttons.Stop:Stop
+TimerView.Labels.Start:Start
+TimerView.Labels.Stop:Finish
+TimerView.Labels.Description:Description
+
+Views.Pages.Setting.UserData.Labels.Back:Back
+
+Views.Pages.Settings.Buttons.Back:Back
+Views.Pages.Settings.Buttons.General:General
+Views.Pages.Settings.Buttons.UserData:User Data
+Views.Pages.Settings.Buttons.About:About
+Views.Pages.Settings.Buttons.Visual:Visuals
+Views.Pages.Settings.Buttons.Export:Export
+Views.Pages.Settings.Buttons.Save:Save Settings
+Views.Pages.Settings.Buttons.Cancel:Cancel
+
+Views.Pages.Timer.Labels.Start:Start
+Views.Pages.Timer.Labels.Stop:Finish
+Views.Pages.Timer.Labels.Description:Description
+Views.Pages.Timer.Buttons.Start:Start
+Views.Pages.Timer.Buttons.Stop:Stop
+
+Views.Pages.Export.Buttons.Import:Import
+Views.Pages.Export.Buttons.Export:Export
+Views.Pages.Export.Buttons.Folder:Open Folder
+
+Views.Pages.TaskDetails.Buttons.Stop:Stop
+Views.Pages.TaskDetails.Buttons.Continiue:Continiue
+Views.Pages.TaskDetails.Buttons.StartNew:Start New
+Views.Pages.TaskDetails.Buttons.Save:Save
+Views.Pages.TaskDetails.Buttons.Delete:Delete
+
+Views.Pages.TaskDetails.Labels.Start:Start
+Views.Pages.TaskDetails.Labels.Stop:Finish
+Views.Pages.TaskDetails.Labels.Description:Description
