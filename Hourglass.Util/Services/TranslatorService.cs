@@ -32,12 +32,14 @@ public class TranslatorService {
 		Languages = [];
 		foreach (string path in Directory.GetFiles(PathService.LANGUAGES_DIRECTORY))
 			Languages[Path.GetFileNameWithoutExtension(path)] = path;
-		CurrentLanguageName = Languages.Keys.ToList()[0];
+		CurrentLanguageName = Languages.Keys.ToList()[1];
 	}
 
 	private void ChangeLanguage(string value) {
 		if(Languages.TryGetValue(value, out var filePath)) {
-			_currentLanguageName = value;
+			Console.WriteLine("Changing to Language:"+value);
+			Console.WriteLine("Path to Language file is:"+filePath);
+            _currentLanguageName = value;
 			ymlReader.ReadFromFile(filePath);
 		}
 	}

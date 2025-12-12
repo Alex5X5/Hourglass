@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.Util.Services;
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -9,7 +10,8 @@ internal unsafe class YmlReader {
 	private Dictionary<string, string> bufferedKeyValuePairs = [];
 
 	public unsafe void ReadFromFile(string filePath) {
-		byte* file = FileService.LoadFileUnsafe(filePath, out int fileSize);
+        //Console.WriteLine($"reading from file at {filePath}");
+        byte* file = FileService.LoadFileUnsafe(filePath, out int fileSize);
 		char* text = FileService.DecodeBufferAnsi(file, fileSize, out int charCount);
 		NativeMemory.Free(file);
 		bufferedKeyValuePairs = [];
@@ -49,8 +51,10 @@ internal unsafe class YmlReader {
 			}
             string val = new(currentSubStringStart, 0, valueCharCount);
 			currentSubStringStart = currentchar;
+			//Console.WriteLine($"key:\"{key}\", value:\"{val}\"");
 			bufferedKeyValuePairs[key] = val;
         }
+		//Console.WriteLine($"read {bufferedKeyValuePairs.Count} entries");
 		NativeMemory.Free(text);
 	}
 
