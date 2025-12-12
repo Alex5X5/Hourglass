@@ -8,13 +8,13 @@ using Hourglass.Util.Attributes;
 public partial class UserDataSubSettingsPageView : SubSettingsPageViewBase {
 
     [TranslateMember("Views.Pages.Settings.UserData.Labels.Username", "Username")]
-    public string UsernameLabelText { get; set; }
+    public string UsernameLabelText { get; set; } = "";
 
     [TranslateMember("Views.Pages.Settings.UserData.Labels.StartDate", "StartDate")]
-    public string StartDateLabelText { get; set; }
-    
+    public string StartDateLabelText { get; set; } = "";
+
     [TranslateMember("Views.Pages.Settings.UserData.Labels.JobName", "JobName")]
-    public string JobNameLabelText { get; set; }
+    public string JobNameLabelText { get; set; } = "";
 
 
     public UserDataSubSettingsPageView() : base() {

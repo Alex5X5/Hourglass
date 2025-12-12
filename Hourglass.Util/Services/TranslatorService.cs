@@ -32,7 +32,7 @@ public class TranslatorService {
 		Languages = [];
 		foreach (string path in Directory.GetFiles(PathService.LANGUAGES_DIRECTORY))
 			Languages[Path.GetFileNameWithoutExtension(path)] = path;
-		CurrentLanguageName = Languages.Keys.First();
+		CurrentLanguageName = Languages.Keys.ToList()[0];
 	}
 
 	private void ChangeLanguage(string value) {

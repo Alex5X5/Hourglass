@@ -4,12 +4,16 @@ using Avalonia.Controls;
 using Avalonia.Input;
 
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util.Attributes;
 
 public partial class TaskDetailsPageView : PageViewBase {
 
-	//private bool initialDescriptionTextboxClear = true;
+	[TranslateMember("Views.Pages.Export.Buttons.Import", "Import")]
+	public string ImportButtonText { get; set; } = "";
 
-	public TaskDetailsPageView() : base() {
+    //private bool initialDescriptionTextboxClear = true;
+
+    public TaskDetailsPageView() : base() {
 		InitializeComponent();
 		//startButton.GotFocus += (sender, args) => {
 		//	startButton.InvalidateVisual();

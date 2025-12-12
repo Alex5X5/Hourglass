@@ -2,12 +2,22 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util.Attributes;
 
 namespace Hourglass.GUI.Views.Pages;
 
 public partial class ExportPageView : PageViewBase {
 
-	public ExportPageView() : base() {
+    [TranslateMember("Views.Pages.Export.Buttons.Import", "Import")]
+    public string ImportButtonText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.Export.Buttons.Export", "Export")]
+    public string ExportButtonText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.Export.Buttons.Folder", "Open Folder")]
+    public string FolderButtonText { get; set; } = "";
+
+    public ExportPageView() : base() {
 		InitializeComponent();
     }
     
