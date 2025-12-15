@@ -5,12 +5,29 @@ using Avalonia.Input;
 
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util.Attributes;
 
 public partial class TimerPageView : PageViewBase {
 
-	private bool initialDescriptionTextboxClear = true;
-	
-	public TimerPageView() : this(null) {
+
+    [TranslateMember("Views.Pages.Timer.Labels.Description", "Description")]
+    public string DescriptionLabelText { get; set; }
+
+    [TranslateMember("Views.Pages.Timer.Labels.Start", "Start")]
+    public string StartLabelText { get; set; }
+
+    [TranslateMember("Views.Pages.Timer.Labels.Stop", "Finish")]
+    public string FinishLabelText { get; set; }
+
+
+    [TranslateMember("Views.Pages.Timer.Buttons.Start", "Start")]
+    public string StartButtonText { get; set; }
+
+    [TranslateMember("Views.Pages.Timer.Buttons.Stop", "Stop")]
+    public string StopButtonText { get; set; }
+
+
+    public TimerPageView() : this(null) {
 		
 	}
 

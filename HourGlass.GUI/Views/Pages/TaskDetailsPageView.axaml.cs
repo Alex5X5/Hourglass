@@ -4,12 +4,40 @@ using Avalonia.Controls;
 using Avalonia.Input;
 
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util.Attributes;
 
 public partial class TaskDetailsPageView : PageViewBase {
 
-	//private bool initialDescriptionTextboxClear = true;
+    [TranslateMember("Views.Pages.TaskDetails.Labels.Start", "Start")]
+    public string StartLabelText { get; set; } = "";
 
-	public TaskDetailsPageView() : base() {
+    [TranslateMember("Views.Pages.TaskDetails.Labels.Stop", "Finish")]
+    public string FinishLabelText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.TaskDetails.Labels.Description", "Description")]
+    public string DescriptionLabelText { get; set; } = "";
+
+
+    [TranslateMember("Views.Pages.TaskDetails.Buttons.Stop", "Stop")]
+	public string StopButtonText { get; set; } = "";
+
+	[TranslateMember("Views.Pages.TaskDetails.Buttons.Continiue", "Continiue")]
+    public string ContiniueButtonText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.TaskDetails.Buttons.StartNew", "Start New")]
+    public string StartNewButtonText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.TaskDetails.Buttons.Save", "Save")]
+    public string SaveButtonText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.TaskDetails.Buttons.Delete", "Delete")]
+    public string DeleteButtonText { get; set; } = "";
+
+
+
+    //private bool initialDescriptionTextboxClear = true;
+
+    public TaskDetailsPageView() : base() {
 		InitializeComponent();
 		//startButton.GotFocus += (sender, args) => {
 		//	startButton.InvalidateVisual();

@@ -4,6 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="1200"
 			 xmlns:local="using:Hourglass.GUI.Views.Components"
+			 xmlns:cls="using:Hourglass.GUI.Views.Pages"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 x:Class="Hourglass.GUI.Views.Pages.ExportPageView"
 			 x:DataType="vm:ExportPageViewModel"
@@ -378,7 +379,8 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Importieren" />
+						<TextBlock Classes="ButtonContent"
+								   Text="{ Binding $parent[cls:ExportPageView].ImportButtonText }" />
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -391,7 +393,8 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Exportieren" />
+						<TextBlock Classes="ButtonContent"
+								   Text="{ Binding $parent[cls:ExportPageView].ExportButtonText }" />
 					</Viewbox>
 				</Grid>
 			</Button>
@@ -404,7 +407,8 @@
 							 Stretch="Uniform"
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
-						<TextBlock Classes="ButtonContent" Text="Ordner Öffnen" />
+						<TextBlock Classes="ButtonContent"
+								   Text="{ Binding $parent[cls:ExportPageView].FolderButtonText }" />
 					</Viewbox>
 				</Grid>
 			</Button>

@@ -5,6 +5,7 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
+			 xmlns:cls="using:Hourglass.GUI.Views.Pages"
 			 xmlns:reactive="using:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.TimerPageView"
 			 x:DataType="vm:TimerPageViewModel"
@@ -43,11 +44,11 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Anfang"
+			<TextBlock Text="{ Binding $parent[cls:TimerPageView].StartLabelText }"
 					   Grid.Row="0"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Ende"
+			<TextBlock Text="{ Binding $parent[cls:TimerPageView].FinishLabelText }"
 					   Grid.Row="0"
 					   Grid.Column="2"
 					   Classes="Default DynamicTextHeight" />
@@ -61,7 +62,7 @@
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Beschreibung"
+			<TextBlock Text="{ Binding $parent[cls:TimerPageView].DescriptionLabelText }"
 					   Grid.Row="4"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
@@ -113,7 +114,8 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Start" />
+							<TextBlock Classes="ButtonContent"
+									   Text="{ Binding $parent[cls:TimerPageView].StartButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -128,7 +130,8 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Stop" />
+							<TextBlock Classes="ButtonContent"
+									   Text="{ Binding $parent[cls:TimerPageView].StopButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>

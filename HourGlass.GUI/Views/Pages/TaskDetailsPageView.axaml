@@ -3,7 +3,8 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages"
+			 xmlns:cls="using:Hourglass.GUI.Views.Pages"
+			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
 			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
 			 xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.TaskDetailsPageView"
@@ -41,7 +42,7 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="2*" />
 			</Grid.ColumnDefinitions>
-			<TextBlock Text="Start"
+			<TextBlock Text="{ Binding $parent[cls:TaskDetailsPageView].StartLabelText }"
 					   Grid.Row="0"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
@@ -50,7 +51,7 @@
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Finish"
+			<TextBlock Text="{ Binding $parent[cls:TaskDetailsPageView].FinishLabelText }"
 					   Classes="DynamicTextHeight"
 					   Grid.Row="0"
 					   Grid.Column="2">
@@ -60,7 +61,7 @@
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
 					 Classes="Default DynamicTextHeight" />
-			<TextBlock Text="Description"
+			<TextBlock Text="{ Binding $parent[cls:TaskDetailsPageView].DescriptionLabelText }"
 					   Grid.Row="4"
 					   Grid.Column="0"
 					   Classes="Default DynamicTextHeight" />
@@ -153,7 +154,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Continiue" />
+							<TextBlock Classes="ButtonContent" Text="{ Binding $parent[cls:TaskDetailsPageView].ContiniueButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -168,7 +169,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Stop" />
+							<TextBlock Classes="ButtonContent" Text="{ Binding $parent[cls:TaskDetailsPageView].StopButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -183,7 +184,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Start New" />
+							<TextBlock Classes="ButtonContent" Text="{ Binding $parent[cls:TaskDetailsPageView].StartNewButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -198,7 +199,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Save" />
+							<TextBlock Classes="ButtonContent" Text="{ Binding $parent[cls:TaskDetailsPageView].SaveButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -213,7 +214,7 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Delete" />
+							<TextBlock Classes="ButtonContent" Text="{ Binding $parent[cls:TaskDetailsPageView].DeleteButtonText }" />
 						</Viewbox>
 					</Grid>
 				</Button>

@@ -2,10 +2,17 @@
 
 using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.Util.Attributes;
 
 public partial class MainView : ViewBase {
 
-	public MainView() : this(null) {
+    [TranslateMember("Views.Pages.TaskDetails.Labels.Start", "Start")]
+    public string StartLabelText { get; set; } = "";
+
+    [TranslateMember("Views.Pages.TaskDetails.Labels.Stop", "Finish")]
+    public string FinishLabelText { get; set; } = "";
+
+    public MainView() : this(null) {
 
 	}
 
