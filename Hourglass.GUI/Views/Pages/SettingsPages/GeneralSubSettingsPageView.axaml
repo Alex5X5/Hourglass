@@ -10,8 +10,26 @@
 			 x:CompileBindings="True"
 			 Loaded="UserControl_Loaded">
 	<Design.DataContext>
-		<vm:AboutSubSettingsPageViewModel />
+		<vm:GeneralSubSettingsPageViewModel />
 	</Design.DataContext>
-	<Grid Background="White" >
+	<Grid Background="White" ShowGridLines="True">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="3*" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="3*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="2*" />
+		</Grid.ColumnDefinitions>
 	</Grid>
 </UserControl>

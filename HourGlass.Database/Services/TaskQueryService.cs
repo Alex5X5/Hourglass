@@ -1,7 +1,7 @@
 ﻿namespace Hourglass.Database.Services;
 
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.Util;
+using Hourglass.Util.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

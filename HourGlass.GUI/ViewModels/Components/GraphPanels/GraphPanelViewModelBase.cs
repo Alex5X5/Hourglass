@@ -3,11 +3,9 @@
 using Avalonia.Controls;
 using Hourglass.Database;
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util;
+using Hourglass.Util.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -47,10 +45,13 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public bool[] MarkedColumns;
 	public bool[] BlockedColumns;
 
+	public event Action NotifyPhaseOutTransitionStart;
+	public event Action NotifyPhaseInTransitionStart;
+
 
 	public IHourglassDbService dbService { set; get; }
 	public DateTimeService dateTimeService { set; get; }
-	public CacheService cacheService;
+	public Services.CacheService cacheService;
 
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
@@ -61,7 +62,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 	}
 	
-	public GraphPanelViewModelBase(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService) : base() {
+	public GraphPanelViewModelBase(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.panelController = panelController;
@@ -124,6 +125,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 				MarkedColumns[i] = false;
 	}
 
+	public async Task OnMissingContextMenuClicked(BlockedTimeIntervallType reason) {
+		await SetTimeIntervallBlocked(reason);
+		UpdateColumnMarkers();
+	}
+
 	public async Task OnMissingContextMenuSickClicked() {
 		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Sick);
 		UpdateColumnMarkers();
@@ -164,8 +170,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 					.Where(x => x.start >= start && x.start <= finish)
 						.Where(x => x.finish >= start && x.finish <= finish);
 				if (!tasks_.Any()) {
-                    await dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start*TimeSpan.TicksPerSecond), X_AXIS_SEGMENT_DURATION);
-                }
+					await dbService.CreateIntervallBlockingTaskAsync(reason, new DateTime(start*TimeSpan.TicksPerSecond), X_AXIS_SEGMENT_DURATION);
+				}
 			}
 			start += X_AXIS_SEGMENT_DURATION;
 			finish += X_AXIS_SEGMENT_DURATION;

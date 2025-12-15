@@ -5,14 +5,13 @@ using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.GUI.Services;
-using Hourglass.Util;
+using Hourglass.Util.Services;
 using System.ComponentModel;
 
 public partial class AboutSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
     private IHourglassDbService dbService;
-    private CacheService cacheService;
+    private Services.CacheService cacheService;
     private ViewModelFactory<MainViewModel> pageFactory;
     private MainViewModel controller;
 

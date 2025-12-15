@@ -1,0 +1,5 @@
+﻿[*.cs]
+
+# IDE0160: In namespace eines Blockbereichs konvertieren
+dotnet_diagnostic.IDE0160.severity = none
+dotnet_diagnostic.ENC0097.severity = none
