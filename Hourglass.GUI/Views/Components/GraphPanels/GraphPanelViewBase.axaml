@@ -1,10 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Components.GraphPanels"
-			 xmlns:cp="using:Hourglass.GUI.Components"
+			 xmlns:cpvm="using:Hourglass.GUI.ViewModels.Components"
+			 xmlns:cp="using:Hourglass.GUI.Views.Components"
 			 x:Class="Hourglass.GUI.Views.Components.GraphPanels.GraphPanelViewBase"
 			 x:DataType="vm:GraphPanelViewModelBase"
 			 Tapped="OnClickBase"
@@ -14,6 +15,24 @@
 			 PointerReleased="OnMouseReleasedBase"
 			 Loaded="OnLoaded"
 			 x:CompileBindings="True">
+	<!--
+	<UserControl.Styles>
+		<Style Selector="Panel">
+			<Setter Property="Background" Value="Red"/>
+			<Style.Animations>
+				<Animation Duration="0:0:3"> 
+					<KeyFrame Cue="0%">
+						<Setter Property="Opacity" Value="0.0"/>
+					</KeyFrame>
+					<KeyFrame Cue="100%">
+						<Setter Property="Opacity" Value="1.0"/>
+					</KeyFrame>
+				</Animation>
+			</Style.Animations>
+		</Style>
+	</UserControl.Styles>
+		</Grid.ColumnDefinitions>
+	-->
 	<Panel>
 		<Grid>
 			<Grid.RowDefinitions>
@@ -26,10 +45,22 @@
 				<ColumnDefinition Width="{ Binding GraphAreaYWeight }" />
 				<ColumnDefinition Width="{ Binding PaddingYWeight }" />
 			</Grid.ColumnDefinitions>
+			<!--
+			-->
+			<ItemsControl Grid.Row ="0"
+						  Grid.Column="1"
+						  Grid.RowSpan="3"
+						  ItemsSource="{ Binding CurrentTasks }">
+				<ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="cpvm:TaskGraphViewModel">
+                        <cp:TaskGraph DataContext="{ Binding }"/>
+                    </DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
 			<Grid Grid.Row ="1"
-					Grid.Column="0"
-					RowDefinitions="*, 5*, *"
-					ColumnDefinitions="*, 7*, *" >
+				  Grid.Column="0"
+				  RowDefinitions="*, 5*, *"
+				  ColumnDefinitions="*, 7*, *" >
 				<Button Grid.Row ="1"
 						Grid.Column="1"
 						Classes="Default"

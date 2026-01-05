@@ -1,12 +1,18 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
 using Avalonia.Controls;
+using Avalonia.Threading;
+
 using Hourglass.Database;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util.Services;
+
+using ReactiveUI;
+
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase {
@@ -45,8 +51,20 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public bool[] MarkedColumns;
 	public bool[] BlockedColumns;
 
-	public event Action NotifyPhaseOutTransitionStart;
-	public event Action NotifyPhaseInTransitionStart;
+	public bool TransitionRunning;
+
+	public event Action<int> NotifyTransitionStep = (step) => { };
+	public int TransitionStep { get; private set; } = 0;
+	
+
+	public ObservableCollection<TaskGraphViewModel> CurrentTasks {
+		get;
+		set;
+	}
+	public ObservableCollection<TaskGraphViewModel> PhasingOutTasks {
+		get;
+		set;
+	}
 
 
 	public IHourglassDbService dbService { set; get; }
@@ -57,6 +75,12 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	protected MainViewModel pageController;
 
 	public string Title => GetTitle();
+
+	private string _rowDefinitions;
+	public string RowDefinitions {
+		get => _rowDefinitions;
+		set => this.RaiseAndSetIfChanged(ref _rowDefinitions, value);
+	}
 
 	public GraphPanelViewModelBase() : this(null, null, null, null, null) {
 
@@ -69,33 +93,28 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.pageController = pageController;
 		this.cacheService = cacheService;
 
+		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
+			//new TaskGraphViewModel(, TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_DURATION)
+		
+		Dispatcher.UIThread.InvokeAsync(
+			async () => {
+				await Task.Delay(1000);
+				await RemoveItem(CurrentTasks[0]);
+			}
+		);
+
 		MarkedColumns = new bool[32];
 		BlockedColumns = new bool[32];
 		for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
 		}
+		RowDefinitions = string.Join("*", Enumerable.Repeat(",2*,*", Y_AXIS_SEGMENT_COUNT));
 	}
 
-	public void OnLoad() {
-		UpdateColumnMarkers();
-	}
-
-	public void OnMouseDragging(Avalonia.Rect dragRect, double width, double paddingX) {
-		double leftRectBound = dragRect.X - paddingX;
-		double rightRectBound = leftRectBound + dragRect.Width;
-		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
-			double leftSegmentBound = width * i / X_AXIS_SEGMENT_COUNT;
-			double rightSegmentBound = width * (i + 1) / X_AXIS_SEGMENT_COUNT;
-			MarkedColumns[i] = false;
-			if(rightRectBound < leftSegmentBound)
-				continue;
-			if(leftRectBound > rightSegmentBound)
-				continue;
-			MarkedColumns[i] = true;
-		}
-	}
-	
-	public void OnMouseMoved() {
+	public async Task RemoveItem(TaskGraphViewModel item) {
+		item.IsRemoving = true;
+		await Task.Delay(2000);
+		CurrentTasks.Remove(item);
 	}
 
 	public void UpdateColumnMarkers() {
@@ -114,53 +133,32 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 	public abstract Task<List<Database.Models.Task>> GetTasksAsync();
 
+	protected abstract string GetTitle();
 	public virtual void OnTaskClicked(Database.Models.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.GoToTaskdetails(task);
 	}
 
-	public void OnMousePressed(bool isLeftDown, bool isRightdown) {
-		if (!isRightdown)
-			for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++)
-				MarkedColumns[i] = false;
-	}
-
-	public async Task OnMissingContextMenuClicked(BlockedTimeIntervallType reason) {
-		await SetTimeIntervallBlocked(reason);
-		UpdateColumnMarkers();
-	}
-
-	public async Task OnMissingContextMenuSickClicked() {
-		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Sick);
-		UpdateColumnMarkers();
-	}
-
-	public async Task MissingContextMenuHolidayClicked() {
-		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Holiday);
-		UpdateColumnMarkers();
-	}
-
-	public async Task MissingContextMenuHomeWorkedClick() {
-		await SetTimeIntervallBlocked(BlockedTimeIntervallType.HomeWork);
-		UpdateColumnMarkers();
-	}
-
-	public async Task MissingContextMenuVacantClicked() {
-		await SetTimeIntervallBlocked(BlockedTimeIntervallType.Vacant);
-		UpdateColumnMarkers();
-	}
-
-	public async Task MissingContextMenuNoExcuseClicked() {
-		await SetTimeIntervallBlocked(BlockedTimeIntervallType.NoExcuse);
-		UpdateColumnMarkers();
-	}
-
-	public async Task MissingContextMenuPresentClicked() {
-		await SetTimeIntervallUnblocked();
-		UpdateColumnMarkers();
+	public void OnMouseDragging(Avalonia.Rect dragRect, double width, double paddingX) {
+		double leftRectBound = dragRect.X - paddingX;
+		double rightRectBound = leftRectBound + dragRect.Width;
+		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
+			double leftSegmentBound = width * i / X_AXIS_SEGMENT_COUNT;
+			double rightSegmentBound = width * (i + 1) / X_AXIS_SEGMENT_COUNT;
+			MarkedColumns[i] = false;
+			if (rightRectBound < leftSegmentBound)
+				continue;
+			if (leftRectBound > rightSegmentBound)
+				continue;
+			MarkedColumns[i] = true;
+		}
 	}
 
 	public async Task SetTimeIntervallBlocked(BlockedTimeIntervallType reason) {
+		if (reason == BlockedTimeIntervallType.None) {
+			await SetTimeIntervallUnblocked();
+			return;
+		}
 		long start = TIME_INTERVALL_START_SECONDS;
 		long finish = start + X_AXIS_SEGMENT_DURATION;
 		List<Database.Models.Task> tasks = dbService.QueryBlockingTasksInIntervallAsync(TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_FINISH_SECONDS).Result;
@@ -195,18 +193,38 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		}
 	}
 
+	public void OnMouseMoved() {
+
+	}
+
+	public void OnMousePressed(bool isLeftDown, bool isRightdown) {
+		if (!isRightdown)
+			for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++)
+				MarkedColumns[i] = false;
+	}
+
+	public async Task OnMissingContextMenuClicked(BlockedTimeIntervallType reason) {
+		await SetTimeIntervallBlocked(reason);
+		UpdateColumnMarkers();
+	}
+
 	public abstract void OnDoubleClick(DateTime clickedTime);
 
-	protected abstract string GetTitle();
-
+	public void OnLoad() {
+		UpdateColumnMarkers();
+	}
+	
 	public void PreviusIntervallClickBase() {
 		PreviusIntervallClick();
 		UpdateColumnMarkers();
+		//PhasingOutTasks = GetTasksAsync().Result;
 	}
 
 	public void FollowingIntervallClickBase() {
 		FollowingIntervallClick();
 		UpdateColumnMarkers();
+		NotifyTransitionStep(1);
+		//PhasingOutTasks = GetTasksAsync().Result;
 	}
 
 	protected abstract void PreviusIntervallClick();

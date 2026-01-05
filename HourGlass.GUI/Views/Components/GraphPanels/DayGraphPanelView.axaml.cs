@@ -6,7 +6,6 @@ using Avalonia;
 public partial class DayGraphPanelView : GraphPanelViewBase {
 
     public DayGraphPanelView() : base() {
-		InitializeComponent();
 	}
 	
 	protected override void DrawTimeline(DrawingContext context) {

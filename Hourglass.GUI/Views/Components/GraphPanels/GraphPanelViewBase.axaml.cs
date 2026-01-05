@@ -2,17 +2,19 @@ namespace Hourglass.GUI.Views.Components.GraphPanels;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Media;
 
 using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database;
 using Hourglass.Database.Models;
+using Hourglass.GUI.ViewModels.Components;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util.Services;
 
-public abstract partial class GraphPanelViewBase : ViewBase {
+using System.Collections.ObjectModel;
+
+	public abstract partial class GraphPanelViewBase : ViewBase {
 
 	#region fields
 
@@ -60,8 +62,6 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	private ContextMenu? _contextMenu;
 
-	private Task[] OldTasks;
-
 	#endregion fields
 	public GraphPanelViewBase() : base() {
 		InitializeComponent();
@@ -70,7 +70,19 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	protected static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
-	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
+	private bool IsOutsideGraphArea(Point p) {
+		if (p.X < PADDING_X)
+			return true;
+		if (p.X > Bounds.Width - PADDING_X)
+			return true;
+		if (p.Y < PADDING_Y)
+			return true;
+		if (p.Y > Bounds.Height - PADDING_Y)
+			return true;
+		return false;
+	}
+
+	public Rect GetTaskRectanlge(Task task, double additionalWidth, double additionalHeight, int i) {
 		double proportion = GRAPH_AREA_WIDTH/TIME_INTERVALL_DURATION;
 		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
 		long duration = task.running ? DateTimeService.ToSeconds(DateTime.Now) - task.start : task.finish - task.start;
@@ -107,6 +119,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		Rect rect = GetTaskRectanlge(task, 0, 0, i);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(20, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		
 		Brush brush = task.running
 			? new LinearGradientBrush() {
 				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
@@ -137,32 +150,9 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		context.DrawText(formattedText, p);
 	}
 
-	public async override void Render(DrawingContext context) {
-		base.Render(context);
-		if (!IsVisible)
-			return;
-		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-		context.FillRectangle(brush, new Rect(Bounds.X+PADDING_X, Bounds.Y+PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
-		DrawTimeline(context);
-		DrawColumnMarkers(context);
-		using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
-			List<Task> tasks = [];
-			if (DataContext is GraphPanelViewModelBase model)
-				tasks = await model.GetTasksAsync();
-			if (tasks != null && tasks.Count > 0) {
-				double graphPosY = PADDING_Y;
-				int blockingTaskCount = 0;
-				for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-					if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
-						DrawTaskGraph(context, tasks[i], i-blockingTaskCount);
-					} else {
-						blockingTaskCount++;
-					}
-				}
-			}
-		}
+	private void DrawMouseRectangle(DrawingContext context) {
 		if (RightMouseDown) {
-			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200,100,100,100));
+			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
 			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
 			Pen pen = new Pen(borderBrush, 2);
 			context.FillRectangle(areaBrush, MarkerDragRectangle);
@@ -170,17 +160,84 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		}
 	}
 
-	private bool IsOutsideGraphArea(Point p) {
-		if (p.X < PADDING_X)
-			return true;
-		if (p.X > Bounds.Width - PADDING_X)
-			return true;
-		if (p.Y < PADDING_Y)
-			return true;
-		if (p.Y > Bounds.Height - PADDING_Y)
-			return true;
-		return false;
+	public override void Render(DrawingContext context) {
+		if (!IsVisible)
+			return;
+		//if (Model.TransitionRunning)
+		//	RenderTransition(context);
+		//else
+		RenderNormal(context);
+		base.Render(context);
+		//this.itemsControll.Render(context);
 	}
+
+	private async void RenderNormal(DrawingContext context) {
+		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+		context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
+		DrawTimeline(context);
+		DrawColumnMarkers(context);
+		using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
+			List<Task> tasks = [];
+			if (DataContext is GraphPanelViewModelBase model)
+				tasks = model.GetTasksAsync().Result;
+			if (tasks != null && tasks.Count > 0) {
+				double graphPosY = PADDING_Y;
+				int blockingTaskCount = 0;
+				for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
+					if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
+						DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
+					} else {
+						blockingTaskCount++;
+					}
+				}
+			}
+		}
+		DrawMouseRectangle(context);
+	}
+
+	//private void RenderTransition(DrawingContext context) {
+	//	double FadeOutX(double step) =>
+	//		step * 0.5;
+	//	double FadeInX(double step) =>
+	//		step * 0.5;
+	//	double FadeInY(double step) =>
+	//		step * 0.5;
+	//	var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+	//	context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
+	//	DrawTimeline(context);
+	//	DrawColumnMarkers(context);
+	//	using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
+	//		List<Task> tasks = Model.PhasingOutTasks;
+	//		if (tasks != null && tasks.Count > 0) {
+	//			double graphPosY = PADDING_Y;
+	//			int blockingTaskCount = 0;
+	//			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
+	//				if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
+	//					DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
+	//				} else {
+	//					blockingTaskCount++;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
+	//		List<Task> tasks = [];
+	//		if (DataContext is GraphPanelViewModelBase model)
+	//			tasks = model.GetTasksAsync().Result;
+	//		if (tasks != null && tasks.Count > 0) {
+	//			double graphPosY = PADDING_Y;
+	//			int blockingTaskCount = 0;
+	//			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
+	//				if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
+	//					DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
+	//				} else {
+	//					blockingTaskCount++;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	DrawMouseRectangle(context);
+	//}
 
 	private void ShowReasonContextMenu() {
 

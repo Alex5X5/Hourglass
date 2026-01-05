@@ -68,6 +68,8 @@ public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelB
 
 	public Project SelectedProject { get; set; }
 	public List<Project> AvailableProjects { get; set; }
+	public Project SelectedLanguage { get; set; }
+	public List<string> Languages { get; set; }
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 

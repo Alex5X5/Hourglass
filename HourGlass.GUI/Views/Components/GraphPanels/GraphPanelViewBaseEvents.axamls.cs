@@ -1,8 +1,12 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
 
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Media.Transformation;
+using Avalonia.Styling;
 
 using Hourglass.Database.Models;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
@@ -100,7 +104,30 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	
 	private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
 		(DataContext as GraphPanelViewModelBase)?.OnLoad();
-		InvalidateVisual();
+		//if (DataContext is GraphPanelViewModelBase model)
+			//model.NotifyTransitionStep += (s) => {
+			//	KeyFrame CreateKeyFrame(double cue, double opacity, int zIndex, bool isVisible = true) =>
+			//		new() {
+			//			Setters = {
+			//				new Setter { Property = Visual.OpacityProperty, Value = opacity },
+
+			//				new Setter { Property = Visual.RenderTransformProperty, Value = TransformOperations.Parse("translateX(100px)")}
+			//			},
+			//			Cue = new Cue(cue)
+			//		};
+				
+			//	var animation = new Animation {
+			//		Duration = new TimeSpan(1 * TimeSpan.TicksPerSecond),
+			//		FillMode = FillMode.Forward,
+			//		Children = {
+			//			CreateKeyFrame(0d, 0.0d, 1),
+			//			CreateKeyFrame(0.5d, 0.5, 1),
+			//			CreateKeyFrame(1d, 1.0d, 2)
+			//		}
+			//	};
+			//	//animation.RunAsync(this);
+			//};
+		//InvalidateVisual();
 	}
 
 	public virtual void OnClick(object? sender, TappedEventArgs e) {

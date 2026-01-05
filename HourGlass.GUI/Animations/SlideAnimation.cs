@@ -36,15 +36,6 @@ public class SlideAnimation : PageSlide {
 
 		var tasks = new Task[from != null && to != null ? 2 : 1];
 		var parent = GetVisualParent(from, to);
-		var (rotateProperty, center) = Orientation switch
-		{
-			SlideAxis.Vertical => (Rotate3DTransform.AngleXProperty, parent.Bounds.Height),
-			SlideAxis.Horizontal => (Rotate3DTransform.AngleYProperty, parent.Bounds.Width),
-			_ => throw new ArgumentOutOfRangeException()
-		};
-
-		var depthSetter = new Setter { Property = Rotate3DTransform.DepthProperty, Value = Depth ?? center };
-		var centerZSetter = new Setter { Property = Rotate3DTransform.CenterZProperty, Value = -center / 2 };
 
 		KeyFrame CreateKeyFrame(double cue, double opacity, int zIndex, bool isVisible = true) =>
 			new()
@@ -53,8 +44,7 @@ public class SlideAnimation : PageSlide {
 				{
 					new Setter { Property = Visual.OpacityProperty, Value = opacity },
 					new Setter { Property = Visual.IsVisibleProperty, Value = isVisible },
-					centerZSetter,
-					depthSetter
+					new Setter { Property = Visual.RenderTransformProperty, Value=Transform.Parse("TranslateX(100px)")}
 				},
 				Cue = new Cue(cue)
 			};
