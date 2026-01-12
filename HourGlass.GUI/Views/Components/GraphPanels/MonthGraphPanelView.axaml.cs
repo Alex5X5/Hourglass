@@ -8,6 +8,7 @@ using Hourglass.GUI.ViewModels.Components.GraphPanels;
 public partial class MonthGraphPanelView : GraphPanelViewBase {
 
 	public MonthGraphPanelView() : base() {
+		base.InitializeComponent();
 		InitializeComponent();
 	}
 

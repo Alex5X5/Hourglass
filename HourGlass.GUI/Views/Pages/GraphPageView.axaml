@@ -7,6 +7,7 @@
 			 xmlns:panels="using:Hourglass.GUI.Views.Components.GraphPanels"
 			 xmlns:bi="using:Hourglass.GUI.Views.Components.GraphModeButtons"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Pages"
+			 xmlns:an="using:Hourglass.GUI.Animations"
 			 x:Class="Hourglass.GUI.Views.Pages.GraphPageView"
 			 x:DataType="vm:GraphPageViewModel"
 			 x:CompileBindings="True">
@@ -90,7 +91,26 @@
 				Grid.Column="1"
 				BorderBrush="Black"
 				BorderThickness="2">
+			<TransitioningContentControl Content="{ Binding CurrentGraphPanel }">
+				<TransitioningContentControl.PageTransition>
+					<an:SlideAnimation Duration="0:0:0.3">
+					</an:SlideAnimation>
+				</TransitioningContentControl.PageTransition>
+			</TransitioningContentControl>
+			<!--
 			<ContentControl Content="{ Binding CurrentGraphPanel }" />
+			<TransitioningContentControl Content="{ Binding CurrentGraphPanel }">
+				<TransitioningContentControl.PageTransition>
+					<PageSlide Duration="0:0:0.8" Orientation="Horizontal" />
+				</TransitioningContentControl.PageTransition>
+				<TransitioningContentControl.ContentTemplate>
+					<DataTemplate>
+						<TextBox Classes="TaskContent" 
+								 Text="{Binding Text}"/>
+					</DataTemplate>
+				</TransitioningContentControl.ContentTemplate>
+			</TransitioningContentControl>
+				-->
 		</Border>
 	</Grid>
 </UserControl>

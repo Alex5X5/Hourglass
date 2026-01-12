@@ -3,7 +3,7 @@ namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util;
+using Hourglass.Util.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public WeekGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
+	public WeekGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService)
 		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
 
 	}

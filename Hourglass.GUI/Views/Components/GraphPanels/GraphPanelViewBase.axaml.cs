@@ -1,41 +1,47 @@
 namespace Hourglass.GUI.Views.Components.GraphPanels;
+
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Media;
-using CommunityToolkit.Mvvm.Input;
-using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util;
 
-public abstract partial class GraphPanelViewBase : ViewBase {
+using CommunityToolkit.Mvvm.Input;
+
+using Hourglass.Database;
+using Hourglass.Database.Models;
+using Hourglass.GUI.ViewModels.Components;
+using Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.Util.Services;
+
+using System.Collections.ObjectModel;
+
+	public abstract partial class GraphPanelViewBase : ViewBase {
 
 	#region fields
 
 	private GraphPanelViewModelBase Model => (DataContext as GraphPanelViewModelBase)!;
 
-    protected int MAX_TASKS => Model.MAX_TASKS;
+	protected int MAX_TASKS => Model.MAX_TASKS;
 
-    protected int GRAPH_CLICK_ADDITIONAL_WIDTH => Model.GRAPH_CLICK_ADDITIONAL_WIDTH;
-    protected int GRAPH_CLICK_ADDITIONAL_HEIGHT => Model.GRAPH_CLICK_ADDITIONAL_HEIGHT;
+	protected int GRAPH_CLICK_ADDITIONAL_WIDTH => Model.GRAPH_CLICK_ADDITIONAL_WIDTH;
+	protected int GRAPH_CLICK_ADDITIONAL_HEIGHT => Model.GRAPH_CLICK_ADDITIONAL_HEIGHT;
 
 	protected int GRAPH_MINIMAL_WIDTH => Model.GRAPH_MINIMAL_WIDTH;
-    protected int GRAPH_CORNER_RADIUS => Model.GRAPH_CORNER_RADIUS;
+	protected int GRAPH_CORNER_RADIUS => Model.GRAPH_CORNER_RADIUS;
 
-    protected long TIME_INTERVALL_START_SECONDS => Model.TIME_INTERVALL_START_SECONDS;
+	protected long TIME_INTERVALL_START_SECONDS => Model.TIME_INTERVALL_START_SECONDS;
 	protected long TIME_INTERVALL_FINISH_SECONDS => Model.TIME_INTERVALL_FINISH_SECONDS;
-    protected long TIME_INTERVALL_DURATION => Model.TIME_INTERVALL_DURATION;
-    protected long X_AXIS_SEGMENT_DURATION => Model.X_AXIS_SEGMENT_DURATION;
+	protected long TIME_INTERVALL_DURATION => Model.TIME_INTERVALL_DURATION;
+	protected long X_AXIS_SEGMENT_DURATION => Model.X_AXIS_SEGMENT_DURATION;
 
 	protected int X_AXIS_SEGMENT_COUNT => Model.X_AXIS_SEGMENT_COUNT;
-    protected int Y_AXIS_SEGMENT_COUNT => Model.Y_AXIS_SEGMENT_COUNT;
+	protected int Y_AXIS_SEGMENT_COUNT => Model.Y_AXIS_SEGMENT_COUNT;
 
-    protected double TASK_DESCRIPTION_GRAPH_SPAGE => Model.TASK_DESCRIPTION_GRAPH_SPACE;
-    protected double TASK_DESCRIPTION_FONT_SIZE => Model.TASK_DESCRIPTION_FONT_SIZE;
+	protected double TASK_DESCRIPTION_GRAPH_SPAGE => Model.TASK_DESCRIPTION_GRAPH_SPACE;
+	protected double TASK_DESCRIPTION_FONT_SIZE => Model.TASK_DESCRIPTION_FONT_SIZE;
 
-    protected int TASK_GRAPH_COLUMN_COUNT => Model.TASK_GRAPH_COLUMN_COUNT;
+	protected int TASK_GRAPH_COLUMN_COUNT => Model.TASK_GRAPH_COLUMN_COUNT;
 
-    protected double X_AXIS_SEGMENT_SIZE => GRAPH_AREA_WIDTH / X_AXIS_SEGMENT_COUNT;
+	protected double X_AXIS_SEGMENT_SIZE => GRAPH_AREA_WIDTH / X_AXIS_SEGMENT_COUNT;
 	protected double Y_AXIS_SEGMENT_SIZE => GRAPH_AREA_HEIGTH / (Y_AXIS_SEGMENT_COUNT * 1.5) * Model.TASK_GRAPH_COLUMN_COUNT;
 
 	protected double PADDING_X => Bounds.Width * GraphPanelViewModelBase.PADDING_X_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_X_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_X_WEIGHT);
@@ -43,9 +49,9 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	protected double GRAPH_AREA_WIDTH => Bounds.Width - 2 * PADDING_X;
 	protected double GRAPH_AREA_HEIGTH => Bounds.Height - 2 * PADDING_Y;
-
-    public const double TIMELINE_MARK_HEIGHT = 7;
-    public const int MAX_TASK_DESCRIPTION_CHARS = 30;
+	
+	public const double TIMELINE_MARK_HEIGHT = 7;
+	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
 
 	private bool RightMouseDown = false;
 	private bool LeftMouseDown = false;
@@ -54,17 +60,29 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	private Point DragOrigin;
 	private Point MousePos = new(0.0,0.0);
 
-    private ContextMenu? _contextMenu;
+	private ContextMenu? _contextMenu;
 
-    #endregion fields
-    public GraphPanelViewBase() : base() {
+	#endregion fields
+	public GraphPanelViewBase() : base() {
 		InitializeComponent();
-    }
+	}
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);
 
-	public Rect GetTaskRectanlge(Database.Models.Task task, double additionalWidth, double additionalHeight, int i) {
+	private bool IsOutsideGraphArea(Point p) {
+		if (p.X < PADDING_X)
+			return true;
+		if (p.X > Bounds.Width - PADDING_X)
+			return true;
+		if (p.Y < PADDING_Y)
+			return true;
+		if (p.Y > Bounds.Height - PADDING_Y)
+			return true;
+		return false;
+	}
+
+	public Rect GetTaskRectanlge(Task task, double additionalWidth, double additionalHeight, int i) {
 		double proportion = GRAPH_AREA_WIDTH/TIME_INTERVALL_DURATION;
 		double graphPosX = (task.start - TIME_INTERVALL_START_SECONDS) * proportion + PADDING_X;
 		long duration = task.running ? DateTimeService.ToSeconds(DateTime.Now) - task.start : task.finish - task.start;
@@ -91,9 +109,9 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			if (Model.MarkedColumns[i])
 				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
-            if (Model.BlockedColumns[i])
-                context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
-            x += X_AXIS_SEGMENT_SIZE;
+			if (Model.BlockedColumns[i])
+				context.FillRectangle(blockedBrush, new Rect(x, y, width, height));
+			x += X_AXIS_SEGMENT_SIZE;
 		}
 	}
 
@@ -101,6 +119,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		Rect rect = GetTaskRectanlge(task, 0, 0, i);
 		Color gradientStartColor = Color.FromArgb(255, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
 		Color gradientFinishColor = Color.FromArgb(20, task.displayColorRed, task.displayColorGreen, task.displayColorBlue);
+		
 		Brush brush = task.running
 			? new LinearGradientBrush() {
 				StartPoint = new RelativePoint(0.0, 0.5, RelativeUnit.Relative),
@@ -131,30 +150,9 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		context.DrawText(formattedText, p);
 	}
 
-	public async override void Render(DrawingContext context) {
-		base.Render(context);
-		if (!IsVisible)
-			return;
-		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-		context.FillRectangle(brush, new Rect(Bounds.X+PADDING_X, Bounds.Y+PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
-		DrawTimeline(context);
-		DrawColumnMarkers(context);
-		List<Database.Models.Task> tasks = [];
-		if (DataContext is GraphPanelViewModelBase model)
-			tasks = await model.GetTasksAsync();
-		if (tasks != null && tasks.Count > 0) {
-			double graphPosY = PADDING_Y;
-			int blockingTaskCount = 0;
-			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-				if (!(tasks[i].blocksTime != Database.BlockedTimeIntervallType.None)) {
-					DrawTaskGraph(context, tasks[i], i-blockingTaskCount);
-				} else {
-					blockingTaskCount++;
-				}
-			}
-		}
+	private void DrawMouseRectangle(DrawingContext context) {
 		if (RightMouseDown) {
-			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200,100,100,100));
+			Brush borderBrush = new SolidColorBrush(Color.FromArgb(200, 100, 100, 100));
 			Brush areaBrush = new SolidColorBrush(Color.FromArgb(150, 150, 220, 255));
 			Pen pen = new Pen(borderBrush, 2);
 			context.FillRectangle(areaBrush, MarkerDragRectangle);
@@ -162,174 +160,119 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		}
 	}
 
-	private bool IsOutsideGraphArea(Point p) {
-        if (p.X < PADDING_X)
-            return true;
-        if (p.X > Bounds.Width - PADDING_X)
-            return true;
-        if (p.Y < PADDING_Y)
-            return true;
-        if (p.Y > Bounds.Height - PADDING_Y)
-            return true;
-		return false;
-    }
-
-	public async void OnClickBase(object? sender, TappedEventArgs e) {
-		Console.WriteLine("base graph panel click");
-		Point mousePos = e.GetPosition(this);
-		if (IsOutsideGraphArea(mousePos))
+	public override void Render(DrawingContext context) {
+		if (!IsVisible)
 			return;
-        if (DataContext is GraphPanelViewModelBase model) {
-			int i = 0;
-			Database.Models.Task? clickedTask = null;
-			foreach (var task in await model.GetTasksAsync()) {
-				Rect rect = GetTaskRectanlge(task, GRAPH_CLICK_ADDITIONAL_WIDTH, GRAPH_CLICK_ADDITIONAL_HEIGHT, i);
-				i++;
-				if (rect.Contains(mousePos)) {
-					clickedTask = task;
-					break;
-				} else {
-					continue;
+		//if (Model.TransitionRunning)
+		//	RenderTransition(context);
+		//else
+		RenderNormal(context);
+		base.Render(context);
+		//this.itemsControll.Render(context);
+	}
+
+	private async void RenderNormal(DrawingContext context) {
+		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+		context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
+		DrawTimeline(context);
+		DrawColumnMarkers(context);
+		using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
+			List<Task> tasks = [];
+			if (DataContext is GraphPanelViewModelBase model)
+				tasks = model.GetTasksAsync().Result;
+			if (tasks != null && tasks.Count > 0) {
+				double graphPosY = PADDING_Y;
+				int blockingTaskCount = 0;
+				for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
+					if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
+						DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
+					} else {
+						blockingTaskCount++;
+					}
 				}
 			}
-			if (clickedTask != null)
-				model.OnTaskClicked(clickedTask);
 		}
-		OnClick(sender, e);
+		DrawMouseRectangle(context);
 	}
 
-	protected void OnDoubleClickBase(object? sender, TappedEventArgs args) {
-		Console.WriteLine("base graph panel double click");
-		Point mousePos = args.GetPosition(this);
-        if (IsOutsideGraphArea(mousePos))
-            return;
-        double offset = mousePos.X - PADDING_X;
-		double clickSeconds = TIME_INTERVALL_START_SECONDS + TIME_INTERVALL_DURATION * offset / (Bounds.Width - 2 * PADDING_X);
-		DateTime clickDate = new DateTime((long)clickSeconds * TimeSpan.TicksPerSecond);
-		(DataContext as GraphPanelViewModelBase)?.OnDoubleClick(clickDate);
-	}
-
-	private void OnMouseMovedBase(object sender, PointerEventArgs args) {
-		MousePos = args.GetCurrentPoint(this).Position;
-		if (RightMouseDown) {
-			MarkerDragRectangle = new Rect(
-				Math.Min(MousePos.X, DragOrigin.X),
-				Math.Min(MousePos.Y, DragOrigin.Y),
-				Math.Abs(MousePos.X - DragOrigin.X),
-				Math.Abs(MousePos.Y - DragOrigin.Y)
-			);
-			(DataContext as GraphPanelViewModelBase)?.OnMouseDragging(MarkerDragRectangle, GRAPH_AREA_WIDTH, PADDING_X);
-		} else {
-			(DataContext as GraphPanelViewModelBase)?.OnMouseMoved();
-		}
-        OnMouseMoved(sender, args);
-		InvalidateVisual();
-	}
-
-	private void OnMousePressedBase(object sender, PointerPressedEventArgs args) {
-		PointerPoint mousePoint = args.GetCurrentPoint(sender as Control);
-        MousePos = mousePoint.Position;
-		DragOrigin = mousePoint.Position;
-		Console.WriteLine($"mouse pressed!");
-		if (mousePoint.Properties.IsRightButtonPressed) {
-			if (!RightMouseDown)
-				DragOrigin = MousePos;
-			RightMouseDown = true;
-			MarkerDragRectangle = new Rect(
-				Math.Min(MousePos.X, DragOrigin.X),
-				Math.Min(MousePos.Y, DragOrigin.Y),
-				Math.Abs(MousePos.X - DragOrigin.X),
-				Math.Abs(MousePos.Y - DragOrigin.Y)
-			);
-			InvalidateVisual();
-		}
-		if (mousePoint.Properties.IsLeftButtonPressed)
-			LeftMouseDown = true;
-		Model.OnMousePressed(mousePoint.Properties.IsLeftButtonPressed, mousePoint.Properties.IsRightButtonPressed);
-        InvalidateVisual();
-	}
-
-	private void OnMouseReleasedBase(object sender, PointerReleasedEventArgs args) {
-		Console.WriteLine($"mouse released!");
-		if (!args.GetCurrentPoint(sender as Control).Properties.IsRightButtonPressed) {
-            if (!IsOutsideGraphArea(MousePos))
-                if (RightMouseDown) {
-                    ShowReasonContextMenu();
-                }
-			RightMouseDown = false;
-		}
-		if (!args.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
-            LeftMouseDown = false;
-		InvalidateVisual();
-    }
+	//private void RenderTransition(DrawingContext context) {
+	//	double FadeOutX(double step) =>
+	//		step * 0.5;
+	//	double FadeInX(double step) =>
+	//		step * 0.5;
+	//	double FadeInY(double step) =>
+	//		step * 0.5;
+	//	var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+	//	context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
+	//	DrawTimeline(context);
+	//	DrawColumnMarkers(context);
+	//	using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
+	//		List<Task> tasks = Model.PhasingOutTasks;
+	//		if (tasks != null && tasks.Count > 0) {
+	//			double graphPosY = PADDING_Y;
+	//			int blockingTaskCount = 0;
+	//			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
+	//				if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
+	//					DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
+	//				} else {
+	//					blockingTaskCount++;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
+	//		List<Task> tasks = [];
+	//		if (DataContext is GraphPanelViewModelBase model)
+	//			tasks = model.GetTasksAsync().Result;
+	//		if (tasks != null && tasks.Count > 0) {
+	//			double graphPosY = PADDING_Y;
+	//			int blockingTaskCount = 0;
+	//			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
+	//				if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
+	//					DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
+	//				} else {
+	//					blockingTaskCount++;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	DrawMouseRectangle(context);
+	//}
 
 	private void ShowReasonContextMenu() {
-        _contextMenu = new ContextMenu();
+
+		void Callback(BlockedTimeIntervallType reason) {
+			(DataContext as GraphPanelViewModelBase)?.OnMissingContextMenuClicked(reason);
+			InvalidateVisual();
+		}
+
+		_contextMenu = new ContextMenu();
 		_contextMenu.ItemsSource = new List<MenuItem>() {
-			new() { Header = "Krank", Command = new RelayCommand(MissingContextMenuSickClick) },
-        	new() { Header = "Feiertag", Command = new RelayCommand(MissingContextMenuHolidayClick) },
-            new() { Header = "Urlaub", Command = new RelayCommand(MissingContextMenuVacantClick) },
-            new() { Header = "Heimarbeitstag", Command = new RelayCommand(MissingContextMenuHomeWorkClick) },
-            new() { Header = "Unentschuldigt", Command = new RelayCommand(MissingContextMenuNoExcuseClick) },
-            new() { Header = "Anwesend", Command = new RelayCommand(MissingContextMenuPresentClick) }
-        };
+			new() { 
+				Header = "Krank",
+				Command = new RelayCommand(()=>Callback(BlockedTimeIntervallType.Sick))
+			},
+			new() {
+				Header = "Feiertag",
+				Command = new RelayCommand(()=>Callback(BlockedTimeIntervallType.Holiday))
+			},
+			new() {
+				Header = "Urlaub",
+				Command = new RelayCommand(()=>Callback(BlockedTimeIntervallType.Vacant))
+			},
+			new() {
+				Header = "Heimarbeitstag",
+				Command = new RelayCommand(()=>Callback(BlockedTimeIntervallType.HomeWork))
+			},
+			new() {
+				Header = "Unentschuldigt",
+				Command = new RelayCommand(()=>Callback(BlockedTimeIntervallType.NoExcuse))
+			},
+			new() {
+				Header = "Anwesend",
+				Command = new RelayCommand(()=>Callback(BlockedTimeIntervallType.None))
+			}
+		};
 		_contextMenu?.Open(this);
-    }
-
-    private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-        (DataContext as GraphPanelViewModelBase)?.OnLoad();
-		InvalidateVisual();
-    }
-
-    public virtual void OnClick(object? sender, TappedEventArgs e) {
-		//Console.WriteLine("closed context menu!");
 	}
-
-    public virtual void OnDoubleClick(object? sender, TappedEventArgs e) { }
-
-	public virtual void OnMouseMoved(object? sender, PointerEventArgs e) { }
-
-	public virtual void OnMousePressed(object sender, PointerPressedEventArgs args) { }
-
-	public virtual void OnMouseReleased(object sender, PointerReleasedEventArgs args) { }
-
-    private void MissingContextMenuSickClick() {
-        (DataContext as GraphPanelViewModelBase)?.OnMissingContextMenuSickClicked();
-        InvalidateVisual();
-    }
-
-    private void MissingContextMenuHolidayClick() {
-        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuHolidayClicked();
-        InvalidateVisual();
-    }
-
-    private void MissingContextMenuVacantClick() {
-        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuVacantClicked();
-        InvalidateVisual();
-    }
-
-    private void MissingContextMenuNoExcuseClick() {
-        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuNoExcuseClicked();
-        InvalidateVisual();
-    }
-
-    private void MissingContextMenuHomeWorkClick() {
-        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuNoExcuseClicked();
-        InvalidateVisual();
-    }
-
-    private void MissingContextMenuPresentClick() {
-        (DataContext as GraphPanelViewModelBase)?.MissingContextMenuPresentClicked();
-        InvalidateVisual();
-    }
-
-    private void PreviusIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		(DataContext as GraphPanelViewModelBase)?.PreviusIntervallClickBase();
-        InvalidateVisual();
-	}
-
-    private void FollowingIntervallClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-        (DataContext as GraphPanelViewModelBase)?.FollowingIntervallClickBase();
-        InvalidateVisual();
-    }
 }

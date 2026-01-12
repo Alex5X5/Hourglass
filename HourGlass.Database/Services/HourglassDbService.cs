@@ -5,7 +5,6 @@ using DatabaseUtil;
 
 using Hourglass.Database.Models;
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.Util;
 using Hourglass.Util.Services;
 using System;
 using System.Linq;

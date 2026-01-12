@@ -1,4 +1,4 @@
-﻿namespace Hourglass.Util;
+﻿namespace Hourglass.Util.Services;
 
 using Hourglass.Util.Services;
 using System;

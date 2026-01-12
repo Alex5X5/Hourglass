@@ -13,7 +13,7 @@
 			 Loaded="UserControl_Loaded">
 	
 	<Design.DataContext>
-		<vm:AboutSubSettingsPageViewModel />
+		<vm:GeneralSubSettingsPageViewModel />
 	</Design.DataContext>
 	
 	<UserControl.Styles>

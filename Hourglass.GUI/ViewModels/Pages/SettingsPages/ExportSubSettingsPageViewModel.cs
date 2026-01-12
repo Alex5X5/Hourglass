@@ -10,9 +10,9 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public ExportSubSettingsPageViewModel() : this(null, null, null) {
+	public ExportSubSettingsPageViewModel() : this(null, null, null) {
 
-    }
+	}
 
     public ExportSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
     }
@@ -20,9 +20,9 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
     private void AllBindingPropertiesChanged() {
     }
 
-    protected virtual void OnPropertyChanged(string propertyName) {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+	protected virtual void OnPropertyChanged(string propertyName) {
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
 
     public void OnLoad() {
         Console.WriteLine("loading About Sub Settings Page!");
