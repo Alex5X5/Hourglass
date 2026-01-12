@@ -1,3 +1,7 @@
+Views.Pages.Export.Title:Exportieren
+Views.Pages.TaskDetails.Title:Details
+Views.Pages.Timer.Title:Zeitmessung
+
 Views.Pages.Settings.About.Title:Über Uns
 Views.Pages.Settings.Export.Title:Export Einstellungen
 Views.Pages.Settings.General.Title:Allgemeine Einstellungen

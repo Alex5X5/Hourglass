@@ -6,7 +6,7 @@
 		xmlns:views="clr-namespace:Hourglass.GUI.Views"
 		x:Class="Hourglass.GUI.Views.MainWindow"
 		x:CompileBindings="True"
-		Title="Hourglass"
+		Title="Timespan"
         Width="800" Height="450">
 	<views:MainView Name="mainView" />
 </Window>

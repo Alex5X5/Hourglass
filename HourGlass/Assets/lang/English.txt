@@ -1,3 +1,7 @@
+Views.Pages.Export.Title:Export
+Views.Pages.TaskDetails.Title:Details
+Views.Pages.Timer.Title:Timer
+
 Views.Pages.Settings.About.Title:About Us
 Views.Pages.Settings.Export.Title:Export Settings
 Views.Pages.Settings.General.Title:General Settings

@@ -1,8 +1,5 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
-using Hourglass.Util;
-
-
 using System.ComponentModel;
 
 public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelBase {

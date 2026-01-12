@@ -57,6 +57,8 @@ public class DateTimeService {
 
 
 	public static DateTime? InterpretDayAndTimeString(string s, int day = 1, int month = 1, int hour = 0, int minute = 0, int second = 0) {
+		if (s == "")
+			return null;
 		int startIndex = 0;
 		int finishIndex = 0;
 		int getSelectionValue(char? nextSeperator, int nextOffset, int defaultValue) {

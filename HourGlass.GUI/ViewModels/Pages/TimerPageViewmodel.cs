@@ -75,9 +75,9 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         get => finishTextboxText;
     }
 
-	public override string Title => "Zeitmessung";
-	
-	public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
+    public override string Title => TranslatorService.Singleton["Views.Pages.Timer.Title"] ?? "Timer";
+
+    public bool IsStartButtonEnabled { get => cacheService?.RunningTask == null; }
     public bool IsStopButtonEnabled { get => cacheService?.RunningTask != null; }
     public bool IsRestartButtonEnabled { get => cacheService?.RunningTask != null; }
 
@@ -145,6 +145,7 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
 	[RelayCommand]
 	private async System.Threading.Tasks.Task StopTask() {
 		Console.WriteLine("stop task button click!");
+		_timer.Stop();
 		if(dbService!=null)
             cacheService.RunningTask = await dbService.FinishCurrentTaskAsync(
 				cacheService.RunningTask?.start ?? DateTimeService.ToSeconds(DateTime.Now),
@@ -157,7 +158,6 @@ public partial class TimerPageViewModel : PageViewModelBase, INotifyPropertyChan
         StartTextboxText = "";
         FinishTextboxText = "";
         AllBindingPropertiesChanged();
-		_timer.Stop();
     }
 
 	[RelayCommand]

@@ -127,7 +127,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 			//	};
 			//	//animation.RunAsync(this);
 			//};
-		//InvalidateVisual();
+		InvalidateVisual();
 	}
 
 	public virtual void OnClick(object? sender, TappedEventArgs e) {

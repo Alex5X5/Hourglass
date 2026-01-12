@@ -98,7 +98,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		Console.WriteLine("timer mode button click!");
 		ChangePage<SettingsPageViewModel>(
 			page => {
-				page?.ChangePage<UserDataSubSettingsPageViewModel>();
+				page?.ChangePage<GeneralSubSettingsPageViewModel>();
 			}
 		);
 	}

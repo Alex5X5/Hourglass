@@ -17,9 +17,9 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 	private ColorService colorService;
 	private MainViewModel controller;
 
-	public override string Title => "Details";
+    public override string Title => TranslatorService.Singleton["Views.Pages.TaskDetails.Title"] ?? "Details";
 
-	private readonly Task temporaryTask;
+    private readonly Task temporaryTask;
 
 	public string DescriptionTextboxText {
         set {
