@@ -4,11 +4,14 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:vm="clr-namespace:Hourglass.GUI.ViewModels.Pages.SettingsPages"
-             xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
+			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
+			 xmlns:cls="using:Hourglass.GUI.Views.Pages.SettingsPages"
+			 xmlns:reactive="clr-namespace:System.Reactive;assembly=System.Reactive"
 			 x:Class="Hourglass.GUI.Views.Pages.SettingsPages.VisualsSubSettingsPageView"
 			 x:DataType="vm:VisualsSubSettingsPageViewModel"
 			 x:CompileBindings="True"
 			 Loaded="UserControl_Loaded">
+	
 	<Design.DataContext>
 		<vm:VisualsSubSettingsPageViewModel />
 	</Design.DataContext>

@@ -1,29 +1,33 @@
-MainView.Buttons.Timer:Timer
-MainView.Buttons.Graphs:Graphs
-MainView.Buttons.Export:Export
+Views.Pages.Settings.About.Title:Über Uns
+Views.Pages.Settings.Export.Title:Export Einstellungen
+Views.Pages.Settings.General.Title:Allgemeine Einstellungen
+Views.Pages.Settings.UserData.Title:Nutzerdaten
+Views.Pages.Settings.Visuals.Title:Graphik Einstellungen
 
-TimerView.Buttons.Start:Start
-TimerView.Buttons.Stop:Stop
-TimerView.Labels.Start:Start
-TimerView.Labels.Stop:Finish
-TimerView.Labels.Description:Description
+Views.MainView.Buttons.Timer:Zeitmessung
+Views.MainView.Buttons.Graphs:Übersicht
+Views.MainView.Buttons.Export:Exportieren
 
-Views.Pages.Setting.UserData.Labels.Back:Back
+Views.Pages.Timer.Buttons.Start:Start
+Views.Pages.Timer.Buttons.Stop:Stop
+Views.Pages.Timer.Labels.Start:Anfang
+Views.Pages.Timer.Labels.Stop:Ende
+Views.Pages.Timer.Labels.Description:Beschreibung
 
 Views.Pages.Settings.Buttons.Back:Zurück
 Views.Pages.Settings.Buttons.General:Allgemein
 Views.Pages.Settings.Buttons.UserData:Nutzerdaten
 Views.Pages.Settings.Buttons.About:Über uns
 Views.Pages.Settings.Buttons.Visual:Grafik
-Views.Pages.Settings.Buttons.Export:Exportieren
+Views.Pages.Settings.Buttons.Export:Export
 Views.Pages.Settings.Buttons.Save:Speichern
 Views.Pages.Settings.Buttons.Cancel:Abbrechen
 
-Views.Pages.Timer.Labels.Start:Anfang
-Views.Pages.Timer.Labels.Stop:Ende
-Views.Pages.Timer.Labels.Description:Beschreibung
-Views.Pages.Timer.Buttons.Start:Start
-Views.Pages.Timer.Buttons.Stop:Stop
+Views.Pages.Settings.General.Labels.Language:Sprache
+
+Views.Pages.Settings.UserData.Labels.Username:Nutzername
+Views.Pages.Settings.UserData.Labels.StartDate:Startdatum
+Views.Pages.Settings.UserData.Labels.JobName:Name der Ausbildung
 
 Views.Pages.Export.Buttons.Import:Importieren
 Views.Pages.Export.Buttons.Export:Exportieren

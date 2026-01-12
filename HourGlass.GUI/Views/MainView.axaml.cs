@@ -6,20 +6,18 @@ using Hourglass.Util.Attributes;
 
 public partial class MainView : ViewBase {
 
-    [TranslateMember("Views.Pages.TaskDetails.Labels.Start", "Start")]
-    public string StartLabelText { get; set; } = "";
+    [TranslateMember("Views.MainView.Buttons.Timer", "Timer")]
+    public string TimerModeButtonText { get; set; } = "";
 
-    [TranslateMember("Views.Pages.TaskDetails.Labels.Stop", "Finish")]
-    public string FinishLabelText { get; set; } = "";
+    [TranslateMember("Views.MainView.Buttons.Graphs", "Graphs")]
+    public string GraphModeButtonText { get; set; } = "";
 
-    public MainView() : this(null) {
+    [TranslateMember("Views.MainView.Buttons.Export", "Export")]
+    public string ExportModeButtonText { get; set; } = "";
 
-	}
 
-	public MainView(MainViewModel model) : base() {
+	public MainView() : base() {
 		InitializeComponent();
-
-		//DataContext = model;
 		if (DataContext is MainViewModel viewModel) {
 			viewModel.ChangePage<TimerPageViewModel>();
 		}

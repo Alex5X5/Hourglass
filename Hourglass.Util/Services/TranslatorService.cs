@@ -23,6 +23,8 @@ public class TranslatorService {
 
 	public string? this[string index] => ymlReader[index];
 
+	public string[] AvailableTranslations => Languages.Keys.ToArray();
+
 	static TranslatorService() {
 		Singleton = new TranslatorService();
 	}
@@ -32,7 +34,7 @@ public class TranslatorService {
 		Languages = [];
 		foreach (string path in Directory.GetFiles(PathService.LANGUAGES_DIRECTORY))
 			Languages[Path.GetFileNameWithoutExtension(path)] = path;
-		CurrentLanguageName = Languages.Keys.ToList()[1];
+		CurrentLanguageName = new SettingsService().TryGetSetting(SettingsService.LANGUAGE_KEY) ?? Languages.Keys.ToList()[0];
 	}
 
 	private void ChangeLanguage(string value) {

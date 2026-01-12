@@ -1,7 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using Hourglass.Database.Services.Interfaces;
-using Hourglass.GUI.Services;
 using Hourglass.Util;
 
 public abstract class SubSettingsPageViewModelBase : ViewModelBase {

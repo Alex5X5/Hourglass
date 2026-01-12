@@ -10,10 +10,10 @@ public partial class UserDataSubSettingsPageView : SubSettingsPageViewBase {
     [TranslateMember("Views.Pages.Settings.UserData.Labels.Username", "Username")]
     public string UsernameLabelText { get; set; } = "";
 
-    [TranslateMember("Views.Pages.Settings.UserData.Labels.StartDate", "StartDate")]
+    [TranslateMember("Views.Pages.Settings.UserData.Labels.StartDate", "Start Date")]
     public string StartDateLabelText { get; set; } = "";
 
-    [TranslateMember("Views.Pages.Settings.UserData.Labels.JobName", "JobName")]
+    [TranslateMember("Views.Pages.Settings.UserData.Labels.JobName", "Job Name")]
     public string JobNameLabelText { get; set; } = "";
 
 
@@ -23,10 +23,6 @@ public partial class UserDataSubSettingsPageView : SubSettingsPageViewBase {
 
     private void UserControl_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
         (DataContext as UserDataSubSettingsPageViewModel)?.OnLoad();
-    }
-
-    private void AnyInput_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-        (DataContext as UserDataSubSettingsPageViewModel)?.AnyInput_LostFocus();
     }
 
     private void TextBox_SizeChanged(object sender, SizeChangedEventArgs e) {

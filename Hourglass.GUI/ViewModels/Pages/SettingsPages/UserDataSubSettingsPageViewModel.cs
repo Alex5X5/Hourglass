@@ -12,7 +12,7 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
 
     public string JobNameTextboxText { set; get; }
 
-    public override string Title => "Nutzerdaten";
+    public override string Title => TranslatorService.Singleton["Views.Pages.Settings.UserData.Title"] ?? "User Data";
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -56,10 +56,5 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
     public void OnLoad() {
         Console.WriteLine("loading User Data Sub Settings Page!");
         AllBindingPropertiesChanged();
-    }
-
-    public void AnyInput_LostFocus() {
-        Console.WriteLine("any input of user data settings lost focus!");
-
     }
 }

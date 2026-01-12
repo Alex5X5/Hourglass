@@ -16,6 +16,7 @@ public partial class SettingsService {
     public const string USER_NAME_KEY = "name";
     public const string JOB_NAME_KEY = "job";
     public const string START_DATE_KEY = "date";
+    public const string LANGUAGE_KEY = "language";
 
     private Dictionary<string, string> Settings;
 
@@ -84,11 +85,6 @@ public partial class SettingsService {
     public void UpdateSettings() {
         SaveSettings();
         Settings = LoadSettings();
-        foreach (Delegate act in OnSettingsReload.GetInvocationList())
-            try {
-                act.DynamicInvoke();
-            } catch (Exception ex){
-                Console.WriteLine("an error occurred while invoking settings reload subscribers: "+ex.Message);
-            }
+        OnSettingsReload.Invoke();
     }
 }

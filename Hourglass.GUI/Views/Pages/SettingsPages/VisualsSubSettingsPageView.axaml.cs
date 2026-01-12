@@ -1,9 +1,12 @@
 namespace Hourglass.GUI.Views.Pages.SettingsPages;
 
-using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
+using Hourglass.Util.Attributes;
 
 public partial class VisualsSubSettingsPageView : SubSettingsPageViewBase {
+
+    [TranslateMember("Views.Pages.Settings.Visuals.Labels.Language", "Language")]
+    public string LanguagesLabelText { get; set; } = "";
 
     public VisualsSubSettingsPageView() : base() {
 		InitializeComponent();

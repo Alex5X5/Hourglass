@@ -3,10 +3,12 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels"
-			 xmlns:pages="using:Hourglass.GUI.Views.Pages"
+			 xmlns:pages="using:Hourglass.GUI.Views.Pages.SettingsPages"
+			 xmlns:cls="using:Hourglass.GUI.Views"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="Hourglass.GUI.Views.MainView"
-			 x:DataType="vm:MainViewModel">
+			 x:DataType="vm:MainViewModel"
+			 x:CompileBindings="True"	>
 	<Design.DataContext>
 		<vm:MainViewModel />
 	</Design.DataContext>
@@ -94,7 +96,9 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Zeitmessung" FontSize="13" />
+							<TextBlock Classes="ButtonContent"
+									   Text="{ Binding $parent[cls:MainView].TimerModeButtonText }"
+									   FontSize="13" />
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -109,7 +113,9 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Übersicht" FontSize="13"/>
+							<TextBlock Classes="ButtonContent"
+									   Text="{ Binding $parent[cls:MainView].GraphModeButtonText }"
+									   FontSize="13"/>
 						</Viewbox>
 					</Grid>
 				</Button>
@@ -124,7 +130,9 @@
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent" Text="Exportieren" FontSize="13"/>
+							<TextBlock Classes="ButtonContent"
+									   Text="{ Binding $parent[cls:MainView].ExportModeButtonText }"
+									   FontSize="13"/>
 						</Viewbox>
 					</Grid>
 				</Button>
