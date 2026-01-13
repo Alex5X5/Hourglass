@@ -1,4 +1,4 @@
-Timespan © 2025 by Alexander Lehnert is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+Attribution-NonCommercial-ShareAlike 4.0 International
 
 =======================================================================
 
