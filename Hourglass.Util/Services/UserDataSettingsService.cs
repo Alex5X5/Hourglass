@@ -14,14 +14,10 @@ public partial class SettingsService {
 	public event Action<string>? OnUsernameChanged;
 
 	private DateTime startDate = DateTime.MinValue;
-	private string startDateString = DateTimeService.ToDayAndMonthAndYearString(DateTime.MinValue);
 	
 	public DateTime StartDate {
-		set {
-			SetSetting(START_DATE_KEY, DateTimeService.ToDayAndMonthAndYearString(value));
-            OnStartDateChanged?.Invoke(nameof(StartDate));
-        }
-		get => DateTimeService.InterpretDayAndMonthAndYearString(GetSetting(START_DATE_KEY)) ?? DateTime.MinValue;
+		set => StartDateString = DateTimeService.ToDayAndMonthAndYearString(value);
+		get => DateTimeService.InterpretDayAndMonthAndYearString(StartDateString) ?? DateTime.MinValue;
 	}
 
 	public string StartDateString {
@@ -44,4 +40,14 @@ public partial class SettingsService {
 	}
 
 	public event Action<string>? OnJobNameChanged;
+
+    public string Language {
+        set {
+            SetSetting(LANGUAGE_KEY, value);
+            OnLanguageChanged?.Invoke(nameof(Language));
+        }
+        get => GetSetting(LANGUAGE_KEY);
+    }
+
+    public event Action<string>? OnLanguageChanged;
 }

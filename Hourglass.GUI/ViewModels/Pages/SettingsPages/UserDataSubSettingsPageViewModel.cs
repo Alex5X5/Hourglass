@@ -23,14 +23,14 @@ public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModel
         settingsService.OnUsernameChanged += val=> OnPropertyChanged(nameof(UsernameTextboxText));
         settingsService.OnStartDateChanged += val=> OnPropertyChanged(nameof(StartDateTextboxText));
         settingsService.OnPreSettingsSave += () => {
-            settingsService.StartDateString = StartDateTextboxText;
-            settingsService.Username = UsernameTextboxText;
-            settingsService.JobName = JobNameTextboxText;
+            settingsService.StartDateString = StartDateTextboxText ?? "";
+            settingsService.Username = UsernameTextboxText ?? "";
+            settingsService.JobName = JobNameTextboxText ?? "";
         };
         if (settingsService != null) {
-            JobNameTextboxText = settingsService.GetSetting(SettingsService.JOB_NAME_KEY);
-            UsernameTextboxText = settingsService.GetSetting(SettingsService.USER_NAME_KEY);
-            StartDateTextboxText = settingsService.GetSetting(SettingsService.START_DATE_KEY);
+            JobNameTextboxText = settingsService.JobName;
+            UsernameTextboxText = settingsService.Username;
+            StartDateTextboxText = settingsService.StartDateString;
         }
         AllBindingPropertiesChanged();
     }

@@ -24,7 +24,7 @@ public partial class SettingsPageViewModel : PageViewModelBase, INotifyPropertyC
 
     public override string Title => _CurrentSubSettingsPage?.Title ?? "";
 
-    public bool IsSaveButtonEnabled => !settingsService.HasUnsavedChanges;
+    public bool IsSaveButtonEnabled => settingsService.HasUnsavedChanges;
 
     public new event PropertyChangedEventHandler? PropertyChanged;
 
