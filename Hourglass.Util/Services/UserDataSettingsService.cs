@@ -49,5 +49,6 @@ public partial class SettingsService {
         get => GetSetting(LANGUAGE_KEY);
     }
 
-    public event Action<string>? OnLanguageChanged;
+    public event Action<string>? OnLanguageChanged = 
+        l => TranslatorService.Singleton.CurrentLanguageName = l;
 }

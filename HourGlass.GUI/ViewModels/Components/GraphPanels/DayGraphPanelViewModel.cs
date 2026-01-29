@@ -55,14 +55,14 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 
 	protected override string GetTitle() {
 		string day = cacheService.SelectedDay.DayOfWeek switch {
-			DayOfWeek.Monday => "Montag",
-			DayOfWeek.Tuesday => "Dienstag",
-			DayOfWeek.Wednesday => "Mittwoch",
-			DayOfWeek.Thursday => "Donnerstag",
-			DayOfWeek.Friday => "Freitag",
-			DayOfWeek.Saturday => "Samstag",
-			DayOfWeek.Sunday => "Sonntag",
-            _ => "Unknown day Option"
+			DayOfWeek.Monday => TranslatorService.Singleton["Days.Monday"] ?? "Monday",
+			DayOfWeek.Tuesday => TranslatorService.Singleton["Days.Tuesday"] ?? "Tuesday",
+			DayOfWeek.Wednesday => TranslatorService.Singleton["Days.Wednesday"] ?? "Wednesday",
+			DayOfWeek.Thursday => TranslatorService.Singleton["Days.Thursday"] ?? "Thursday",
+			DayOfWeek.Friday => TranslatorService.Singleton["Days.Friday"] ?? "Friday",
+			DayOfWeek.Saturday => TranslatorService.Singleton["Days.Saturday"] ?? "Saturday",
+			DayOfWeek.Sunday => TranslatorService.Singleton["Days.Sunday"] ?? "Sunday",
+            _ => "Unknown"
 		};
 		string date = DateTimeService.ToDayAndMonthString(cacheService.SelectedDay);
 		return $"{day}  {date}";

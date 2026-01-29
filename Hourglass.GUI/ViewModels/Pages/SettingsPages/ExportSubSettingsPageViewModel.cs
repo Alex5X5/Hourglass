@@ -8,8 +8,6 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
 
     public override string Title => TranslatorService.Singleton["Views.Pages.Settings.Export.Title"] ?? "Export Settings";
 
-    public new event PropertyChangedEventHandler? PropertyChanged;
-
 	public ExportSubSettingsPageViewModel() : this(null, null, null) {
 
 	}
@@ -19,10 +17,6 @@ public partial class ExportSubSettingsPageViewModel : SubSettingsPageViewModelBa
 
     private void AllBindingPropertiesChanged() {
     }
-
-	protected virtual void OnPropertyChanged(string propertyName) {
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
 
     public void OnLoad() {
         Console.WriteLine("loading About Sub Settings Page!");

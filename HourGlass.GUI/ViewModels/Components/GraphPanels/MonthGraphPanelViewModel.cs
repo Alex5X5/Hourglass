@@ -59,18 +59,18 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
 	protected override string GetTitle() {
 		string month = cacheService.SelectedDay.Month switch {
-			1 => "Januar",
-			2 => "Februar",
-			3 => "März",
-			4 => "April",
-			5 => "Mai",
-			6 => "Juni",
-			7 => "Juli",
-			8 => "August",
-			9 => "September",
-			10 => "Oktober",
-			11 => "November",
-			12 => "Dezember",
+			1 => TranslatorService.Singleton["Months.January"] ?? "January",
+			2 => TranslatorService.Singleton["Months.February"] ?? "February",
+			3 => TranslatorService.Singleton["Months.March"] ?? "March",
+			4 => TranslatorService.Singleton["Months.April"] ?? "April",
+			5 => TranslatorService.Singleton["Months.May"] ?? "May",
+			6 => TranslatorService.Singleton["Months.June"] ?? "June",
+			7 => TranslatorService.Singleton["Months.July"] ?? "July",
+			8 => TranslatorService.Singleton["Months.August"] ?? "August",
+			9 => TranslatorService.Singleton["Months.September"] ?? "September",
+			10 => TranslatorService.Singleton["Months.October"] ?? "October",
+			11 => TranslatorService.Singleton["Months.November"] ?? "November",
+			12 => TranslatorService.Singleton["Months.December"] ?? "December",
 			_ => "Unknown"
 		};
 		return $"{month}  {cacheService.SelectedDay.Year}";
