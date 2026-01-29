@@ -73,7 +73,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
     public bool IsContiniueButtonEnabled => cacheService.RunningTask == null;
 	public bool IsStartNewButtonEnabled => cacheService.RunningTask == null;
     public bool IsSaveButtonEnabled => DidChange;
-    public bool IsStopButtonEnabled => cacheService.RunningTask == cacheService.SelectedTask;
+    public bool IsStopButtonEnabled => cacheService.SelectedTask?.running ?? false;
     public bool IsDeleteButtonEnabled => true;
 
 	public new event PropertyChangedEventHandler? PropertyChanged;

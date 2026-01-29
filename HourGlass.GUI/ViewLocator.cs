@@ -1,10 +1,9 @@
 ﻿namespace Hourglass.GUI;
 
-using Hourglass.GUI.ViewModels;
-
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
+using Hourglass.GUI.ViewModels;
 using Hourglass.GUI.Views;
 
 public class ViewLocator : IDataTemplate {

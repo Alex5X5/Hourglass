@@ -8,8 +8,9 @@ public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelB
     public string SelectedLanguage {
         get => selectedLanguage;
         set {
+            if (value != selectedLanguage)
+                HasUnsavedChanges = true;
             selectedLanguage = value;
-            OnSelectedLanguageChanged();
         }
     }
     public List<string> AvailableLanguages { get; set; }
@@ -28,9 +29,7 @@ public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelB
     }
     
     private void AllBindingPropertiesChanged() {
-    }
-
-    private void OnSelectedLanguageChanged() {
+        OnPropertyChanged(nameof(SelectedLanguage));
     }
 
     protected virtual void OnPropertyChanged(string propertyName) {
@@ -38,12 +37,12 @@ public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelB
     }
 
 	public void OnLoad() {
-		Console.WriteLine("loading Visuals Sub Settings Page!");
+		Console.WriteLine("loading General Sub Settings Page!");
 		AllBindingPropertiesChanged();
 	}
     public override void SaveSettings() {
         Console.WriteLine("[General]:save button click!");
-        settingsService.SetSetting(SettingsService.LANGUAGE_KEY, selectedLanguage);
+        settingsService.Language = selectedLanguage;
         AllBindingPropertiesChanged();
     }
 }

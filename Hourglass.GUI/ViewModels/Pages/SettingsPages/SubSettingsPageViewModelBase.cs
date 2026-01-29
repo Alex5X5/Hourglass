@@ -13,8 +13,12 @@ public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 	protected MainViewModel pageController;
 
 	public abstract string Title { get; }
+	public bool HasUnsavedChanges {
+		protected set;
+		get;
+	} = false;
 
-	public SubSettingsPageViewModelBase() : this(null, null, null) {
+    public SubSettingsPageViewModelBase() : this(null, null, null) {
 		
 	}
 	
@@ -23,6 +27,7 @@ public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 		//this.settingsController = settingsController;
 		this.pageController = pageController;
 		this.settingsService = settingsService;
+		HasUnsavedChanges = false;
 	}
 
     public abstract void SaveSettings();
