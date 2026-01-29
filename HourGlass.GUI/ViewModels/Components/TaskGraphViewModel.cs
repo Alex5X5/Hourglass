@@ -53,7 +53,7 @@ public class TaskGraphViewModel : INotifyPropertyChanged {
 		long offset = task.start - intervallStart;
 		beforeTaskColumnWeigth = new ColumnDefinition(1000.0 / intervallDuration * offset, GridUnitType.Star);
 		taskColumnWeigth = new ColumnDefinition(1000.0 / intervallDuration * task.Duration, GridUnitType.Star);
-		afterTaskColumnWeigth = new ColumnDefinition(1000.0 / intervallDuration * (1000.0 - offset - task.Duration), GridUnitType.Star);
+		afterTaskColumnWeigth = new ColumnDefinition(1000.0 / intervallDuration * (intervallDuration - offset - task.Duration), GridUnitType.Star);
 	}
 
 	private void ColumnsChanged() {

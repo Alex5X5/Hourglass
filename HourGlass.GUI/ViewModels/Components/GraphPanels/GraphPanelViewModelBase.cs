@@ -94,14 +94,22 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 
 		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
+		CurrentTasks.Add(
+			new TaskGraphViewModel(
+				dbService.QueryCurrentTaskAsync().Result,
+				TIME_INTERVALL_DURATION,
+				TIME_INTERVALL_START_SECONDS,
+				0
+			)
+		);
 			//new TaskGraphViewModel(, TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_DURATION)
 		
-		Dispatcher.UIThread.InvokeAsync(
-			async () => {
-				await Task.Delay(1000);
-				await RemoveItem(CurrentTasks[0]);
-			}
-		);
+		//Dispatcher.UIThread.InvokeAsync(
+		//	async () => {
+		//		await Task.Delay(1000);
+		//		await RemoveItem(CurrentTasks[0]);
+		//	}
+		//);
 
 		MarkedColumns = new bool[32];
 		BlockedColumns = new bool[32];
