@@ -16,6 +16,8 @@ public class Program {
 
         PathService.PrintDetailedInfo();
 		PathService.ExtractFiles("Hourglass");
+		PrintService ps = new PrintService();
+		ps.Print(PathService.AssetsPath("output-readable-indexers.pdf"));
 
 		BuildAvaloniaApp()
 			.StartWithClassicDesktopLifetime(args);
