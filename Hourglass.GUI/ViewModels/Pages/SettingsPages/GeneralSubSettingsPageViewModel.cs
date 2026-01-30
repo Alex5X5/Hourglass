@@ -1,49 +1,41 @@
-namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
+using ReactiveUI;
 
-using System.ComponentModel;
+namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 public partial class GeneralSubSettingsPageViewModel : SubSettingsPageViewModelBase {
     
-    private string selectedLanguage;
+    private string selectedLanguage = "";
     public string SelectedLanguage {
         get => selectedLanguage;
         set {
-            selectedLanguage = value;
-            OnSelectedLanguageChanged();
+            if (value == null)
+                return;
+            if (value != selectedLanguage)
+                HasUnsavedChanges = true;
+            this.RaiseAndSetIfChanged(ref selectedLanguage, value);
         }
     }
     public List<string> AvailableLanguages { get; set; }
     
     public override string Title => TranslatorService.Singleton["Views.Pages.Settings.General.Title"] ?? "General Settings";
         
-    public new event PropertyChangedEventHandler? PropertyChanged;
-    
     public GeneralSubSettingsPageViewModel() : this(null, null, null) {
     }
     
     public GeneralSubSettingsPageViewModel(DateTimeService dateTimeService, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
         AvailableLanguages = TranslatorService.Singleton.AvailableTranslations.ToList();
-        selectedLanguage = TranslatorService.Singleton.CurrentLanguageName;
-        OnPropertyChanged(nameof(SelectedLanguage));
-    }
-    
-    private void AllBindingPropertiesChanged() {
-    }
-
-    private void OnSelectedLanguageChanged() {
-    }
-
-    protected virtual void OnPropertyChanged(string propertyName) {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (settingsService != null) {
+            settingsService.OnLanguageChanged +=
+                val => this.RaiseAndSetIfChanged(ref selectedLanguage, settingsService.Language);
+            SelectedLanguage = settingsService.Language;
+        }
     }
 
 	public void OnLoad() {
-		Console.WriteLine("loading Visuals Sub Settings Page!");
-		AllBindingPropertiesChanged();
+		Console.WriteLine("loading General Sub Settings Page!");
 	}
+
     public override void SaveSettings() {
-        Console.WriteLine("[General]:save button click!");
-        settingsService.SetSetting(SettingsService.LANGUAGE_KEY, selectedLanguage);
-        AllBindingPropertiesChanged();
+        settingsService.Language = selectedLanguage;
     }
 }

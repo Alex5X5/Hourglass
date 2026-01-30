@@ -20,6 +20,7 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
     public override string Title => TranslatorService.Singleton["Views.Pages.TaskDetails.Title"] ?? "Details";
 
     private readonly Task temporaryTask;
+	private readonly Task selectedTask;
 
 	public string DescriptionTextboxText {
         set {
@@ -69,11 +70,11 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		get => didChange;
 	}
 
-    public bool IsContiniueButtonEnabled { get => cacheService.RunningTask == null; }
-	public bool IsStartNewButtonEnabled { get => cacheService.RunningTask == null; }
-	public bool IsSaveButtonEnabled { get => DidChange; }
-	public bool IsStopButtonEnabled { get => cacheService.RunningTask != null; }
-    public bool IsDeleteButtonEnabled { get => true; }
+    public bool IsContiniueButtonEnabled => cacheService.RunningTask == null;
+	public bool IsStartNewButtonEnabled => cacheService.RunningTask == null;
+    public bool IsSaveButtonEnabled => DidChange;
+    public bool IsStopButtonEnabled => cacheService.SelectedTask?.running ?? false;
+    public bool IsDeleteButtonEnabled => true;
 
 	public new event PropertyChangedEventHandler? PropertyChanged;
 
@@ -162,7 +163,6 @@ public partial class TaskDetailsPageViewModel : PageViewModelBase, INotifyProper
 		cacheService.RunningTask = await dbService.ContiniueTaskAsync(cacheService.SelectedTask);
 		controller.GoBack();
 	}
-
 
 	[RelayCommand]
 	private void ApplyChanges() {

@@ -2,10 +2,10 @@
 
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.Util;
+using ReactiveUI;
 
 public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 
-	protected IHourglassDbService dbService { set; get; }
     protected DateTimeService dateTimeService { set; get; }
 	protected SettingsService settingsService;
 
@@ -14,16 +14,24 @@ public abstract class SubSettingsPageViewModelBase : ViewModelBase {
 
 	public abstract string Title { get; }
 
-	public SubSettingsPageViewModelBase() : this(null, null, null) {
+	private bool hasUnsavedChanges = false;
+	public bool HasUnsavedChanges {
+		protected set => this.RaiseAndSetIfChanged(ref hasUnsavedChanges, value);
+		get => hasUnsavedChanges;
+	}
+
+    public SubSettingsPageViewModelBase() : this(null, null, null) {
 		
 	}
 	
 	public SubSettingsPageViewModelBase(DateTimeService dateTimeService, MainViewModel pageController, SettingsService settingsService) : base() {
         this.dateTimeService = dateTimeService;
-		//this.settingsController = settingsController;
 		this.pageController = pageController;
 		this.settingsService = settingsService;
-	}
+        if (settingsService != null)
+            settingsService.OnPreSettingsSave += SaveSettings;
+		HasUnsavedChanges = false;
+    }
 
     public abstract void SaveSettings();
 }

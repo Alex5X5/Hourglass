@@ -45,12 +45,6 @@ public partial class SettingsService {
         if (!HasUnsavedChanges)
             return;
         OnPreSettingsSave.Invoke();
-        //foreach (Delegate act in OnPreSettingsSave.GetInvocationList())
-        //    try {
-        //        act.DynamicInvoke();
-        //    } catch (Exception ex) {
-        //        Console.WriteLine("an error occurred while invoking settings save subscribers: " + ex.Message);
-        //    }
         string[] lines = new string[Settings.Count];
         int i = 0;
         foreach (string key in Settings.Keys) {

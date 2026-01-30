@@ -1,59 +1,60 @@
 namespace Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 using Hourglass.Util.Services;
+using ReactiveUI;
 using System.ComponentModel;
 
 public partial class UserDataSubSettingsPageViewModel : SubSettingsPageViewModelBase {
 
-    public string UsernameTextboxText { set; get; }
+	private string usernameTextboxText = "";
+	public string UsernameTextboxText {
+		set => this.RaiseAndSetIfChanged(ref usernameTextboxText, value);
+		get => usernameTextboxText;
+	}
 
-    public string StartDateTextboxText { set; get; }
+	private string startDateTextboxText = "";
+	public string StartDateTextboxText {
+		set => this.RaiseAndSetIfChanged(ref startDateTextboxText, value);
+		get => startDateTextboxText;
+	}
 
-    public string JobNameTextboxText { set; get; }
+	private string jobNameTextboxText = "";
+	public string JobNameTextboxText {
+		set => this.RaiseAndSetIfChanged(ref jobNameTextboxText, value);
+		get => jobNameTextboxText;
+	}
 
-    public override string Title => TranslatorService.Singleton["Views.Pages.Settings.UserData.Title"] ?? "User Data";
+	public override string Title => TranslatorService.Singleton["Views.Pages.Settings.UserData.Title"] ?? "User Data";
 
-    public new event PropertyChangedEventHandler? PropertyChanged;
+	public new event PropertyChangedEventHandler? PropertyChanged;
 
-    public UserDataSubSettingsPageViewModel() : this(null, null, null, null) {
+	public UserDataSubSettingsPageViewModel() : this(null, null, null, null) {
 
-    }
+	}
 
-    public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
-        settingsService.OnUsernameChanged += val=> OnPropertyChanged(nameof(UsernameTextboxText));
-        settingsService.OnStartDateChanged += val=> OnPropertyChanged(nameof(StartDateTextboxText));
-        settingsService.OnPreSettingsSave += () => {
-            settingsService.StartDateString = StartDateTextboxText;
-            settingsService.Username = UsernameTextboxText;
-            settingsService.JobName = JobNameTextboxText;
-        };
-        if (settingsService != null) {
-            JobNameTextboxText = settingsService.GetSetting(SettingsService.JOB_NAME_KEY);
-            UsernameTextboxText = settingsService.GetSetting(SettingsService.USER_NAME_KEY);
-            StartDateTextboxText = settingsService.GetSetting(SettingsService.START_DATE_KEY);
-        }
-        AllBindingPropertiesChanged();
-    }
+	public UserDataSubSettingsPageViewModel(DateTimeService dateTimeService, SettingsPageViewModel settingsController, MainViewModel pageController, SettingsService settingsService) : base(dateTimeService, pageController, settingsService) {
+		if (settingsService != null) {
+			settingsService.OnUsernameChanged += 
+				val => this.RaiseAndSetIfChanged(ref usernameTextboxText, settingsService.Username);
+			settingsService.OnStartDateChanged +=
+				val => this.RaiseAndSetIfChanged(ref startDateTextboxText, settingsService.StartDateString);
+			settingsService.OnJobNameChanged += 
+				val => this.RaiseAndSetIfChanged(ref jobNameTextboxText, settingsService.JobName);
+			settingsService.OnPreSettingsSave += () => {
+			};
+			UsernameTextboxText = settingsService.Username;
+			StartDateTextboxText = settingsService.StartDateString;
+			JobNameTextboxText = settingsService.JobName;
+		}
+	}
 
-    private void AllBindingPropertiesChanged() {
-        OnPropertyChanged(nameof(UsernameTextboxText));
-        OnPropertyChanged(nameof(JobNameTextboxText));
-        OnPropertyChanged(nameof(StartDateTextboxText));
-    }
-
-    protected virtual void OnPropertyChanged(string propertyName) {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	public void OnLoad() {
+		Console.WriteLine("loading User Data Sub Settings Page!");
     }
 
     public override void SaveSettings() {
         settingsService.StartDateString = StartDateTextboxText;
         settingsService.Username = UsernameTextboxText;
         settingsService.JobName = JobNameTextboxText;
-        AllBindingPropertiesChanged();
-    }
-
-    public void OnLoad() {
-        Console.WriteLine("loading User Data Sub Settings Page!");
-        AllBindingPropertiesChanged();
     }
 }

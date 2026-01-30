@@ -35,7 +35,6 @@ public partial class TimerPageView : PageViewBase {
 		InitializeComponent();
 		startButton.GotFocus += (sender, args) => {
 			startButton.InvalidateVisual();
-			Console.WriteLine("start button got focus!");
 		};
 	}
 
@@ -49,12 +48,10 @@ public partial class TimerPageView : PageViewBase {
 	}
 
 	private void TextBox_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e) {
-		Console.WriteLine("key pressed!");
 		if (e.Key == Key.Escape)
 			TopLevel.GetTopLevel(this)?.Focus();
 		if (e.Key == Key.Enter) {
 			startButton.Focus();
-			Console.WriteLine($"button is focused {startButton.IsFocused}");
 		}
 	}
 

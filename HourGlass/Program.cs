@@ -24,23 +24,7 @@ public class Program {
 
 		//EncryptionService service = new("test"); 
 		//service.EncryptFile(PathService.FilesPath("database"));
-
-		//Application.Run(new Hourglass.GUI.Pages.LoginPopup.LoginPopup());
-
 	}
-
-
-	//#if PUBLISHED
-	//		InstallerService.CheckIsInAppdata();
-	//		if (!InstallerService.IsInstalled())
-	//			BuildInstallerApp()
-	//				.StartWithClassicDesktopLifetime(args);
-	//		else
-	//#endif
-	//			BuildMainApp()
-	//				.StartWithClassicDesktopLifetime(args);
-	//}
-
 
 	public static AppBuilder BuildAvaloniaApp()
 		=> AppBuilder.Configure<App>()
@@ -48,18 +32,4 @@ public class Program {
 			.WithInterFont()
 			.LogToTrace()
 			.UseReactiveUI();
-
-	public static AppBuilder BuildMainApp()
-		=> AppBuilder.Configure<App>()
-			.UsePlatformDetect()
-			.WithInterFont()
-			.LogToTrace()
-			.UseReactiveUI();
-	
-	//public static AppBuilder BuildInstallerApp()
-	//	=> AppBuilder.Configure<InstallerApp>()
-	//		.UsePlatformDetect()
-	//		.WithInterFont()
-	//		.LogToTrace()
-	//		.UseReactiveUI();
 }

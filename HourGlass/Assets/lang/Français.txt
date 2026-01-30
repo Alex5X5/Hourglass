@@ -1,6 +1,6 @@
-Views.Pages.Export.Title:Export
-Views.Pages.TaskDetails.Title:Details
-Views.Pages.Timer.Title:Timer
+Views.Pages.Export.Title:Exporter
+Views.Pages.TaskDetails.Title:Détails
+Views.Pages.Timer.Title:Minuterie
 
 Views.Pages.Settings.About.Title:About Us
 Views.Pages.Settings.Export.Title:Export Settings
@@ -47,23 +47,23 @@ Views.Pages.TaskDetails.Labels.Start:Start
 Views.Pages.TaskDetails.Labels.Stop:Finish
 Views.Pages.TaskDetails.Labels.Description:Description
 
-Days.Monday:Monday
-Days.Tuesday:Tuesday
-Days.Wednesday:Wendsday
-Days.Thursday:Thursday
-Days.Friday:Friday
-Days.Saturday:Saturday
-Days.Sunday:Sunday
+Days.Monday:lundi
+Days.Tuesday:mardi
+Days.Wednesday:mercredi
+Days.Thursday:jeudi
+Days.Friday:vendredi
+Days.Saturday:samedi
+Days.Sunday:dimanche
 
-Months.January:January
-Months.February:February
-Months.March:March
-Months.April:April
-Months.May:May
-Months.June:June
-Months.July:July
-Months.August:August
-Months.September:September
-Months.October:October
-Months.November:November
-Months.December:December
+Months.January:Janvier
+Months.February:Février
+Months.March:Mars
+Months.April:Avril
+Months.May:Mai
+Months.June:Juin
+Months.July:Juillet
+Months.August:Août
+Months.September:Septembre
+Months.October:Octobre
+Months.November:Novembre
+Months.December:Décembre
