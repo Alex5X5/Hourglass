@@ -14,7 +14,7 @@ using Hourglass.Util.Services;
 
 using System.Collections.ObjectModel;
 
-	public abstract partial class GraphPanelViewBase : ViewBase {
+public abstract partial class GraphPanelViewBase : ViewBase {
 
 	#region fields
 
@@ -62,9 +62,18 @@ using System.Collections.ObjectModel;
 
 	private ContextMenu? _contextMenu;
 
+	private Grid grid => new Grid() { 
+		RowDefinitions = new RowDefinitions((DataContext as GraphPanelViewModelBase)?.Rows ?? "*"),
+		ColumnDefinitions = new ColumnDefinitions("*")
+	};
+
 	#endregion fields
 	public GraphPanelViewBase() : base() {
 		InitializeComponent();
+		TasksGrid = grid;
+		//Console.WriteLine(TasksGrid);
+  //      TasksGrid.RowDefinitions.Clear();
+  //      TasksGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 	}
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>

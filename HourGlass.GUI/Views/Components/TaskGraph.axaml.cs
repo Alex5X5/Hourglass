@@ -3,10 +3,14 @@ namespace Hourglass.GUI.Views.Components;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-
+using Avalonia.Rendering.Composition;
 using Hourglass.GUI.ViewModels.Components;
 
 public partial class TaskGraph : UserControl {
+
+	public double X => 10;
+	public double Y => 10;
+
 
 	public bool IsRemoving {
 		get => (DataContext as TaskGraphViewModel)?.IsRemoving ?? false;

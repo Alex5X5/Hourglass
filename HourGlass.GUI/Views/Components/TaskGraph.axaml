@@ -7,6 +7,8 @@
 			 mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
 			 x:Class="Hourglass.GUI.Views.Components.TaskGraph"
 			 x:DataType="vm:TaskGraphViewModel"
+			 MinWidth="0"
+			 MinHeight="0"
 			 Loaded="OnLoaded">
 	<Grid HorizontalAlignment="Stretch">
 		<Grid.ColumnDefinitions>
@@ -59,8 +61,8 @@
 			</Panel.Styles>
 			<Rectangle Grid.Row="0"
 						Grid.Column="1"
-						RadiusX="20"
-						RadiusY="20"
+						RadiusX="5"
+						RadiusY="5"
 						Fill="Orange"
 						Name="Rect">
 			</Rectangle>

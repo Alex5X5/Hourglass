@@ -1,5 +1,6 @@
 ﻿namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
@@ -8,8 +9,6 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.Util.Services;
 
-using ReactiveUI;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +16,7 @@ using System.Threading.Tasks;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
-	public abstract int TASK_GRAPH_COLUMN_COUNT { get; }
+    public abstract int TASK_GRAPH_COLUMN_COUNT { get; }
 
 	public abstract int MAX_TASKS { get; }
 
@@ -76,13 +75,16 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 	public string Title => GetTitle();
 
-	private string _rowDefinitions;
-	public string RowDefinitions {
-		get => _rowDefinitions;
-		set => this.RaiseAndSetIfChanged(ref _rowDefinitions, value);
-	}
+	//private string _rowDefinitions;
+	//public string RowDefinitions {
+	//	get => _rowDefinitions;
+	//	set => this.RaiseAndSetIfChanged(ref _rowDefinitions, value);
+	//}
+	public string Rows => "*," + string.Join(",*,", Enumerable.Repeat("2*", Y_AXIS_SEGMENT_COUNT)) + ",*";
+	public string Columns => "*," + string.Join(",*,", Enumerable.Repeat("2*", X_AXIS_SEGMENT_COUNT)) + ",*";
 
-	public GraphPanelViewModelBase() : this(null, null, null, null, null) {
+
+    public GraphPanelViewModelBase() : this(null, null, null, null, null) {
 
 	}
 	
@@ -94,35 +96,42 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 
 		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
-		CurrentTasks.Add(
-			new TaskGraphViewModel(
-				dbService.QueryCurrentTaskAsync().Result,
-				TIME_INTERVALL_DURATION,
-				TIME_INTERVALL_START_SECONDS,
-				0
-			)
-		);
-			//new TaskGraphViewModel(, TIME_INTERVALL_START_SECONDS, TIME_INTERVALL_DURATION)
-		
-		//Dispatcher.UIThread.InvokeAsync(
-		//	async () => {
-		//		await Task.Delay(1000);
-		//		await RemoveItem(CurrentTasks[0]);
-		//	}
-		//);
+		List<Database.Models.Task> tasks = GetTasksAsync().Result;
+		for(int i=0; i<tasks.Count; i++) {
+			Console.WriteLine($"add loop i:{i} count:{tasks.Count} len:{CurrentTasks.Count}");
+            CurrentTasks.Add(
+				new TaskGraphViewModel(
+					tasks[i],
+					TIME_INTERVALL_DURATION,
+					TIME_INTERVALL_START_SECONDS,
+					i * 2
+				)
+			);
+		}
 
+		//int count = CurrentTasks.Count;
+		//for (int i=0; i< count; i++) {
+		//	Console.WriteLine($"remove loop i:{i} count:{count} len:{CurrentTasks.Count}");
+		//	TaskGraphViewModel task = CurrentTasks[i];
+		//	Console.WriteLine($"removing task {task}");
+		//	Task.Run(
+		//		async ()=> {
+		//			await Task.Delay(1000);
+		//			await RemoveItem(task);
+		//		}
+		//	);
+		//}
 		MarkedColumns = new bool[32];
 		BlockedColumns = new bool[32];
 		for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
 		}
-		RowDefinitions = string.Join("*", Enumerable.Repeat(",2*,*", Y_AXIS_SEGMENT_COUNT));
 	}
 
 	public async Task RemoveItem(TaskGraphViewModel item) {
-		item.IsRemoving = true;
-		await Task.Delay(2000);
-		CurrentTasks.Remove(item);
+		Dispatcher.UIThread.Invoke(() => item.IsRemoving = true);
+		await Task.Delay(1000);
+		Dispatcher.UIThread.Invoke(() => CurrentTasks.Remove(item));
 	}
 
 	public void UpdateColumnMarkers() {
