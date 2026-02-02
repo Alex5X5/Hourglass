@@ -15,8 +15,10 @@ public class DateTimeService {
 		this.settingsService = settingsService;
 	}
 
+	public static int DayOfWorkWeek(DateTime day) =>
+		(int)(day.DayOfWeek - 1 + 7) % 7;
 
-	public static long ToSeconds(DateTime date) =>
+    public static long ToSeconds(DateTime date) =>
 		date.Ticks / TimeSpan.TicksPerSecond;
 
 
