@@ -37,12 +37,11 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public MonthGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
-		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
+	public MonthGraphPanelViewModel(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, CacheService cacheService)
+        : base(graphFactory, dbService, dateTimeService, null, pageController, cacheService) { }
 
-	}
 
-	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
+    public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfMonthAtDateAsync(cacheService.SelectedDay) : [];
 
 	//public override void OnClick(Database.Models.Task task) {

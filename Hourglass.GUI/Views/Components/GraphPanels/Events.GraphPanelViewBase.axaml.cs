@@ -100,7 +100,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	
 	private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
 		(DataContext as GraphPanelViewModelBase)?.OnLoad();
-		TasksGrid = grid;
+		//TasksGrid = grid;
     //    if (DataContext is GraphPanelViewModelBase model)
     //        if(TasksGrid != null)
 				//TasksGrid.RowDefinitions = RowDefinitions.Parse(model.Rows);

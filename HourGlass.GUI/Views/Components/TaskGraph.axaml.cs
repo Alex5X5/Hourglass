@@ -1,9 +1,7 @@
 namespace Hourglass.GUI.Views.Components;
 
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
-using Avalonia.Rendering.Composition;
+using Avalonia.Media;
 using Hourglass.GUI.ViewModels.Components;
 
 public partial class TaskGraph : UserControl {

@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 public class TaskGraphViewModel : INotifyPropertyChanged {
 
-	private readonly Database.Models.Task task;
+	public readonly Database.Models.Task task;
 
 	private readonly long intervallStart;
 	private readonly long intervallDuration;
@@ -37,13 +37,17 @@ public class TaskGraphViewModel : INotifyPropertyChanged {
 	}
 
 	public double Row { get; private set; }
+	public double Column { get; private set; }
 
 
 	public event PropertyChangedEventHandler? PropertyChanged = (a, s) => { };
 
+	public TaskGraphViewModel() : this(new Database.Models.Task(), 1, 0, 0) { }
+
 	public TaskGraphViewModel(Database.Models.Task task, long intervallDuration, long intervallStart, int row) {
 		this.task = task;
 		Row = row;
+		Column = 0;
 		this.intervallStart = intervallStart;
 		this.intervallDuration = intervallDuration;
 		CalculateColumnWeights();

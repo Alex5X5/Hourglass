@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 public class PageInstanciator {
 
@@ -57,30 +58,39 @@ public class PageInstanciator {
 
     public void RegisterPageScoped<T, ScopeOwnerT>() where T : class {
 		serviceCollection.AddScoped<T>();
-	}
+    }
 
-	public void AddScopeController<OwnerT>() where OwnerT : class {
+    public void AddScopeController<OwnerT>() where OwnerT : class {
         serviceCollection.AddSingleton<Func<Type, IServiceScope>>(
             (serviceProvider) =>
                 (controllerType) => {
-					IServiceScope scope = serviceProvider.CreateScope();
-					return scope;
-				}
+                    IServiceScope scope = serviceProvider.CreateScope();
+                    return scope;
+                }
         );
         serviceCollection.AddTransient<ScopeController<OwnerT>>(
             serviceProvider=>new ScopeController<OwnerT>(serviceProvider.CreateScope())
+        );
+
+        //return (IServiceScope)scope?.Scope?.GetService(typeof(OwnerT))
+        //	?? throw new InvalidOperationException($"View model of type {controllerType?.FullName} has no registered view model");
+        //}
+        //serviceProvider => {
+        //	IServiceScope scope = serviceProvider.CreateScope();
+        //	ScopeController<OwnerT> controller = new ScopeController<OwnerT>(serviceProvider.GetService<Func<Type, IServiceScope>>());
+        //	runningScopes.Add(controller);
+        //	return controller;
+        //}
+
+    }
+
+    public void RegisterComponentTransient<ComponentT>() where ComponentT : class {
+		serviceCollection.AddTransient<ComponentT>();
+		serviceCollection.AddSingleton<Func<ComponentT>>(
+			(serviceProvider) => 
+				() => serviceProvider.GetService<ComponentT>() ?? Activator.CreateInstance<ComponentT>()
 		);
-		
-					//return (IServiceScope)scope?.Scope?.GetService(typeof(OwnerT))
-					//	?? throw new InvalidOperationException($"View model of type {controllerType?.FullName} has no registered view model");
-				//}
-			//serviceProvider => {
-			//	IServiceScope scope = serviceProvider.CreateScope();
-			//	ScopeController<OwnerT> controller = new ScopeController<OwnerT>(serviceProvider.GetService<Func<Type, IServiceScope>>());
-			//	runningScopes.Add(controller);
-			//	return controller;
-			//}
-		
+        serviceCollection.AddSingleton<ComponentViewModelFactory<ComponentT>>();
     }
 
 	public void AddContentBindingType<ContentBaseT>() {
@@ -115,6 +125,23 @@ public class ViewModelFactory<ViewBaseType>(Func<Type, ViewBaseType> factory) {
 		afterCreation?.Invoke((T?)viewModel);
 		return viewModel;
 	}
+}
+
+public class ComponentViewModelFactory<ComponentT>(Func<ComponentT> factory) {
+
+    public ComponentT GetComponentViewModel(
+		Action<ComponentT?>? afterCreation = null,
+		Dictionary<string, object?>? data = null
+	) {
+        ComponentT viewModel = factory();
+		if(data != null) {
+			FieldInfo[] fields = typeof(ComponentT).GetFields();
+			foreach(string key in data.Keys)
+				fields.FirstOrDefault(x => x.Name == key)?.SetValue(viewModel, data[key]);
+		}
+        afterCreation?.Invoke(viewModel);
+        return viewModel;
+    }
 }
 
 public class ScopeController<OwnerT>(IServiceScope scope) : IScopeController where OwnerT : class {

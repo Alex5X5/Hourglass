@@ -7,65 +7,58 @@
 			 mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
 			 x:Class="Hourglass.GUI.Views.Components.TaskGraph"
 			 x:DataType="vm:TaskGraphViewModel"
-			 MinWidth="0"
-			 MinHeight="0"
+			 Width="100"
+			 Height="100"
 			 Loaded="OnLoaded">
-	<Grid HorizontalAlignment="Stretch">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="{ Binding BeforeTaskColumnWeigth }"/>
-			<ColumnDefinition Width="{ Binding TaskColumnWeigth }"/>
-			<ColumnDefinition Width="{ Binding AfterTaskColumnWeigth }"/>
-		</Grid.ColumnDefinitions>
-		<Panel Classes.removing="{Binding IsRemoving}">
-			<Panel.RenderTransform>
-				<TranslateTransform />
-			</Panel.RenderTransform>
-			<Panel.Styles>
-				<Style Selector="Panel">
-					<Setter Property="Opacity" Value="1" />
-					<Setter Property="Transitions">
-						<Setter.Value>
-							<Transitions> 
-								<TransformOperationsTransition Property="RenderTransform"/>
-							</Transitions>
-						</Setter.Value>
-					</Setter>  
-				</Style>
-				<Style Selector="Panel.removing">
-					<Style.Animations>
-						<Animation Duration="0:0:0.65" FillMode="Forward">
-							<Animation.Easing>
-								<CubicEaseOut />
-							</Animation.Easing>
-							<KeyFrame Cue="0%">
-								<Setter Property="TranslateTransform.X" Value="0"/>
-							</KeyFrame>
-							<KeyFrame Cue="100%">
-								<Setter Property="TranslateTransform.X" Value="100"/>
-							</KeyFrame>
-						</Animation>
+	<Panel Classes.removing="{Binding IsRemoving}">
+		<Panel.RenderTransform>
+			<TranslateTransform />
+		</Panel.RenderTransform>
+		<Panel.Styles>
+			<Style Selector="Panel">
+				<Setter Property="Opacity" Value="1" />
+				<Setter Property="Transitions">
+					<Setter.Value>
+						<Transitions> 
+							<TransformOperationsTransition Property="RenderTransform"/>
+						</Transitions>
+					</Setter.Value>
+				</Setter>  
+			</Style>
+			<Style Selector="Panel.removing">
+				<Style.Animations>
+					<Animation Duration="0:0:0.65" FillMode="Forward">
+						<Animation.Easing>
+							<CubicEaseOut />
+						</Animation.Easing>
+						<KeyFrame Cue="0%">
+							<Setter Property="TranslateTransform.X" Value="0"/>
+						</KeyFrame>
+						<KeyFrame Cue="100%">
+							<Setter Property="TranslateTransform.X" Value="100"/>
+						</KeyFrame>
+					</Animation>
 					
-						<Animation Duration="0:0:0.65" FillMode="Forward">
-							<Animation.Easing>
-								<LinearEasing />
-							</Animation.Easing>
-							<KeyFrame Cue="0%">
-								<Setter Property="Opacity" Value="1"/>
-							</KeyFrame>
-							<KeyFrame Cue="100%">
-								<Setter Property="Opacity" Value="0"/>
-							</KeyFrame>
-						</Animation>
-					</Style.Animations>
-				</Style>
-			</Panel.Styles>
-			<Rectangle Grid.Row="0"
-						Grid.Column="1"
-						RadiusX="5"
-						RadiusY="5"
-						Fill="Orange"
-						Name="Rect">
-			</Rectangle>
-		</Panel>
-	</Grid>
+					<Animation Duration="0:0:0.65" FillMode="Forward">
+						<Animation.Easing>
+							<LinearEasing />
+						</Animation.Easing>
+						<KeyFrame Cue="0%">
+							<Setter Property="Opacity" Value="1"/>
+						</KeyFrame>
+						<KeyFrame Cue="100%">
+							<Setter Property="Opacity" Value="0"/>
+						</KeyFrame>
+					</Animation>
+				</Style.Animations>
+			</Style>
+		</Panel.Styles>
+		<Rectangle Grid.Row="0"
+					Grid.Column="1"
+					RadiusX="5"
+					RadiusY="5"
+					Fill="Orange"
+					Name="Rect">
+		</Rectangle>
+	</Panel>
 </UserControl>

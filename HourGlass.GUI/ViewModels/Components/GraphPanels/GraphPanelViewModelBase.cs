@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Tmds.DBus.Protocol;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
@@ -72,8 +73,9 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 	public GraphPageViewModel panelController;
 	protected MainViewModel pageController;
+	protected ComponentViewModelFactory<TaskGraphViewModel> graphFactory;
 
-	public string Title => GetTitle();
+    public string Title => GetTitle();
 
 	//private string _rowDefinitions;
 	//public string RowDefinitions {
@@ -84,11 +86,12 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public string Columns => "*," + string.Join(",*,", Enumerable.Repeat("2*", X_AXIS_SEGMENT_COUNT)) + ",*";
 
 
-    public GraphPanelViewModelBase() : this(null, null, null, null, null) {
+    public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
 
 	}
 	
-	public GraphPanelViewModelBase(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService) : base() {
+	public GraphPanelViewModelBase(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService) : base() {
+		this.graphFactory = graphFactory;
 		this.dbService = dbService;
 		this.dateTimeService = dateTimeService;
 		this.panelController = panelController;
@@ -97,14 +100,25 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
 		List<Database.Models.Task> tasks = GetTasksAsync().Result;
+		int skippedCounter = 0;
 		for(int i=0; i<tasks.Count; i++) {
-			Console.WriteLine($"add loop i:{i} count:{tasks.Count} len:{CurrentTasks.Count}");
+			if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
+				skippedCounter++;
+				continue;
+			}
+			int i_ = i - skippedCounter;
+			Console.WriteLine($"add loop i_:{i_} count:{tasks.Count} len:{CurrentTasks.Count}");
+			Dictionary<string, object?> data = new Dictionary<string, object?> {
+				{ nameof(TaskGraphViewModel.task), tasks[i] }
+			};
             CurrentTasks.Add(
-				new TaskGraphViewModel(
-					tasks[i],
-					TIME_INTERVALL_DURATION,
-					TIME_INTERVALL_START_SECONDS,
-					i * 2
+				graphFactory.GetComponentViewModel(
+					null,
+					new Dictionary<string, object?> {
+						{ nameof(TaskGraphViewModel.task), tasks[i_] },
+						{ nameof(TaskGraphViewModel.Row), Math.Floor((double)i_ / TASK_GRAPH_COLUMN_COUNT) },
+						{ nameof(TaskGraphViewModel.Column), i_ % TASK_GRAPH_COLUMN_COUNT }
+					}
 				)
 			);
 		}
@@ -151,6 +165,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public abstract Task<List<Database.Models.Task>> GetTasksAsync();
 
 	protected abstract string GetTitle();
+
 	public virtual void OnTaskClicked(Database.Models.Task task) {
 		cacheService.SelectedTask = task;
 		pageController.GoToTaskdetails(task);

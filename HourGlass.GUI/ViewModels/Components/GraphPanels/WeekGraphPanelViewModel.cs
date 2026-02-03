@@ -3,7 +3,7 @@ namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util.Services;
+using Hourglass.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,12 +36,11 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
 
 	}
 
-	public WeekGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService)
-		: base(dbService, dateTimeService, panelController, pageController, cacheService) {
+	public WeekGraphPanelViewModel(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, CacheService cacheService)
+        : base(graphFactory, dbService, dateTimeService, null, pageController, cacheService) { }
 
-	}
 
-	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
+    public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfWeekAtDateAsync(cacheService.SelectedDay) : [];
 
 	//public override void OnClick(Database.Models.Task task) {

@@ -4,8 +4,10 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
 			 xmlns:vm="using:Hourglass.GUI.ViewModels.Components.GraphPanels"
+			 xmlns:cls="using:Hourglass.GUI.Views.Components.GraphPanels"
 			 xmlns:cpvm="using:Hourglass.GUI.ViewModels.Components"
 			 xmlns:cp="using:Hourglass.GUI.Views.Components"
+			 xmlns:vc="using:Hourglass.GUI.ValueConverters"
 			 x:Class="Hourglass.GUI.Views.Components.GraphPanels.GraphPanelViewBase"
 			 x:DataType="vm:GraphPanelViewModelBase"
 			 Tapped="OnClickBase"
@@ -51,9 +53,9 @@
 						  Grid.RowSpan="3"
 						  ItemsSource="{ Binding CurrentTasks }">
 				<ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="cpvm:TaskGraphViewModel">
-                        <cp:TaskGraph DataContext="{ Binding }"/>
-                    </DataTemplate>
+					<DataTemplate DataType="cpvm:TaskGraphViewModel">
+						<cp:TaskGraph DataContext="{ Binding }"/>
+					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
 			-->
@@ -61,36 +63,46 @@
 						  Grid.Column="1"
 						  Grid.RowSpan="3"
 						  ItemsSource="{ Binding CurrentTasks }">
-				<ItemsControl.Styles>
-					<Style x:DataType="cpvm:TaskGraphViewModel" Selector="ItemsControl > ContentPresenter">
-						<Setter Property="Grid.Row" Value="{ Binding Row }" />
-					</Style>
-				</ItemsControl.Styles>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<Grid Name="TasksGrid">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="8.4*" />
-								<RowDefinition Height="2*" />
-								<RowDefinition Height="8.4*" />
-								<RowDefinition Height="2*" />
-								<RowDefinition Height="8.4*" />
-								<RowDefinition Height="2*" />
-								<RowDefinition Height="8.4*" />
-								<RowDefinition Height="2*" />
-								<RowDefinition Height="8.4*" />
-							</Grid.RowDefinitions>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="66*" />
-								<ColumnDefinition Width="8*" />
-								<ColumnDefinition Width="25*" />
-							</Grid.ColumnDefinitions>
-						</Grid>
+						<Canvas Background="green" />
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="cpvm:TaskGraphViewModel">
-						<cp:TaskGraph DataContext="{ Binding }"/>
+						<Panel Canvas.Top="500"
+							   Canvas.Left="300">
+							<cp:TaskGraph DataContext="{ Binding }">
+								<Panel.Width>
+									<MultiBinding Converter="{ x:Static vc:GridToPositionConverters.WidthConverter }">
+										<Binding Path="$parent[cls:GraphPanelViewBase].Bounds" />
+										<Binding Path="$self.DataContext" />
+										<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
+									</MultiBinding>
+								</Panel.Width>
+								<Panel.Height>
+									<MultiBinding Converter="{ x:Static vc:GridToPositionConverters.HeightConverter }">
+										<Binding Path="$parent[cls:GraphPanelViewBase].Bounds" />
+										<Binding Path="$self.DataContext" />
+										<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
+									</MultiBinding>
+								</Panel.Height>
+								<!--
+								<Canvas.Top>
+									<MultiBinding Converter="{ x:Static vc:GridToPositionConverters.RowConverter }">
+										<Binding Path="$parent[cls:GraphPanelViewBase].Bounds" />
+										<Binding Path="Row" />
+									</MultiBinding>
+								</Canvas.Top>
+								<Canvas.Left>
+									<MultiBinding Converter="{ x:Static vc:GridToPositionConverters.ColumnConverter }">
+										<Binding Path="$parent[cls:GraphPanelViewBase].DataContext.TASK_GRAPH_COLUMN_COUNT" />
+										<Binding Path="$parent[cls:GraphPanelViewBase].Bounds" />
+									</MultiBinding>
+								</Canvas.Left>
+								-->
+							</cp:TaskGraph>
+						</Panel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

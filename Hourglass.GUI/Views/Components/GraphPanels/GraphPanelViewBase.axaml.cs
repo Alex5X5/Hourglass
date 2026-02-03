@@ -70,7 +70,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	#endregion fields
 	public GraphPanelViewBase() : base() {
 		InitializeComponent();
-		TasksGrid = grid;
+		//TasksGrid = grid;
 		//Console.WriteLine(TasksGrid);
   //      TasksGrid.RowDefinitions.Clear();
   //      TasksGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));

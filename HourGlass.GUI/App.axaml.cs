@@ -46,6 +46,8 @@ public partial class App : Application {
 			instanciator.AddCommonServiceSingleton<IPdfService, PdfService>();
         }
 
+		instanciator.RegisterComponentTransient<TaskGraphViewModel>();
+
 		//instanciator.RegisterComponentTransient<DocumentPreviewerViewModel>();
 
 		instanciator.AddContentBindingType<PageViewModelBase>();

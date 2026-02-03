@@ -31,15 +31,15 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
     public override double TASK_DESCRIPTION_GRAPH_SPACE => 10;
     public override double TASK_DESCRIPTION_FONT_SIZE => 30;
 
-    public DayGraphPanelViewModel() : base() {
+    public DayGraphPanelViewModel() : this(null, null, null, null, null) {
 
 	}
 
-	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, CacheService cacheService)
-		: base(dbService, dateTimeService, null, pageController, cacheService) { }
+	public DayGraphPanelViewModel(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, MainViewModel pageController, CacheService cacheService)
+		: this(graphFactory, dbService, dateTimeService, null, pageController, cacheService) { }
 
-	public DayGraphPanelViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
-		: base(dbService, dateTimeService, panelController, pageController, cacheService) { }
+	public DayGraphPanelViewModel(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, CacheService cacheService)
+		: base(graphFactory, dbService, dateTimeService, panelController, pageController, cacheService) { }
 
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(cacheService.SelectedDay) : [];
