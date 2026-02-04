@@ -13,7 +13,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Tmds.DBus.Protocol;
+
+
+
+
+public class Product {
+    public string Name { get; set; } = "";
+    public decimal Price { get; set; }
+    public string Currency { get; set; } = "USD";
+    public string Description { get; set; } = "";
+}
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
@@ -86,9 +95,17 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public string Columns => "*," + string.Join(",*,", Enumerable.Repeat("2*", X_AXIS_SEGMENT_COUNT)) + ",*";
 
 
-    public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
+    public double DiscountPercentage { get; set; } = 10;
 
-	}
+    public List<Product> Products { get; set; } = new()
+    {
+        new Product { Name = "Laptop", Price = 999.99m, Currency = "USD", Description = "Powerful laptop" },
+        new Product { Name = "Mouse", Price = 29.99m, Currency = "EUR", Description = "Wireless mouse" },
+        new Product { Name = "Keyboard", Price = 79.99m, Currency = "GBP", Description = "Mechanical keyboard" }
+    };
+
+    public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
+    }
 	
 	public GraphPanelViewModelBase(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService) : base() {
 		this.graphFactory = graphFactory;
@@ -139,8 +156,8 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		BlockedColumns = new bool[32];
 		for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
-		}
-	}
+        }
+    }
 
 	public async Task RemoveItem(TaskGraphViewModel item) {
 		Dispatcher.UIThread.Invoke(() => item.IsRemoving = true);

@@ -8,11 +8,9 @@ using CommunityToolkit.Mvvm.Input;
 
 using Hourglass.Database;
 using Hourglass.Database.Models;
-using Hourglass.GUI.ViewModels.Components;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Util.Services;
 
-using System.Collections.ObjectModel;
 
 public abstract partial class GraphPanelViewBase : ViewBase {
 
@@ -25,13 +23,13 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	protected int GRAPH_CLICK_ADDITIONAL_WIDTH => Model.GRAPH_CLICK_ADDITIONAL_WIDTH;
 	protected int GRAPH_CLICK_ADDITIONAL_HEIGHT => Model.GRAPH_CLICK_ADDITIONAL_HEIGHT;
 
-	protected int GRAPH_MINIMAL_WIDTH => Model.GRAPH_MINIMAL_WIDTH;
+    public int GRAPH_MINIMAL_WIDTH => Model.GRAPH_MINIMAL_WIDTH;
 	protected int GRAPH_CORNER_RADIUS => Model.GRAPH_CORNER_RADIUS;
 
-	protected long TIME_INTERVALL_START_SECONDS => Model.TIME_INTERVALL_START_SECONDS;
-	protected long TIME_INTERVALL_FINISH_SECONDS => Model.TIME_INTERVALL_FINISH_SECONDS;
-	protected long TIME_INTERVALL_DURATION => Model.TIME_INTERVALL_DURATION;
-	protected long X_AXIS_SEGMENT_DURATION => Model.X_AXIS_SEGMENT_DURATION;
+    public long TIME_INTERVALL_START_SECONDS => Model.TIME_INTERVALL_START_SECONDS;
+    public long TIME_INTERVALL_FINISH_SECONDS => Model.TIME_INTERVALL_FINISH_SECONDS;
+    public long TIME_INTERVALL_DURATION => Model.TIME_INTERVALL_DURATION;
+    public long X_AXIS_SEGMENT_DURATION => Model.X_AXIS_SEGMENT_DURATION;
 
 	protected int X_AXIS_SEGMENT_COUNT => Model.X_AXIS_SEGMENT_COUNT;
 	protected int Y_AXIS_SEGMENT_COUNT => Model.Y_AXIS_SEGMENT_COUNT;
@@ -41,14 +39,14 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	protected int TASK_GRAPH_COLUMN_COUNT => Model.TASK_GRAPH_COLUMN_COUNT;
 
-	protected double X_AXIS_SEGMENT_SIZE => GRAPH_AREA_WIDTH / X_AXIS_SEGMENT_COUNT;
-	protected double Y_AXIS_SEGMENT_SIZE => GRAPH_AREA_HEIGTH / (Y_AXIS_SEGMENT_COUNT * 1.5) * Model.TASK_GRAPH_COLUMN_COUNT;
+    public double X_AXIS_SEGMENT_SIZE => GRAPH_AREA_WIDTH / X_AXIS_SEGMENT_COUNT;
+	public double Y_AXIS_SEGMENT_SIZE => GRAPH_AREA_HEIGTH / (Y_AXIS_SEGMENT_COUNT * 1.5) * Model.TASK_GRAPH_COLUMN_COUNT;
 
-	protected double PADDING_X => Bounds.Width * GraphPanelViewModelBase.PADDING_X_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_X_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_X_WEIGHT);
-	protected double PADDING_Y => Bounds.Height * GraphPanelViewModelBase.PADDING_Y_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_Y_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_Y_WEIGHT);
+    public double PADDING_X => Bounds.Width * GraphPanelViewModelBase.PADDING_X_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_X_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_X_WEIGHT);
+    public double PADDING_Y => Bounds.Height * GraphPanelViewModelBase.PADDING_Y_WEIGHT / (GraphPanelViewModelBase.GRAPH_AREA_Y_WEIGHT + 2 * GraphPanelViewModelBase.PADDING_Y_WEIGHT);
 
-	protected double GRAPH_AREA_WIDTH => Bounds.Width - 2 * PADDING_X;
-	protected double GRAPH_AREA_HEIGTH => Bounds.Height - 2 * PADDING_Y;
+    public double GRAPH_AREA_WIDTH => Bounds.Width - 2 * PADDING_X;
+    public double GRAPH_AREA_HEIGTH => Bounds.Height - 2 * PADDING_Y;
 	
 	public const double TIMELINE_MARK_HEIGHT = 7;
 	public const int MAX_TASK_DESCRIPTION_CHARS = 30;
@@ -67,14 +65,15 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		ColumnDefinitions = new ColumnDefinitions("*")
 	};
 
-	#endregion fields
-	public GraphPanelViewBase() : base() {
+    #endregion fields
+
+    public GraphPanelViewBase() : base() {
 		InitializeComponent();
-		//TasksGrid = grid;
-		//Console.WriteLine(TasksGrid);
-  //      TasksGrid.RowDefinitions.Clear();
-  //      TasksGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-	}
+        //TasksGrid = grid;
+        //Console.WriteLine(TasksGrid);
+        //      TasksGrid.RowDefinitions.Clear();
+        //      TasksGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+    }
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>
 		Math.Round(Math.Log(3 * height + 1) * 3 * x + height * 0.3 * x, 2);

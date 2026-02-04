@@ -56,12 +56,12 @@
 					 Grid.Row="2"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
-					 Classes="Default DynamicTextHeight" />
+					 Classes="Default Output DynamicTextHeight" />
 			<TextBox Text="{ Binding FinishTextboxText }"
 					 Grid.Row="2"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
-					 Classes="Default DynamicTextHeight" />
+					 Classes="Default Output DynamicTextHeight" />
 			<TextBlock Text="{ Binding $parent[cls:TimerPageView].DescriptionLabelText }"
 					   Grid.Row="4"
 					   Grid.Column="0"

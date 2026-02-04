@@ -32,6 +32,7 @@
 			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
 			<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
 			<Setter Property="Foreground" Value="{ StaticResource DefaultForeground }" />
+			<Setter Property="Cursor" Value="Hand"/>
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
 		<Style Selector="^:pressed /template/ ContentPresenter">

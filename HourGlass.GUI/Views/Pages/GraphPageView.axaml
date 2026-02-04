@@ -92,10 +92,12 @@
 				BorderBrush="Black"
 				BorderThickness="2">
 			<TransitioningContentControl Content="{ Binding CurrentGraphPanel }">
+				<!--
 				<TransitioningContentControl.PageTransition>
 					<an:SlideAnimation Duration="0:0:0.3">
 					</an:SlideAnimation>
 				</TransitioningContentControl.PageTransition>
+				-->
 			</TransitioningContentControl>
 			<!--
 			<ContentControl Content="{ Binding CurrentGraphPanel }" />

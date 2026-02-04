@@ -56,20 +56,64 @@
 			<Setter Property="Foreground" Value="Black" />
 		</Style>
 	</Style>
-	
-	<Style Selector="TextBox.DefaultBorder">
+
+	<Style Selector="TextBox.Default">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="BorderThickness" Value="3" />
 		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
+		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
 		<Setter Property="CornerRadius" Value="0" />
+
 		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
 			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
+
 		<Style Selector="^:focus /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
+			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
 		</Style>
+
+		<Style Selector="^:pressed /template/ Border">
+			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
+		</Style>
+	</Style>
+	
+	<Style Selector="TextBox.Default.Output">
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="BorderThickness" Value="3" />
+		<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="CornerRadius" Value="0" />
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+			<Setter Property="RenderTransform" Value="None"/>
+		</Style>
+
+		<Style Selector="^:focus /template/ Border">
+			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		</Style>
+
 		<Style Selector="^:pressed /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		</Style>
+		<Style Selector="^:focus">
+			<Setter Property="Foreground" Value="Black" />
 		</Style>
 	</Style>
 	

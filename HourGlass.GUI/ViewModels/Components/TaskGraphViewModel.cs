@@ -39,6 +39,8 @@ public class TaskGraphViewModel : INotifyPropertyChanged {
 	public double Row { get; private set; }
 	public double Column { get; private set; }
 
+	public int index { get; private set; }
+
 
 	public event PropertyChangedEventHandler? PropertyChanged = (a, s) => { };
 
