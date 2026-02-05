@@ -14,16 +14,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-
-
-
-public class Product {
-    public string Name { get; set; } = "";
-    public decimal Price { get; set; }
-    public string Currency { get; set; } = "USD";
-    public string Description { get; set; } = "";
-}
-
 public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
     public abstract int TASK_GRAPH_COLUMN_COUNT { get; }
@@ -93,16 +83,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	//}
 	public string Rows => "*," + string.Join(",*,", Enumerable.Repeat("2*", Y_AXIS_SEGMENT_COUNT)) + ",*";
 	public string Columns => "*," + string.Join(",*,", Enumerable.Repeat("2*", X_AXIS_SEGMENT_COUNT)) + ",*";
-
-
-    public double DiscountPercentage { get; set; } = 10;
-
-    public List<Product> Products { get; set; } = new()
-    {
-        new Product { Name = "Laptop", Price = 999.99m, Currency = "USD", Description = "Powerful laptop" },
-        new Product { Name = "Mouse", Price = 29.99m, Currency = "EUR", Description = "Wireless mouse" },
-        new Product { Name = "Keyboard", Price = 79.99m, Currency = "GBP", Description = "Mechanical keyboard" }
-    };
 
     public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
     }

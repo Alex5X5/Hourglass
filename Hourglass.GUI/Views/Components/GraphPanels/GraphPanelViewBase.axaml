@@ -100,7 +100,7 @@
 							</Setter.Value>
 						</Setter>
 					</Style>
-					<Style Selector="Panel.Template > ContentPresenter" x:DataType="cpvm:TaskGraphViewModel">
+					<Style Selector="ContentPresenter" x:DataType="cpvm:TaskGraphViewModel">
 						<Setter Property="Canvas.Left">
 							<Setter.Value>
 								<MultiBinding Converter="{ StaticResource LeftConverter }">
