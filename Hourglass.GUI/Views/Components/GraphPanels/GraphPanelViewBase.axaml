@@ -64,42 +64,47 @@
 						  Grid.RowSpan="3"
 						  ItemsSource="{ Binding CurrentTasks }">
 				<ItemsControl.Resources>
-					<vc:CanvasLeftConverter x:Key="LeftConverter"/>
-					<vc:CanvasTopConverter x:Key="TopConverter"/>
 					<vc:WidthConverter x:Key="WidthConverter"/>
 					<vc:HeightConverter x:Key="HeightConverter"/>
+					<vc:CanvasLeftConverter x:Key="LeftConverter"/>
+					<vc:CanvasTopConverter x:Key="TopConverter"/>
 				</ItemsControl.Resources>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<Canvas Name="ItemsCanvas" Background="green" />
+						<Canvas Background="green" Classes="ItemsPanel" />
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="cpvm:TaskGraphViewModel">
-						<Panel Background="blue">
-							<Panel.Width>
-								<MultiBinding Converter="{ StaticResource WidthConverter }">
-									<Binding Path="$parent[Canvas].Bounds" />
-									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
-									<Binding />
-								</MultiBinding>
-							</Panel.Width>
-							<Panel.Height>
-								<MultiBinding Converter="{ StaticResource WidthConverter }">
-									<Binding Path="$parent[Canvas].Bounds" />
-									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
-									<Binding />
-								</MultiBinding>
-							</Panel.Height>
+						<Panel Background="blue" Classes="Template">
 						</Panel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 				<ItemsControl.Styles>
-					<Style Selector="Panel" x:DataType="cpvm:TaskGraphViewModel">
+					<Style Selector="Panel.Template" x:DataType="cpvm:TaskGraphViewModel">
+						<Setter Property="Panel.Width">
+							<Setter.Value>
+								<MultiBinding Converter="{ StaticResource WidthConverter }">
+									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
+									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
+									<Binding />
+								</MultiBinding>
+							</Setter.Value>
+						</Setter>
+						<Setter Property="Panel.Height">
+							<Setter.Value>
+								<MultiBinding Converter="{ StaticResource HeightConverter }">
+									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
+									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
+								</MultiBinding>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<Style Selector="Panel.Template > ContentPresenter" x:DataType="cpvm:TaskGraphViewModel">
 						<Setter Property="Canvas.Left">
 							<Setter.Value>
 								<MultiBinding Converter="{ StaticResource LeftConverter }">
-									<Binding Path="$parent[cls:GraphPanelViewBase].Bounds" />
+									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
 									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
 									<Binding />
 								</MultiBinding>
@@ -108,7 +113,7 @@
 						<Setter Property="Canvas.Top">
 							<Setter.Value>
 								<MultiBinding Converter="{ StaticResource TopConverter }">
-									<Binding Path="$parent[Canvas].Bounds" />
+									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
 									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
 									<Binding />
 								</MultiBinding>
