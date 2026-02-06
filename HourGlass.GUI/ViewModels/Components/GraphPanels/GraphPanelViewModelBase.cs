@@ -48,13 +48,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public GridLength PaddingYWeight { get; } = new GridLength(PADDING_Y_WEIGHT, GridUnitType.Star);
 
 	public bool[] MarkedColumns;
-	public bool[] BlockedColumns;
-
-	public bool TransitionRunning;
-
-	public event Action<int> NotifyTransitionStep = (step) => { };
-	public int TransitionStep { get; private set; } = 0;
-	
+	public bool[] BlockedColumns;	
 
 	public ObservableCollection<TaskGraphViewModel> CurrentTasks {
 		get;
@@ -65,7 +59,6 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		set;
 	}
 
-
 	public IHourglassDbService dbService { set; get; }
 	public DateTimeService dateTimeService { set; get; }
 	public Services.CacheService cacheService;
@@ -75,15 +68,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	protected ComponentViewModelFactory<TaskGraphViewModel> graphFactory;
 
     public string Title => GetTitle();
-
-	//private string _rowDefinitions;
-	//public string RowDefinitions {
-	//	get => _rowDefinitions;
-	//	set => this.RaiseAndSetIfChanged(ref _rowDefinitions, value);
-	//}
-	public string Rows => "*," + string.Join(",*,", Enumerable.Repeat("2*", Y_AXIS_SEGMENT_COUNT)) + ",*";
-	public string Columns => "*," + string.Join(",*,", Enumerable.Repeat("2*", X_AXIS_SEGMENT_COUNT)) + ",*";
-
+	
     public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
     }
 	
@@ -97,6 +82,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
 		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
 		List<Database.Models.Task> tasks = GetTasksAsync().Result;
+
 		int skippedCounter = 0;
 		for(int i=0; i<tasks.Count; i++) {
 			if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
@@ -113,8 +99,7 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 					null,
 					new Dictionary<string, object?> {
 						{ nameof(TaskGraphViewModel.task), tasks[i_] },
-						{ nameof(TaskGraphViewModel.Row), Math.Floor((double)i_ / TASK_GRAPH_COLUMN_COUNT) },
-						{ nameof(TaskGraphViewModel.Column), i_ % TASK_GRAPH_COLUMN_COUNT }
+						{ nameof(TaskGraphViewModel.index), i_ }
 					}
 				)
 			);
@@ -246,14 +231,11 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	public void PreviusIntervallClickBase() {
 		PreviusIntervallClick();
 		UpdateColumnMarkers();
-		//PhasingOutTasks = GetTasksAsync().Result;
 	}
 
 	public void FollowingIntervallClickBase() {
 		FollowingIntervallClick();
 		UpdateColumnMarkers();
-		NotifyTransitionStep(1);
-		//PhasingOutTasks = GetTasksAsync().Result;
 	}
 
 	protected abstract void PreviusIntervallClick();

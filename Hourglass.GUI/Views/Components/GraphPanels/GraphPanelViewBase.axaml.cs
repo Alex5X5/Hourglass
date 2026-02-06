@@ -60,19 +60,10 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	private ContextMenu? _contextMenu;
 
-	private Grid grid => new Grid() { 
-		RowDefinitions = new RowDefinitions((DataContext as GraphPanelViewModelBase)?.Rows ?? "*"),
-		ColumnDefinitions = new ColumnDefinitions("*")
-	};
-
     #endregion fields
 
     public GraphPanelViewBase() : base() {
 		InitializeComponent();
-        //TasksGrid = grid;
-        //Console.WriteLine(TasksGrid);
-        //      TasksGrid.RowDefinitions.Clear();
-        //      TasksGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
     }
 
 	protected static double ArialHeightToPt(double height, double x = 1) =>
@@ -171,81 +162,13 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 	public override void Render(DrawingContext context) {
 		if (!IsVisible)
 			return;
-		//if (Model.TransitionRunning)
-		//	RenderTransition(context);
-		//else
-		RenderNormal(context);
-		base.Render(context);
-		//this.itemsControll.Render(context);
+        var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+        context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
+        DrawTimeline(context);
+        DrawColumnMarkers(context);
+        DrawMouseRectangle(context);
+        base.Render(context);
 	}
-
-	private async void RenderNormal(DrawingContext context) {
-		var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-		context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
-		DrawTimeline(context);
-		DrawColumnMarkers(context);
-		using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
-			List<Task> tasks = [];
-			if (DataContext is GraphPanelViewModelBase model)
-				tasks = model.GetTasksAsync().Result;
-			if (tasks != null && tasks.Count > 0) {
-				double graphPosY = PADDING_Y;
-				int blockingTaskCount = 0;
-				for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-					if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
-						DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
-					} else {
-						blockingTaskCount++;
-					}
-				}
-			}
-		}
-		DrawMouseRectangle(context);
-	}
-
-	//private void RenderTransition(DrawingContext context) {
-	//	double FadeOutX(double step) =>
-	//		step * 0.5;
-	//	double FadeInX(double step) =>
-	//		step * 0.5;
-	//	double FadeInY(double step) =>
-	//		step * 0.5;
-	//	var brush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-	//	context.FillRectangle(brush, new Rect(Bounds.X + PADDING_X, Bounds.Y + PADDING_Y, Bounds.Width - 2 * PADDING_X, Bounds.Height - 2 * PADDING_Y));
-	//	DrawTimeline(context);
-	//	DrawColumnMarkers(context);
-	//	using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
-	//		List<Task> tasks = Model.PhasingOutTasks;
-	//		if (tasks != null && tasks.Count > 0) {
-	//			double graphPosY = PADDING_Y;
-	//			int blockingTaskCount = 0;
-	//			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-	//				if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
-	//					DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
-	//				} else {
-	//					blockingTaskCount++;
-	//				}
-	//			}
-	//		}
-	//	}
-	//	using (context.PushTransform(Matrix.CreateTranslation(0, 0))) {
-	//		List<Task> tasks = [];
-	//		if (DataContext is GraphPanelViewModelBase model)
-	//			tasks = model.GetTasksAsync().Result;
-	//		if (tasks != null && tasks.Count > 0) {
-	//			double graphPosY = PADDING_Y;
-	//			int blockingTaskCount = 0;
-	//			for (int i = 0; i < MAX_TASKS && i < tasks.Count; i++) {
-	//				if (!(tasks[i].blocksTime != BlockedTimeIntervallType.None)) {
-	//					DrawTaskGraph(context, tasks[i], i - blockingTaskCount);
-	//				} else {
-	//					blockingTaskCount++;
-	//				}
-	//			}
-	//		}
-	//	}
-	//	DrawMouseRectangle(context);
-	//}
 
 	private void ShowReasonContextMenu() {
 

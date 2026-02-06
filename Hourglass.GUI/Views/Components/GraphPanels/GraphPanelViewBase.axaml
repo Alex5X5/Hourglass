@@ -35,7 +35,7 @@
 	</UserControl.Styles>
 		</Grid.ColumnDefinitions>
 	-->
-	<Panel Background="yellow">
+	<Panel>
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="4*" />
@@ -47,36 +47,26 @@
 				<ColumnDefinition Width="{ Binding GraphAreaYWeight }" />
 				<ColumnDefinition Width="{ Binding PaddingYWeight }" />
 			</Grid.ColumnDefinitions>
-			<!--
 			<ItemsControl Grid.Row ="0"
-						  Grid.Column="1"
+						  Grid.Column="0"
 						  Grid.RowSpan="3"
-						  ItemsSource="{ Binding CurrentTasks }">
-				<ItemsControl.ItemTemplate>
-					<DataTemplate DataType="cpvm:TaskGraphViewModel">
-						<cp:TaskGraph DataContext="{ Binding }"/>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
-			-->
-			<ItemsControl Grid.Row ="0"
-						  Grid.Column="1"
-						  Grid.RowSpan="3"
+						  Grid.ColumnSpan="3"
 						  ItemsSource="{ Binding CurrentTasks }">
 				<ItemsControl.Resources>
-					<vc:WidthConverter x:Key="WidthConverter"/>
-					<vc:HeightConverter x:Key="HeightConverter"/>
-					<vc:CanvasLeftConverter x:Key="LeftConverter"/>
-					<vc:CanvasTopConverter x:Key="TopConverter"/>
+					<vc:TaskWidthConverter x:Key="WidthConverter"/>
+					<vc:TaskHeightConverter x:Key="HeightConverter"/>
+					<vc:TaskLeftConverter x:Key="LeftConverter"/>
+					<vc:TaskTopConverter x:Key="TopConverter"/>
 				</ItemsControl.Resources>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<Canvas Background="green" Classes="ItemsPanel" />
+						<Canvas />
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="cpvm:TaskGraphViewModel">
-						<Panel Background="blue" Classes="Template">
+						<Panel Classes="Template">
+							<cp:TaskGraph DataContext="{ Binding }"/>
 						</Panel>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>

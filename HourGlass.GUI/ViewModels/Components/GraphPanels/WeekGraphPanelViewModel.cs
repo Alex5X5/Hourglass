@@ -69,18 +69,4 @@ public class WeekGraphPanelViewModel : GraphPanelViewModelBase {
     protected override void FollowingIntervallClick() {
 		cacheService.SelectedDay = cacheService.SelectedDay.AddDays(7);
 	}
-
-	//public async override void SetTimeIntervallUnblocked() {
-	//}
-
-	//public void SetTimeIntervallBlocked(string reason) {
-	//	DateTime blockedIntervallStartDate = DateTimeService.FloorWeek(cacheService.SelectedDay);
-	//	for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
-	//		if (MarkedColumns[i]) {
-	//			dbService.CreateIntervallBlockingTaskAsync(BlockedTimeIntervallType.Sick, blockedIntervallStartDate, TimeSpan.SecondsPerDay);
-	//			BlockedColumns[i] = true;
-	//		}
- //           blockedIntervallStartDate = blockedIntervallStartDate.AddDays(1);
-	//	}
-	//}
 }

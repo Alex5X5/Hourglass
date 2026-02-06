@@ -86,12 +86,4 @@ public class MonthGraphPanelViewModel : GraphPanelViewModelBase {
         nextMonth = DateTimeService.FloorMonth(nextMonth.AddDays(DateTime.DaysInMonth(nextMonth.Year, nextMonth.Month) + 1));
         cacheService.SelectedDay = nextMonth;
     }
-
-    //public override void SetTimeIntervallBlocked(string reason) {
-
-    //}
-
-    //public override void SetTimeIntervallUnblocked() {
-
-    //}
 }

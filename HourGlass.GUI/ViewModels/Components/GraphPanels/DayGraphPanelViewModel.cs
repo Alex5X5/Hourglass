@@ -3,7 +3,6 @@ namespace Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.Services;
 using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -44,11 +43,6 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
 	public async override Task<List<Database.Models.Task>> GetTasksAsync() =>
 		dbService != null ? await dbService.QueryTasksOfDayAtDateAsync(cacheService.SelectedDay) : [];
 
-	//public override void OnClick(Database.Models.Task task) {
-	//	pageController.ChangePage<TaskDetailsPageViewModel>();
-	//	Console.WriteLine("day graph panel model click");
-	//}
-
 	public override void OnDoubleClick(DateTime clickedTime) {
 		Console.WriteLine("day graph panel model double click");
 	}
@@ -75,12 +69,4 @@ public class DayGraphPanelViewModel : GraphPanelViewModelBase {
     protected override void FollowingIntervallClick() {
         cacheService.SelectedDay = cacheService.SelectedDay.AddDays(1);
     }
-
- //   public override void SetTimeIntervallBlocked(string reason) {
-
-	//}
-
- //   public override void SetTimeIntervallUnblocked() {
-
-	//}
 }
