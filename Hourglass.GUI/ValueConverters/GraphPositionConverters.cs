@@ -64,3 +64,25 @@ public class TaskHeightConverter : IMultiValueConverter {
         return (graphAreaHeight / (panelModel?.Y_AXIS_SEGMENT_COUNT ?? 1 * 1.5) * panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1) / 1.5;
     }
 }
+
+public class CanvasTopConverter : IMultiValueConverter {
+    public object? Convert(IList<object?> lst, Type targetType, object? parameter, CultureInfo culture) {
+        Rect parentBounds = (lst[0] as Rect?) ?? new Rect(0, 0, 10, 10);
+        GraphPanelViewModelBase? panelModel = lst[1] as GraphPanelViewModelBase;
+        TaskGraphViewModel? taskModel = lst[2] as TaskGraphViewModel;
+        double paddingY = TaskConverterHelper.PaddingY(parentBounds);
+        double graphAreaHeight = parentBounds.Height - 2 * paddingY;
+        double yAxissegmentSize = graphAreaHeight / (panelModel?.Y_AXIS_SEGMENT_COUNT ?? 10 * 1.5) * panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1;
+        return yAxissegmentSize * (taskModel?.Index ?? 0 % (panelModel?.MAX_TASKS ?? 10 / panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1)) + paddingY + 30;
+    }
+}
+
+public class CanvasHeightConverter : IMultiValueConverter {
+    public object? Convert(IList<object?> lst, Type targetType, object? parameter, CultureInfo culture) {
+        Rect parentBounds = (lst[0] as Rect?) ?? new Rect(0, 0, 10, 10);
+        GraphPanelViewModelBase? panelModel = lst[1] as GraphPanelViewModelBase;
+        double paddingY = TaskConverterHelper.PaddingY(parentBounds);
+        double graphAreaHeight = parentBounds.Height - 2 * paddingY;
+        return (graphAreaHeight / (panelModel?.Y_AXIS_SEGMENT_COUNT ?? 1 * 1.5) * panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1);
+    }
+}

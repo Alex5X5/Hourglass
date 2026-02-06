@@ -1,15 +1,18 @@
 namespace Hourglass.GUI.Views.Components;
 
+using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
 using Hourglass.GUI.ViewModels.Components;
 
 public partial class TaskGraph : UserControl {
 
-	public double X => 10;
-	public double Y => 10;
-
-
+	public static StyledProperty<double> GaphWidthProperty = AvaloniaProperty.Register<TaskGraph, double>(nameof(GraphWidth));
+	
+	public double GraphWidth {
+        get => GetValue(GaphWidthProperty);
+        set => SetValue(GaphWidthProperty, value);
+    }
+	
 	public bool IsRemoving {
 		get => (DataContext as TaskGraphViewModel)?.IsRemoving ?? false;
 		set {

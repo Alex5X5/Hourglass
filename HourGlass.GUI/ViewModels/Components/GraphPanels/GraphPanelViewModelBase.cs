@@ -81,46 +81,51 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 
 		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
-		List<Database.Models.Task> tasks = GetTasksAsync().Result;
-
-		int skippedCounter = 0;
-		for(int i=0; i<tasks.Count; i++) {
-			if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
-				skippedCounter++;
-				continue;
-			}
-			int i_ = i - skippedCounter;
-			Console.WriteLine($"add loop i_:{i_} count:{tasks.Count} len:{CurrentTasks.Count}");
-			Dictionary<string, object?> data = new Dictionary<string, object?> {
-				{ nameof(TaskGraphViewModel.Task), tasks[i] }
-			};
-            CurrentTasks.Add(
-				graphFactory.GetComponentViewModel(
-					null,
-					new Dictionary<string, object?> {
-						{ nameof(TaskGraphViewModel.Task), tasks[i_] },
-						{ nameof(TaskGraphViewModel.Index), i_ }
-					}
-				)
-			);
-		}
-
-		//int count = CurrentTasks.Count;
-		//for (int i=0; i< count; i++) {
-		//	Console.WriteLine($"remove loop i:{i} count:{count} len:{CurrentTasks.Count}");
-		//	TaskGraphViewModel task = CurrentTasks[i];
-		//	Console.WriteLine($"removing task {task}");
-		//	Task.Run(
-		//		async ()=> {
-		//			await Task.Delay(1000);
-		//			await RemoveItem(task);
-		//		}
-		//	);
-		//}
+		SetTasks();
 		MarkedColumns = new bool[32];
 		BlockedColumns = new bool[32];
 		for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
+        }
+    }
+
+	protected void ClearTasks() {
+        int count = CurrentTasks.Count;
+        for (int i = 0; i < count; i++) {
+            Console.WriteLine($"remove loop i:{i} count:{count} len:{CurrentTasks.Count}");
+            TaskGraphViewModel task = CurrentTasks[i];
+            Console.WriteLine($"removing task {task}");
+            Task.Run(
+                async () => {
+                    await Task.Delay(1000);
+                    await RemoveItem(task);
+                }
+            );
+        }
+    }
+
+	protected void SetTasks() {
+        List<Database.Models.Task> tasks = GetTasksAsync().Result;
+        int skippedCounter = 0;
+        for (int i = 0; i < tasks.Count; i++) {
+            if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
+                skippedCounter++;
+                continue;
+            }
+            int i_ = i - skippedCounter;
+            Console.WriteLine($"add loop i_:{i_} count:{tasks.Count} len:{CurrentTasks.Count}");
+            Dictionary<string, object?> data = new Dictionary<string, object?> {
+                { nameof(TaskGraphViewModel.Task), tasks[i] }
+            };
+            CurrentTasks.Add(
+                graphFactory.GetComponentViewModel(
+                    null,
+                    new Dictionary<string, object?> {
+                        { nameof(TaskGraphViewModel.Task), tasks[i_] },
+                        { nameof(TaskGraphViewModel.Index), i_ }
+                    }
+                )
+            );
         }
     }
 
@@ -229,12 +234,16 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	}
 	
 	public void PreviusIntervallClickBase() {
+		ClearTasks();
 		PreviusIntervallClick();
+		SetTasks();
 		UpdateColumnMarkers();
 	}
 
 	public void FollowingIntervallClickBase() {
+		ClearTasks();
 		FollowingIntervallClick();
+		SetTasks();
 		UpdateColumnMarkers();
 	}
 

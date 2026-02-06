@@ -57,6 +57,8 @@
 					<vc:TaskHeightConverter x:Key="HeightConverter"/>
 					<vc:TaskLeftConverter x:Key="LeftConverter"/>
 					<vc:TaskTopConverter x:Key="TopConverter"/>
+					<vc:CanvasTopConverter x:Key="CanvasTopConverter"/>
+					<vc:CanvasHeightConverter x:Key="CanvasWidthConverter"/>
 				</ItemsControl.Resources>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
@@ -65,9 +67,9 @@
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="cpvm:TaskGraphViewModel">
-						<Panel Classes="Template">
+						<Canvas Classes="Template" Background="green">
 							<cp:TaskGraph DataContext="{ Binding }"/>
-						</Panel>
+						</Canvas>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 				<ItemsControl.Styles>
@@ -103,6 +105,31 @@
 						<Setter Property="Canvas.Top">
 							<Setter.Value>
 								<MultiBinding Converter="{ StaticResource TopConverter }">
+									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
+									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
+									<Binding />
+								</MultiBinding>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<Style Selector="Canvas.Template">
+						<Setter Property="Width" Value="{ Binding $parent[ItemsControl].ItemsPanelRoot.Bounds.Width }" />
+						<Setter Property="Height">
+							<Setter.Value>
+								<MultiBinding Converter="{ StaticResource CanvasWidthConverter }">
+									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
+									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
+									<Binding />
+								</MultiBinding>
+							</Setter.Value>
+						</Setter>
+					</Style>
+
+					<Style Selector="Canvas.Template > ContentPresenter">
+						<Setter Property="Canvas.Left" Value="0" />
+						<Setter Property="Canvas.Top">
+							<Setter.Value>
+								<MultiBinding Converter="{ StaticResource CanvasTopConverter }">
 									<Binding Path="$parent[ItemsControl].ItemsPanelRoot.Bounds" />
 									<Binding Path="$parent[cls:GraphPanelViewBase].DataContext" />
 									<Binding />

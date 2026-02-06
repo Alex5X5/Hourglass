@@ -8,7 +8,7 @@
 			 x:Class="Hourglass.GUI.Views.Components.TaskGraph"
 			 x:DataType="vm:TaskGraphViewModel"
 			 Loaded="OnLoaded">
-	<Panel Classes.removing="{Binding IsRemoving}">
+	<Panel Classes="Template" Classes.removing="{Binding IsRemoving}">
 		<Panel.RenderTransform>
 			<TranslateTransform />
 		</Panel.RenderTransform>
@@ -52,11 +52,20 @@
 			</Style>
 		</Panel.Styles>
 		<Rectangle Grid.Row="0"
-				   Grid.Column="1"
+				   Grid.Column="0"
 				   RadiusX="5"
 				   RadiusY="5"
 				   Fill="Orange"
 				   Name="Rect">
 		</Rectangle>
+		<TextBlock Grid.Row="0"
+				   Grid.Column="0"
+				   Text="Dienstag"
+				   RenderTransformOrigin="50,50"
+				   Classes="Default DynamicTextHeight" >
+			<TextBlock.RenderTransform>
+				<RotateTransform Angle="-90" />
+			</TextBlock.RenderTransform>
+		</TextBlock>
 	</Panel>
 </UserControl>

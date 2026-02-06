@@ -9,6 +9,7 @@ using Hourglass.PDF.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyChanged {
@@ -118,8 +119,14 @@ public partial class ExportPageViewModel : PageViewModelBase, INotifyPropertyCha
 
     [RelayCommand]
     private void OpenExplorer() {
-        Console.WriteLine("export button click!");
-		Process.Start("explorer.exe", PathService.FilesPath(@"Nachweise\"));
+		string folderPath = PathService.FilesPath(@"Nachweise\");
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            Process.Start("explorer.exe", $"{folderPath}");
+        } else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+		    Process.Start("open", $"{folderPath}");
+		} else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+			Process.Start("xdg-open", $"{folderPath}");
+		}
     }
 
     public void OnTaskRedirect(Database.Models.Task task) {
