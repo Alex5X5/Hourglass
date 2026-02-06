@@ -125,7 +125,7 @@
 						</Setter>
 					</Style>
 
-					<Style Selector="Canvas.Template > ContentPresenter">
+					<Style Selector="Canvas.Template /template/ ContentPresenter">
 						<Setter Property="Canvas.Left" Value="0" />
 						<Setter Property="Canvas.Top">
 							<Setter.Value>
