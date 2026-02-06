@@ -24,7 +24,7 @@ public class TaskLeftConverter : IMultiValueConverter {
         double paddingX = TaskConverterHelper.PaddingX(parentBounds);
         double graphAreaWidth = parentBounds.Width - 2 * paddingX;
         double proportion = graphAreaWidth / panelModel?.TIME_INTERVALL_DURATION ?? 1;
-        return ((taskModel?.task.start ?? 0) - (panelModel?.TIME_INTERVALL_START_SECONDS ?? 0)) * proportion + paddingX;
+        return ((taskModel?.Task.start ?? 0) - (panelModel?.TIME_INTERVALL_START_SECONDS ?? 0)) * proportion + paddingX;
     }
 }
 
@@ -36,7 +36,7 @@ public class TaskTopConverter : IMultiValueConverter {
         double paddingY = TaskConverterHelper.PaddingY(parentBounds);
         double graphAreaHeight = parentBounds.Height - 2 * paddingY;
         double yAxissegmentSize = graphAreaHeight / (panelModel?.Y_AXIS_SEGMENT_COUNT ?? 10 * 1.5) * panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1;
-        return yAxissegmentSize * (taskModel?.index ?? 0 % (panelModel?.MAX_TASKS ?? 10 / panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1)) + paddingY;
+        return yAxissegmentSize * (taskModel?.Index ?? 0 % (panelModel?.MAX_TASKS ?? 10 / panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1)) + paddingY;
     }
 }
 
@@ -45,11 +45,11 @@ public class TaskWidthConverter : IMultiValueConverter {
         Rect parentBounds = (lst[0] as Rect?) ?? new Rect(0, 0, 10, 10);
         GraphPanelViewModelBase? panelModel = lst[1] as GraphPanelViewModelBase;
         TaskGraphViewModel? task = lst[2] as TaskGraphViewModel;
-        bool running = task?.task.running ?? false;
+        bool running = task?.Task.running ?? false;
         double paddingX = TaskConverterHelper.PaddingX(parentBounds);
         double graphAreaWidth = parentBounds.Width - 2 * paddingX;
         double proportion = graphAreaWidth / panelModel?.TIME_INTERVALL_DURATION ?? 1;
-        long duration = (running ? DateTimeService.ToSeconds(DateTime.Now) : (task?.task.finish ?? 1)) - (task?.task.start ?? 0);
+        long duration = (running ? DateTimeService.ToSeconds(DateTime.Now) : (task?.Task.finish ?? 1)) - (task?.Task.start ?? 0);
         double graphLength = duration * proportion;
         return Math.Max(graphLength, panelModel?.GRAPH_MINIMAL_WIDTH ?? 10);
     }

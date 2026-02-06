@@ -92,14 +92,14 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 			int i_ = i - skippedCounter;
 			Console.WriteLine($"add loop i_:{i_} count:{tasks.Count} len:{CurrentTasks.Count}");
 			Dictionary<string, object?> data = new Dictionary<string, object?> {
-				{ nameof(TaskGraphViewModel.task), tasks[i] }
+				{ nameof(TaskGraphViewModel.Task), tasks[i] }
 			};
             CurrentTasks.Add(
 				graphFactory.GetComponentViewModel(
 					null,
 					new Dictionary<string, object?> {
-						{ nameof(TaskGraphViewModel.task), tasks[i_] },
-						{ nameof(TaskGraphViewModel.index), i_ }
+						{ nameof(TaskGraphViewModel.Task), tasks[i_] },
+						{ nameof(TaskGraphViewModel.Index), i_ }
 					}
 				)
 			);
