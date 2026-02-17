@@ -73,7 +73,7 @@ public class CanvasTopConverter : IMultiValueConverter {
         double paddingY = TaskConverterHelper.PaddingY(parentBounds);
         double graphAreaHeight = parentBounds.Height - 2 * paddingY;
         double yAxissegmentSize = graphAreaHeight / (panelModel?.Y_AXIS_SEGMENT_COUNT ?? 10 * 1.5) * panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1;
-        return yAxissegmentSize * (taskModel?.Index ?? 0 % (panelModel?.MAX_TASKS ?? 10 / panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1)) + paddingY + 30;
+        return yAxissegmentSize * (taskModel?.Index ?? 0 % (panelModel?.MAX_TASKS ?? 10 / panelModel?.TASK_GRAPH_COLUMN_COUNT ?? 1)) + paddingY;
     }
 }
 

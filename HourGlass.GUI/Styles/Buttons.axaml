@@ -1,19 +1,22 @@
 <Styles xmlns="https://github.com/avaloniaui"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:bc="using:Hourglass.GUI.ValueConverters">
+		xmlns:vc="using:Hourglass.GUI.ValueConverters">
 	<Design.PreviewWith>
 		<StackPanel Width="100" Height="100">
-			<Button Classes="SrhDefault" Width="50" Height="50" />
+			<Button Classes="Default" Width="50" Height="50" />
 		</StackPanel>
 	</Design.PreviewWith>
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="/Styles/ButtonConstants.axaml"/>
+				<ResourceDictionary>
+					<vc:ButtonCornerConverter x:Key="CornerConverter"/>
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Styles.Resources>
 	<Style Selector="Button.Default">
-		<Style.Resources>
-			<ResourceDictionary>
-				<ResourceDictionary.MergedDictionaries>
-					<ResourceInclude Source="/Styles/ButtonConstants.axaml"/>
-				</ResourceDictionary.MergedDictionaries>
-			</ResourceDictionary>
-		</Style.Resources>
 		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
 		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
 		<Setter Property="BorderThickness" Value="{ StaticResource DefaultBorderThickness }" />
@@ -48,14 +51,16 @@
 			<Setter Property="Foreground" Value="{ StaticResource SrhGrayDark2 }" />
 		</Style>
 	</Style>
+	<Style Selector="Button.Rounded">
+		<Setter Property="CornerRadius">
+			<Setter.Value>
+				<MultiBinding Converter="{ StaticResource CornerConverter }">
+					<Binding Path="$self.Bounds" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
 	<Style Selector="Button.DefaultBorder">
-		<Style.Resources>
-			<ResourceDictionary>
-				<ResourceDictionary.MergedDictionaries>
-					<ResourceInclude Source="/Styles/ButtonConstants.axaml"/>
-				</ResourceDictionary.MergedDictionaries>
-			</ResourceDictionary>
-		</Style.Resources>
 		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
 		<Setter Property="BorderThickness" Value="{ StaticResource DefaultBorderThickness }" />
 		<Style Selector="^:pointerover /template/ ContentPresenter">
@@ -70,13 +75,6 @@
 		</Style>
 	</Style>
 	<Style Selector="Button.DefaultBackground">
-		<Style.Resources>
-			<ResourceDictionary>
-				<ResourceDictionary.MergedDictionaries>
-					<ResourceInclude Source="/Styles/ButtonConstants.axaml"/>
-				</ResourceDictionary.MergedDictionaries>
-			</ResourceDictionary>
-		</Style.Resources>
 		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
 		<Style Selector="^:pointerover /template/ ContentPresenter">
 			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
@@ -87,10 +85,10 @@
 	</Style>
 	<Style Selector="Button.DynamicBackground">
 		<Style Selector="^:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static bc:ColorConverters.ColorConverterBrighten} }" />
+			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static vc:ColorConverters.ColorConverterBrighten} }" />
 		</Style>
 		<Style Selector="^:pressed /template/ ContentPresenter">
-			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static bc:ColorConverters.ColorConverterDarken} }" />
+			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static vc:ColorConverters.ColorConverterDarken} }" />
 		</Style>
 	</Style>
 </Styles>

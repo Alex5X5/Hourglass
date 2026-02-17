@@ -16,7 +16,13 @@ using System.Threading.Tasks;
 
 public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 
-    public abstract int TASK_GRAPH_COLUMN_COUNT { get; }
+	public enum TimeIntervalchange {
+		Following,
+		Previous,
+		None
+	}
+
+	public abstract int TASK_GRAPH_COLUMN_COUNT { get; }
 
 	public abstract int MAX_TASKS { get; }
 
@@ -67,10 +73,10 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	protected MainViewModel pageController;
 	protected ComponentViewModelFactory<TaskGraphViewModel> graphFactory;
 
-    public string Title => GetTitle();
+	public string Title => GetTitle();
 	
-    public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
-    }
+	public GraphPanelViewModelBase() : this(null, null, null, null, null, null) {
+	}
 	
 	public GraphPanelViewModelBase(ComponentViewModelFactory<TaskGraphViewModel> graphFactory, IHourglassDbService dbService, DateTimeService dateTimeService, GraphPageViewModel panelController, MainViewModel pageController, Services.CacheService cacheService) : base() {
 		this.graphFactory = graphFactory;
@@ -81,58 +87,96 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 		this.cacheService = cacheService;
 
 		CurrentTasks = new ObservableCollection<TaskGraphViewModel>();
-		SetTasks();
+		SetTasks(TimeIntervalchange.Following);
 		MarkedColumns = new bool[32];
 		BlockedColumns = new bool[32];
 		for (int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
 			MarkedColumns[i] = false;
-        }
-    }
+		}
+	}
 
-	protected void ClearTasks() {
-        int count = CurrentTasks.Count;
-        for (int i = 0; i < count; i++) {
-            Console.WriteLine($"remove loop i:{i} count:{count} len:{CurrentTasks.Count}");
-            TaskGraphViewModel task = CurrentTasks[i];
-            Console.WriteLine($"removing task {task}");
-            Task.Run(
-                async () => {
-                    await Task.Delay(1000);
-                    await RemoveItem(task);
-                }
-            );
-        }
-    }
+	protected void ClearTasks(TimeIntervalchange change) {
+		int count = CurrentTasks.Count;
+		for (int i = 0; i < count; i++) {
+			Console.WriteLine($"remove loop i:{i} count:{count} len:{CurrentTasks.Count}");
+			TaskGraphViewModel task = CurrentTasks[i];
+			Console.WriteLine($"removing task {task}");
+			Task.Run(
+				async () => {
+					await RemoveItem(task, change);
+				}
+			);
+		}
+	}
 
-	protected void SetTasks() {
-        List<Database.Models.Task> tasks = GetTasksAsync().Result;
-        int skippedCounter = 0;
-        for (int i = 0; i < tasks.Count; i++) {
-            if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
-                skippedCounter++;
-                continue;
-            }
-            int i_ = i - skippedCounter;
-            Console.WriteLine($"add loop i_:{i_} count:{tasks.Count} len:{CurrentTasks.Count}");
-            Dictionary<string, object?> data = new Dictionary<string, object?> {
-                { nameof(TaskGraphViewModel.Task), tasks[i] }
-            };
-            CurrentTasks.Add(
-                graphFactory.GetComponentViewModel(
-                    null,
-                    new Dictionary<string, object?> {
-                        { nameof(TaskGraphViewModel.Task), tasks[i_] },
-                        { nameof(TaskGraphViewModel.Index), i_ }
-                    }
-                )
-            );
-        }
-    }
+	protected void SetTasks(TimeIntervalchange change) {
+		List<Database.Models.Task> tasks = GetTasksAsync().Result;
+		int skippedCounter = 0;
+		for (int i = 0; i < tasks.Count; i++) {
+			if (tasks[i].blocksTime != BlockedTimeIntervallType.None) {
+				skippedCounter++;
+				continue;
+			}
+			int i_ = i - skippedCounter;
+			Console.WriteLine($"add loop i_:{i_} count:{tasks.Count} len:{CurrentTasks.Count}");
+			Dictionary<string, object?> data = new Dictionary<string, object?> {
+				{ nameof(TaskGraphViewModel.Task), tasks[i] }
+			};
+			Task.Run(
+				async () => {
+					TaskGraphViewModel newModel = graphFactory.GetComponentViewModel(
+						null,
+						new Dictionary<string, object?> {
+							{ nameof(TaskGraphViewModel.Task), tasks[i_] },
+							{ nameof(TaskGraphViewModel.Index), i_ }
+						}
+					);
+					await AddItem(newModel, change);
+				}
+			);
+		}
+	}
 
-	public async Task RemoveItem(TaskGraphViewModel item) {
-		Dispatcher.UIThread.Invoke(() => item.IsRemoving = true);
-		await Task.Delay(1000);
-		Dispatcher.UIThread.Invoke(() => CurrentTasks.Remove(item));
+	public async Task RemoveItem(TaskGraphViewModel item, TimeIntervalchange change) {
+		if (change != TimeIntervalchange.None)
+			await Task.Delay(100 * item.Index);
+		Dispatcher.UIThread.Invoke(
+			() =>{
+				if(change == TimeIntervalchange.Following)
+					item.IsRemovingFollowing = true;
+				else
+					item.IsRemovingLast = true;
+
+			}
+		);
+		await Task.Delay(2000);
+		Dispatcher.UIThread.Invoke(
+			() =>
+				CurrentTasks.Remove(item)
+		);
+	}
+	
+	public async Task AddItem(TaskGraphViewModel item, TimeIntervalchange change) {
+		if(change != TimeIntervalchange.None)
+			await Task.Delay(100 * item.Index);
+		if (change == TimeIntervalchange.Following)
+			item.IsAddingFollowing = true;
+		else 
+			item.IsAddingLast = true;
+		Dispatcher.UIThread.Invoke(
+			() => {
+				CurrentTasks.Add(item);
+			}
+		);
+		await Task.Delay(2000);
+		Dispatcher.UIThread.Invoke(
+			() => {
+				if (change == TimeIntervalchange.Following)
+					item.IsAddingFollowing = false;
+				else
+					item.IsAddingLast = false;
+			}
+		);
 	}
 
 	public void UpdateColumnMarkers() {
@@ -234,17 +278,25 @@ public abstract partial class GraphPanelViewModelBase : ViewModelBase {
 	}
 	
 	public void PreviusIntervallClickBase() {
-		ClearTasks();
-		PreviusIntervallClick();
-		SetTasks();
-		UpdateColumnMarkers();
+		Task.Run(
+			async () => {
+				ClearTasks(TimeIntervalchange.Previous);
+				PreviusIntervallClick();
+				UpdateColumnMarkers();
+				SetTasks(TimeIntervalchange.Previous);
+			}
+		);
 	}
 
 	public void FollowingIntervallClickBase() {
-		ClearTasks();
-		FollowingIntervallClick();
-		SetTasks();
-		UpdateColumnMarkers();
+		Task.Run(
+			async () => {
+				ClearTasks(TimeIntervalchange.Following);
+				FollowingIntervallClick();
+				UpdateColumnMarkers();
+				SetTasks(TimeIntervalchange.Following);
+			}
+		);
 	}
 
 	protected abstract void PreviusIntervallClick();

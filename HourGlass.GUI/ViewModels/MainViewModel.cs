@@ -7,7 +7,6 @@ using Hourglass.Database.Services.Interfaces;
 using Hourglass.GUI.ViewModels.Components.GraphPanels;
 using Hourglass.GUI.ViewModels.Pages;
 using Hourglass.GUI.ViewModels.Pages.SettingsPages;
-using Hourglass.Util;
 
 using ReactiveUI;
 
@@ -17,7 +16,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	private readonly ViewModelFactory<PageViewModelBase>? pageFactory;
 	private IHourglassDbService dbService;
-	private DateTimeService dateTimeService;
 	private Services.CacheService cacheService;
 
 	private PageViewModelBase? lastPage;
@@ -62,7 +60,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 
 	public MainViewModel(IHourglassDbService dbService, DateTimeService dateTimeService, ViewModelFactory<PageViewModelBase> pageFactory, Services.CacheService cacheService) : base() {
 		this.dbService = dbService;
-		this.dateTimeService = dateTimeService;
 		this.pageFactory = pageFactory;
 		this.cacheService = cacheService;
 
@@ -70,7 +67,8 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		ShowNavigationBar = true;
         
 		CurrentPage = pageFactory?.GetPageViewModel<TimerPageViewModel>();
-		cacheService.OnSelectedDayChanged+= date=>this.RaisePropertyChanged(nameof(Title));
+		if(cacheService!=null)
+			cacheService.OnSelectedDayChanged+= date=>this.RaisePropertyChanged(nameof(Title));
     }
 
 	//protected void OnPropertyChanged(string propertyName) {

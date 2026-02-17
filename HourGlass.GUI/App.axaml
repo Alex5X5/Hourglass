@@ -11,6 +11,7 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceInclude Source="/Styles/GlobalColors.axaml"/>
+				<ResourceInclude Source="/Styles/GlobalConverters.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 			<FontFamily x:Key="SrhText">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_Rg.ttf#Srh</FontFamily>
 			<FontFamily x:Key="SrhTextItalic">avares://Hourglass.GUI/Assets/Fonts/srh/SRHText_It.ttf#Srh</FontFamily>

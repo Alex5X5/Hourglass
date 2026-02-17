@@ -15,10 +15,10 @@ public partial class TaskGraph : UserControl {
 	
 	public bool IsRemoving {
 		get => (DataContext as TaskGraphViewModel)?.IsRemoving ?? false;
-		set {
-			if (DataContext is TaskGraphViewModel model)
-				model.IsRemoving = value;
-		}
+		//set {
+		//	if (DataContext is TaskGraphViewModel model)
+		//		model.IsRemoving = value;
+		//}
 	}
 
 	public Database.Models.Task? Task {

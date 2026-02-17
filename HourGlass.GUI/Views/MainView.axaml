@@ -16,12 +16,12 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="4*" />
 			<RowDefinition Height="{ Binding NavigationBarHeight }" />
-			<RowDefinition Height="18*" />
+			<RowDefinition Height="26*" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
-		<Panel Background="{ StaticResource SrhOrange }" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" >
+		<Panel Background="{ StaticResource TimespanBlue }" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
@@ -68,8 +68,7 @@
 				</Grid>
 			</Grid>
 		</Panel>
-		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" />
-		<Panel Background="{ StaticResource SrhGray }" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" >
+		<Panel Background="{ StaticResource TimespanBlueLight1 }" Grid.Column="0" Grid.Row="1" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
@@ -77,20 +76,20 @@
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="5*" />
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="3*" />
-					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="5*" />
 				</Grid.ColumnDefinitions>
 				<Button Grid.Row="1"
 						Grid.Column="1"
 						Classes="Default"
 						Command="{ Binding GoToTimerCommand }"
 						Name="TimerModeButton">
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Grid RowDefinitions="*, 10*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
 								 Grid.Column="1"
 								 Stretch="Uniform"
@@ -107,7 +106,7 @@
 						Classes="Default"
 						Command="{ Binding GoToGraphsCommand }"
 						Name="GraphModeButton">
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Grid RowDefinitions="*, 7*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
 								 Grid.Column="1"
 								 Stretch="Uniform"
@@ -124,7 +123,7 @@
 						Classes="Default"
 						Command="{Binding GoToExportCommand}"
 						Name="ExportModeButton">
-					<Grid RowDefinitions="*, 5*, *" ColumnDefinitions="*, 10*, *">
+					<Grid RowDefinitions="*, 7*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
 								 Grid.Column="1"
 								 Stretch="Uniform"

@@ -16,7 +16,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 
 	#region fields
 
-	private GraphPanelViewModelBase Model => (DataContext as GraphPanelViewModelBase)!;
+	private GraphPanelViewModelBase Model => (DataContext as GraphPanelViewModelBase) ?? new DayGraphPanelViewModel();
 
 	protected int MAX_TASKS => Model.MAX_TASKS;
 
@@ -105,7 +105,7 @@ public abstract partial class GraphPanelViewBase : ViewBase {
 		double y = PADDING_Y + 2;
 		double width = X_AXIS_SEGMENT_SIZE - 4;
 		double height = GRAPH_AREA_HEIGTH - 5;
-		for(int i=0; i<X_AXIS_SEGMENT_COUNT; i++) {
+		for (int i = 0; i < X_AXIS_SEGMENT_COUNT; i++) {
 			if (Model.MarkedColumns[i])
 				context.FillRectangle(markedBrush, new Rect(x, y, width, height));
 			if (Model.BlockedColumns[i])
