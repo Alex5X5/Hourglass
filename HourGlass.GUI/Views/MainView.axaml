@@ -69,10 +69,19 @@
 			</Grid>
 		</Panel>
 		<Panel Background="{ StaticResource TimespanBlueLight1 }" Grid.Column="0" Grid.Row="1" >
+			<Panel.Styles>
+				<Style Selector="Button.Navigation">
+					<Setter Property="BorderBrush" Value ="Transparent" />
+					<Setter Property="Background" Value ="Transparent" />
+					<Style Selector="^.Selected">
+						<Setter Property="Background" Value ="White" />				
+					</Style>
+				</Style>
+			</Panel.Styles>
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
-					<RowDefinition Height="4*" />
+					<RowDefinition Height="7*" />
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
@@ -86,54 +95,51 @@
 				</Grid.ColumnDefinitions>
 				<Button Grid.Row="1"
 						Grid.Column="1"
-						Classes="Default"
-						Command="{ Binding GoToTimerCommand }"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding TimerButtonSelected }"
+						Click="TimerModeButton_Click"
 						Name="TimerModeButton">
-					<Grid RowDefinitions="*, 10*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
 								 Grid.Column="1"
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent"
-									   Text="{ Binding $parent[cls:MainView].TimerModeButtonText }"
-									   FontSize="13" />
+							<TextBlock Text="{ Binding $parent[cls:MainView].TimerModeButtonText }"
+									   FontSize="10"
+									   FontWeight="13"/>
 						</Viewbox>
-					</Grid>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="3"
-						Classes="Default"
-						Command="{ Binding GoToGraphsCommand }"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding GraphsButtonSelected }"
+						Click="GraphModeButton_Click"
 						Name="GraphModeButton">
-					<Grid RowDefinitions="*, 7*, *" ColumnDefinitions="*, 10*, *">
 						<Viewbox Grid.Row="1"
 								 Grid.Column="1"
 								 Stretch="Uniform"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent"
-									   Text="{ Binding $parent[cls:MainView].GraphModeButtonText }"
-									   FontSize="13"/>
+							<TextBlock Text="{ Binding $parent[cls:MainView].GraphModeButtonText }"
+									   FontSize="10"
+									   FontWeight="13"/>
 						</Viewbox>
-					</Grid>
 				</Button>
 				<Button Grid.Row="1"
 						Grid.Column="5"
-						Classes="Default"
-						Command="{Binding GoToExportCommand}"
+						Classes="Rounded Navigation"
+						Classes.Selected="{ Binding ExportButtonSelected }"
+						Click="ExportModeButton_Click"
 						Name="ExportModeButton">
-					<Grid RowDefinitions="*, 7*, *" ColumnDefinitions="*, 10*, *">
-						<Viewbox Grid.Row="1"
-								 Grid.Column="1"
-								 Stretch="Uniform"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Center">
-							<TextBlock Classes="ButtonContent"
-									   Text="{ Binding $parent[cls:MainView].ExportModeButtonText }"
-									   FontSize="13"/>
-						</Viewbox>
-					</Grid>
+					<Viewbox Grid.Row="1"
+							 Grid.Column="1"
+							 Stretch="Uniform"
+							 VerticalAlignment="Center"
+							 HorizontalAlignment="Center">
+						<TextBlock Text="{ Binding $parent[cls:MainView].ExportModeButtonText }"
+								   FontSize="10"
+								   FontWeight="13"/>
+					</Viewbox>
 				</Button>
 			</Grid>
 		</Panel>

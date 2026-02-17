@@ -43,16 +43,39 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 		}
 	}
 
-	private bool showSettingsIcon = false;
-	public bool ShowSettingsIcon {
-		set {
-			this.RaiseAndSetIfChanged(ref showSettingsIcon, value);
-			this.RaisePropertyChanged(nameof(ShowSettingsIcon));
-		}
-		get => showSettingsIcon;
-	}
+    private bool showSettingsIcon = false;
+    public bool ShowSettingsIcon {
+        set {
+            this.RaiseAndSetIfChanged(ref showSettingsIcon, value);
+        }
+        get => showSettingsIcon;
+    }
 
-	private bool IsFirstGraphPageChange = true;
+    private bool timerButtonSelected = true;
+    public bool TimerButtonSelected {
+        set {
+            this.RaiseAndSetIfChanged(ref timerButtonSelected, value);
+        }
+        get => timerButtonSelected;
+    }
+
+    private bool graphsButtonSelected = false;
+    public bool GraphsButtonSelected {
+        set {
+            this.RaiseAndSetIfChanged(ref graphsButtonSelected, value);
+        }
+        get => graphsButtonSelected;
+    }
+
+    private bool exportButtonSelected = false;
+    public bool ExportButtonSelected {
+        set {
+            this.RaiseAndSetIfChanged(ref exportButtonSelected, value);
+        }
+        get => exportButtonSelected;
+    }
+
+    private bool IsFirstGraphPageChange = true;
 	
 	public MainViewModel() : this(null, null, null, null) {
 		
@@ -71,10 +94,6 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 			cacheService.OnSelectedDayChanged+= date=>this.RaisePropertyChanged(nameof(Title));
     }
 
-	//protected void OnPropertyChanged(string propertyName) {
- //       TitleChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
- //   }
-
     public void ChangePage<PageT>(Action<PageT?>? afterCreation = null) where PageT : PageViewModelBase {
 		if (pageFactory == null)
 			return;
@@ -92,8 +111,7 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	}
 
 	[RelayCommand]
-	private void GoToSettings() {
-		Console.WriteLine("timer mode button click!");
+    public void GoToSettings() {
 		ChangePage<SettingsPageViewModel>(
 			page => {
 				page?.ChangePage<GeneralSubSettingsPageViewModel>();
@@ -102,14 +120,18 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	}
 
 	[RelayCommand]
-	private void GoToTimer() {
-		Console.WriteLine("timer mode button click!");
+	public void GoToTimer() {
+        TimerButtonSelected = true;
+        GraphsButtonSelected = false;
+        ExportButtonSelected = false;
 		ChangePage<TimerPageViewModel>();
 	}
 
 	[RelayCommand]
-	private void GoToGraphs() {
-		Console.WriteLine("graph mode button click!");
+    public void GoToGraphs() {
+		TimerButtonSelected = false;
+		GraphsButtonSelected = true;
+		ExportButtonSelected = false;
 		ChangePage<GraphPageViewModel>(
 			IsFirstGraphPageChange ? page=> {
 				page?.ChangeGraphPanel<DayGraphPanelViewModel>();
@@ -119,15 +141,11 @@ public partial class MainViewModel : ViewModelBase,  INotifyPropertyChanged {
 	}
 
 	[RelayCommand]
-	private void GoToExport() {
-		Console.WriteLine("export mode button click!");
+    public void GoToExport() {
+        TimerButtonSelected = false;
+        GraphsButtonSelected = false;
+        ExportButtonSelected = true;
 		ChangePage<ExportPageViewModel>();
-	}
-
-	[RelayCommand]
-	private void GoToProject() {
-		Console.WriteLine("project mode button click!");
-		ChangePage<ProjectPageViewModel>();
 	}
 
 	public void GoToTaskdetails(Database.Models.Task task) {

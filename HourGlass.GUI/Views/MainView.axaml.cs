@@ -24,26 +24,17 @@ public partial class MainView : ViewBase {
 	}
 
 	private void TimerModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("timer mode button click!");
 		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<TimerPageViewModel>();
+			viewModel.GoToTimer();
 	}
 
 	private void GraphModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("graph mode button click!");
 		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<GraphPageViewModel>();
+			viewModel.GoToGraphs();
 	}
 
 	private void ExportModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("export mode button click!");
 		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<ExportPageViewModel>();
-	}
-
-	private void ProjectModeButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) {
-		Console.WriteLine("project mode button click!");
-		if (DataContext is MainViewModel viewModel)
-			viewModel.ChangePage<ProjectPageViewModel>();
+			viewModel.GoToExport();
 	}
 }
