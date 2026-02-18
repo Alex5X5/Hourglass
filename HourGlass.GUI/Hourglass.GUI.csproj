@@ -107,4 +107,8 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Assets\Fonts\AnyBody\" />
+	</ItemGroup>
+
 </Project>

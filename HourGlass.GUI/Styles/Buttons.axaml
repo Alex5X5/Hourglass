@@ -91,4 +91,11 @@
 			<Setter Property="Background" Value="{ Binding $parent[Button].Background, Converter={x:Static vc:ColorConverters.ColorConverterDarken} }" />
 		</Style>
 	</Style>
+	<Style Selector="Button.Navigation">
+		<Setter Property="BorderBrush" Value ="Transparent" />
+		<Setter Property="Background" Value ="Transparent" />
+		<Style Selector="^.Selected">
+			<Setter Property="Background" Value ="White" />
+		</Style>
+	</Style>
 </Styles>

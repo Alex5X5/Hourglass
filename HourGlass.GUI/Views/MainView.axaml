@@ -69,15 +69,6 @@
 			</Grid>
 		</Panel>
 		<Panel Background="{ StaticResource TimespanBlueLight1 }" Grid.Column="0" Grid.Row="1" >
-			<Panel.Styles>
-				<Style Selector="Button.Navigation">
-					<Setter Property="BorderBrush" Value ="Transparent" />
-					<Setter Property="Background" Value ="Transparent" />
-					<Style Selector="^.Selected">
-						<Setter Property="Background" Value ="White" />				
-					</Style>
-				</Style>
-			</Panel.Styles>
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />

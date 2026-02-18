@@ -7,9 +7,6 @@
 		</StackPanel>
 	</Design.PreviewWith>
 	
-	<Style Selector="TextBlock.Default, TextBox.Default">
-	</Style>
-	
 	<Style Selector="TextBlock.Default">
 		<Setter Property="Padding" Value="0,0,0,0"/>
 		<Setter Property="MinHeight" Value="0"/>
@@ -24,37 +21,6 @@
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=1.66 }" />
-	</Style>
-
-
-	<Style Selector="TextBox.Default">
-		<Setter Property="Foreground" Value="Black" />
-		<Setter Property="FontFamily" Value="Arial" />
-		<Setter Property="HorizontalAlignment" Value="Stretch" />
-		<Setter Property="VerticalAlignment" Value="Stretch" />
-		<Setter Property="BorderThickness" Value="3" />
-		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
-		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
-		<Setter Property="CornerRadius" Value="0" />
-		
-		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-			<Setter Property="RenderTransform" Value="None"/>
-		</Style>
-		
-		<Style Selector="^:focus /template/ Border">
-			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
-			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
-		</Style>
-		
-		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-		</Style>
-		<Style Selector="^:focus">
-			<Setter Property="Foreground" Value="Black" />
-		</Style>
 	</Style>
 
 	<Style Selector="TextBox.Default">
@@ -115,6 +81,16 @@
 		<Style Selector="^:focus">
 			<Setter Property="Foreground" Value="Black" />
 		</Style>
+	</Style>
+
+	<Style Selector="TextBox.Rounded">
+		<Setter Property="CornerRadius">
+			<Setter.Value>
+				<MultiBinding Converter="{ StaticResource CommonBoundConverters }">
+					<Binding Path="$self.Bounds" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
 	</Style>
 	
 	<Style Selector="TextBox.DefaultForeground">

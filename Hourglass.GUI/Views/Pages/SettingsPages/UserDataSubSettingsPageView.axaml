@@ -48,22 +48,22 @@
 		<TextBlock Text="{ Binding $parent[cls:UserDataSubSettingsPageView].UsernameLabelText }"
 				   Grid.Row="0"
 				   Grid.Column="1"
-				   Classes="Default DynamicTextHeight" />
+				   Classes="Default Rounded DynamicTextHeight" />
 		<TextBox Text="{ Binding UsernameTextboxText }"
 				 Grid.Row="2"
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
-				 Classes="DefaultBackground DefaultBorder" />
+				 Classes="Rounded DefaultBackground DefaultBorder" />
 		<TextBlock Text="{ Binding $parent[cls:UserDataSubSettingsPageView].JobNameLabelText }"
 				   Grid.Row="4"
 				   Grid.Column="1"
 				   MinHeight="0"
-				   Classes="Default DynamicTextHeight" />
+				   Classes="Default Rounded DynamicTextHeight" />
 		<TextBox Text="{ Binding JobNameTextboxText }"
 				 Grid.Row="6"
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
-				 Classes="DefaultBackground DefaultBorder" />
+				 Classes="Rounded DefaultBackground DefaultBorder" />
 		<TextBlock Text="{ Binding $parent[cls:UserDataSubSettingsPageView].StartDateLabelText }"
 				   Grid.Row="8"
 				   Grid.Column="1"
@@ -73,6 +73,6 @@
 				 Grid.Row="10"
 				 Grid.Column="1"
 				 Grid.ColumnSpan="2"
-				 Classes="DefaultBackground DefaultBorder" />
+				 Classes="Rounded DefaultBackground DefaultBorder" />
 	</Grid>
 </UserControl>
