@@ -11,16 +11,15 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.3.6" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.3.6" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.6" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.6" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.6" />
+		<PackageReference Include="Avalonia" Version="11.3.12" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
+		<PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.9.2" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.6" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.12" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
-		<PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.6.5" />
+		<PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.9.5" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -105,7 +104,23 @@
 
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
+		<AvaloniaResource Include="Assets\Images\**" />
 		<AvaloniaResource Include="Themes\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Assets\Images\haken-kreis.svg" />
+	  <EmbeddedResource Include="Assets\Images\kalender-jahr.svg" />
+	  <EmbeddedResource Include="Assets\Images\kalender-monat.svg" />
+	  <EmbeddedResource Include="Assets\Images\kalender-tag.svg" />
+	  <EmbeddedResource Include="Assets\Images\kalender-woche.svg" />
+	  <EmbeddedResource Include="Assets\Images\kreuz.svg" />
+	  <EmbeddedResource Include="Assets\Images\loeschen.svg" />
+	  <EmbeddedResource Include="Assets\Images\pfeil-links.svg" />
+	  <EmbeddedResource Include="Assets\Images\pfeil-oben.svg" />
+	  <EmbeddedResource Include="Assets\Images\pfeil-rechts.svg" />
+	  <EmbeddedResource Include="Assets\Images\pfeil-unten.svg" />
+	  <EmbeddedResource Include="Assets\Images\stift.svg" />
 	</ItemGroup>
 
 	<ItemGroup>

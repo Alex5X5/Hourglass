@@ -1,11 +1,10 @@
 namespace Hourglass;
 
 using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 
 using Hourglass.GUI;
 using Hourglass.Util.Services;
-using System.Globalization;
 
 public class Program {
 	/// <summary>
