@@ -6,12 +6,20 @@
 			<TextBlock Classes="DynamictextHeight" Width="50" Height="50" Text="test" />
 		</StackPanel>
 	</Design.PreviewWith>
-	
+
+	<Style Selector="TextBox.Test">
+		<Setter Property="Padding" Value="0,0,0,0"/>
+		<Setter Property="MinHeight" Value="0"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="FontSize" Value="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.9}" />
+	</Style>
 	<Style Selector="TextBlock.Default">
 		<Setter Property="Padding" Value="0,0,0,0"/>
 		<Setter Property="MinHeight" Value="0"/>
 		<Setter Property="Foreground" Value="Black" />
-		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="FontFamily" Value="Anybody" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 	</Style>
@@ -25,28 +33,28 @@
 
 	<Style Selector="TextBox.Default">
 		<Setter Property="Foreground" Value="Black" />
-		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="FontFamily" Value="Anybody" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="BorderThickness" Value="3" />
-		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
-		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Setter Property="CornerRadius" Value="0" />
 
 		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
 
 		<Style Selector="^:focus /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
-			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
 		</Style>
 
 		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
 		</Style>
 		<Style Selector="^:focus">
 			<Setter Property="Foreground" Value="Black" />
@@ -55,28 +63,28 @@
 	
 	<Style Selector="TextBox.Default.Output">
 		<Setter Property="Foreground" Value="Black" />
-		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="FontFamily" Value="Anybody" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="BorderThickness" Value="3" />
-		<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Setter Property="CornerRadius" Value="0" />
 
 		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-			<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
 
 		<Style Selector="^:focus /template/ Border">
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-			<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		</Style>
 
 		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
-			<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		</Style>
 		<Style Selector="^:focus">
 			<Setter Property="Foreground" Value="Black" />
@@ -95,7 +103,7 @@
 	
 	<Style Selector="TextBox.DefaultForeground">
 		<Setter Property="Foreground" Value="Black" />
-		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="FontFamily" Value="Anybody" />
 		<Setter Property="FontSize" Value="10" />
 		<Style Selector="^:focus">
 			<Setter Property="Foreground" Value="Black" />
@@ -103,15 +111,15 @@
 	</Style>
 	
 	<Style Selector="TextBox.DefaultBackground">
-		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
 		</Style>
 		<Style Selector="^:focus /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
 		</Style>
 		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
 		</Style>
 	</Style>
 	
@@ -124,28 +132,28 @@
 
 	<Style Selector="ComboBox.Default">
 		<Setter Property="Foreground" Value="Black" />
-		<Setter Property="FontFamily" Value="Arial" />
+		<Setter Property="FontFamily" Value="Anybody" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="BorderThickness" Value="3" />
-		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
-		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Setter Property="CornerRadius" Value="0" />
 
 		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
 
 		<Style Selector="^:focus /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
-			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
 		</Style>
 
 		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
 		</Style>
 		<Style Selector="^:focus">
 			<Setter Property="Foreground" Value="Black" />
@@ -154,17 +162,17 @@
 
 	<Style Selector="ComboBox.DefaultBorder">
 		<Setter Property="BorderThickness" Value="3" />
-		<Setter Property="BorderBrush" Value="{ StaticResource SrhGrayDark1 }" />
+		<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1Dark1 }" />
 		<Setter Property="CornerRadius" Value="0" />
 		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
 			<Setter Property="RenderTransform" Value="None"/>
 		</Style>
 		<Style Selector="^:focus /template/ Border">
 			<Setter Property="BorderBrush" Value="{ StaticResource Focus1 }" />
 		</Style>
 		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="BorderBrush" Value="{ StaticResource SrhGray }" />
+			<Setter Property="BorderBrush" Value="{ DynamicResource BackgroundColor1 }" />
 		</Style>
 	</Style>
 
@@ -178,15 +186,15 @@
 	</Style>
 
 	<Style Selector="ComboBox.DefaultBackground">
-		<Setter Property="Background" Value="{ StaticResource SrhGray }" />
+		<Setter Property="Background" Value="{ DynamicResource BackgroundColor1 }" />
 		<Style Selector="^:pointerover /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
 		</Style>
 		<Style Selector="^:focus /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource Focus2 }" />
+			<Setter Property="Background" Value="{ DynamicResource Focus2 }" />
 		</Style>
 		<Style Selector="^:pressed /template/ Border">
-			<Setter Property="Background" Value="{ StaticResource SrhGrayLight1 }" />
+			<Setter Property="Background" Value="{ DynamicResource BackgroundColor1Light1 }" />
 		</Style>
 	</Style>
 

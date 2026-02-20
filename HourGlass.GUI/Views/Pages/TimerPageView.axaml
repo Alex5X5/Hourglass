@@ -56,12 +56,12 @@
 					 Grid.Row="2"
 					 Grid.Column="0"
 					 VerticalContentAlignment="Center"
-					 Classes="Default Output DynamicTextHeight" />
+					 Classes="Default Output Rounded DynamicTextHeight" />
 			<TextBox Text="{ Binding FinishTextboxText }"
 					 Grid.Row="2"
 					 Grid.Column="2"
 					 VerticalContentAlignment="Center"
-					 Classes="Default Output DynamicTextHeight" />
+					 Classes="Default Output Rounded DynamicTextHeight" />
 			<TextBlock Text="{ Binding $parent[cls:TimerPageView].DescriptionLabelText }"
 					   Grid.Row="4"
 					   Grid.Column="0"
@@ -71,7 +71,7 @@
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 Name="DescriptionTextbox"
-					 Classes="Default"
+					 Classes="Default Rounded"
 					 FontSize="{ Binding $self.Bounds, Converter={x:Static vc:TextSizeConverters.TextSizeFromWidthAndHeightAndParameterConverter}, ConverterParameter=0.26 }"
 					 VerticalContentAlignment="Top"
 					 GotFocus="TextBox_GotFocus"

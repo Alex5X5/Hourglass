@@ -4,23 +4,20 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
-using Hourglass.GUI.ViewModels;
-using Hourglass.GUI.ViewModels.Pages;
-using Hourglass.GUI.ViewModels.Components.GraphPanels;
-using Hourglass.GUI.Views;
-using Hourglass.Util;
-using Hourglass.Util.Services;
-
+using Avalonia.Markup.Xaml.Styling;
 using Hourglass.Database.Services;
 using Hourglass.Database.Services.Interfaces;
+using Hourglass.GUI.Services;
+using Hourglass.GUI.ViewModels;
+using Hourglass.GUI.ViewModels.Components;
+using Hourglass.GUI.ViewModels.Components.GraphPanels;
+using Hourglass.GUI.ViewModels.Pages;
+using Hourglass.GUI.ViewModels.Pages.SettingsPages;
+using Hourglass.GUI.Views;
 using Hourglass.PDF;
 using Hourglass.PDF.Services.Interfaces;
-
+using Hourglass.Util.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Hourglass.GUI.Services;
-using Hourglass.GUI.ViewModels.Components;
-using Hourglass.GUI.ViewModels.Pages.SettingsPages;
 
 public partial class App : Application {
 
@@ -86,9 +83,19 @@ public partial class App : Application {
 			};
 		}
 
-		// Or use TryGetResource for safer access
-
 		base.OnFrameworkInitializationCompleted();
 	}
+
+    public static void SetTheme(string themeName) {
+        var mergedDicts = Application.Current!.Resources.MergedDictionaries;
+
+        var existing = mergedDicts.OfType<ResourceInclude>()
+            .FirstOrDefault(r => r.Source?.OriginalString.Contains("Theme") == true);
+        if (existing != null)
+            mergedDicts.Remove(existing);
+
+        var uri = new Uri($"avares://Hourglass.GUI/Assets/Themes/{themeName}Theme.axaml");
+        mergedDicts.Add(new ResourceInclude(uri) { Source = uri });
+    }
 }
 

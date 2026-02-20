@@ -12,7 +12,7 @@ public static class TextSizeConverters {
 		new FuncValueConverter<Rect, object?, double>(
 			(rect, m) => {
 				double d = double.Parse((m as string)!, CultureInfo.InvariantCulture);
-                var val = Math.Round(rect.Height * 0.6 * d, 1);
+                var val = Math.Round(rect.Height * 0.55 * d, 1);
 				return Math.Max(5.0, val);
 			}
 		);
@@ -20,7 +20,7 @@ public static class TextSizeConverters {
 	public static FuncValueConverter<Rect, double> TextSizeFromWidthAndHeightConverter { get; } =
 		new FuncValueConverter<Rect, double>(
 			rect => {
-				var val = Math.Round(rect.Height * 0.6, 1);
+				var val = Math.Round(rect.Height * 0.55, 1);
 				return Math.Max(5.0, val);
 			}
 		);

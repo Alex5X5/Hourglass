@@ -21,7 +21,7 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
-		<Panel Background="{ StaticResource TimespanBlue }" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" >
+		<Panel Background="{ DynamicResource BackgroundColor2 }" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="1" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
@@ -39,18 +39,12 @@
 					  Grid.Column="1"
 					  RowDefinitions="4*, 15*, 2*"
 					  ColumnDefinitions="*, 10*, *">
-					<Viewbox Grid.Row="1"
-							 Grid.Column="1"
-							 Stretch="Uniform"
-							 VerticalAlignment="Center"
-							 HorizontalAlignment="Center">
-						<TextBlock Padding="0, 4, 0, -4"
-								   Text="{Binding Title}"
-								   Foreground="White"
-								   FontFamily="{ StaticResource SrhTextBold }"
-								   FontSize="17"
-								   LineHeight="17" />
-					</Viewbox>
+					<TextBlock Grid.Row="1"
+							   Grid.Column="1"
+							   Classes="DynamicTextHeight"
+							   FontFamily="Anybody"
+							   Text="{ Binding Title }"
+							   FontWeight="13"/>
 				</Grid>
 				<Grid Grid.Row="1" Grid.Column="3" RowDefinitions="*, 5*, *" IsVisible="{ Binding ShowSettingsIcon }">
 					<Viewbox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -68,7 +62,7 @@
 				</Grid>
 			</Grid>
 		</Panel>
-		<Panel Background="{ StaticResource TimespanBlueLight1 }" Grid.Column="0" Grid.Row="1" >
+		<Panel Background="{ DynamicResource BackgroundColor1 }" Grid.Column="0" Grid.Row="1" >
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" />
@@ -96,7 +90,7 @@
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
 							<TextBlock Text="{ Binding $parent[cls:MainView].TimerModeButtonText }"
-									   FontSize="10"
+									   FontSize="9"
 									   FontWeight="13"/>
 						</Viewbox>
 				</Button>
@@ -112,7 +106,7 @@
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Center">
 							<TextBlock Text="{ Binding $parent[cls:MainView].GraphModeButtonText }"
-									   FontSize="10"
+									   FontSize="9"
 									   FontWeight="13"/>
 						</Viewbox>
 				</Button>
@@ -128,7 +122,7 @@
 							 VerticalAlignment="Center"
 							 HorizontalAlignment="Center">
 						<TextBlock Text="{ Binding $parent[cls:MainView].ExportModeButtonText }"
-								   FontSize="10"
+								   FontSize="9"
 								   FontWeight="13"/>
 					</Viewbox>
 				</Button>

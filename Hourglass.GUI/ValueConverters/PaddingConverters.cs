@@ -18,8 +18,8 @@ public static class PaddingConverters {
 				} catch (FormatException) {
                     Console.WriteLine("format!!!");
                 }
-				var val = Math.Round(rect.Height * 0.105 * d, 3);
-				return new Thickness(0, -val, 0, val);
+				var val = Math.Round(rect.Height * -0.30 * d, 3);
+				return new Thickness(5, val, 0, val);
 			}
 		);
 }
